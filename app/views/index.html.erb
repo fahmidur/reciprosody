@@ -1,0 +1,18 @@
+<div class="hero-unit">
+  <h1>Welcome to Reciprosody!</h1>
+	<p>
+		A repository of prosodically annotated material.  <br />
+
+		All material is distributed under open-source or academic/scholarly research licenses. 
+	</p>
+	
+	<% if user_signed_in? %>
+		Signed in as <%= current_user.email %>.<br/>
+		Not you? Then <%= link_to "Sign out", destroy_user_session_path, :method => :delete %><br/>
+	<%else%>
+		<p>Start using Reciprosody today.  <a href='/users/sign_in'>Sign in</a> or...</p>
+		<%= link_to "Sign up now!", new_user_registration_path, class: "btn btn-large btn-primary" %>
+	<%end%>
+	
+</div>
+

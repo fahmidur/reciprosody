@@ -7,8 +7,50 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<div class='navbar navbar-inverse navbar-fixed-top'>
+	<div class='navbar-inner'>
+		<div class='container'>
+			<div class='btn btn-navbar' data-toggle='collapse' data-target='.nav-collapse'>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+			</div>
+			<a id='logo' href='/'>Reciprosody <span id='btag'>beta</span></a>
+			
+			<div class='nav-collapse collapse'>
+				<ul class='nav'>
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class='container'>
+	<%= yield %>
+	<hr>
+	<div class='container below_hr'>
+		<p>Reciprosody hosted and maintained by the Speech Lab @ Queens College</p>
+	</div>
+</div>
 
-<%= yield %>
+<div class='navbar navbar-fixed-bottom'>
+	<div class='navbar-inner'>
+		<div class='container'>
+		
+			<form class='navbar-search pull-right'>
+				<input type='text' class='search-query' placeholder='Search'>
+			</form>
+		
+			<ul class='nav pull-left'>
+				<li><a href='/about'>About</a></li>
+				<li><a href='/faq'>FAQ</a></li>
+				<li><a href='/contact'>Contact</a></li>
+			</ul>
+		
+		</div>
+	</div>
+</div>
+   
 
 </body>
 </html>
