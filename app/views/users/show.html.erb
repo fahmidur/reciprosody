@@ -1,0 +1,12 @@
+<div class='center hero-unit'>
+	<h1>User Home</h1>
+	
+	
+	<br/>
+	<p>
+	Signed in as <%= current_user.email %>.<br/>
+	Not you? Then <%= link_to "Sign out", destroy_user_session_path, :method => :delete %><br/>
+	</p>
+	
+	<p class='about'>To-Do: Expand user model and make user settings panel.</p>
+</div>
