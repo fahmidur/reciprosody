@@ -1,7 +1,21 @@
 Reciprosody2::Application.routes.draw do
+	#----authenticaton-----------------------
   devise_for :users
 
-	root :to => 'application#index'
+	#----maps to users controller-------------
+	resource :user
+	
+	#--------only a few static pages-------------------
+	root :to 					=> 'pages#index'
+	match 'about' 		=> 'pages#about'
+	match 'faq' 			=> 'pages#faq'
+	match 'contact'		=> 'pages#contact'
+	#--------------------------------------------------
+	
+	match '/faq_submit'	=> 'pages#faq_submit', :via => :get
+	
+	
+	
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

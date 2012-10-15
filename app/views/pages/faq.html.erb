@@ -1,0 +1,57 @@
+<div class='center hero-unit'>
+<h1>F.A.Q</h1>
+
+	<div class='about'>
+		<h4>Does the material need to be in English?</h4>
+		<p>No. Spoken material in any language can be shared through Reciprosody.</p>
+		
+		<h4>Do annotations need to be in ToBI or some other standard?</h4>
+		<p>No. Any annotation standard is welcome. This includes annotations that do not follow any particular standard. As examples, annotations of binary prominence, and paralinguistic behavior like "sarcasm", are considered prosodic annotations and are encouraged on Reciprosody.</p>
+		
+		<h4>What speech data can I upload?</h4>
+		<p>You may upload anything you have the rights to disseminate freely to academic researchers and educators. We currently recommend that audio files are uploaded as .wav files, but this is not enforced.</p>
+		
+		<h4>How do I download a corpus?</h4>
+		<p>Use the navigation bar on the top of the page to view a list of available corpora. When you view the corpus details, you will see a 'Download' link, if you are logged in as a Reciprosody user.</p>
+		
+		<h4><button id='ask_btn' class='btn'>I have another question.</button></h4>
+		
+		<div id='quick_question'>
+			<h4>Quick Question</h4>
+			<%= form_tag '/faq_submit', :method => 'get', :remote => true, 'data-type' => :json, :id => 'qq_form' do%>
+			<%= text_field_tag "question", nil, :placeholder => 'Your Question' %>
+			<%= recaptcha_tags :ajax => true%>
+			<%= submit_tag "Submit Question", :id => 'qsubmit' %>
+			<% end %>
+			<div id='response'>
+			</div>
+		</div>
+	</div>
+</div>
+<script type='text/javascript'>
+	$(function() {		
+		$('#quick_question').hide();
+		
+		$('#ask_btn').click(function() {
+			$('#quick_question').toggle("fast");
+		});
+		
+		$('#qq_form').on('ajax:success', function(event, data, status, xhr) {
+			if(!data.response) {
+				$('#response').prepend(
+					"<div class='alert alert-error'>" +
+					"<button type='button' class='close' data-dismiss='alert'>×</button>" +
+					"<strong>Sorry! Invalid Input</strong></div>");
+			}
+			else {
+				$('#response').prepend(
+					"<div class='alert alert-success'>" +
+					"<button type='button' class='close' data-dismiss='alert'>×</button>" +
+					"<strong>Thanks for writing!</strong></div>");
+			}
+			Recaptcha.reload();
+		});
+		
+		
+	});
+</script>

@@ -21,9 +21,14 @@ group :assets do
 end
 
 gem 'jquery-rails'
+
+#---Modified by Me -SFR----------------
 gem 'twitter-bootstrap-rails'
 gem 'devise'
+gem "recaptcha", :require => "recaptcha/rails"
 #gem 'tlsmail'
+
+#--------------------------------------
 
 
 # To use ActiveModel has_secure_password
