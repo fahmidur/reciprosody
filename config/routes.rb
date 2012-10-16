@@ -13,7 +13,7 @@ Reciprosody2::Application.routes.draw do
 	#--------------------------------------------------
 	
 	match '/faq_submit'	=> 'pages#faq_submit', :via => :get
-	
+	match '/sug_submit' => 'pages#sug_submit', :via => :get
 	
 	
   # The priority is based upon order of creation:

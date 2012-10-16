@@ -20,7 +20,7 @@
 			<h4>Quick Question</h4>
 			<%= form_tag '/faq_submit', :method => 'get', :remote => true, 'data-type' => :json, :id => 'qq_form' do%>
 			<%= text_field_tag "question", nil, :placeholder => 'Your Question' %>
-			<%= recaptcha_tags :ajax => true%>
+			<%= recaptcha_tags :ajax => true, :display => {:theme => 'clean'}%>
 			<%= submit_tag "Submit Question", :id => 'qsubmit' %>
 			<% end %>
 			<div id='response'>

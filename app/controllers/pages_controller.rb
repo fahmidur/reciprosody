@@ -28,11 +28,52 @@ class PagesController < ApplicationController
 	  end
   end
   
+  #-- sends an email to me +reciprosody_sug --
+  def sug_submit
+  	email = params[:email]
+  	name = params[:name].split(/\W/).map(&:capitalize).join(" ")
+  	text = params[:text][0]
+  	
+  	
+  	logger.debug "Text = |#{text}|"
+  	
+  	errors = Hash.new(false)
+  	errors[:cap] 		= !verify_recaptcha
+  	errors[:email]	= !email_valid(email)
+  	errors[:name]		= !name_valid(name)
+  	errors[:text] 	= text.blank?
+  	
+  	okay = true
+  	errors.each do |k, v|
+  		if v == true
+  			okay = false
+  			break
+  		end
+  	end
+  	if(okay)
+  		#---send email---
+	  	PagesMailer.sug_mail(email, name, text).deliver
+  	end
+  	
+  	render :json => {:okay => okay, :errors => errors}
+  	
+  end
+  
   def contact
   	
   end
   
   private
+  
+  def name_valid(name)
+  	return true if name =~ /\w+/
+  	return false
+  end
+  
+  def email_valid(email)
+  	return true if email =~ /^.+\@.+\..+$/
+  	return false
+  end
   
   def user_redirect
   	if user_signed_in?

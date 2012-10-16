@@ -19,7 +19,19 @@
 			
 			<div class='nav-collapse collapse'>
 				<ul class='nav'>
-					
+					<li><a href='/'>Home</a></li>
+					<li><a href='/corpora'>Corpora</a></li>
+					<% if user_signed_in? %>
+						<li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
+					<%else%>
+						<li><a href='/users/sign_in'>Sign in</a></li>
+					<%end%>
+				</ul>
+				<ul class='nav pull-right'>
+					<% if user_signed_in? %>
+						<li><a href='#'>Hello, <%= current_user.email %></a></li>
+					<%else%>
+					<%end%>
 				</ul>
 			</div>
 		</div>
@@ -29,10 +41,17 @@
 	<%= yield %>
 	<hr>
 	<div class='container below_hr'>
-		<p><a href='/'>Reciprosody</a> hosted and maintained by the <a href='http://speech.cs.qc.cuny.edu/' target='_blank'>Speech Lab @ Queens College</a></p>
+		<a href='/' class='pull-left'>Reciprosody</a> hosted and maintained by the <a href='http://speech.cs.qc.cuny.edu/' target='_blank'>Speech Lab @ Queens College</a>
+		<a href='/contact' class='pull-right padleft'>Contact</a>
+		<a href='/faq' class='pull-right padleft'>FAQ</a>
+		<a href='/about' class='pull-right padleft'>About</a>
+		
+		
+		
 	</div>
 </div>
 
+<!--
 <div class='navbar navbar-fixed-bottom'>
 	<div class='navbar-inner'>
 		<div class='container'>
@@ -50,7 +69,7 @@
 		</div>
 	</div>
 </div>
-   
+--> 
 
 </body>
 </html>

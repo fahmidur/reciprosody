@@ -1,0 +1,75 @@
+<div class='center hero-unit'>
+	<h1>Contact Us</h1>
+	
+	<div class='about'>
+		<p>Reciprosody is hosted and maintained by the 
+		<a href='http://speech.cs.qc.cuny.edu/' target='_blank'>Speech Lab @ Queens College </a>in Flushing, Queens, New York, New York.</p>
+		
+		<p>Please contact Andrew Rosenberg (<a href='mailto:andrew@cs.qc.cuny.edu' target='_blank'>andrew@cs.qc.cuny.edu</a>) with any questions or comments about Reciprosody.</p>
+		
+	</div>
+
+</div>
+
+<div class='quick_question'>
+	<a class='btn btn-large' href='#' id='sug_toggle'>Suggestion Box</a>
+	<div id='sug_wrapper'>
+		<%= form_tag '/sug_submit', :remote => true, :method => 'get', 'data-type' => :json, :id => 'sug_form' do%>
+		<%= text_field_tag "name", nil, :placeholder => 'Your Name', :id => 'sug_name'%> 
+		<%= text_field_tag "email", nil, :placeholder => 'you@gmail.com', :id => 'sug_email' %><br/>
+		<%= text_area "text", nil, :placeholder => 'I think you should...', :id => 'sug_text' %>
+		<%= recaptcha_tags :ajax => true, :display => {:theme => 'clean'}%>
+		<%= submit_tag "Send", :id => 'submit', :class => 'btn btn-large' %>
+		<% end %>
+		<div id='response'>
+		</div>
+	</div>
+</div>
+
+<script type='text/javascript'>
+	$('#sug_wrapper').hide();
+	$('#sug_toggle').click(function() {
+		$('#sug_wrapper').toggle("fast");
+	});
+	$('#sug_form').on('ajax:success', function(event, data, status, xhr) {
+		if(data.okay) {
+			Recaptcha.reload();
+			$('#sug_form').slideUp().delay(3000).slideDown();
+			$('#response').prepend(
+					"<div class='alert alert-success'>" +
+					"<button type='button' class='close' data-dismiss='alert'>×</button>" +
+					"<strong>Thanks for writing!</strong></div>");
+		} else {
+			var errors = "Invalid:";
+			
+					
+			if(data.errors.name) {
+				errors += " Name";
+				flash($('#sug_name'));
+			}
+			if(data.errors.email) {
+				errors += " Email"
+				flash($('#sug_email'));
+			}
+			if(data.errors.text) {
+				errors += " Text"
+				flash($('#sug_text'));
+			}
+			if(data.errors.cap) {
+				errors += " Captcha"
+				flash($('#dynamic_recaptcha'));
+			}
+			
+			$('#response').prepend(
+					"<div class='alert alert-error'>" +
+					"<button type='button' class='close' data-dismiss='alert'>×</button>" +
+					"<strong>Sorry! "+errors+"</strong></div>");
+		}
+		
+		function flash(item) {
+		item.animate({opacity: 0.2}, 200).delay(100).animate({opacity: 1.0}, 200).delay(100).animate({opacity: 0.2}, 200).delay(100).animate({opacity: 1.0}, 200);
+		}
+		console.log(data);
+	});
+</script>
+
