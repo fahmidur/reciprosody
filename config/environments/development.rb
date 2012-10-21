@@ -34,6 +34,7 @@ Reciprosody2::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = false #CHANGED FROM TRUE TO FALSE - TESTING ASSETS PIPELINE - SFR
+  config.serve_static_assets = false #Prevents precompiled assets being included twice - SFR
   
 	#SMTP Gmail Action Mailer - SFR
 	#require 'tlsmail'
