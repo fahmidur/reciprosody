@@ -1,0 +1,36 @@
+<%= form_for(@corpus, :multipart => true) do |f| %>
+  <% if @corpus.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@corpus.errors.count, "error") %> prohibited this corpus from being saved:</h2>
+
+      <ul>
+      <% @corpus.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <li>filename = <%= @filename %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :language, "Main Language" %>
+    <%= f.select :language, options_for_select(@langs) %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :file %>
+    <%= file_field_tag :file %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :description %><br />
+    <%= f.text_area :description , :class => 'big_desc'%>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

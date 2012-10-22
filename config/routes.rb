@@ -1,4 +1,6 @@
 Reciprosody2::Application.routes.draw do
+  resources :corpora
+
 	#----authenticaton-----------------------
   devise_for :users
 
@@ -6,10 +8,12 @@ Reciprosody2::Application.routes.draw do
 	resource :user
 	
 	#--------only a few static pages-------------------
+	resources :pages
 	root :to 					=> 'pages#index'
 	match 'about' 		=> 'pages#about'
 	match 'faq' 			=> 'pages#faq'
 	match 'contact'		=> 'pages#contact'
+	match 'perm'			=> 'pages#permission'
 	#--------------------------------------------------
 	
 	match '/faq_submit'	=> 'pages#faq_submit', :via => :get

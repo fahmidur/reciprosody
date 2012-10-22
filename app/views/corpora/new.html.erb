@@ -1,0 +1,9 @@
+<% content_for :javascript_includes do %>
+	<%= javascript_include_tag "corpus_new.js" %>
+<% end %>
+
+<h1>New corpus</h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Back', corpora_path, :class => 'btn' %>

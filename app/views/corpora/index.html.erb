@@ -1,0 +1,24 @@
+<h1>Corpora</h1>
+
+<% @corpora.each do |corpus| %>
+  <div class='corpi_item'>
+    <h4><%= corpus.name %></h4>
+    <h6>Language: <%= corpus.language %></h6>
+    
+    <p><%= corpus.description %></p>
+    
+    <%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
+    <% if user_signed_in? %>
+		  <td><%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %></td>
+		  <td><%= link_to 'Destroy', corpus, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini' %></td>
+		 <% end %>
+  </tr>
+  
+  </div>
+<% end %>
+</table>
+
+<br />
+<%if user_signed_in? %>
+	<%= link_to 'New Corpus', new_corpus_path, :class => 'btn' %>
+<% end %>

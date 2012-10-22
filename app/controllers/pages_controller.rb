@@ -15,6 +15,9 @@ class PagesController < ApplicationController
   	
   end
   
+  def permission
+  end
+  
   #-- submit a new faq --
   def faq_submit
   	question = params[:question]
