@@ -1,11 +1,15 @@
 <div class='center hero-unit'>
 	<h1>User Home</h1>
-	
-	
 	<br/>
+	
+	
 	<p>
-	Signed in as <%= current_user.email %>.<br/>
+	<h4><br/> <%= current_user.name%></h4>
+	<p><%= current_user.email %></p>
+	
+	<p>
 	Not you? Then <%= link_to "Sign out", destroy_user_session_path, :method => :delete %><br/>
 	</p>
 	
+	<p><a href='/users' class='btn'>Show all users</a></p>
 </div>

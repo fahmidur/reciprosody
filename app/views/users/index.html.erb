@@ -1,0 +1,14 @@
+<table class='pretty-table'>
+	<tr>
+		<th>Name</th>
+		<th>Email</th>
+	</tr>
+	
+	
+	<%@users.each do |user| %>
+	<tr>
+		<td><%=user.name%></td>
+		<td><a href='mailto:<%= user.email %>' target='_blank'><%=user.email%></a></td>
+	</tr>
+	<% end %>
+</table>

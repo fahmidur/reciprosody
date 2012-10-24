@@ -2,12 +2,14 @@ Reciprosody2::Application.routes.draw do
   resources :corpora do
   	get :autocomplete_language_name, :on => :collection
   end
-
+	
+	match 'users'	=> 'users#index'
 	#----authenticaton-----------------------
   devise_for :users
 
 	#----maps to users controller-------------
 	resource :user
+	
 	
 	#--------only a few static pages-------------------
 	resources :pages

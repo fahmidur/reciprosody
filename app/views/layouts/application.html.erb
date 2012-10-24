@@ -30,7 +30,7 @@
 				</ul>
 				<ul class='nav pull-right'>
 					<% if user_signed_in? %>
-						<li><a href='#'>Hello, <%= current_user.email %></a></li>
+						<li><a href='/users/edit'>Hello, <%= current_user.name %></a></li>
 					<%else%>
 					<%end%>
 				</ul>
