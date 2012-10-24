@@ -1,5 +1,5 @@
 class Corpus < ActiveRecord::Base
-  attr_accessible :description, :language, :name, :upload
+  attr_accessible :description, :language, :name, :upload, :duration, :num_speakers, :speaker_desc, :genre, :annotation, :license, :citation
   before_destroy :remove_dirs
   
   validates :name, :presence => true
