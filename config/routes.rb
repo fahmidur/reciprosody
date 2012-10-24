@@ -1,5 +1,7 @@
 Reciprosody2::Application.routes.draw do
-  resources :corpora
+  resources :corpora do
+  	get :autocomplete_language_name, :on => :collection
+  end
 
 	#----authenticaton-----------------------
   devise_for :users

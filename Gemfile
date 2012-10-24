@@ -26,6 +26,8 @@ gem 'jquery-rails'
 gem 'twitter-bootstrap-rails'
 gem 'devise'
 gem "recaptcha", :require => "recaptcha/rails"
+gem 'nifty-generators'
+gem "rails3-jquery-autocomplete"
 #gem 'tlsmail'
 
 #--------------------------------------

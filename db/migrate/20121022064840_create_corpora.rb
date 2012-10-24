@@ -4,7 +4,7 @@ class CreateCorpora < ActiveRecord::Migration
       t.string :name
       t.string :language
       t.text :description
-
+			
       t.timestamps
     end
   end

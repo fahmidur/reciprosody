@@ -1,12 +1,11 @@
 <%= form_for(@corpus, :multipart => true) do |f| %>
   <% if @corpus.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@corpus.errors.count, "error") %> prohibited this corpus from being saved:</h2>
-
+    <div id="error_explanation" class='alert alert-error'>
+    	 <button type="button" class="close" data-dismiss="alert">×</button>
+      <p><%= pluralize(@corpus.errors.count, "error") %> prohibited this corpus from being saved:</p>
       <ul>
       <% @corpus.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
-        <li>filename = <%= @filename %></li>
       <% end %>
       </ul>
     </div>
@@ -17,13 +16,13 @@
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :language, "Main Language" %>
-    <%= f.select :language, options_for_select(@langs) %>
+    <%= f.label :language, "Language" %>
+    <%= f.autocomplete_field :language, '/corpora/autocomplete_language_name' %>
   </div>
   
   <div class="field">
-    <%= f.label :file %>
-    <%= file_field_tag :file %>
+    <%= f.label :upload %>
+    <%= f.file_field :upload %>
   </div>
   
   <div class="field">

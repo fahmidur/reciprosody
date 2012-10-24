@@ -1,5 +1,6 @@
 class CorporaController < ApplicationController
 	before_filter :auth, :except => :index
+	autocomplete :language, :name
 	
   # GET /corpora
   # GET /corpora.json
@@ -27,7 +28,9 @@ class CorporaController < ApplicationController
   # GET /corpora/new.json
   def new
     @corpus = Corpus.new
-		@langs = ['English', 'Mandarin', 'Spanish', 'Hindi', 'Arabic', 'Portuguese', 'Bengali', 'Russian', 'Japanese', 'Punjabi', 'German', 'Javanese', 'Wu', 'Indonesian', 'Telugu', 'Vietnamese', 'Korean', 'French', 'Marathi', 'Tamil', 'Urdu', 'Turkish', 'Italian', 'Cantonese', 'Thai', 'Gujarati', 'Jin', 'Min', 'Persian', 'Polish', 'Pashto', 'Kannada', 'Xiang', 'Malayalam', 'Sundanese', 'Hausa', 'Oriya', 'Burmese', 'Hakka', 'Ukrainian', 'Bhojpuri', 'Tagalog', 'Yoruba', 'Maithili', 'Uzbek', 'Sindhi', 'Amharic', 'Fula', 'Romanian', 'Oromo', 'Igbo', 'Azerbaijani', 'Awadhi', 'Gan', 'Cebuano', 'Dutch', 'Kurdish', 'Serbo', 'Malagasy', 'Saraiki', 'Nepali', 'Sinhalese', 'Chittagonian', 'Zhuang', 'Khmer', 'Turkmen', 'Assamese', 'Madurese', 'Somali', 'Marwari', 'Magahi', 'Haryanvi', 'Hungarian', 'Chhattisgarhi', 'Greek', 'Chewa', 'Deccan', 'Akan', 'Kazakh', 'Min', 'Sylheti', 'Zulu', 'Czech', 'Kinyarwanda', 'Dhundhari', 'Haitian', 'Min', 'Ilokano', 'Quechua', 'Kirundi', 'Swedish', 'Hmong', 'Shona', 'Uyghur', 'Hiligaynon', 'Mossi', 'Xhosa', 'Belarusian', 'Balochi', 'Konkani'];
+		
+		logger.info "TEST"
+		
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @corpus }
@@ -42,27 +45,33 @@ class CorporaController < ApplicationController
   # POST /corpora
   def create
     @corpus = Corpus.new(params[:corpus])
-		@filename = params[:file]
+		@file = @corpus.upload_file
 		
-		@langs = ['English', 'Mandarin', 'Spanish', 'Hindi', 'Arabic', 'Portuguese', 'Bengali', 'Russian', 'Japanese', 'Punjabi', 'German', 'Javanese', 'Wu', 'Indonesian', 'Telugu', 'Vietnamese', 'Korean', 'French', 'Marathi', 'Tamil', 'Urdu', 'Turkish', 'Italian', 'Cantonese', 'Thai', 'Gujarati', 'Jin', 'Min', 'Persian', 'Polish', 'Pashto', 'Kannada', 'Xiang', 'Malayalam', 'Sundanese', 'Hausa', 'Oriya', 'Burmese', 'Hakka', 'Ukrainian', 'Bhojpuri', 'Tagalog', 'Yoruba', 'Maithili', 'Uzbek', 'Sindhi', 'Amharic', 'Fula', 'Romanian', 'Oromo', 'Igbo', 'Azerbaijani', 'Awadhi', 'Gan', 'Cebuano', 'Dutch', 'Kurdish', 'Serbo', 'Malagasy', 'Saraiki', 'Nepali', 'Sinhalese', 'Chittagonian', 'Zhuang', 'Khmer', 'Turkmen', 'Assamese', 'Madurese', 'Somali', 'Marwari', 'Magahi', 'Haryanvi', 'Hungarian', 'Chhattisgarhi', 'Greek', 'Chewa', 'Deccan', 'Akan', 'Kazakh', 'Min', 'Sylheti', 'Zulu', 'Czech', 'Kinyarwanda', 'Dhundhari', 'Haitian', 'Min', 'Ilokano', 'Quechua', 'Kirundi', 'Swedish', 'Hmong', 'Shona', 'Uyghur', 'Hiligaynon', 'Mossi', 'Xhosa', 'Belarusian', 'Balochi', 'Konkani'];
-				
-    respond_to do |format|
-      if @corpus.save
-        format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
-        format.json { render json: @corpus, status: :created, location: @corpus }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @corpus.errors, status: :unprocessable_entity }
-      end
-    end
+		logger.info "FILE = #{@file}"
+		
+		
+
+		@corpus.valid? #note to self, overwrites existing errors
+		if !@file
+  		@corpus.errors[:upload_file] = " is missing"
+		end
+		
+	  respond_to do |format|
+	    if @corpus.errors.none? && create_corpus() && @corpus.save
+	      format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
+	    else
+	      format.html { render action: "new" }
+	    end
+	  end
+	
   end
 
   # PUT /corpora/1
-  # PUT /corpora/1.json
   def update
     @corpus = Corpus.find(params[:id])
+
     respond_to do |format|
-      if @corpus.update_attributes(params[:corpus])
+    	if @corpus.update_attributes(params[:corpus])
         format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
         format.json { head :no_content }
       else
@@ -70,6 +79,8 @@ class CorporaController < ApplicationController
         format.json { render json: @corpus.errors, status: :unprocessable_entity }
       end
     end
+    
+
   end
 
   # DELETE /corpora/1
@@ -85,6 +96,54 @@ class CorporaController < ApplicationController
   end
   
   private
+  
+  def create_corpus
+  	archive_ext = get_archive_ext(@file.original_filename);
+  	if !archive_ext
+  		@corpus.errors[:file_type] = "must be zip or tar.gz or tgz"
+  		return false
+  	end
+  	
+  	#prepare xtract directory
+  	@corpus.utoken = gen_unique_token()
+  	
+  	logger.info "----utoken = #{@corpus.utoken}"
+  	
+  	xtract_dir = "corpora.files/#{@corpus.utoken}"
+  	Dir.mkdir xtract_dir unless Dir.exists? xtract_dir
+  	
+  	#prepare archive directory
+  	archive_dir = "corpora.archives/#{@corpus.utoken}"
+  	
+  	
+  	Dir.mkdir archive_dir unless Dir.exists? archive_dir
+  	archive_path = "#{archive_dir}/#{file_count(archive_dir)}.#{archive_ext}"
+  	logger.info "-----------------PATH = #{archive_path}"
+  	logger.info "-----------------FILETYPE = #{@file.class}"
+  	File.open(archive_path, "wb") {|f| f.write(@file.read)}
+  	
+  	return true
+  end
+  
+  
+  def gen_unique_token()
+  	utoken = ""
+  	begin
+  		utoken = SecureRandom.uuid
+  	end while Corpus.where(:utoken => utoken).exists?
+  	return utoken
+  end
+  
+  def get_archive_ext(string)
+  	return "tar.gz" if string =~ /\.tar\.gz$/
+  	return "tgz" if string =~ /\.tgz$/
+  	return "zip" if string =~ /\.zip$/
+  	return nil
+  end
+  
+  def file_count(dir)
+  	return Dir.glob("#{dir}/*").length
+  end
   
   def auth
   	if !user_signed_in?
