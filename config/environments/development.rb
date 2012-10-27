@@ -32,6 +32,7 @@ Reciprosody2::Application.configure do
   # Do not compress assets
   config.assets.compress = false
 
+
   # Expands the lines which load the assets
   config.assets.debug = true #CHANGED FROM TRUE TO FALSE - TESTING ASSETS PIPELINE - SFR
   config.serve_static_assets = false #Prevents precompiled assets being included twice - SFR

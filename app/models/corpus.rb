@@ -4,6 +4,7 @@ class Corpus < ActiveRecord::Base
   
   validates :name, :presence => true
   validates :language, :presence => true
+  validates :num_speakers, :inclusion => 1..9999
   #validates :description, :presence => true
   
   attr_accessor :upload_file

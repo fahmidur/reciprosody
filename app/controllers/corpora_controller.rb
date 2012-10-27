@@ -1,6 +1,7 @@
 class CorporaController < ApplicationController
 	before_filter :auth, :except => :index
 	autocomplete :language, :name
+	autocomplete :license, :name
 	
   # GET /corpora
   # GET /corpora.json
@@ -28,8 +29,6 @@ class CorporaController < ApplicationController
   # GET /corpora/new.json
   def new
     @corpus = Corpus.new
-		
-		logger.info "TEST"
 		
     respond_to do |format|
       format.html # new.html.erb

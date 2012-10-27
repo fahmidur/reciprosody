@@ -1,6 +1,7 @@
 Reciprosody2::Application.routes.draw do
   resources :corpora do
   	get :autocomplete_language_name, :on => :collection
+  	get :autocomplete_license_name, :on => :collection
   end
 	
 	match 'users'	=> 'users#index'

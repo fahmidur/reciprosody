@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121024141941) do
+ActiveRecord::Schema.define(:version => 20121027222923) do
 
   create_table "corpora", :force => true do |t|
     t.string   "name"
@@ -44,6 +44,10 @@ ActiveRecord::Schema.define(:version => 20121024141941) do
   end
 
   create_table "languages", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "licenses", :force => true do |t|
     t.string "name"
   end
 
