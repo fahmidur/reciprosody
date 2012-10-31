@@ -4,10 +4,13 @@ Reciprosody2::Application.routes.draw do
   	get :autocomplete_license_name, :on => :collection
   end
 	
-	match 'users'	=> 'users#index'
+	
 	#----authenticaton-----------------------
   devise_for :users
-
+  
+  
+	match 'users'	=> 'users#index'
+	
 	#----maps to users controller-------------
 	resource :user
 	
