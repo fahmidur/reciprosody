@@ -90,12 +90,18 @@ body {
 	margin-bottom:1em;
 	background-color:#fefefe;
 	border:1px solid #eee;
+	border-left:2px solid #eee;
 	padding:1em;
-	border-radius:5px;
+	color:#6d6d6d;
+	-webkit-transition-property:background, border, color;
+	-webkit-transition-duration:2s, 3s, 3s;
+	-webkit-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
 }
 .corpi_item:hover {
+		color:#2d2d2d;
 		background-color:#fafaff;
-		border:1px solid #EAEAFF;
+		border:1px solid #adadad;
+		border-left:2px solid #4FD5D6;
 }
 #corpus_name {
 }

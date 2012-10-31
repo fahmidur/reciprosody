@@ -28,12 +28,25 @@
 						<li><a href='/users/sign_in'>Sign in</a></li>
 					<%end%>
 				</ul>
+				
+
 				<ul class='nav pull-right'>
 					<% if user_signed_in? %>
-						<li><a href='/users/edit'>Hello, <%= current_user.name %></a></li>
+						<li>
+							<a href='#' class='dropdown-toggle' data-toggle='dropdown'>
+								<img src='assets/settings.png' width=20 height=20 />
+								<%= current_user.name %>
+								<b class='caret'></b>
+							</a>
+							<ul class='dropdown-menu'>
+								<li><a href='/users/edit'>Edit Account</a></li>
+								<li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
+							</ul>
+						</li>
 					<%else%>
 					<%end%>
 				</ul>
+				
 			</div>
 		</div>
 	</div>

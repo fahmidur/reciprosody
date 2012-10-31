@@ -121,9 +121,41 @@ class CorporaController < ApplicationController
   	logger.info "-----------------FILETYPE = #{@file.class}"
   	File.open(archive_path, "wb") {|f| f.write(@file.read)}
   	
+  	
+  	begin
+			#---now extract the archive based on ext--
+			if archive_ext == "tar.gz" || archive_ext == "tgz"
+				untar(archive_path, xtract_dir)
+			elsif archive_ext == "zip"
+			end
+		rescue => exception
+			#---something went wrong, so delete directories---
+			FileUtils.rm_rf("corpora.files/#{@corpus.utoken}/");
+  		FileUtils.rm_rf("corpora.archives/#{@corpus.utoken}/");
+  		@corpus.errors[:internal] = " issue extracting your archive"
+  		return false
+		end
+  	
   	return true
   end
   
+  def untar(tarpath, xtract_dir)
+  	strip = "--strip 1";
+  	nostrip = false
+  	#---do not remove container if container doesn't exist--
+  	files = `tar tf #{tarpath}`.split("\n")
+  	container = files[0][/^[^\/]+\//]
+  	files.each do |f|
+  		if(f[/^[^\/]+\//] != container)
+  			nostrip = true
+  			break
+  		end
+  	end
+  	strip = "" if nostrip
+  	#-------------------------------------------
+  	logger.info "tar zxf #{tarpath} -C #{xtract_dir} #{strip}"
+  	system("tar zxf #{tarpath} -C #{xtract_dir} #{strip}");
+  end
   
   def gen_unique_token()
   	utoken = ""
@@ -135,8 +167,8 @@ class CorporaController < ApplicationController
   
   def get_archive_ext(string)
   	return "tar.gz" if string =~ /\.tar\.gz$/
-  	return "tgz" if string =~ /\.tgz$/
-  	return "zip" if string =~ /\.zip$/
+  	return "tgz" 		if string =~ /\.tgz$/
+  	return "zip"		if string =~ /\.zip$/
   	return nil
   end
   

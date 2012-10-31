@@ -1,5 +1,11 @@
 <h1>Corpora</h1>
-
+<% if !user_signed_in? %>
+	<div class='alert alert-info'>
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		<h5>Please Sign-in or Register for download, view, edit, and upload corpora.</h5>
+	</div>
+<% end %>
+		 
 <% @corpora.each do |corpus| %>
   <div class='corpi_item'>
     <h4><%= corpus.name %></h4>
@@ -7,10 +13,11 @@
     
     <p><%= corpus.description %></p>
     
-    <%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
+    
     <% if user_signed_in? %>
-		  <td><%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %></td>
-		  <td><%= link_to 'Destroy', corpus, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini' %></td>
+    	<%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
+		  <%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
+		  <%= link_to 'Destroy', corpus, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini' %>
 		 <% end %>
   </tr>
   
