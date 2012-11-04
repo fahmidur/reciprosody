@@ -120,41 +120,64 @@ class CorporaController < ApplicationController
   	logger.info "-----------------PATH = #{archive_path}"
   	logger.info "-----------------FILETYPE = #{@file.class}"
   	File.open(archive_path, "wb") {|f| f.write(@file.read)}
-  	
-  	
+    
   	begin
 			#---now extract the archive based on ext--
 			if archive_ext == "tar.gz" || archive_ext == "tgz"
 				untar(archive_path, xtract_dir)
 			elsif archive_ext == "zip"
+				unzip(archive_path, xtract_dir)
 			end
 		rescue => exception
 			#---something went wrong, so delete directories---
-			FileUtils.rm_rf("corpora.files/#{@corpus.utoken}/");
-  		FileUtils.rm_rf("corpora.archives/#{@corpus.utoken}/");
+			#FileUtils.rm_rf("corpora.files/#{@corpus.utoken}/");
+  		#FileUtils.rm_rf("corpora.archives/#{@corpus.utoken}/");
+  		@corpus.remove_dirs
   		@corpus.errors[:internal] = " issue extracting your archive"
   		return false
 		end
+    
+    
   	
   	return true
   end
   
+  def unzip(zip_path, xtract_dir)
+  	files = `unzip -l #{zip_path}`.split("\n")
+  	files.shift(3); files.pop(2);
+  	files.map! {|f| f[30..-1]}
+    
+  	`unzip #{zip_path} -d #{xtract_dir}`
+    container = container(files)
+    if container
+        `mv #{xtract_dir}/#{container} #{xtract_dir}/#{@corpus.utoken}` #Safety - in case container contains folder with same name as container
+        `mv #{xtract_dir}/#{@corpus.utoken}/** #{xtract_dir}`
+        `rm -rf #{xtract_dir}/#{@corpus.utoken}`
+    end
+ 
+  end
+  
   def untar(tarpath, xtract_dir)
   	strip = "--strip 1";
-  	nostrip = false
-  	#---do not remove container if container doesn't exist--
   	files = `tar tf #{tarpath}`.split("\n")
-  	container = files[0][/^[^\/]+\//]
-  	files.each do |f|
-  		if(f[/^[^\/]+\//] != container)
-  			nostrip = true
-  			break
-  		end
-  	end
-  	strip = "" if nostrip
+    strip = "" if container(files) == nil
   	#-------------------------------------------
   	logger.info "tar zxf #{tarpath} -C #{xtract_dir} #{strip}"
   	system("tar zxf #{tarpath} -C #{xtract_dir} #{strip}");
+  end
+  
+  
+  
+  # returns the name of the container if there is one
+  # returns nil otherwise (when there is no container)
+  def container(files)
+  	container = files[0][/^[^\/]+\//]
+  	files.each do |f|
+  		if(f[/^[^\/]+\//] != container)
+  			return nil
+  		end
+  	end
+  	return container
   end
   
   def gen_unique_token()
