@@ -1,20 +1,21 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <b>Name:</b>
-  <%= @corpus.name %>
-</p>
+<h3 class='corpus_header'><%= @corpus.name %><span class='corpus_icon pull-right'></span></h3>
 
-<p>
-  <b>Language:</b>
-  <%= @corpus.language %>
-</p>
+<span class='corpi_l'>Language: <%= @corpus.language %> </span>
+<span class='corpi_l pull-right'>Duration: <%= @corpus.human_duration %></span><br/>
 
+
+<br/>
 <p>
-  <b>Description:</b>
+  <h5>Description:</h5>
   <%= @corpus.description %>
 </p>
+<p>
+   
+</p>
 
+<br/>
 
 <%= link_to 'Edit', edit_corpus_path(@corpus), :class => 'btn' %> &nbsp;
 <%= link_to 'Back', corpora_path, :class => 'btn' %>

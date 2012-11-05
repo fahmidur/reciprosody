@@ -1,5 +1,5 @@
 @import "twitter/bootstrap/bootstrap";
-body { 
+body {
 	padding-top: 60px;
 }
 
@@ -10,7 +10,7 @@ body {
 @iconWhiteSpritePath: asset-path('twitter/bootstrap/glyphicons-halflings-white.png');
 
 // Set the Font Awesome (Font Awesome is default. You can disable by commenting below lines)
-// Note: If you use asset_path() here, your compiled boostrap_and_overrides.css will not 
+// Note: If you use asset_path() here, your compiled boostrap_and_overrides.css will not
 //       have the proper paths. So for now we use the absolute path.
 @fontAwesomeEotPath: '/assets/fontawesome-webfont.eot';
 @fontAwesomeWoffPath: '/assets/fontawesome-webfont.woff';
@@ -84,7 +84,7 @@ body {
 	resize:none;
 }
 .field {
-	margin-bottom:1em;
+	margin-bottom:0.5em;
 }
 .corpi_item {
 	margin-bottom:1em;
@@ -103,14 +103,20 @@ body {
 		border:1px solid #adadad;
 		border-left:2px solid #4FD5D6;
 }
-#corpus_name {
-}
-.corpi_lang {
+.corpi_l {
 	font-weight:bold;
 	font-size:small;
 }
-#corpus_num_speakers {
-
+.corpus_header {
+  background-color:#fefefe;
+  border-bottom:1px solid #efefef;
+}
+.corpus_icon {
+  display:inline-block;
+  background-image:url('/assets/library.png');
+  width:32px;
+  height:32px;
+  margin-right:1em;
 }
 .pretty-table {
     overflow:hidden;
@@ -158,6 +164,5 @@ body {
 				-moz-border-radius-bottomright:5px;
 				-webkit-border-bottom-right-radius:5px; /* Saf3-4 */
 		}
-
 }
 

@@ -9,8 +9,10 @@
 <% @corpora.each do |corpus| %>
   <div class='corpi_item'>
     <h4><%= corpus.name %></h4>
-    <p class='corpi_lang'>Language: <%= corpus.language %></p>
     
+    <span class='corpi_l'><%= corpus.language %></span>
+    <span class='corpi_l pull-right'>Duration: <%= corpus.human_duration %> </span>
+    <br/>
     <p><%= corpus.description %></p>
     
     

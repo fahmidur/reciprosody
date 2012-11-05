@@ -1,8 +1,9 @@
 <%= form_for(@corpus, :multipart => true) do |f| %>
+
   <% if @corpus.errors.any? %>
   	<div class='row-fluid'>
   	
-		  <div id="error_explanation" class='alert alert-error span4'>
+		  <div id="error_explanation" class='alert alert-error span11'>
 		  	 <button type="button" class="close" data-dismiss="alert">×</button>
 		    <p><%= pluralize(@corpus.errors.count, "error") %> prohibited this corpus from being saved:</p>
 		    <ul>
@@ -26,23 +27,36 @@
 		  <%= f.label :language, "Language" %>
 		  <%= f.autocomplete_field :language, '/corpora/autocomplete_language_name' %>
 		</div>
-		
-
-  
-  </div> 
-  
-  <div class='row-fluid'>
- 		<div class='field span4'>
+    
+   	<div class='field span4'>
 			<%= f.label :num_speakers, "Number of Speakers" %>
 		  <%= f.number_field :num_speakers, :value => '1' %>
 		</div>
+    
+  </div>
+  <div class='row-fluid'>
+    <div class='field span4'>
+        <%= f.label :hours, "Hours"%>
+        <%= f.number_field :hours, :value => '0'%>
+    </div>
+    
+    <div class='field span4'>
+        <%= f.label :minutes, "Minutes"%>
+        <%= f.number_field :minutes, :value => '0'%>
+    </div>
+
+    <div class='field span4'>
+        <%= f.label :seconds, "Seconds"%>
+        <%= f.number_field :seconds, :value => '0'%>
+    </div>
+
+  </div>
   
+  <div class='row-fluid'>
   	 <div class='field span4'>
 			<%= f.label :speaker_desc, "Speaker Description" %>
 		  <%= f.text_field :speaker_desc, :placeholder => 'Male, Late 50s' %>
 		</div>
-  </div>
-  <div class='row-fluid'>
 		<div class='field span4'>
 			<%= f.label :genre, "Genre" %>
 		  <%= f.text_field :genre, :placeholder => 'Historical' %>
@@ -52,6 +66,10 @@
 			<%= f.label :annotation, "Annotation" %>
 		  <%= f.text_field :annotation %>
 		</div>
+  </div>
+  
+  <div class='row-fluid'>
+
   </div>
   
   <div class='row-fluid'>
@@ -69,7 +87,6 @@
   </div>
   
   <div class='row-fluid'>
-  
 		<div class="field span4">
 		  <%= f.label :description %>
 		  <%= f.text_area :description , :class => 'big_desc'%>
@@ -80,6 +97,7 @@
 		  <%= f.text_area :citation , :class => 'big_desc'%>
 		</div>
   </div>
+  
   <div class="actions">
     <%= f.submit %>
   </div>
