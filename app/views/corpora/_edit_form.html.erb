@@ -1,4 +1,4 @@
-<%= form_for(@corpus, :multipart => true) do |f| %>
+<%= form_for(@corpus, :multipart => true, :method => :post) do |f| %>
 
   <% if @corpus.errors.any? %>
   	<div class='row-fluid'>
@@ -37,17 +37,17 @@
   <div class='row-fluid'>
     <div class='field span4'>
         <%= f.label :hours, "Hours"%>
-        <%= f.number_field :hours, :value => 0%>
+        <%= f.number_field :hours%>
     </div>
     
     <div class='field span4'>
         <%= f.label :minutes, "Minutes"%>
-        <%= f.number_field :minutes, :value => 0%>
+        <%= f.number_field :minutes%>
     </div>
 
     <div class='field span4'>
         <%= f.label :seconds, "Seconds"%>
-        <%= f.number_field :seconds, :value => 0%>
+        <%= f.number_field :seconds%>
     </div>
 
   </div>

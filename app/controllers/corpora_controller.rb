@@ -1,5 +1,7 @@
 class CorporaController < ApplicationController
 	before_filter :auth, :except => :index
+	#before_filter :block, :only => [:edit, :update]
+	
 	autocomplete :language, :name
 	autocomplete :license, :name
 	
@@ -18,7 +20,17 @@ class CorporaController < ApplicationController
   # GET /corpora/1.json
   def show
     @corpus = Corpus.find(params[:id])
-
+		@archives = []
+		@archive_names = Dir.entries("corpora.archives/#{@corpus.utoken}").select {|n| n != ".." && n != "." }
+		
+		#begin
+			@archive_names.each do |n|
+				@archives.push ["V."+n[/\d+\.(zip|tgz|tar\.gz|)$/], n]
+				#@archives.push [n, n]
+			end
+		#rescue
+		#end
+		
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @corpus }
@@ -29,7 +41,7 @@ class CorporaController < ApplicationController
   # GET /corpora/new.json
   def new
     @corpus = Corpus.new
-		
+	
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @corpus }
@@ -40,14 +52,29 @@ class CorporaController < ApplicationController
   def edit
     @corpus = Corpus.find(params[:id])
   end
+  
+  # GET /corpora/1/download
+  def download
+  	@corpus = Corpus.find(params[:id])
+  	@filename = params[:name]
+  	
+  	#To-Do: Error/Evil checking
 
+  	archive_path = "corpora.archives/#{@corpus.utoken}/#{@filename}"
+  	
+  	if invalid_filename?(@filename) && !File.file?(archive_path)
+  		redirect_to '/perm'
+  	else
+  		send_file archive_path
+  	end
+  end
+	
   # POST /corpora
   def create
     @corpus = Corpus.new(params[:corpus])
 		@file = @corpus.upload_file
 		
 		logger.info "FILE = #{@file}"
-		
 		
 
 		@corpus.valid? #note to self, overwrites existing errors
@@ -64,13 +91,26 @@ class CorporaController < ApplicationController
 	  end
 	
   end
-
-  # PUT /corpora/1
-  def update
+ 
+  # POST /corpora/1 <-This is currently used for edit
+  def post_update
     @corpus = Corpus.find(params[:id])
+    
+		@corpus.upload = params[:corpus][:upload]
+		
+		@file = @corpus.upload_file
+		logger.info "---------------FILE = #{@file}"
 
+		@corpus.valid? #note to self, overwrites existing errors
+		if !@file
+			logger.info "----NO FILE----!!!!----"
+  		@corpus.errors[:upload_file] = " is missing"
+  	else
+  		create_corpus()
+		end
+		
     respond_to do |format|
-    	if @corpus.update_attributes(params[:corpus])
+    	if @corpus.update_attributes(params[:corpus]) && @corpus.save
         format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
         format.json { head :no_content }
       else
@@ -78,8 +118,33 @@ class CorporaController < ApplicationController
         format.json { render json: @corpus.errors, status: :unprocessable_entity }
       end
     end
-    
+  end
+  
+  # PUT /corpora/1
+  def update
+    @corpus = Corpus.find(params[:id])
 
+		@file = @corpus.upload_file
+		
+		logger.info "FILE = #{@file}"
+		
+
+		@corpus.valid? #note to self, overwrites existing errors
+		if !@file
+  		@corpus.errors[:upload_file] = " is missing"
+  	else
+  		create_corpus()
+		end
+		
+    respond_to do |format|
+    	if @corpus.update_attributes(params[:corpus]) && @corpus.save
+        format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @corpus.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # DELETE /corpora/1
@@ -104,7 +169,7 @@ class CorporaController < ApplicationController
   	end
   	
   	#prepare xtract directory
-  	@corpus.utoken = gen_unique_token()
+  	@corpus.utoken = gen_unique_token() if !@corpus.utoken
   	
   	logger.info "----utoken = #{@corpus.utoken}"
   	
@@ -113,10 +178,18 @@ class CorporaController < ApplicationController
   	
   	#prepare archive directory
   	archive_dir = "corpora.archives/#{@corpus.utoken}"
-  	
-  	
   	Dir.mkdir archive_dir unless Dir.exists? archive_dir
-  	archive_path = "#{archive_dir}/#{file_count(archive_dir)}.#{archive_ext}"
+  	
+  	#archive_name = @file.original_filename[0..-(archive_ext.length+2)]
+  	
+  	#Note: Using original filename + version doesn't work because
+  	# archive_name.zip --upload-> archive_name.0.zip --upload-> archive_name.0.1.zip --upload-> archive_name.0.1.2.zip
+  	# so it requires also stripping the original version number from the filename if it contains one
+  	# so it a bit messy for now. To-Do: I must fix this
+  	
+  	#For now: Use de-humanized version of corpus.name
+  	archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
+  	archive_path = "#{archive_dir}/#{archive_name}.#{file_count(archive_dir)}.#{archive_ext}"
   	logger.info "-----------------PATH = #{archive_path}"
   	logger.info "-----------------FILETYPE = #{@file.class}"
   	File.open(archive_path, "wb") {|f| f.write(@file.read)}
@@ -136,8 +209,6 @@ class CorporaController < ApplicationController
   		@corpus.errors[:internal] = " issue extracting your archive"
   		return false
 		end
-    
-    
   	
   	return true
   end
@@ -199,9 +270,19 @@ class CorporaController < ApplicationController
   	return Dir.glob("#{dir}/*").length
   end
   
+  def invalid_filename?(name)
+  	return true if name =~ /^\.\./
+  	return true if name =~ /\~/
+  	return false
+  end
+  
   def auth
   	if !user_signed_in?
   		redirect_to '/perm'
   	end
+  end
+  
+  def block
+  	redirect_to '/perm'
   end
 end

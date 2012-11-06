@@ -1,3 +1,7 @@
+<% content_for :javascript_includes do %>
+	<%= javascript_include_tag "corpus_index.js" %>
+<% end %>
+
 <h1>Corpora</h1>
 <% if !user_signed_in? %>
 	<div class='alert alert-info'>
@@ -19,13 +23,30 @@
     <% if user_signed_in? %>
     	<%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
 		  <%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
-		  <%= link_to 'Destroy', corpus, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini' %>
+		  <!--<%= link_to 'Destroy', corpus, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini' %>-->
+		  <a href="#delete-confirm-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right" data-toggle="modal">Delete</i></a>
 		 <% end %>
-  </tr>
-  
   </div>
+  
+  <div class="modal fade" id="delete-confirm-<%= corpus.id %>">
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">×</a>
+			<h3>Are you sure?</h3>
+		</div>
+		<div class="modal-body">
+			<p>Just checking.</p>
+		</div>
+		<div class="modal-footer">
+			<%= link_to 'Destroy', 'corpora/'+corpus.id.to_s, method: :delete, :class => 'btn' %>
+			<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+		</div>
+	</div>
+  
 <% end %>
-</table>
+
+
+
+
 
 <br />
 <%if user_signed_in? %>
