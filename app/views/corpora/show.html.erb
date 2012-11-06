@@ -1,70 +1,89 @@
 <p id="notice"><%= notice %></p>
 
-<h3 class='corpus_header'><%= @corpus.name %><span class='corpus_icon pull-right'></span></h3>
-<br/>
+<!--<span class='corpus_header'><%= @corpus.name %><span class='corpus_icon pull-right'></span></span>-->
 
-<div class='row-fluid'>
-	<div class='box span12'>
-		<span class='corpus_show_name'>Language</span> 
-		<span class='corpus_show_value'><%= @corpus.language %></span>
-	
-		<span class='corpi_l pull-right'>Duration: <%= @corpus.human_duration %></span>
-	</div>
-</div>
-
-<div class='row-fluid'>
-	<div class='box span4'>
-		<span class='corpus_show_name'>Speaker Description:</span>
-		<span class='corpus_show_value'><%= @corpus.speaker_desc %></span>
-	</div>
-	<div class='box span4'>
-		<span class='corpus_show_name'>Number of Speakers:</span>
-		<span class='corpus_show_value'><%= @corpus.num_speakers %></span>
-	</div>
-	
-	<div class='box span4'>
-		<span class='corpus_show_name'>Genre:</span>
-		<span class='corpus_show_value'><%= @corpus.genre %></span>
-	</div>
-</div>
-
-<div class='row-fluid'>
-	<div class='box span4'>
-		<span class='corpus_show_name'>Annotation:</span>
-		<span class='corpus_show_value'><%= @corpus.annotation %></span>
-	</div>
-	
-	<div class='box span4'>
-		<span class='corpus_show_name'>License:</span>
-		<span class='corpus_show_value'><%= @corpus.license %></span>
-	</div>
-	
-	<div class='box span4'>
-		<span class='corpus_show_name'>UUID</span>
-		<span class='corpus_show_value'><%= @corpus.utoken %> </span>
-	</div>
-	
-</div>
-
-<div class='row-fluid'>
-	<div class='box span4'>
-		<h5>Description</h5>
-		<%= @corpus.description %>
-	</div>
-	<div class='box span4'>
-		<h5>Citation</h5>
-		<%= @corpus.citation %>
-	</div>
-	
-	<div class='box span4'>
-		<%= form_tag("/corpora/#{@corpus.id}/download", :method => :get) do%>
-			<%= select_tag(:name, options_for_select(@archives), :class=>'download_select') %>
-			<input type='submit' class='btn btn-primary cdownload' value='Download Corpus'>
-		<% end %>
-	</div>
-</div>
+<ul class="nav nav-tabs">
+	<li class='corpus_name'><%= @corpus.name %></li>
+  <li class='pull-right active'><a href="#details" data-toggle="tab">Details</a></li>
+  <li class='pull-right'><a href="#files" data-toggle="tab">Files</a></li>
+</ul>
 
 <br/>
 
+<div class='tab-content'>
+	<div class='tab-pane active' id='details'>
+	
+		<div class='row-fluid'>
+			<div class='box span12'>
+				<span class='corpus_show_name'>Language</span> 
+				<span class='corpus_show_value'><%= @corpus.language %></span>
+	
+				<span class='pull-right'>
+					<span class='corpus_show_name'>Duration</span>
+					<span class='corpus_show_value'><%= @corpus.human_duration %></span>
+				</span>
+			</div>
+		</div>
+
+		<div class='row-fluid'>
+			<div class='box span4'>
+				<span class='corpus_show_name'>Speaker Description:</span>
+				<span class='corpus_show_value'><%= @corpus.speaker_desc %></span>
+			</div>
+			<div class='box span4'>
+				<span class='corpus_show_name'>Number of Speakers:</span>
+				<span class='corpus_show_value'><%= @corpus.num_speakers %></span>
+			</div>
+	
+			<div class='box span4'>
+				<span class='corpus_show_name'>Genre:</span>
+				<span class='corpus_show_value'><%= @corpus.genre %></span>
+			</div>
+		</div>
+
+		<div class='row-fluid'>
+			<div class='box span4'>
+				<span class='corpus_show_name'>Annotation:</span>
+				<span class='corpus_show_value'><%= @corpus.annotation %></span>
+			</div>
+	
+			<div class='box span4'>
+				<span class='corpus_show_name'>License:</span>
+				<span class='corpus_show_value'><%= @corpus.license %></span>
+			</div>
+	
+			<div class='box span4'>
+				<span class='corpus_show_name'>UUID</span>
+				<span class='corpus_show_value'><%= @corpus.utoken %> </span>
+			</div>
+	
+		</div>
+
+		<div class='row-fluid'>
+			<div class='box span4'>
+				<h5>Description</h5>
+				<%= @corpus.description %>
+			</div>
+			<div class='box span4'>
+				<h5>Citation</h5>
+				<%= @corpus.citation %>
+			</div>
+	
+			<div class='box span4'>
+				<%= form_tag("/corpora/#{@corpus.id}/download", :method => :get) do%>
+					<%= select_tag(:name, options_for_select(@archives), :class=>'download_select') %>
+					<input type='submit' class='btn btn-primary cdownload' value='Download Corpus'>
+				<% end %>
+			</div>
+		</div>
+		
+	</div> <!--End of Details -->
+	
+	<div class='tab-pane active' id='files'>
+	</div>
+	
+</div> <!--End of Tab Content-->
+
+<br/>
 <%= link_to 'Edit', edit_corpus_path(@corpus), :class => 'btn' %> &nbsp;
 <%= link_to 'Back', corpora_path, :class => 'btn' %>
