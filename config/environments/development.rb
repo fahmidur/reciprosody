@@ -41,7 +41,7 @@ Reciprosody2::Application.configure do
 	#require 'tlsmail'
 	#Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE);
 	
-	config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+	config.action_mailer.default_url_options = { :host => '108.29.43.202:3000' }
 	config.action_mailer.delivery_method = :smtp
 	config.action_mailer.perform_deliveries = true
 	config.action_mailer.raise_delivery_errors = true
