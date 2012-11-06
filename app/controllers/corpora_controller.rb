@@ -23,13 +23,18 @@ class CorporaController < ApplicationController
 		@archives = []
 		@archive_names = Dir.entries("corpora.archives/#{@corpus.utoken}").select {|n| n != ".." && n != "." }
 		
-		#begin
-			@archive_names.each do |n|
-				@archives.push ["V."+n[/\d+\.(zip|tgz|tar\.gz|)$/], n]
-				#@archives.push [n, n]
-			end
-		#rescue
-		#end
+		#--Sort from highest to lowest Version
+		@archive_names.sort! do |a, b|
+			logger.info("a=#{a} b=#{b}")
+			x = a.gsub(/\.#{get_archive_ext(a)}$/, '')[/\d+$/].to_i
+			y = b.gsub(/\.#{get_archive_ext(b)}$/, '')[/\d+$/].to_i
+			y <=> x
+		end
+		
+		@archive_names.each do |n|
+			@archives.push ["V."+n[/\d+\.(zip|tgz|tar\.gz|)$/], n]
+		end
+		
 		
     respond_to do |format|
       format.html # show.html.erb
@@ -174,7 +179,13 @@ class CorporaController < ApplicationController
   	logger.info "----utoken = #{@corpus.utoken}"
   	
   	xtract_dir = "corpora.files/#{@corpus.utoken}"
-  	Dir.mkdir xtract_dir unless Dir.exists? xtract_dir
+  	if Dir.exists? xtract_dir
+  		#--clear the directory--(for now)
+  		`rm -rf #{xtract_dir}/*`
+  	else
+  		Dir.mkdir xtract_dir
+  	end
+  	#Dir.mkdir xtract_dir unless Dir.exists? xtract_dir
   	
   	#prepare archive directory
   	archive_dir = "corpora.archives/#{@corpus.utoken}"
