@@ -1,20 +1,29 @@
-<div class='center hero-unit'>
+<div class='center hero-unit grad1'>
 	<h1><%= current_user.name%></h1>
-	<p><%= current_user.email %></p>
+	<small><%= current_user.email %></small>
 	
 	<p>
 	<!--Not you? Then <%= link_to "Sign out", destroy_user_session_path, :method => :delete %><br/>-->
 	</p>
-	
-	<p><a href='/users' class='btn'>Show all users</a></p>
 </div>
-<script type="text/javascript">
- $(function() {
-        /* For zebra striping */
-        $("table tr:nth-child(odd)").addClass("odd-row");
-        /* For cell text alignment */
-        $("table td:first-child, table th:first-child").addClass("first");
-        /* For removing the last border */
-        $("table td:last-child, table th:last-child").addClass("last");
-});
-</script>
+
+<div class='row-fluid'>
+	<div class="box span2">
+		<ul class="nav nav-tabs nav-stacked">
+			<li class='l-nav'><a href='/users' class=''>Show All Users</a></li>
+			<li class='l-nav'><a href='/user/invite' class=''>Invite a Friend</a></li>
+
+			<li class='l-nav'><a href='/corpora' class=''>View Corpora</a></li>
+			<li><a href='/corpora/new' class=''>New Corpus</a></li>
+		</ul>
+	</div>
+	
+	<div class='box span5'>
+		
+	</div>
+	
+	<div class='box span5'>
+	</div>
+	
+</div>
+

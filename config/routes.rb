@@ -13,11 +13,15 @@ Reciprosody2::Application.routes.draw do
 	#----authenticaton-----------------------
   devise_for :users
   
-  
 	match 'users'	=> 'users#index'
 	
 	#----maps to users controller-------------
-	resource :user
+	resource :user do
+		member do
+			get :invite
+			post :invite_user
+		end
+	end
 	
 	
 	#--------only a few static pages-------------------

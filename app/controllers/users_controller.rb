@@ -6,8 +6,44 @@ class UsersController < ApplicationController
 		
 	end
 	
+	# GET /user/
 	def index
 		@users = User.all
+	end
+	
+	# GET /user/invite
+	def invite
+		
+	end
+	
+	# POST /users/invite_user
+	def invite_user
+		name	= params[:name]
+		email = params[:email]
+		
+		respond_to do |format|
+			if name != nil && !name.blank? && email != nil && !email.blank? && email_valid(email) && User.find_by_email(email) == nil
+				logger.info("****Name  = #{name}")
+				logger.info("****Email = #{email}")
+				#--Create and Save User--
+				@tmp_password = Devise.friendly_token[0,6]
+				@new_user = User.new(:name => name.titleize, :email => email, :password => @tmp_password, :password_confirmation => @tmp_password)
+				logger.info("**NEW USER**\n")
+				logger.info(@new_user.to_s)
+				
+				@new_user.save
+				
+				#--Email temporary password to @new_user
+				UsersMailer.invitation_mail(current_user, @new_user, @tmp_password).deliver
+				
+				format.html #renders success message
+			else
+				logger.info("****Invalid Input")
+				format.html { redirect_to '/user/invite', :notice => "Invalid Input" }
+			end
+    end  
+      
+ 
 	end
 	
 	private
@@ -16,6 +52,11 @@ class UsersController < ApplicationController
 		if !user_signed_in?
 			redirect_to '/perm'
 		end
+	end
+	
+	def email_valid(email)
+		return true if email =~ /^.+\@.+\..+$/
+		return false
 	end
 	
 end

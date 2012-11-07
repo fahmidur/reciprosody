@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  
+  <body>
+  	<p><%= @to_user.name %>,</p>
+  	
+    <h4>You've been invited to Reciprosody.</h4>
+    
+    <p><%= @from_user.name %> would like you to join Reciprosody</p>
+    <p>An account has already been created in your name with the email address: <%= @to_user.email %></p>
+    <p>Your temporary password is <span style="font-weight:bold; padding:5px; background-color:#efefef"><%= @tmp_password %></span></p>
+    
+		<p>Sincerely,<br/>
+		The Reciprosody Team</p>
+		
+  </body>
+</html>
