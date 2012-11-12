@@ -3,19 +3,20 @@ class PagesController < ApplicationController
 	
 	before_filter :user_redirect, :only => [:index]
   
+  #----Static Pagse---
   def index
-  	
   end
   
   def about
-  	
   end
   
   def faq
-  	
   end
   
   def permission
+  end
+  
+  def welcome
   end
   
   #-- submit a new faq --

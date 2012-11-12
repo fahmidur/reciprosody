@@ -1,10 +1,15 @@
 <h2>Resend confirmation instructions</h2>
-
 <%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post }) do |f| %>
-  <%= devise_error_messages! %>
-
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email %></div>
+	<% if !resource.errors.empty? %>
+		<div class='alert alert-error'>
+			<button type="button" class="close" data-dismiss="alert">×</button>
+			<%= devise_error_messages! %>
+		</div>
+	<% end %>
+  <div>
+  	<%= f.label :email %>
+  	<%= f.email_field :email %>
+  </div>
 
   <div><%= f.submit "Resend confirmation instructions" %></div>
 <% end %>

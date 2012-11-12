@@ -1,42 +1,55 @@
 <h2>Edit <%= resource_name.to_s.humanize %></h2>
-
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
 
-
-	  <%= devise_error_messages! %>
-
-
+	<% if !resource.errors.empty? %>
+	<div class='alert alert-error'>
+		<button type="button" class="close" data-dismiss="alert">×</button>
+	  	<%= devise_error_messages! %>
+	</div>
+	<% end %>
 	
-  <div>
-		<%= f.label :name %><br/>
+  <div class='field row-fluid'>
+		<%= f.label :name %>
 		<%= f.text_field :name %><br/>	
 	</div>
 				
-  <div>
-  	<%= f.label :email %><br />
-	  <%= f.email_field :email %>
+  <div class='field row-fluid'>
+  	<%= f.label :email %>
+	  <%= f.email_field :email, 'title' => 'Reminder', 'data-content' => 'Please enter a valid email address' %>
 	</div>
 
-  <div>
-  	<%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-  	<%= f.password_field :password, :autocomplete => "off" %>
+  <div class='field row-fluid'>
+  	<%= f.label :password %>
+  	<%= f.password_field :password, :autocomplete => "off", 'title' => 'Reminder', 'data-content' => "Leave blank if you don't want to change anything." %>
   </div>
 
-  <div>
-  	<%= f.label :password_confirmation %><br />
-  	<%= f.password_field :password_confirmation %>
+  <div class='field row-fluid'>
+  	<%= f.label :password_confirmation %>
+  	<%= f.password_field :password_confirmation, 'title' => 'Reminder', 'data-content' => "Make sure this matches your password" %>
   </div>
 
-  <div>
-  	<%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-  	<%= f.password_field :current_password %>
+  <div class='field row-fluid'>
+  	<%= f.label :current_password %>
+  	<%= f.password_field :current_password, 'title' => 'Reminder', 'data-content' => "We need your current password to confirm your changes" %>
   </div>
 
-  <div><%= f.submit "Update" %></div>
+  <div><%= f.submit "Update", :class => 'btn' %></div>
 <% end %>
 
-<h3>Cancel my account</h3>
+<br/>
 
-<p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %>.</p>
 
-<%= link_to "Back", :back %>
+<div class='gbox'>
+
+	<h3>Cancel My Account</h3>
+
+	<p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %>.</p>
+
+</div>
+<%= link_to "Back", 'javascript:history.go(-1)', :class => 'btn' %>
+
+<script type='text/javascript'>
+	$(function() {
+		$('input').popover({trigger:'focus', placement: 'right'});
+	});
+</script>

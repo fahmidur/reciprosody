@@ -11,7 +11,7 @@ Reciprosody2::Application.routes.draw do
 	
 	
 	#----authenticaton-----------------------
-  devise_for :users
+  devise_for :users, :controllers => {:registrations => "registrations"}
   
 	match 'users'	=> 'users#index'
 	
@@ -31,6 +31,7 @@ Reciprosody2::Application.routes.draw do
 	match 'faq' 			=> 'pages#faq'
 	match 'contact'		=> 'pages#contact'
 	match 'perm'			=> 'pages#permission'
+	match 'welcome'		=> 'pages#welcome'
 	#--------------------------------------------------
 	
 	match '/faq_submit'	=> 'pages#faq_submit', :via => :get
