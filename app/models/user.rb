@@ -8,6 +8,16 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name
   
-  # attr_accessible :title, :body
+  has_many :corpora, :through => :memberships
+  has_many :memberships
+  
+  scope :owners,		where(:memberships => {role: 'owner'})
+  scope :approvers,		where(:memberships => {role: 'approver'})
+  scope :members,		where(:memberships => {role: 'member'})
+  
+  
+  def email_format
+  	"#{self.name}<#{self.email}>"
+  end
   
 end

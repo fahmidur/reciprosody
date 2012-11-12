@@ -96,6 +96,12 @@
 		  <%= f.label :citation %>
 		  <%= f.text_area :citation , :class => 'big_desc'%>
 		</div>
+		
+		<div class="field span4">
+		  <label for='members'>Owner</label>
+		  <%= f.autocomplete_field :user, '/corpora/autocomplete_user_name', :value => current_user.email_format %>
+		</div>
+		
   </div>
   
   <div class="actions">

@@ -1,5 +1,9 @@
 class Corpus < ActiveRecord::Base
   attr_accessible :description, :language, :name, :upload, :duration, :num_speakers, :speaker_desc, :genre, :annotation, :license, :citation, :hours, :minutes, :seconds
+
+  has_many :users, :through => :memberships
+  has_many :memberships, :dependent => :delete_all #cascading delete
+  
   before_destroy :remove_dirs
   
   before_validation :set_duration
@@ -12,6 +16,26 @@ class Corpus < ActiveRecord::Base
   attr_accessor :upload_file, :hours, :minutes, :seconds
   
   after_find :set_times
+  
+  #-------------------memberships-------------------------
+  accepts_nested_attributes_for :memberships, :users
+  scope :owner_of,			where(memberships: {role: 'owner'})
+  scope :approver_of,		where(memberships: {role: 'approver'})
+  scope :member_of, 		where(memberships: {role: 'member'})
+  
+  def owners
+  	self.users.owners.all
+  end
+  
+  def approvers
+  	self.users.approvers.all
+  end
+  
+  def members
+  	self.users.members.all
+  end
+  #--------------------------------------------------------
+  
   
   #--Attribute_writer for @upload_file
   def upload=(upload_file)

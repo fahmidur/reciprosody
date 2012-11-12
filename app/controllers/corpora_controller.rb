@@ -4,6 +4,7 @@ class CorporaController < ApplicationController
 	
 	autocomplete :language, :name
 	autocomplete :license, :name
+	autocomplete :user, :name, :full => true, :display_value => :email_format, :extra_data => [:email]
 	
   # GET /corpora
   # GET /corpora.json
@@ -76,7 +77,10 @@ class CorporaController < ApplicationController
 	
   # POST /corpora
   def create
-    @corpus = Corpus.new(params[:corpus])
+  	paramHash = params[:corpus]
+  	owner_text = paramHash.delete('user')
+  	
+    @corpus = Corpus.new(paramHash)
 		@file = @corpus.upload_file
 		
 		logger.info "FILE = #{@file}"
@@ -87,8 +91,20 @@ class CorporaController < ApplicationController
   		@corpus.errors[:upload_file] = " is missing"
 		end
 		
+		owner_email = ""
+		if owner_text =~ /\<(.+)\>/
+			owner_email = $1
+		end
+		
+		@owner = User.find_by_email(owner_email);
+  	if !@owner
+			@corpus.errors[:owner] = " does not exist. Please invite owner. "  	
+  	end
+  	
+		
 	  respond_to do |format|
 	    if @corpus.errors.none? && create_corpus() && @corpus.save
+	    	Membership.create(:user_id => @owner.id, :corpus_id => @corpus.id, :role => 'owner');
 	      format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
 	    else
 	      format.html { render action: "new" }
@@ -156,7 +172,9 @@ class CorporaController < ApplicationController
   # DELETE /corpora/1.json
   def destroy
     @corpus = Corpus.find(params[:id])
-    @corpus.destroy
+    if(@corpus.owners.include?(current_user()))
+    	@corpus.destroy
+    end
 
     respond_to do |format|
       format.html { redirect_to corpora_url }
