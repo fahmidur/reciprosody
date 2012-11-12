@@ -16,3 +16,5 @@
 
 #ignore these folders -SFR
 .redcar
+corpora.archives/*
+corpora.files/*
