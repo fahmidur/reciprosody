@@ -28,8 +28,6 @@ gem 'devise'
 gem "recaptcha", :require => "recaptcha/rails"
 gem 'nifty-generators'
 gem "rails3-jquery-autocomplete"
-#gem 'tlsmail'
-
 #--------------------------------------
 
 
@@ -38,6 +36,8 @@ gem "rails3-jquery-autocomplete"
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
+
+
 
 # Use unicorn as the app server
 # gem 'unicorn'

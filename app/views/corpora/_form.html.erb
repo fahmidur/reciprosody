@@ -12,7 +12,6 @@
 		    <% end %>
 		    </ul>
 		  </div>
-    
     </div>
   <% end %>
 	
@@ -98,8 +97,7 @@
 		</div>
 		
 		<div class="field span4">
-		  <label for='members'>Owner</label>
-		  <%= f.autocomplete_field :user, '/corpora/autocomplete_user_name', :value => current_user.email_format %>
+		  <%= render 'members', :f => f%>
 		</div>
 		
   </div>
