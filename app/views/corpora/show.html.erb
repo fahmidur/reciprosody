@@ -80,7 +80,7 @@
 		
 		<div class='row-fluid'>
 			<div class='box span4'>
-				<h5>Owners</h5>
+				<h5 id='owners_hd'><%= pluralize(@corpus.owners.size, 'Owner', 'Owners') %></h5>
 
 					<% @corpus.owners.each do |owner| %>
 							<div class='member'>
@@ -90,7 +90,17 @@
 					<% end %>
 
 			</div>
+			
+			<div class='box span4'>
+				<h5 id='approvers_hd'><%= pluralize(@corpus.approvers.size, 'Approver', 'Approvers') %> </h5>
+			</div>
+			
+			<div class='box span4'>
+				<h5 id='members_hd'><%= pluralize(@corpus.members.size, 'Member', 'Members') %> </h5>
+			</div>
+			
 		</div>
+		
 		
 	</div> <!--End of Details -->
 	

@@ -78,7 +78,7 @@ class CorporaController < ApplicationController
   # POST /corpora
   def create
   	paramHash = params[:corpus]
-  	owner_text = paramHash.delete('user')
+  	owner_text = paramHash.delete('owner')
   	
     @corpus = Corpus.new(paramHash)
 		@file = @corpus.upload_file
