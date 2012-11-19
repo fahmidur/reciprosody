@@ -43,12 +43,18 @@ Reciprosody2::Application.configure do
 	
   #-SFR Home Server
 	# config.action_mailer.default_url_options = { :host => '108.29.43.202:3000' }
-	config.action_mailer.default_url_options = { :host => '127.0.0.1:3000' }
+	
+	#-Localhost for Testing
+	#config.action_mailer.default_url_options = { :host => '127.0.0.1:3000' }
+	
+	#-Development machine i.e Jaguare
+	config.action_mailer.default_url_options = { :host => 'http://jaguar.cs.qc.cuny.edu/' }
   
 	config.action_mailer.delivery_method = :smtp
 	config.action_mailer.perform_deliveries = true
 	config.action_mailer.raise_delivery_errors = true
 
+  
 	config.action_mailer.smtp_settings = {
 		:enable_starttls_auto => true,
 		:address				=> "smtp.gmail.com",
@@ -56,6 +62,7 @@ Reciprosody2::Application.configure do
 		:authenticaton	=> :plain,
 		:user_name 			=> "WebDevMailer1@gmail.com",
 		:password				=> "itdoesnotmatter",
-		:host						=> "localhost:3000"
+		:host						=> "localhost:3000" 
 	}
+	
 end

@@ -85,7 +85,7 @@
 					<% @corpus.owners.each do |owner| %>
 							<div class='member'>
 								<span class='member_name'><%= owner.name %></span>
-								<span class='member_email pull-right'><a href="mailto:<%= owner.email%>" class='btn btn-mini' target='_BLANK'><%= owner.email %></a></span>
+								<span class='member_email pull-right'><a href="mailto:<%= owner.email%>" class='btn btn-mini' target='_BLANK'><i class='icon-envelope'></i>&nbsp;<%= owner.email %></a></span>
 							</div>
 					<% end %>
 

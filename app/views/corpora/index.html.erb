@@ -25,7 +25,7 @@
 		  <%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
 		  <!--<%= link_to 'Destroy', corpus, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini' %>-->
 		  <% if corpus.owners.include?(current_user())%>
-		  	<a href="#delete-confirm-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right" data-toggle="modal">Delete</i></a>
+		  	<a href="#delete-confirm-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><i class='icon-remove'></i>&nbsp; Delete</a>
 		  <% end %>
 		  
 		 <% end %>

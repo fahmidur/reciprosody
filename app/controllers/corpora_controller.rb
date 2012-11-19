@@ -46,10 +46,18 @@ class CorporaController < ApplicationController
 	# GET /corpora/1/manage_members
 	def manage_members
 		@corpus = Corpus.find_by_id(params[:id])
+		
+		
+		
 		#--only owners can manage members--
 		if @corpus == nil || !@corpus.owners.include?(current_user())
 			redirect_to '/perm'
 		end
+		
+		@owners = @corpus.owners
+		@approvers = @corpus.approvers
+		@members = @corpus.members
+		
 	end
 	
 	# GET corpora/1/add_member
@@ -59,6 +67,10 @@ class CorporaController < ApplicationController
 	# params[role]  = 'owner'
 	def add_member
 		
+	end
+	
+	def get_members
+	  
 	end
 	
   # GET /corpora/new
