@@ -4,6 +4,7 @@ Reciprosody2::Application.routes.draw do
   resources :corpora do
   	member do
   		get :download
+  		get :manage_members
   	end
   	get :autocomplete_language_name,	:on => :collection
   	get :autocomplete_license_name,		:on => :collection

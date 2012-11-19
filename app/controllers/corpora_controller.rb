@@ -43,6 +43,24 @@ class CorporaController < ApplicationController
     end
   end
 
+	# GET /corpora/1/manage_members
+	def manage_members
+		@corpus = Corpus.find_by_id(params[:id])
+		#--only owners can manage members--
+		if @corpus == nil || !@corpus.owners.include?(current_user())
+			redirect_to '/perm'
+		end
+	end
+	
+	# GET corpora/1/add_member
+	# Ajax - Adds Member. i.e.
+	# params[:id] = Corpus.id
+	# params[email] = 's.f.reza@gmail.com'
+	# params[role]  = 'owner'
+	def add_member
+		
+	end
+	
   # GET /corpora/new
   # GET /corpora/new.json
   def new
