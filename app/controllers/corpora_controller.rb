@@ -221,21 +221,21 @@ class CorporaController < ApplicationController
   		return false
   	end
   	
-  	#prepare xtract directory
+  	# create extract directory parent if necessary
+  	xtract_dir = "corpora.files"
+  	Dir.mkdir xtract_dir unless  Dir.exists? xtract_dir
+  	# prepare xtract directory
   	@corpus.utoken = gen_unique_token() if !@corpus.utoken
-  	
   	logger.info "----utoken = #{@corpus.utoken}"
-  	
   	xtract_dir = "corpora.files/#{@corpus.utoken}"
-  	if Dir.exists? xtract_dir
-  		#--clear the directory--(for now)
-  		`rm -rf #{xtract_dir}/*`
-  	else
-  		Dir.mkdir xtract_dir
-  	end
-  	#Dir.mkdir xtract_dir unless Dir.exists? xtract_dir
   	
-  	#prepare archive directory
+  	Dir.mkdir xtract_dir unless Dir.exists? xtract_dir
+  	`rm -rf #{xtract_dir}/*` #--clear the directory--(for now)
+  	
+  	# create archive directory parent if necessary
+  	archive_dir = "corpora.archives"
+  	Dir.mkdir archive_dir unless Dir.exists? archive_dir
+  	# prepare archive directory
   	archive_dir = "corpora.archives/#{@corpus.utoken}"
   	Dir.mkdir archive_dir unless Dir.exists? archive_dir
   	
