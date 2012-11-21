@@ -1,8 +1,8 @@
 Reciprosody2::Application.routes.draw do
-	match 'corpora/:id'	=> 'corpora#post_update', :via => :post
-	
+	#match 'corpora/:id'	=> 'corpora#post_update', :via => :post
   resources :corpora do
   	member do
+  	  post :update
   		get :download
   		get :manage_members
   	end

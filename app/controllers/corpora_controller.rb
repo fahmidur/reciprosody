@@ -1,9 +1,9 @@
 class CorporaController < ApplicationController
-	before_filter :auth, :except => :index
-	#before_filter :block, :only => [:edit, :update]
+	before_filter :user_filter, :except => :index
+	before_filter :owner_filter, :only => [:edit, :update, :destroy]
 	
 	autocomplete :language, :name
-	autocomplete :license, :name
+	autocomplete :license, :named
 	autocomplete :user, :name, :full => true, :display_value => :email_format, :extra_data => [:email]
 	
   # GET /corpora
@@ -143,10 +143,13 @@ class CorporaController < ApplicationController
 	
   end
  
-  # POST /corpora/1 <-This is currently used for edit
-  def post_update
+  # POST /corpora/1 
+  # This is currently used for edits
+  #
+  # FILTERED_BY: owner_filter
+  #
+  def update
     @corpus = Corpus.find(params[:id])
-    
 		@corpus.upload = params[:corpus][:upload]
 		
 		@file = @corpus.upload_file
@@ -170,41 +173,16 @@ class CorporaController < ApplicationController
       end
     end
   end
-  
-  # PUT /corpora/1
-  def update
-    @corpus = Corpus.find(params[:id])
-
-		@file = @corpus.upload_file
-		
-		logger.info "FILE = #{@file}"
-		
-
-		@corpus.valid? #note to self, overwrites existing errors
-		if !@file
-  		@corpus.errors[:upload_file] = " is missing"
-  	else
-  		create_corpus()
-		end
-		
-    respond_to do |format|
-    	if @corpus.update_attributes(params[:corpus]) && @corpus.save
-        format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @corpus.errors, status: :unprocessable_entity }
-      end
-    end
-  end
 
   # DELETE /corpora/1
   # DELETE /corpora/1.json
+  #
+  # FILTERED_BY: owner_filter
+  #
   def destroy
     @corpus = Corpus.find(params[:id])
-    if(@corpus.owners.include?(current_user()))
-    	@corpus.destroy
-    end
+    @corpus.destroy
+
 
     respond_to do |format|
       format.html { redirect_to corpora_url }
@@ -212,7 +190,9 @@ class CorporaController < ApplicationController
     end
   end
   
-  private
+  #---------------------------------------------------------------------------
+  private #-------------------------------------------------------------------
+  #---------------------------------------------------------------------------
   
   def create_corpus
   	archive_ext = get_archive_ext(@file.original_filename);
@@ -335,13 +315,12 @@ class CorporaController < ApplicationController
   	return false
   end
   
-  def auth
-  	if !user_signed_in?
-  		redirect_to '/perm'
-  	end
+  def user_filter
+  	redirect_to '/perm' unless user_signed_in?
   end
   
-  def block
-  	redirect_to '/perm'
+  def owner_filter
+    @corpus = Corpus.find_by_id(params[:id])
+    redirect_to '/perm' unless @corpus.owners.include?(current_user())
   end
 end
