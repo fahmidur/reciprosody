@@ -5,6 +5,8 @@ Reciprosody2::Application.routes.draw do
   	  post :update
   		get :download
   		get :manage_members
+  		get :add_member
+  		delete :remove_member
   	end
   	get :autocomplete_language_name,	:on => :collection
   	get :autocomplete_license_name,		:on => :collection

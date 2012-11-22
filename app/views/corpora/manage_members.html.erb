@@ -35,8 +35,8 @@
       </div>
       
       <div class='span4 btn-group hButton'>
-        <a href="#update-confirm-<%=mem.id%>" data-id="<%= mem.id %>" class="update-confirm btn btn-small" data-toggle="modal">Update</a>
-        <a href="#delete-confirm" data-id="<%= mem.id %>" data-name="<%= mem.user.name %>" data-cid='<%= @corpus.id %>'class="delete-confirm btn btn-small" data-toggle="modal"><i class='icon-remove'></i></a>
+        <a href="#update-confirm-<%=mem.id%>" data-id="<%= mem.id %>" class="update-confirm btn" data-toggle="modal">Update</a>
+        <a href="#delete-confirm" data-id="<%= mem.id %>" data-name="<%= mem.user.name %>" data-cid='<%= @corpus.id %>'class="delete-confirm btn" data-toggle="modal"><i class='icon-remove'></i></a>
       </div>
       
     </div>
@@ -52,7 +52,7 @@
         <h3>Are you sure?</h3>
       </div>
       <div class="modal-body">
-        <p id='deleteMsg'>You're about to remove <span id='memName'>MEMNAME</span> as <span id='memRole'>MEMROLE</span> of <span class='corpusName'><i class='icon-book'></i><%= @corpus.name %></span></p>
+        <p id='deleteMsg'>You're about to remove <span id='memName'>MEMNAME</span> as <span id='memRole'>MEMROLE</span> of <span class='corpusName'><i class='icon-book'></i>&nbsp;<%= @corpus.name %></span></p>
       </div>
       <div class="modal-footer">
         <%= link_to 'Yes', '#', method: :delete, :class => 'btn', :id => 'yesDelete'%>

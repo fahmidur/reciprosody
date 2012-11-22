@@ -15,6 +15,6 @@ $(function() {
     $('#memName').html(memName);
     $('#memRole').html(memRole);
     
-    $('#yesDelete').attr('href', '/corpus/'+corId+'/remove_member?member_id='+memId);
+    $('#yesDelete').attr('href', '/corpora/'+corId+'/remove_member?member_id='+memId);
   });
 });
