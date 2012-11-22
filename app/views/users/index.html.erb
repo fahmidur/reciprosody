@@ -8,7 +8,7 @@
 	<%@users.each do |user| %>
 	<tr>
 		<td><%=user.name%></td>
-		<td><a href='mailto:<%= user.email %>' target='_blank'><%=user.email%></a></td>
+		<td><a href="mailto:<%= user.email%>" class='btn btn-mini' target='_BLANK'><i class='icon-envelope'></i>&nbsp;<%= user.email %></a></td>
 	</tr>
 	<% end %>
 </table>

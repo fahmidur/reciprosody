@@ -1,6 +1,6 @@
 class CorporaController < ApplicationController
 	before_filter :user_filter, :except => :index
-	before_filter :owner_filter, :only => [:edit, :update, :destroy]
+	before_filter :owner_filter, :only => [:edit, :update, :destroy, :manage_members, :add_member, :remove_member]
 	
 	autocomplete :language, :name
 	autocomplete :license, :named
@@ -8,9 +8,12 @@ class CorporaController < ApplicationController
 	
   # GET /corpora
   # GET /corpora.json
+  #
+	# FILTERED_BY: nothing
+	#
   def index
     @corpora = Corpus.all
-		
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @corpora }
@@ -44,33 +47,44 @@ class CorporaController < ApplicationController
   end
 
 	# GET /corpora/1/manage_members
+	#
+	# FILTERED_BY: owner_filter
+	# ACTS_AS: get_members
 	def manage_members
 		@corpus = Corpus.find_by_id(params[:id])
 		
+		@memberships = @corpus.memberships.includes(:user)
 		
-		
-		#--only owners can manage members--
-		if @corpus == nil || !@corpus.owners.include?(current_user())
-			redirect_to '/perm'
+		#-Both Formats are Used
+		respond_to do |format|
+		  format.html
+		  format.json { render json: [@memberships] }
 		end
-		
-		@owners = @corpus.owners
-		@approvers = @corpus.approvers
-		@members = @corpus.members
 		
 	end
 	
 	# GET corpora/1/add_member
 	# Ajax - Adds Member. i.e.
+	# 
 	# params[:id] = Corpus.id
 	# params[email] = 's.f.reza@gmail.com'
 	# params[role]  = 'owner'
+	#
+	# FILTERED_BY: owner_filter
+	#
 	def add_member
-		
 	end
 	
-	def get_members
-	  
+	# GET corpora/1/remove_member
+	# Ajax - Removes Member i.e
+	#
+	# params[:id] = Corpus.id
+	# params[:member_id] = '2'
+	# ROLES NOT NECESSARY
+	#
+	# FILTERED_BY: owner_filter
+	#
+	def remove_member
 	end
 	
   # GET /corpora/new
@@ -321,6 +335,6 @@ class CorporaController < ApplicationController
   
   def owner_filter
     @corpus = Corpus.find_by_id(params[:id])
-    redirect_to '/perm' unless @corpus.owners.include?(current_user())
+    redirect_to '/perm' unless @corpus && @corpus.owners.include?(current_user())
   end
 end

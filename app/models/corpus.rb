@@ -22,6 +22,7 @@ class Corpus < ActiveRecord::Base
   scope :owner_of,			where(memberships: {role: 'owner'})
   scope :approver_of,		where(memberships: {role: 'approver'})
   scope :member_of, 		where(memberships: {role: 'member'})
+  scope :memberships,   where(memberships: {})
   
   def owners
   	self.users.owners.all
