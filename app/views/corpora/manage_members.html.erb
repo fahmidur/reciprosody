@@ -1,40 +1,54 @@
 <% content_for :javascript_includes do %>
   <%= javascript_include_tag "manage_members.js" %>
 <% end %>
-<h1>Members of <span class='corpusName'><%= @corpus.name %></span></h1>
-	<div id='response'>
-		
+
+<p id="notice"><%= notice %></p>
+
+<!--<span class='corpus_header'><%= @corpus.name %><span class='corpus_icon pull-right'></span></span>-->
+
+<ul class="nav nav-tabs">
+	<li class='corpus_name'><%= @corpus.name %></li>
+
+  <li class='pull-right'><a href="<%= corpus_path(@corpus)%>">Details</a></li>
+  <li class='pull-right active'><a href="#files">Manage Members</a></li>
+</ul>
+
+<br/>
+
+	
+		<div id='response'>
+		</div>
+
+		<%= form_tag add_member_corpus_path(@corpus), :remote => true, :method => 'get', 'data-type' => :json, :id => 'addMem_form' do%>
+
+
+		<div class='row-fluid memberListItem'>
+	<div class="span5 input-prepend">
+	<span class="add-on"><i class="icon-user"></i></span>
+	<input id="newMem" class="ui-autocomplete-input" data-autocomplete="/corpora/autocomplete_user_name" id="corpus_member" name="member[email]" size="30" type="text" value="" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
 	</div>
-	
-	<%= form_tag add_member_corpus_path(@corpus), :remote => true, :method => 'get', 'data-type' => :json, :id => 'addMem_form' do%>
 
-	
-  <div class='row-fluid memberListItem'>
-    <div class="span5 input-prepend">
-      <span class="add-on"><i class="icon-user"></i></span>
-      <input id="newMem" class="ui-autocomplete-input" data-autocomplete="/corpora/autocomplete_user_name" id="corpus_member" name="member[email]" size="30" type="text" value="" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
-    </div>
-    
-    <div class="span5 input-prepend">
-      <span class="add-on"><i class="icon-list"></i></span>
-        <%= select_tag "member[role]", options_for_select([['Owner', 'owner'],['Approver', 'approver'], ['Member', 'member']], 'member') %>
-    </div>
-    
-    <div class="span2">
-      <button id='addMember' class="btn btn-primary" type='submit'><i class='icon-plus-sign'></i></button>
-    </div>
-    
-  </div>
-	
-	<% end %>
-	
-<div id='memberList'>	
-  <% @memberships.each do |mem| %>
-		<%= render :partial => 'member', :locals => {:mem => mem} %>
-  <% end %>
-</div>
+	<div class="span5 input-prepend">
+	<span class="add-on"><i class="icon-list"></i></span>
+		<%= select_tag "member[role]", options_for_select([['Owner', 'owner'],['Approver', 'approver'], ['Member', 'member']], 'member') %>
+	</div>
 
-<!---Dynamic Modals--->
+	<div class="span2">
+	<button id='addMember' class="btn btn-primary" type='submit'><i class='icon-plus-sign'></i></button>
+	</div>
+	</div>
+
+		<% end %>
+
+		<div id='memberList'>
+			<% @memberships.each do |mem| %>
+				<%= render :partial => 'member', :locals => {:mem => mem} %>
+			<% end %>
+		</div>
+	
+
+
+
     <div class="modal fade" id="delete-confirm">
       <div class="modal-header">
         <a class="close" data-dismiss="modal">×</a>
@@ -52,3 +66,14 @@
        	
       </div>
     </div> <!--End of Delete Modal-->
+
+
+<br/>
+
+<%= link_to 'Edit', edit_corpus_path(@corpus), :class => 'btn' %> &nbsp;
+<%= link_to 'Back', 'javascript:history.go(-1)', :class => 'btn' %> &nbsp;
+<%= link_to 'All Corpora', corpora_path, :class => 'btn' %>
+
+
+
+    

@@ -4,9 +4,12 @@
 
 <ul class="nav nav-tabs">
 	<li class='corpus_name'><%= @corpus.name %></li>
-  <li class='pull-right active'><a href="#details" data-toggle="tab">Details</a></li>
-  <li class='pull-right'><a href="#files" data-toggle="tab">Comments</a></li>
-  <li class='pull-right'><a href="#files" data-toggle="tab">Files</a></li>
+	<li class='pull-right active'><a href="#details">Details</a></li>
+	
+	<% if @corpus.owners.include?(current_user())%>
+		<li class='pull-right'><a href="<%=manage_members_corpus_path(@corpus)%>">Manage Members</a></li>
+	<% end %>
+
 </ul>
 
 <br/>
@@ -103,16 +106,13 @@
 		
 		
 	</div> <!--End of Details -->
-	
-	<div class='tab-pane active' id='files'>
-	</div>
-	
-	<div class='tab-pane active' id='comments'>
-	</div>
 		
 	
 </div> <!--End of Tab Content-->
 
 <br/>
 <%= link_to 'Edit', edit_corpus_path(@corpus), :class => 'btn' %> &nbsp;
-<%= link_to 'Back', 'javascript:history.go(-1)', :class => 'btn' %>
+<%= link_to 'Back', 'javascript:history.go(-1)', :class => 'btn' %> &nbsp;
+<%= link_to 'All Corpora', corpora_path, :class => 'btn' %>
+
+
