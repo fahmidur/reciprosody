@@ -3,7 +3,7 @@ class CorporaController < ApplicationController
 	before_filter :owner_filter, :only => [:edit, :update, :destroy, :manage_members, :add_member, :remove_member]
 	
 	autocomplete :language, :name
-	autocomplete :license, :named
+	autocomplete :license, :name
 	autocomplete :user, :name, :full => true, :display_value => :email_format, :extra_data => [:email]
 	
   # GET /corpora
@@ -67,24 +67,90 @@ class CorporaController < ApplicationController
 	# Ajax - Adds Member. i.e.
 	# 
 	# params[:id] = Corpus.id
-	# params[email] = 's.f.reza@gmail.com'
-	# params[role]  = 'owner'
+	# params[:email] = 's.f.reza@gmail.com'
+	# params[:role]  = 'owner'
 	#
 	# FILTERED_BY: owner_filter
 	#
 	def add_member
+		@corpus = Corpus.find_by_id(params[:id])
+		errors = []
+		
+		memHash = params[:member]
+		if errors.length == 0 && !memHash
+			errors.push("Invalid parameter format")
+		end
+
+		role = nil
+		role = memHash[:role] if errors.length == 0
+		
+		if errors.length == 0 && ( !role || role.blank? || !(['owner','approver','member'].include?(role)) )
+			errors.push("Invalid role")
+		end
+		
+		memberEmail = nil
+		if errors.length == 0 && memHash[:email] =~ /<(.+)>/
+			memberEmail = $1
+		end
+		
+		if errors.length == 0 && memberEmail == nil
+			errors.push("Invalid member format #{memHash[:email]}");
+		end
+		
+		@member = User.find_by_email(memberEmail)
+		if errors.length == 0 && @member == nil
+			errors.push("User does not exist")
+		end
+		
+		
+		membership = Membership.where(:corpus_id => @corpus.id, :user_id => @member.id).first if errors.length == 0
+		
+		if errors.length == 0 && membership != nil
+			errors.push("Membership already exists")
+		end
+		
+		
+		if errors.length == 0
+			membership = Membership.create(:user_id => @member.id, :corpus_id => @corpus.id, :role => role)
+		end
+			
+		respond_to do |format|
+			format.html { redirect_to manage_members_corpus_path(@corpus)}
+			
+			format.json do
+				if(errors.length == 0)
+					render :json => {:ok => true, :resp => render_to_string(:partial => 'member', :layout => false, :locals => {:mem => membership}) }
+				else
+					render :json => {:ok => false, :resp => "#{errors.join("\n")}"}
+				end
+			end
+			
+		end
 	end
 	
 	# GET corpora/1/remove_member
 	# Ajax - Removes Member i.e
 	#
 	# params[:id] = Corpus.id
-	# params[:member_id] = '2'
+	# params[:mem_id] = '2'
 	# ROLES NOT NECESSARY
 	#
 	# FILTERED_BY: owner_filter
 	#
 	def remove_member
+		membership = Membership.find_by_id(params[:mem_id])
+		
+		 respond_to do |format|
+      format.json do 
+      	if membership
+      		id = membership.id
+      		membership.destroy
+      		render :json => {:ok => true, :id => id  } 
+      	else
+      		render :json => {:ok => false, :id => params[:mem_id] }
+      	end
+      end
+    end
 	end
 	
   # GET /corpora/new
@@ -242,6 +308,8 @@ class CorporaController < ApplicationController
   	
   	#For now: Use de-humanized version of corpus.name
   	archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
+  	archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, ''); #escape shell-unsafe-chars
+  	
   	archive_path = "#{archive_dir}/#{archive_name}.#{file_count(archive_dir)}.#{archive_ext}"
   	logger.info "-----------------PATH = #{archive_path}"
   	logger.info "-----------------FILETYPE = #{@file.class}"

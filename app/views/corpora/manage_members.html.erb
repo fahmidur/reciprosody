@@ -1,49 +1,38 @@
 <% content_for :javascript_includes do %>
   <%= javascript_include_tag "manage_members.js" %>
 <% end %>
-<h1>Members of <%= @corpus.name %></h1>
+<h1>Members of <span class='corpusName'><i class='icon-book'></i>&nbsp;<%= @corpus.name %></span></h1>
+	<div id='response'>
+		
+	</div>
+	
+	<%= form_tag add_member_corpus_path(@corpus), :remote => true, :method => 'get', 'data-type' => :json, :id => 'addMem_form' do%>
 
-<div class='box'>
-
-  <div class='row-fluid'>
-    <div class="span4 input-prepend">
+	
+  <div class='row-fluid memberListItem'>
+    <div class="span5 input-prepend">
       <span class="add-on"><i class="icon-user"></i></span>
-      <input class="memberInput ui-autocomplete-input" data-autocomplete="/corpora/autocomplete_user_name" id="corpus_member" name="corpus[member]" size="30" type="text" value="" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+      <input id="newMem" class="ui-autocomplete-input" data-autocomplete="/corpora/autocomplete_user_name" id="corpus_member" name="member[email]" size="30" type="text" value="" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
     </div>
     
-    <div class="span4 input-prepend">
+    <div class="span5 input-prepend">
       <span class="add-on"><i class="icon-list"></i></span>
-      <%= select "member", "role_id", [['Owner', 'owner'],['Approver', 'approver'], ['Member', 'member']] %>
+        <%= select_tag "member[role]", options_for_select([['Owner', 'owner'],['Approver', 'approver'], ['Member', 'member']], 'member') %>
     </div>
     
-    <div class='span4'>
-      <button id='addMember' class="btn btn-primary"><i class='icon-plus-sign'></i>&nbsp; Add Member</button>
+    <div class="span2">
+      <button id='addMember' class="btn btn-primary" type='submit'><i class='icon-plus-sign'></i></button>
     </div>
     
   </div>
-
+	
+	<% end %>
+	
+<div id='memberList'>	
   <% @memberships.each do |mem| %>
-    <div class='row-fluid bSpacer' id='memberList'>
-      <div class='span4'>
-	      <span class='member_name'><%= mem.user.name%></span>
-	      <span class='member_email'><a href="mailto:<%= mem.user.email%>" class='btn btn-mini' target='_BLANK'><i class='icon-envelope'></i>&nbsp;<%= mem.user.email %></a></span>
-      </div>
-      
-      <div class="span4 input-prepend">
-        <span class="add-on"><i class="icon-list"></i></span>
-        <%= select "member", "role_id-"+mem.id.to_s, [['Owner', 'owner'],['Approver', 'approver'], ['Member', 'member']], :selected => mem.role %>
-      </div>
-      
-      <div class='span4 btn-group hButton'>
-        <a href="#update-confirm-<%=mem.id%>" data-id="<%= mem.id %>" class="update-confirm btn" data-toggle="modal">Update</a>
-        <a href="#delete-confirm" data-id="<%= mem.id %>" data-name="<%= mem.user.name %>" data-cid='<%= @corpus.id %>'class="delete-confirm btn" data-toggle="modal"><i class='icon-remove'></i></a>
-      </div>
-      
-    </div>
-    
+		<%= render :partial => 'member', :locals => {:mem => mem} %>
   <% end %>
-  
-</div> <!--End of Box-->
+</div>
 
 <!---Dynamic Modals--->
     <div class="modal fade" id="delete-confirm">
@@ -55,7 +44,11 @@
         <p id='deleteMsg'>You're about to remove <span id='memName'>MEMNAME</span> as <span id='memRole'>MEMROLE</span> of <span class='corpusName'><i class='icon-book'></i>&nbsp;<%= @corpus.name %></span></p>
       </div>
       <div class="modal-footer">
-        <%= link_to 'Yes', '#', method: :delete, :class => 'btn', :id => 'yesDelete'%>
+      	<%= form_tag remove_member_corpus_path(@corpus), :remote => true, :method => 'delete', 'data-type' => :json, :id => 'remMem_form' do %>
+      	<input type='hidden' name='mem_id' value='' id='yesDelete'/>
+        <button class='btn' id='yesDelete' type='submit'>Yes</button>
         <a href="#" data-dismiss="modal" class="btn">Cancel</a>
+       	<% end %>
+       	
       </div>
     </div> <!--End of Delete Modal-->
