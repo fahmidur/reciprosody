@@ -134,7 +134,7 @@ DEPENDENCIES
   devise
   jquery-rails
   nifty-generators
-  rails (= 3.2.8)
+  rails (>= 3.2.8)
   rails3-jquery-autocomplete
   recaptcha
   sass-rails (~> 3.2.3)

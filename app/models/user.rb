@@ -15,7 +15,6 @@ class User < ActiveRecord::Base
   scope :approvers,		where(:memberships => {role: 'approver'})
   scope :members,		where(:memberships => {role: 'member'})
   
-  
   def email_format
   	"#{self.name}<#{self.email}>"
   end
