@@ -1,16 +1,16 @@
 Reciprosody2::Application.routes.draw do
-	#match 'corpora/:id'	=> 'corpora#post_update', :via => :post
   resources :corpora do
   	member do
-  	  post :update
+  	  	post :update
   		get :download
   		get :manage_members
   		get :add_member
+  		get :update_member
   		delete :remove_member
   	end
   	get :autocomplete_language_name,	:on => :collection
   	get :autocomplete_license_name,		:on => :collection
-  	get :autocomplete_user_name,			:on => :collection
+  	get :autocomplete_user_name,		:on => :collection
   end
 	
 	

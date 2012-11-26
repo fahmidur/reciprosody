@@ -1,32 +1,36 @@
 class CorporaController < ApplicationController
 	before_filter :user_filter, :except => :index
-	before_filter :owner_filter, :only => [:edit, :update, :destroy, :manage_members, :add_member, :remove_member]
+	before_filter :owner_filter, 
+		:only => [:edit, :update, :destroy, 
+				  :manage_members, 
+				  :add_member, :update_member,:remove_member]
+				  
 	
 	autocomplete :language, :name
 	autocomplete :license, :name
 	autocomplete :user, :name, :full => true, :display_value => :email_format, :extra_data => [:email]
 	
-  # GET /corpora
-  # GET /corpora.json
-  #
+	# GET /corpora
+	# GET /corpora.json
+	#
 	# FILTERED_BY: nothing
 	#
-  def index
-    @corpora = Corpus.all
-    
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @corpora }
-    end
-  end
+	def index
+		@corpora = Corpus.all
 
-  # GET /corpora/1
-  # GET /corpora/1.json
-  def show
-    @corpus = Corpus.find(params[:id])
+		respond_to do |format|
+			format.html # index.html.erb
+			format.json { render json: @corpora }
+		end
+	end
+
+	# GET /corpora/1
+	# GET /corpora/1.json
+	def show
+		@corpus = Corpus.find(params[:id])
 		@archives = []
 		@archive_names = Dir.entries("corpora.archives/#{@corpus.utoken}").select {|n| n != ".." && n != "." }
-		
+
 		#--Sort from highest to lowest Version
 		@archive_names.sort! do |a, b|
 			logger.info("a=#{a} b=#{b}")
@@ -34,17 +38,17 @@ class CorporaController < ApplicationController
 			y = b.gsub(/\.#{get_archive_ext(b)}$/, '')[/\d+$/].to_i
 			y <=> x
 		end
-		
+
 		@archive_names.each do |n|
 			@archives.push ["V."+n[/\d+\.(zip|tgz|tar\.gz|)$/], n]
 		end
-		
-		
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @corpus }
-    end
-  end
+
+
+		respond_to do |format|
+		  format.html # show.html.erb
+		  format.json { render json: @corpus }
+		end
+	end
 
 	# GET /corpora/1/manage_members
 	#
@@ -52,15 +56,14 @@ class CorporaController < ApplicationController
 	# ACTS_AS: get_members
 	def manage_members
 		@corpus = Corpus.find_by_id(params[:id])
-		
+
 		@memberships = @corpus.memberships.includes(:user)
-		
+
 		#-Both Formats are Used
 		respond_to do |format|
 		  format.html
 		  format.json { render json: [@memberships] }
 		end
-		
 	end
 	
 	# GET corpora/1/add_member
@@ -84,7 +87,7 @@ class CorporaController < ApplicationController
 		role = nil
 		role = memHash[:role] if errors.length == 0
 		
-		if errors.length == 0 && ( !role || role.blank? || !(['owner','approver','member'].include?(role)) )
+		if errors.length == 0 && ( !role || role.blank? || !(Membership.roles.include?(role)) )
 			errors.push("Invalid role")
 		end
 		
@@ -128,6 +131,33 @@ class CorporaController < ApplicationController
 		end
 	end
 	
+	# GET corpora/1/update_member
+	# Ajax - Updates role of _existing_ member
+	#
+	# params[:id] = Corpus.id
+	# params[:mem_id] = '2'
+	# params[:role] = 'owner'
+	#
+	# FILTERED_BY: owner_filter
+	#
+	def update_member
+		#To-Do: More Error Checking
+		membership = Membership.find_by_id(params[:mem_id])
+		role = params[:role]
+		
+		respond_to do |format|
+			format.json do
+				if membership && Membership.roles.include?(role)
+					membership.role = role
+					membership.save
+					render :json => {:ok => true, :id => membership.id }	
+				else
+					render :json => {:ok => false, :id => membership.id, :role => membership.role}
+				end
+			end
+		end
+	end
+	
 	# GET corpora/1/remove_member
 	# Ajax - Removes Member i.e
 	#
@@ -139,89 +169,89 @@ class CorporaController < ApplicationController
 	#
 	def remove_member
 		membership = Membership.find_by_id(params[:mem_id])
-		
-		 respond_to do |format|
-      format.json do 
-      	if membership
-      		id = membership.id
-      		membership.destroy
-      		render :json => {:ok => true, :id => id  } 
-      	else
-      		render :json => {:ok => false, :id => params[:mem_id] }
-      	end
-      end
-    end
+
+		respond_to do |format|
+			format.json do 
+				if membership
+					id = membership.id
+					membership.destroy
+					render :json => {:ok => true, :id => id  } 
+				else
+					render :json => {:ok => false, :id => params[:mem_id] }
+				end
+			end
+		end
 	end
 	
-  # GET /corpora/new
-  # GET /corpora/new.json
-  def new
-    @corpus = Corpus.new
-	
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @corpus }
-    end
-  end
+	# GET /corpora/new
+	# GET /corpora/new.json
+	def new
+		@corpus = Corpus.new
 
-  # GET /corpora/1/edit
-  def edit
-    @corpus = Corpus.find(params[:id])
-  end
+		respond_to do |format|
+			format.html # new.html.erb
+			format.json { render json: @corpus }
+		end
+	end
+
+	# GET /corpora/1/edit
+	def edit
+		@corpus = Corpus.find(params[:id])
+	end
   
-  # GET /corpora/1/download
-  def download
-  	@corpus = Corpus.find(params[:id])
-  	@filename = params[:name]
-  	
-  	#To-Do: Error/Evil checking
+	# GET /corpora/1/download
+	def download
+		@corpus = Corpus.find(params[:id])
+		@filename = params[:name]
 
-  	archive_path = "corpora.archives/#{@corpus.utoken}/#{@filename}"
-  	
-  	if invalid_filename?(@filename) && !File.file?(archive_path)
-  		redirect_to '/perm'
-  	else
-  		send_file archive_path
-  	end
-  end
+		#To-Do: Error/Evil checking
+
+		archive_path = "corpora.archives/#{@corpus.utoken}/#{@filename}"
+
+		if invalid_filename?(@filename) && !File.file?(archive_path)
+			redirect_to '/perm'
+		else
+			send_file archive_path
+		end
+	end
 	
-  # POST /corpora
-  def create
-  	paramHash = params[:corpus]
-  	owner_text = paramHash.delete('owner')
-  	
-    @corpus = Corpus.new(paramHash)
+	# POST /corpora
+	def create
+		paramHash = params[:corpus]
+		owner_text = paramHash.delete('owner')
+
+		@corpus = Corpus.new(paramHash)
 		@file = @corpus.upload_file
-		
+
 		logger.info "FILE = #{@file}"
-		
+
 
 		@corpus.valid? #note to self, overwrites existing errors
 		if !@file
-  		@corpus.errors[:upload_file] = " is missing"
+			@corpus.errors[:upload_file] = " is missing"
 		end
-		
+
 		owner_email = ""
 		if owner_text =~ /\<(.+)\>/
 			owner_email = $1
 		end
-		
+
 		@owner = User.find_by_email(owner_email);
-  	if !@owner
+		if !@owner
 			@corpus.errors[:owner] = " does not exist. Please invite owner. "  	
-  	end
-  	
-		
-	  respond_to do |format|
-	    if @corpus.errors.none? && create_corpus() && @corpus.save
-	    	Membership.create(:user_id => @owner.id, :corpus_id => @corpus.id, :role => 'owner');
-	      format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
-	    else
-	      format.html { render action: "new" }
-	    end
-	  end
+		end
+
 	
-  end
+		respond_to do |format|
+			if @corpus.errors.none? && create_corpus() && @corpus.save
+				Membership.create(:user_id => @owner.id, :corpus_id => @corpus.id, :role => 'owner');
+				format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
+			else
+				format.html { render action: "new" }
+			end
+		end
+
+	end
  
   # POST /corpora/1 
   # This is currently used for edits
