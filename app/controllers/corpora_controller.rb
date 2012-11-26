@@ -305,7 +305,7 @@ class CorporaController < ApplicationController
   
 	def create_corpus(msg = "unspecified")
 		require 'shellwords'
-		Dir.chdir(Rails.root.to_s)
+		Dir.chdir(Rails.root)
 		
 		# create corpora directory if necessary
 		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
@@ -315,7 +315,7 @@ class CorporaController < ApplicationController
 		Dir.mkdir corpus_dir unless Dir.exists? corpus_dir
 		
 		sub_dir = []
-		archive_dir		= corpus_dir		+ "/" + Corpus.archives_subFolder;		sub_dir << archive_dir;
+		archive_dir		= corpus_dir		+ "/" + Corpus.archives_subFolder;	sub_dir << archive_dir;
 		tmp_dir			= corpus_dir		+ "/" + Corpus.tmp_subFolder; 		sub_dir << tmp_dir;
 		head_dir		= corpus_dir		+ "/" + Corpus.head_subFolder;		sub_dir << head_dir;
 		svn_dir			= corpus_dir		+ "/" + Corpus.svn_subFolder;		sub_dir << svn_dir;
@@ -338,11 +338,13 @@ class CorporaController < ApplicationController
 			return false
 		end
 		
+		msg.gsub!("\n", " ");
+		
 		archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
 		archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, '');
 		archive_path = "#{archive_dir}/#{archive_name}.#{file_count(archive_dir)}.#{archive_ext}"
 		File.open(archive_path, "wb") {|f| f.write(@file.read)}
-		#-Locked-
+		#-LOCKED-
 		
 		begin
 			if archive_ext == "tar.gz" || archive_ext == "tgz"
@@ -353,29 +355,83 @@ class CorporaController < ApplicationController
 		rescue => exception
 			@corpus.remove_dirs
 			@corpus.errors[:internal] = " issue extracting your archive"
+			
+			Dir.chdir Rails.root
+			`rm -rf #{tmp_dir}/*` #UNLOCK
 			return false
 		end
 		
-		#SVN Import
-		Dir.chdir @corpus.tmp_path
-		`svnadmin create ../svn` ; 
-		`svn import . #{@corpus.svn_file_url} -m "#{Shellwords.escape(msg)}"`
+		initial_commit = false
 		
-		#-UNLOCK-
-		Dir.chdir Rails.root
-		`rm -rf #{tmp_dir}/*`
+		if Dir.glob("#{@corpus.svn_path}/*").empty?
+			#--Initial Commit--
+			Dir.chdir Rails.root
+			`svnadmin create #{@corpus.svn_path}` 
+		
+			Dir.chdir @corpus.tmp_path
+			`svn import . #{@corpus.svn_file_url} -m "#{Shellwords.escape(msg)}"`
+			
+			Dir.chdir Rails.root
+			`rm -f #{archive_path}` #original archive path is not svn working copy
+			
+			initial_commit = true
+		else
+			Dir.chdir Rails.root
+			Dir.chdir @corpus.tmp_path
+			#Check if tmp is a valid SVN Working Copy
+			if !Dir.exists? "./.svn"
+				@corpus.errors[:your_upload] = " is not a recent svn working copy"
+				
+				Dir.chdir Rails.root
+				`rm -rf #{tmp_dir}/*` #UNLOCK
+				return false
+			end
+			`svn add . --force`
+			lines = `svn merge --dry-run -r BASE:HEAD .`.split("\n")
+			conflicts = []
+			lines.each do |line|
+				conflicts << line line[0] == 'C'
+			end
+			if conflicts.size > 0
+				@corpus.errors[:file_conflicts] = " need to be fixed\n" + conflicts.join("\n")
+				
+				Dir.chdir Rails.root
+				`rm -rf #{tmp_dir}/*` #UNLOCK
+				return false
+			end
+			
+			`svn commit -m "#{Shellwords.escape(msg)}"`
+		end
+		
+
+		#Dir.chdir Rails.root
+		#`rm -rf #{tmp_dir}/*`
 		#-UNLOCKED-
 		
 		#SVN Checkout to uuid/head
+		Dir.chdir Rails.root
 		Dir.chdir @corpus.head_path
-		`svn co #{@corpus.svn_file_url} .`
+		if Dir.glob("#{@corpus.head_path}/*").empty?
+			`svn co #{@corpus.svn_file_url} .`
+		else
+			`svn update`
+		end
+		
+		
+		puts `zip -9 -r ../#{Corpus.archives_subFolder}/#{archive_name}.0.zip .` if initial_commit
+		
+		
 		
 		Dir.chdir Rails.root
+		`rm -rf #{tmp_dir}/*`
+		#-UNLOCKED-
 		return true
 		#--------------------------------------------------------------------------
 	end
   
 	def unzip(zip_path, xtract_dir)
+		Dir.chdir Rails.root
+		
 		files = `unzip -l #{zip_path}`.split("\n")
 		files.shift(3); files.pop(2);
 		files.map! {|f| f[30..-1]}
@@ -390,6 +446,8 @@ class CorporaController < ApplicationController
 	end
   
 	def untar(tarpath, xtract_dir)
+		Dir.chdir Rails.root
+		
 		strip = "--strip 1";
 		files = `tar tf #{tarpath}`.split("\n")
 		strip = "" if container(files) == nil
