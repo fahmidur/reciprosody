@@ -386,14 +386,41 @@ class CorporaController < ApplicationController
 				`rm -rf #{tmp_dir}/*` #UNLOCK
 				return false
 			end
+			
+			#--In /tmp Directory--
+			
 			`svn add . --force`
-			lines = `svn merge --dry-run -r BASE:HEAD .`.split("\n")
+			
+			require 'open3'
+			stdin, stdout, stderr = Open3.popen3('svn merge --dry-run -r BASE:HEAD .')
+			
+			out_lines = stdout.readlines.split("\n")
+			err_lines = stderr.readlines.split("\n")
+			
 			conflicts = []
-			lines.each do |line|
-				conflicts << line if line[0] == 'C'
+			errors = []
+			
+			out_lines.each do |line|
+				conflicts << line.gsub!(/^C\s+/, '') if line[0] == 'C'
 			end
+			
+
+			if err_lines.size > 0
+				err_lines.each do |e|
+					e = e[0]
+					@corpus.errors[:SVN_Error] = " => " + e.gsub!(/^.+E\d+\:/, '') if e
+				end
+
+				Dir.chdir Rails.root
+				`rm -rf #{tmp_dir}/*` #UNLOCK
+				return false
+			end
+
+			
 			if conflicts.size > 0
-				@corpus.errors[:file_conflicts] = " need to be fixed\n" + conflicts.join("\n")
+				conflicts.each do |c|
+					@corpus.errors[:file_conflict] = " on #{c}"
+				end
 				
 				Dir.chdir Rails.root
 				`rm -rf #{tmp_dir}/*` #UNLOCK
