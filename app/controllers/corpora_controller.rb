@@ -29,7 +29,9 @@ class CorporaController < ApplicationController
 	def show
 		@corpus = Corpus.find(params[:id])
 		@archives = []
-		@archive_names = Dir.entries("corpora.archives/#{@corpus.utoken}").select {|n| n != ".." && n != "." }
+		
+		Dir.chdir(Rails.root.to_s)
+		@archive_names = Dir.entries(@corpus.archives_path).select {|n| n != ".." && n != "." }
 
 		#--Sort from highest to lowest Version
 		@archive_names.sort! do |a, b|
@@ -206,7 +208,7 @@ class CorporaController < ApplicationController
 
 		#To-Do: Error/Evil checking
 
-		archive_path = "corpora.archives/#{@corpus.utoken}/#{@filename}"
+		archive_path = "#{@corpus.archives_path}/#{@filename}"
 
 		if invalid_filename?(@filename) && !File.file?(archive_path)
 			redirect_to '/perm'
@@ -227,9 +229,11 @@ class CorporaController < ApplicationController
 
 
 		@corpus.valid? #note to self, overwrites existing errors
-		if !@file
-			@corpus.errors[:upload_file] = " is missing"
-		end
+		
+		#Allow for Empty Corpus
+		#if !@file
+		#	@corpus.errors[:upload_file] = " is missing"
+		#end
 
 		owner_email = ""
 		if owner_text =~ /\<(.+)\>/
@@ -241,9 +245,9 @@ class CorporaController < ApplicationController
 			@corpus.errors[:owner] = " does not exist. Please invite owner. "  	
 		end
 
-	
+		
 		respond_to do |format|
-			if @corpus.errors.none? && create_corpus() && @corpus.save
+			if @corpus.errors.none? && create_corpus("Initial") && @corpus.save
 				Membership.create(:user_id => @owner.id, :corpus_id => @corpus.id, :role => 'owner');
 				format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
 			else
@@ -253,186 +257,194 @@ class CorporaController < ApplicationController
 
 	end
  
-  # POST /corpora/1 
-  # This is currently used for edits
-  #
-  # FILTERED_BY: owner_filter
-  #
-  def update
-    @corpus = Corpus.find(params[:id])
+	# POST /corpora/1 
+	# This is currently used for edits
+	#
+	# FILTERED_BY: owner_filter
+	#
+	def update
+		@corpus = Corpus.find(params[:id])
 		@corpus.upload = params[:corpus][:upload]
+		msg = params[:msg]
 		
 		@file = @corpus.upload_file
 		logger.info "---------------FILE = #{@file}"
 
-		@corpus.valid? #note to self, overwrites existing errors
-		if !@file
-			logger.info "----NO FILE----!!!!----"
-  		@corpus.errors[:upload_file] = " is missing"
-  	else
-  		create_corpus()
+		@corpus.valid?
+	
+		respond_to do |format|
+			if @corpus.update_attributes(params[:corpus]) && create_corpus(msg) && @corpus.save
+				format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
+				format.json { head :no_content }
+			else
+				format.html { render action: "edit" }
+				format.json { render json: @corpus.errors, status: :unprocessable_entity }
+			end
+		end
+	end
+
+	# DELETE /corpora/1
+	# DELETE /corpora/1.json
+	#
+	# FILTERED_BY: owner_filter
+	#
+	def destroy
+		@corpus = Corpus.find(params[:id])
+		@corpus.destroy
+
+
+		respond_to do |format|
+			format.html { redirect_to corpora_url }
+			format.json { head :no_content }
+		end
+	end
+  
+	#---------------------------------------------------------------------------
+	private #-------------------------------------------------------------------
+	#---------------------------------------------------------------------------
+  
+	def create_corpus(msg = "unspecified")
+		require 'shellwords'
+		Dir.chdir(Rails.root.to_s)
+		
+		# create corpora directory if necessary
+		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
+		# Generate uToken
+		@corpus.utoken = gen_unique_token() if !@corpus.utoken
+		corpus_dir = Corpus.corpora_folder() + "/" + @corpus.utoken
+		Dir.mkdir corpus_dir unless Dir.exists? corpus_dir
+		
+		sub_dir = []
+		archive_dir		= corpus_dir		+ "/" + Corpus.archives_subFolder;		sub_dir << archive_dir;
+		tmp_dir			= corpus_dir		+ "/" + Corpus.tmp_subFolder; 		sub_dir << tmp_dir;
+		head_dir		= corpus_dir		+ "/" + Corpus.head_subFolder;		sub_dir << head_dir;
+		svn_dir			= corpus_dir		+ "/" + Corpus.svn_subFolder;		sub_dir << svn_dir;
+		
+		sub_dir.each do |d|
+			Dir.mkdir d unless Dir.exists? d
 		end
 		
-    respond_to do |format|
-    	if @corpus.update_attributes(params[:corpus]) && @corpus.save
-        format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @corpus.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /corpora/1
-  # DELETE /corpora/1.json
-  #
-  # FILTERED_BY: owner_filter
-  #
-  def destroy
-    @corpus = Corpus.find(params[:id])
-    @corpus.destroy
-
-
-    respond_to do |format|
-      format.html { redirect_to corpora_url }
-      format.json { head :no_content }
-    end
-  end
-  
-  #---------------------------------------------------------------------------
-  private #-------------------------------------------------------------------
-  #---------------------------------------------------------------------------
-  
-  def create_corpus
-  	archive_ext = get_archive_ext(@file.original_filename);
-  	if !archive_ext
-  		@corpus.errors[:file_type] = "must be zip or tar.gz or tgz"
-  		return false
-  	end
-  	
-  	# create extract directory parent if necessary
-  	xtract_dir = "corpora.files"
-  	Dir.mkdir xtract_dir unless  Dir.exists? xtract_dir
-  	# prepare xtract directory
-  	@corpus.utoken = gen_unique_token() if !@corpus.utoken
-  	logger.info "----utoken = #{@corpus.utoken}"
-  	xtract_dir = "corpora.files/#{@corpus.utoken}"
-  	
-  	Dir.mkdir xtract_dir unless Dir.exists? xtract_dir
-  	`rm -rf #{xtract_dir}/*` #--clear the directory--(for now)
-  	
-  	# create archive directory parent if necessary
-  	archive_dir = "corpora.archives"
-  	Dir.mkdir archive_dir unless Dir.exists? archive_dir
-  	# prepare archive directory
-  	archive_dir = "corpora.archives/#{@corpus.utoken}"
-  	Dir.mkdir archive_dir unless Dir.exists? archive_dir
-  	
-  	#archive_name = @file.original_filename[0..-(archive_ext.length+2)]
-  	
-  	#Note: Using original filename + version doesn't work because
-  	# archive_name.zip --upload-> archive_name.0.zip --upload-> archive_name.0.1.zip --upload-> archive_name.0.1.2.zip
-  	# so it requires also stripping the original version number from the filename if it contains one
-  	# so it a bit messy for now. To-Do: I must fix this
-  	
-  	#For now: Use de-humanized version of corpus.name
-  	archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
-  	archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, ''); #escape shell-unsafe-chars
-  	
-  	archive_path = "#{archive_dir}/#{archive_name}.#{file_count(archive_dir)}.#{archive_ext}"
-  	logger.info "-----------------PATH = #{archive_path}"
-  	logger.info "-----------------FILETYPE = #{@file.class}"
-  	File.open(archive_path, "wb") {|f| f.write(@file.read)}
-    
-  	begin
-			#---now extract the archive based on ext--
+		return true if !@file #--We're done if there's no file---
+		
+		archive_ext = get_archive_ext(@file.original_filename);
+		if !archive_ext
+			@corpus.errors[:file_type] = "must be zip or tar.gz or tgz"
+			return false
+		end
+		
+		#--Locking for Multiple Users--
+		if !Dir.glob(tmp_dir + "/*").empty?
+			@corpus.errors[:upload_in_use] = ": Please try again in just a minute."
+			return false
+		end
+		
+		archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
+		archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, '');
+		archive_path = "#{archive_dir}/#{archive_name}.#{file_count(archive_dir)}.#{archive_ext}"
+		File.open(archive_path, "wb") {|f| f.write(@file.read)}
+		#-Locked-
+		
+		begin
 			if archive_ext == "tar.gz" || archive_ext == "tgz"
-				untar(archive_path, xtract_dir)
+				untar(archive_path, tmp_dir)
 			elsif archive_ext == "zip"
-				unzip(archive_path, xtract_dir)
+				unzip(archive_path, tmp_dir)
 			end
 		rescue => exception
-			#---something went wrong, so delete directories---
-			#FileUtils.rm_rf("corpora.files/#{@corpus.utoken}/");
-  		#FileUtils.rm_rf("corpora.archives/#{@corpus.utoken}/");
-  		@corpus.remove_dirs
-  		@corpus.errors[:internal] = " issue extracting your archive"
-  		return false
+			@corpus.remove_dirs
+			@corpus.errors[:internal] = " issue extracting your archive"
+			return false
 		end
-  	
-  	return true
-  end
+		
+		#SVN Import
+		Dir.chdir @corpus.tmp_path
+		`svnadmin create ../svn` ; 
+		`svn import . #{@corpus.svn_file_url} -m "#{Shellwords.escape(msg)}"`
+		
+		#-UNLOCK-
+		Dir.chdir Rails.root
+		`rm -rf #{tmp_dir}/*`
+		#-UNLOCKED-
+		
+		#SVN Checkout to uuid/head
+		Dir.chdir @corpus.head_path
+		`svn co #{@corpus.svn_file_url} .`
+		
+		Dir.chdir Rails.root
+		return true
+		#--------------------------------------------------------------------------
+	end
   
-  def unzip(zip_path, xtract_dir)
-  	files = `unzip -l #{zip_path}`.split("\n")
-  	files.shift(3); files.pop(2);
-  	files.map! {|f| f[30..-1]}
-    
-  	`unzip #{zip_path} -d #{xtract_dir}`
-    container = container(files)
-    if container
-        `mv #{xtract_dir}/#{container} #{xtract_dir}/#{@corpus.utoken}` #Safety - in case container contains folder with same name as container
-        `mv #{xtract_dir}/#{@corpus.utoken}/** #{xtract_dir}`
-        `rm -rf #{xtract_dir}/#{@corpus.utoken}`
-    end
- 
-  end
+	def unzip(zip_path, xtract_dir)
+		files = `unzip -l #{zip_path}`.split("\n")
+		files.shift(3); files.pop(2);
+		files.map! {|f| f[30..-1]}
+
+		`unzip #{zip_path} -d #{xtract_dir}`
+		container = container(files)
+		if container
+			`mv #{xtract_dir}/#{container} #{xtract_dir}/#{@corpus.utoken}` #Safety - in case container contains folder with same name as container
+			`mv #{xtract_dir}/#{@corpus.utoken}/** #{xtract_dir}`
+			`rm -rf #{xtract_dir}/#{@corpus.utoken}`
+		end
+	end
   
-  def untar(tarpath, xtract_dir)
-  	strip = "--strip 1";
-  	files = `tar tf #{tarpath}`.split("\n")
-    strip = "" if container(files) == nil
-  	#-------------------------------------------
-  	logger.info "tar zxf #{tarpath} -C #{xtract_dir} #{strip}"
-  	system("tar zxf #{tarpath} -C #{xtract_dir} #{strip}");
-  end
-  
+	def untar(tarpath, xtract_dir)
+		strip = "--strip 1";
+		files = `tar tf #{tarpath}`.split("\n")
+		strip = "" if container(files) == nil
+		#-------------------------------------------
+		logger.info "tar zxf #{tarpath} -C #{xtract_dir} #{strip}"
+		system("tar zxf #{tarpath} -C #{xtract_dir} #{strip}");
+	end
   
   
-  # returns the name of the container if there is one
-  # returns nil otherwise (when there is no container)
-  def container(files)
-  	container = files[0][/^[^\/]+\//]
-  	files.each do |f|
-  		if(f[/^[^\/]+\//] != container)
-  			return nil
-  		end
-  	end
-  	return container
-  end
   
-  def gen_unique_token()
-  	utoken = ""
-  	begin
-  		utoken = SecureRandom.uuid
-  	end while Corpus.where(:utoken => utoken).exists?
-  	return utoken
-  end
+	# returns the name of the container if there is one
+	# returns nil otherwise (when there is no container)
+	def container(files)
+		container = files[0][/^[^\/]+\//]
+		files.each do |f|
+			if(f[/^[^\/]+\//] != container)
+				return nil
+			end
+		end
+		return container
+	end
   
-  def get_archive_ext(string)
-  	return "tar.gz" if string =~ /\.tar\.gz$/
-  	return "tgz" 		if string =~ /\.tgz$/
-  	return "zip"		if string =~ /\.zip$/
-  	return nil
-  end
+	def gen_unique_token()
+		utoken = ""
+		begin
+			utoken = SecureRandom.uuid
+		end while Corpus.where(:utoken => utoken).exists?
+		return utoken
+	end
   
-  def file_count(dir)
-  	return Dir.glob("#{dir}/*").length
-  end
+	def get_archive_ext(string)
+		return "tar.gz" if string =~ /\.tar\.gz$/
+		return "tgz" 		if string =~ /\.tgz$/
+		return "zip"		if string =~ /\.zip$/
+		return nil
+	end
   
-  def invalid_filename?(name)
-  	return true if name =~ /^\.\./
-  	return true if name =~ /\~/
-  	return false
-  end
+	def file_count(dir)
+		return Dir.glob("#{dir}/*").length
+	end
   
-  def user_filter
-  	redirect_to '/perm' unless user_signed_in?
-  end
+	def invalid_filename?(name)
+		return true if name == nil
+		return true if name.blank?
+		return true if name =~ /^\.\./
+		return true if name =~ /\~/
+		return false
+	end
   
-  def owner_filter
-    @corpus = Corpus.find_by_id(params[:id])
-    redirect_to '/perm' unless @corpus && @corpus.owners.include?(current_user())
-  end
+	def user_filter
+		redirect_to '/perm' unless user_signed_in?
+	end
+  
+	def owner_filter
+		@corpus = Corpus.find_by_id(params[:id])
+		redirect_to '/perm' unless @corpus && @corpus.owners.include?(current_user())
+	end
 end

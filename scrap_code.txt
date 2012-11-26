@@ -1,0 +1,60 @@
+#-Create Corpus without SVN using Old Directory Structure------------------------------------
+	def create_corpus
+		archive_ext = get_archive_ext(@file.original_filename);
+		if !archive_ext
+			@corpus.errors[:file_type] = "must be zip or tar.gz or tgz"
+			return false
+		end
+
+		# create extract directory parent if necessary
+		xtract_dir = "corpora.files"
+		Dir.mkdir xtract_dir unless  Dir.exists? xtract_dir
+		# prepare xtract directory
+		@corpus.utoken = gen_unique_token() if !@corpus.utoken
+		logger.info "----utoken = #{@corpus.utoken}"
+		xtract_dir = "corpora.files/#{@corpus.utoken}"
+
+		Dir.mkdir xtract_dir unless Dir.exists? xtract_dir
+		`rm -rf #{xtract_dir}/*` #--clear the directory--(for now)
+
+		# create archive directory parent if necessary
+		archive_dir = "corpora.archives"
+		Dir.mkdir archive_dir unless Dir.exists? archive_dir
+		# prepare archive directory
+		archive_dir = "corpora.archives/#{@corpus.utoken}"
+		Dir.mkdir archive_dir unless Dir.exists? archive_dir
+
+		#archive_name = @file.original_filename[0..-(archive_ext.length+2)]
+
+		#Note: Using original filename + version doesn't work because
+		# archive_name.zip --upload-> archive_name.0.zip --upload-> archive_name.0.1.zip --upload-> archive_name.0.1.2.zip
+		# so it requires also stripping the original version number from the filename if it contains one
+		# so it a bit messy for now. To-Do: I must fix this
+
+		#For now: Use de-humanized version of corpus.name
+		archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
+		archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, ''); #escape shell-unsafe-chars
+
+		archive_path = "#{archive_dir}/#{archive_name}.#{file_count(archive_dir)}.#{archive_ext}"
+		logger.info "-----------------PATH = #{archive_path}"
+		logger.info "-----------------FILETYPE = #{@file.class}"
+		File.open(archive_path, "wb") {|f| f.write(@file.read)}
+
+		begin
+			#---now extract the archive based on ext--
+			if archive_ext == "tar.gz" || archive_ext == "tgz"
+				untar(archive_path, xtract_dir)
+			elsif archive_ext == "zip"
+				unzip(archive_path, xtract_dir)
+			end
+		rescue => exception
+			#---something went wrong, so delete directories---
+			#FileUtils.rm_rf("corpora.files/#{@corpus.utoken}/");
+			#FileUtils.rm_rf("corpora.archives/#{@corpus.utoken}/");
+			@corpus.remove_dirs
+			@corpus.errors[:internal] = " issue extracting your archive"
+			return false
+		end
+
+		return true #--Corpus Successfully Made--
+	end
