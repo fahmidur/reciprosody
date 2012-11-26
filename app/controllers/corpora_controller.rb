@@ -390,7 +390,7 @@ class CorporaController < ApplicationController
 			lines = `svn merge --dry-run -r BASE:HEAD .`.split("\n")
 			conflicts = []
 			lines.each do |line|
-				conflicts << line line[0] == 'C'
+				conflicts << line if line[0] == 'C'
 			end
 			if conflicts.size > 0
 				@corpus.errors[:file_conflicts] = " need to be fixed\n" + conflicts.join("\n")
