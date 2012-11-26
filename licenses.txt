@@ -1,0 +1,41 @@
+Academic Free License
+Affero GPL
+Apache License
+Apple Public Source License
+Artistic License
+Berkeley Database License
+BSD license
+Boost Software License
+CeCILL
+Common Development and Distribution License
+Code Project Open License
+Common Public License
+Cryptix General License
+Eclipse Public License
+Educational Community License
+Eiffel Forum License
+EUPL
+Fair Licence
+GNU General Public License
+GNU Lesser General Public License
+Hacktivismo Enhanced-Source Software License Agreement
+IBM Public License
+Intel Open Source License
+ISC license
+LaTeX Project Public License
+MIT license / X11 license
+Mozilla Public License
+Netscape Public License
+OPaC Free Public License
+Open Software License
+OpenSSL license
+PHP License
+Python Software Foundation License
+Q Public License
+Sun Industry Standards Source License
+Sun Public License
+Sybase Open Watcom Public License
+W3C Software Notice and License
+XCore Open Source License
+zlib/libpng license
+Zope Public License

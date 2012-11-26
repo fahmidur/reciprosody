@@ -28,14 +28,13 @@
 	
 	<div class='span5'>
 		<h5>My Corpora</h5>
-		<% current_user().corpora.each do |corpus| %>
+		<% current_user().owner_of.each do |corpus| %>
 			<div class='corpi_item'>
 				<h4><%= corpus.name %></h4>
 				
 				<span class='corpi_l'><%= corpus.language %></span>
 				<span class='corpi_l pull-right'>Duration: <%= corpus.human_duration %> </span>
 				<br/>
-				
 				
 				<% if user_signed_in? %>
 					<%= link_to 'Show', corpus, :class => 'btn btn-mini' %>

@@ -19,10 +19,11 @@ class Corpus < ActiveRecord::Base
   
   #-------------------memberships-------------------------
   accepts_nested_attributes_for :memberships, :users
-  scope :owner_of,			where(memberships: {role: 'owner'})
-  scope :approver_of,		where(memberships: {role: 'approver'})
-  scope :member_of, 		where(memberships: {role: 'member'})
-  scope :memberships,   where(memberships: {})
+  
+  scope :owner_of,		where(memberships: {role: 'owner'})
+  scope :approver_of,	where(memberships: {role: 'approver'})
+  scope :member_of, 	where(memberships: {role: 'member'})
+
   
   def owners
   	self.users.owners.all
