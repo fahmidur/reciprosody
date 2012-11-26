@@ -81,28 +81,42 @@
 			</div>
 		</div>
 		
+		<!---Memberships row--->
+		<% if @corpus.memberships.size > 0 %>
 		<div class='row-fluid'>
+			<% if @corpus.owners.size > 0 %>
 			<div class='box span4'>
 				<h5 id='owners_hd'><%= pluralize(@corpus.owners.size, 'Owner', 'Owners') %></h5>
 
 					<% @corpus.owners.each do |owner| %>
-							<div class='member'>
-								<span class='member_name'><%= owner.name %></span>
-								<span class='member_email pull-right'><a href="mailto:<%= owner.email%>" class='btn btn-mini' target='_BLANK'><i class='icon-envelope'></i>&nbsp;<%= owner.email %></a></span>
-							</div>
+						<%= render :partial => 's.member', :locals => {:mem => owner} %>
 					<% end %>
 
 			</div>
+			<% end %>
 			
+			<% if @corpus.approvers.size > 0 %>
 			<div class='box span4'>
 				<h5 id='approvers_hd'><%= pluralize(@corpus.approvers.size, 'Approver', 'Approvers') %> </h5>
+								
+				<% @corpus.approvers.each do |approver| %>
+					<%= render :partial => 's.member', :locals => {:mem => approver } %>
+				<% end %>								
+				
 			</div>
+			<% end %>
 			
+			<% if @corpus.members.size > 0 %>
 			<div class='box span4'>
 				<h5 id='members_hd'><%= pluralize(@corpus.members.size, 'Member', 'Members') %> </h5>
+				<% @corpus.members.each do |member| %>
+					<%= render :partial => 's.member', :locals => {:mem =>  member} %>
+				<% end %>
 			</div>
+			<% end %>
 			
-		</div>
+		</div> <!--End of row-fluid for Memberships-->
+		<% end %>
 		
 		
 	</div> <!--End of Details -->
