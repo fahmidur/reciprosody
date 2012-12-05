@@ -273,7 +273,7 @@ class CorporaController < ApplicationController
 		@corpus.valid?
 	
 		respond_to do |format|
-			if @corpus.update_attributes(params[:corpus]) && create_corpus(msg) && @corpus.save
+			if @corpus.update_attributes(params[:corpus]) && create_corpus(msg)  && @corpus.save
 				format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
 				format.json { head :no_content }
 			else
@@ -444,8 +444,7 @@ class CorporaController < ApplicationController
 			`svn update`
 		end
 		
-		
-		puts `zip -9 -r ../#{Corpus.archives_subFolder}/#{archive_name}.0.zip .` if initial_commit
+		`zip -9 -r ../#{Corpus.archives_subFolder}/#{archive_name}.0.zip .` if initial_commit
 		
 		
 		
