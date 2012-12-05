@@ -19,3 +19,4 @@
 corpora/*
 *~
 public/assets/*
+.sass-cache/*

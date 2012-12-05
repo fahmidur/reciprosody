@@ -45,10 +45,10 @@ Reciprosody2::Application.configure do
 	# config.action_mailer.default_url_options = { :host => '108.29.43.202:3000' }
 	
 	#-Localhost for Testing
-	# config.action_mailer.default_url_options = { :host => '127.0.0.1:3000' }
+	config.action_mailer.default_url_options = { :host => '127.0.0.1:3000' }
 	
 	#-Development machine i.e Jaguare
-	 config.action_mailer.default_url_options = { :host => 'jaguar.cs.qc.cuny.edu' }
+	# config.action_mailer.default_url_options = { :host => 'jaguar.cs.qc.cuny.edu' }
   
 	config.action_mailer.delivery_method = :smtp
 	config.action_mailer.perform_deliveries = true
