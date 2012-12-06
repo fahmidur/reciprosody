@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121125230705) do
+ActiveRecord::Schema.define(:version => 20121206023229) do
 
   create_table "corpora", :force => true do |t|
     t.string   "name"
@@ -60,6 +60,14 @@ ActiveRecord::Schema.define(:version => 20121125230705) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "super_keys", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "super_keys", ["user_id"], :name => "index_super_keys_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false

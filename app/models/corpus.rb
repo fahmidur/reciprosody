@@ -67,8 +67,15 @@ class Corpus < ActiveRecord::Base
 	
 	#-------------------------------------------------------
 
-
-
+	#------------------Rights-------------------------------
+	# Not exactly the same as memberships
+	#-------------------------------------------------------
+	def canEdit?(user)
+		return true if self.owners.include? user
+		return true if user.super_key != nil
+		return false
+	end
+	
 	#-------------------memberships-------------------------
 	accepts_nested_attributes_for :memberships, :users
 

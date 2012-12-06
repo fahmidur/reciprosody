@@ -4,7 +4,7 @@
   	<div class='row-fluid'>
   	
 		  <div id="error_explanation" class='alert alert-error span11'>
-		  	 <button type="button" class="close" data-dismiss="alert">×</button>
+			<button type="button" class="close" data-dismiss="alert"><i class='icon-remove-circle'></i></button>
 		    <p><%= pluralize(@corpus.errors.count, "error") %> prohibited this corpus from being saved:</p>
 		    <ul>
 		    <% @corpus.errors.full_messages.each do |msg| %>

@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
 
 	has_many :corpora, :through => :memberships
 	has_many :memberships
+	
+	has_one :super_key
 
 	scope :owners,		where(:memberships => {role: 'owner'})
 	scope :approvers,	where(:memberships => {role: 'approver'})

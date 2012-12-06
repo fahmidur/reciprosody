@@ -6,7 +6,7 @@
 	<li class='corpus_name'><%= @corpus.name %></li>
 	<li class='pull-right active'><a href="#details">Details</a></li>
 	
-	<% if @corpus.owners.include?(current_user())%>
+	<% if @corpus.canEdit?(current_user())%>
 		<li class='pull-right'><a href="<%=manage_members_corpus_path(@corpus)%>">Manage Members</a></li>
 	<% end %>
 

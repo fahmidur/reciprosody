@@ -29,13 +29,14 @@ Reciprosody2::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  # Do not compress assets
-  config.assets.compress = false
 
-
-  # Expands the lines which load the assets
-  config.assets.debug = true #CHANGED FROM TRUE TO FALSE - TESTING ASSETS PIPELINE - SFR
-  config.serve_static_assets = false #Prevents precompiled assets being included twice - SFR
+  #-ASSETS-
+  config.assets.compress = true
+  config.assets.enabled = true
+  config.assets.debug = false #CHANGED FROM TRUE TO FALSE - TESTING ASSETS PIPELINE - SFR
+  config.serve_static_assets = true #Prevents precompiled assets being included twice - SFR
+  # Generate digests for assets URLs.
+  config.assets.digest = true
   
 	#SMTP Gmail Action Mailer - SFR
 	#require 'tlsmail'

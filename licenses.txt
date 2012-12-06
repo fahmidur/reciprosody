@@ -10,6 +10,7 @@ CeCILL
 Common Development and Distribution License
 Code Project Open License
 Common Public License
+Creative Commons Attribution-Non-Commercial-Share-Alike 3.0 License
 Cryptix General License
 Eclipse Public License
 Educational Community License

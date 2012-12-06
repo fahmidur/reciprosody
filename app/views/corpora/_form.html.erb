@@ -1,115 +1,143 @@
 <%= form_for(@corpus, :multipart => true) do |f| %>
 
-  <% if @corpus.errors.any? %>
-  	<div class='row-fluid'>
-  	
-		  <div id="error_explanation" class='alert alert-error span11'>
-		  	 <button type="button" class="close" data-dismiss="alert">×</button>
-		    <p><%= pluralize(@corpus.errors.count, "error") %> prohibited this corpus from being saved:</p>
-		    <ul>
-		    <% @corpus.errors.full_messages.each do |msg| %>
-		      <li><%= msg %></li>
-		    <% end %>
-		    </ul>
-		  </div>
-    </div>
-  <% end %>
-	
+<% if @corpus.errors.any? %>
 	<div class='row-fluid'>
-	
-		<div class="field span4">
-		  <%= f.label :name %>
-		  <%= f.text_field :name %>
+
+		<div id="error_explanation" class='alert alert-error span11'>
+			<button type="button" class="close" data-dismiss="alert"><i class='icon-remove-circle'></i></button>
+			<p><%= pluralize(@corpus.errors.count, "error") %> prohibited this corpus from being saved:</p>
+			<ul>
+				<% @corpus.errors.full_messages.each do |msg| %>
+				<li><%= msg %></li>
+				<% end %>
+			</ul>
 		</div>
 		
+	</div>
+<% end %>
+	
+	<div class='row-fluid'>
+
 		<div class="field span4">
-		  <%= f.label :language, "Language" %>
-		  <%= f.autocomplete_field :language, '/corpora/autocomplete_language_name' %>
+			<%= f.label :name %>
+			<%= f.text_field :name, :title => 'Reminder', 'data-content' => "Please choose an appropriate name.<br/>For more help see our <a href='#' target='_blank'>How-To</a>"%>
 		</div>
-    
-   	<div class='field span4'>
+
+		<div class="field span4">
+			<%= f.label :language, "Language" %>
+			<%= f.autocomplete_field :language, '/corpora/autocomplete_language_name' %>
+		</div>
+
+		<div class='field span4'>
 			<%= f.label :num_speakers, "Number of Speakers" %>
-		  <%= f.number_field :num_speakers, :value => '1' %>
+			<%= f.number_field :num_speakers, :value => '1' %>
 		</div>
-    
-  </div>
-  <div class='row-fluid'>
-    <div class='field span4'>
-        <%= f.label :hours, "Hours"%>
-        <%= f.number_field :hours, :value => 0%>
-    </div>
-    
-    <div class='field span4'>
-        <%= f.label :minutes, "Minutes"%>
-        <%= f.number_field :minutes, :value => 0%>
-    </div>
 
-    <div class='field span4'>
-        <%= f.label :seconds, "Seconds"%>
-        <%= f.number_field :seconds, :value => 0%>
-    </div>
-
-  </div>
+	</div>
   
-  <div class='row-fluid'>
-  	 <div class='field span4'>
+	<div class='row-fluid'>
+		<div class='field span4'>
+			<%= f.label :hours, "Hours"%>
+			<%= f.number_field :hours, :value => 0%>
+		</div>
+
+		<div class='field span4'>
+			<%= f.label :minutes, "Minutes"%>
+			<%= f.number_field :minutes, :value => 0%>
+		</div>
+
+		<div class='field span4'>
+			<%= f.label :seconds, "Seconds"%>
+			<%= f.number_field :seconds, :value => 0%>
+		</div>
+
+	</div>
+  
+	<div class='row-fluid'>
+		<div class='field span4'>
 			<%= f.label :speaker_desc, "Speaker Description" %>
-		  <%= f.text_field :speaker_desc, :placeholder => 'Male, Late 50s' %>
+			<%= f.text_field :speaker_desc, :placeholder => 'Male, Late 50s' %>
 		</div>
 		<div class='field span4'>
 			<%= f.label :genre, "Genre" %>
-		  <%= f.text_field :genre, :placeholder => 'Historical' %>
+			<%= f.text_field :genre, :placeholder => 'Historical' %>
 		</div>
-		
+
 		<div class='field span4'>
 			<%= f.label :annotation, "Annotation" %>
-		  <%= f.text_field :annotation %>
+			<%= f.text_field :annotation %>
 		</div>
-  </div>
+	</div>
   
-  <div class='row-fluid'>
-  
+	<div class='row-fluid'>
+
 		<div class='field span4'>
 			<%= f.label :license, "License" %>
-		  <%= f.autocomplete_field :license, '/corpora/autocomplete_license_name' %>
+			<%= f.autocomplete_field :license, '/corpora/autocomplete_license_name' %>
 		</div>
-		
+
 		<div class="field span4">
-		  <%= f.label :upload %>
-		  <%= f.file_field :upload %>
+			<%= f.label :upload %>
+			<%= f.file_field :upload, :title => 'Reminder', 'data-content' => "Must be a valid .zip, .tgz, or tar.gz<br/>For more help see our <a href='#' target='_blank'>How-To</a>" %>
 		</div>
-		
+
 		<div class="field span4">
 			<label>New External Members?</label>
 			<a href='/user/invite' class='btn' target="_blank">Invite a Friend</a>
 		</div>
-  </div>
+	
+	</div>
   
-  <div class='row-fluid'>
+	<div class='row-fluid'>
+	
 		<div class="field span4">
-		  <%= f.label :description %>
-		  <%= f.text_area :description , :class => 'big_desc'%>
+			<%= f.label :description %>
+			<%= f.text_area :description , :class => 'big_desc'%>
 		</div>
-		
-		<div class="field span4">
-		  <%= f.label :citation %>
-		  <%= f.text_area :citation , :class => 'big_desc'%>
-		</div>
-		
-		<div class="field span4">
-		  <label for='owners'>Primary Owner</label>
-		  
-		  <div class="input-prepend">
-        <span class="add-on"><i class="icon-user"></i></span>
-			  <%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user.email_format, :class => 'memberInput' %> 
-      </div>
-  
 
+		<div class="field span4">
+			<%= f.label :citation %>
+			<%= f.text_area :citation , :class => 'big_desc'%>
+		</div>
+
+		<div class="field span4">
+			<label for='owners'>Primary Owner</label>
+
+			<div class="input-prepend">
+			<span class="add-on"><i class="icon-user"></i></span>
+			<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user.email_format, :class => 'memberInput' %> 
+			</div>
 		</div>
 		
-  </div>
+	</div>
   
   <div class="actions">
     <%= f.submit :class => 'btn' %>
   </div>
 <% end %>
+
+<script type='text/javascript'>
+	var popOversEnabled = false;
+	$(function() {
+		dw();
+		$(window).resize(dw);
+	});
+	function dw() {
+		
+		if(isMobile() && popOversEnabled) {
+
+			$('input').popover('destroy');
+			popOversEnabled = false;
+			return;
+		}
+		if(!isMobile() && !popOversEnabled) {
+
+			$('input').popover({trigger:'focus', placement: 'right'});
+			popOversEnabled = true;
+			return;
+		}
+	}
+	function isMobile() {
+		return $('div.btn.btn-navbar').is(":visible")
+	}
+</script>
