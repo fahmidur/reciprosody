@@ -19,11 +19,11 @@
 	
 		<div class='row-fluid'>
 			<div class='box span12'>
-				<span class='corpus_show_name'>Language</span> 
+				<span class='corpus_show_name'>Language:</span> 
 				<span class='corpus_show_value'><%= @corpus.language %></span>
 	
 				<span class='pull-right'>
-					<span class='corpus_show_name'>Duration</span>
+					<span class='corpus_show_name'>Duration:</span>
 					<span class='corpus_show_value'><%= @corpus.human_duration %></span>
 				</span>
 			</div>
@@ -57,7 +57,7 @@
 			</div>
 	
 			<div class='box span4'>
-				<span class='corpus_show_name'>UUID</span>
+				<span class='corpus_show_name'>UUID:</span>
 				<span class='corpus_show_value'><%= @corpus.utoken %> </span>
 			</div>
 	
@@ -65,19 +65,29 @@
 
 		<div class='row-fluid'>
 			<div class='box span4'>
-				<h5>Description</h5>
-				<%= @corpus.description %>
+				<div class='modal-header'>
+					<h5>Description</h5>
+				</div>
+				
+				<%=raw markdown(@corpus.description) %>
 			</div>
 			<div class='box span4'>
-				<h5>Citation</h5>
-				<%= @corpus.citation %>
+				<div class='modal-header'>
+					<h5>Citation</h5>
+				</div>
+				<%=raw markdown(@corpus.citation) %>
 			</div>
 	
 			<div class='box span4 row-fluid'>
 				<%= form_tag("/corpora/#{@corpus.id}/download", :method => :get) do%>
-					<%= select_tag(:name, options_for_select(@archives), :class=>'span4') %>
-					<input type='submit' class='btn btn-primary cdownload span8' value="Download">
+					<div class='btn-group'>
+						<%= select_tag(:name, options_for_select(@archives), :class=>'span8 vSelect') %>
+						<input type='submit' class='btn btn-primary cdownload span4' value="Download">
+					</div>
 				<% end %>
+				<br/>
+				<span class='corpus_show_name'>Last Modified:</span> 
+				<span class='corpus_show_value'><%= time_ago_in_words(@last_modified) %> ago</span>
 			</div>
 		</div>
 		

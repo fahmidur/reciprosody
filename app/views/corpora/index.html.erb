@@ -17,7 +17,7 @@
     <span class='corpi_l'><%= corpus.language %></span>
     <span class='corpi_l pull-right'>Duration: <%= corpus.human_duration %> </span>
     <br/>
-    <p><%= corpus.description %></p>
+    <p><%=raw snippet(markdown(corpus.description)) %></p>
     
     
     <% if user_signed_in? %>

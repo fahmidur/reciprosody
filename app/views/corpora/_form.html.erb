@@ -20,12 +20,12 @@
 
 		<div class="field span4">
 			<%= f.label :name %>
-			<%= f.text_field :name, :title => 'Reminder', 'data-content' => "Please choose an appropriate name.<br/>For more help see our <a href='#' target='_blank'>How-To</a>"%>
+			<%= f.text_field :name, :title => 'Reminder', 'data-content' => "Please choose an appropriate name.<hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
 		</div>
 
 		<div class="field span4">
 			<%= f.label :language, "Language" %>
-			<%= f.autocomplete_field :language, '/corpora/autocomplete_language_name' %>
+			<%= f.autocomplete_field :language, '/corpora/autocomplete_language_name', :title => 'Reminder', 'data-content' => "This field is required.<hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
 		</div>
 
 		<div class='field span4'>
@@ -56,7 +56,7 @@
 	<div class='row-fluid'>
 		<div class='field span4'>
 			<%= f.label :speaker_desc, "Speaker Description" %>
-			<%= f.text_field :speaker_desc, :placeholder => 'Male, Late 50s' %>
+			<%= f.text_field :speaker_desc, :placeholder => 'Male, Late 50s'%>
 		</div>
 		<div class='field span4'>
 			<%= f.label :genre, "Genre" %>
@@ -78,7 +78,7 @@
 
 		<div class="field span4">
 			<%= f.label :upload %>
-			<%= f.file_field :upload, :title => 'Reminder', 'data-content' => "Must be a valid .zip, .tgz, or tar.gz<br/>For more help see our <a href='#' target='_blank'>How-To</a>" %>
+			<%= f.file_field :upload, :title => 'Reminder', 'data-content' => "Must be a valid .zip, .tgz, or tar.gz<br/>For more help see our <a href='/how-to' target='_blank'>How-To</a>" %>
 		</div>
 
 		<div class="field span4">
@@ -92,20 +92,26 @@
 	
 		<div class="field span4">
 			<%= f.label :description %>
-			<%= f.text_area :description , :class => 'big_desc'%>
+			<%= f.text_area :description , :class => 'big_desc', :title => 'Reminder', 'data-content' => "This field supports Markdown"%>
 		</div>
 
 		<div class="field span4">
 			<%= f.label :citation %>
-			<%= f.text_area :citation , :class => 'big_desc'%>
+			<%= f.text_area :citation , :class => 'big_desc', :title => 'Reminder', 'data-content' => "This field also supports Markdown"%>
 		</div>
 
 		<div class="field span4">
 			<label for='owners'>Primary Owner</label>
 
 			<div class="input-prepend">
-			<span class="add-on"><i class="icon-user"></i></span>
-			<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user.email_format, :class => 'memberInput' %> 
+				<span class="add-on"><i class="icon-user"></i></span>
+				<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user.email_format, :class => 'memberInput', :id => 'primaryOwner' %> 
+			</div>
+			<br/>
+			<div id='help_sticker' class='alert alert-info'>
+				<button type="button" class="close" data-dismiss="alert"><i class='icon-remove-circle'></i></button>
+				<h4>Need Any Help?</h4><br/>
+				<p>Visit our <a href='/how-to' target='_blank' class='btn btn-mini btn-primary'>How-To &nbsp;<i class='icon-circle-arrow-right'></i></a></p>
 			</div>
 		</div>
 		
@@ -123,21 +129,24 @@
 		$(window).resize(dw);
 	});
 	function dw() {
-		
+		$('#help_sticker').width($('#primaryOwner').width()-10);
 		if(isMobile() && popOversEnabled) {
 
-			$('input').popover('destroy');
+			$('input, textarea').popover('destroy');
 			popOversEnabled = false;
 			return;
 		}
 		if(!isMobile() && !popOversEnabled) {
 
-			$('input').popover({trigger:'focus', placement: 'right'});
+			$('input, textarea').popover({trigger:'focus', placement: 'right'});
 			popOversEnabled = true;
 			return;
 		}
 	}
 	function isMobile() {
-		return $('div.btn.btn-navbar').is(":visible")
+		if($('div.btn.btn-navbar').is(":visible") && $(window).width() < 520) {
+			return true;
+		}
+		return false;
 	}
 </script>

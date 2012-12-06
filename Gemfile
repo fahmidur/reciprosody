@@ -30,6 +30,8 @@ gem "recaptcha", :require => "recaptcha/rails"
 gem 'nifty-generators'
 gem "rails3-jquery-autocomplete"
 gem "activerecord-import" #for bulk importing data
+gem "redcarpet", "1.17.2"
+gem "nokogiri"
 #--------------------------------------
 
 

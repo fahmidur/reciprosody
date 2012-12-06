@@ -40,11 +40,23 @@ class CorporaController < ApplicationController
 			y = b.gsub(/\.#{get_archive_ext(b)}$/, '')[/\d+$/].to_i
 			y <=> x
 		end
-
+		
+		archive_path = ""
+		time = nil
+		
+		view_helper = help
+		
 		@archive_names.each do |n|
-			@archives.push ["V."+n[/\d+\.(zip|tgz|tar\.gz|)$/], n]
+			archive_path = "#{@corpus.archives_path}/#{n}"
+			time = view_helper.time_ago_in_words(File.new(archive_path).mtime)
+			@archives.push ["V." + n[/\d+(?=\.(zip|tgz|tar\.gz|)$)/] + " [#{time} ago]", n]
 		end
-
+		
+		archive_path = "#{@corpus.archives_path}/#{@archive_names.first}"
+		@last_modified = File.new(archive_path).mtime
+		
+		
+		
 
 		respond_to do |format|
 		  format.html # show.html.erb
