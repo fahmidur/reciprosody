@@ -78,10 +78,8 @@ Reciprosody2::Application.configure do
   config.action_mailer.smtp_settings = {
       :enable_starttls_auto => true,
       :address => "eniac.cs.qc.cuny.edu",
-      :port => "587",
-      :authenticaton => :plain,
-      :user_name => "andrew",
-      :password => "itdoesnotmatter",
+      :port => "25",
+      :authenticaton => :none,
       :host => "localhost:3000"
   }
 end
