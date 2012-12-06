@@ -6,7 +6,9 @@ class UsersMailer < ActionMailer::Base
   	@to_user = to_user
   	@tmp_password = tmp_password
   	
-  	mail(:from => @from_user.email, :to => @to_user.email, :subject => "Reciprosody - An invitation from " + @from_user.name);
+  	mail(:from => @from_user.email,
+         :to => @to_user.email,
+         :subject => "Reciprosody - An invitation from " + @from_user.name)
   end
   
 end
