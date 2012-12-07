@@ -324,6 +324,12 @@ class CorporaController < ApplicationController
 		# create corpora directory if necessary
 		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
 		
+		archive_ext = get_archive_ext(@file.original_filename);
+		if !archive_ext
+			@corpus.errors[:file_type] = "must be zip"
+			return false
+		end
+		
 		# Generate uToken
 		@corpus.utoken = gen_unique_token() if !@corpus.utoken
 		corpus_dir = Corpus.corpora_folder() + "/" + @corpus.utoken
@@ -341,12 +347,6 @@ class CorporaController < ApplicationController
 		
 		return true if !@file #--We're done if there's no file---
 		
-		archive_ext = get_archive_ext(@file.original_filename);
-		if !archive_ext
-			@corpus.errors[:file_type] = "must be zip or tar.gz or tgz"
-			return false
-		end
-		
 		#--Locking for Multiple Users--
 		if !Dir.glob(tmp_dir + "/*").empty?
 			@corpus.errors[:upload_in_use] = ": Please try again in just a minute."
@@ -355,18 +355,23 @@ class CorporaController < ApplicationController
 		
 		msg.gsub!("\n", " ");
 		
+		
+		#---------Extract Archive-------------------------------------------------
+		# Archive should be deleted should this function return false
+		# at any point
+		#-------------------------------------------------------------------------
+		
 		archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
 		archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, '');
-		archive_path = "#{archive_dir}/#{archive_name}.#{file_count(archive_dir)}.#{archive_ext}"
+		version = file_count(archive_dir)
+		archive_path = "#{archive_dir}/#{archive_name}.#{version}.#{archive_ext}"
 		File.open(archive_path, "wb") {|f| f.write(@file.read)}
 		
 		#------------------LOCKED------------------------------------------------------------
 		# /tmp Directory Locked. Must UNLOCK prior to any return via clear_directory(tmp_dir)
 		#------------------------------------------------------------------------------------
-		begin
-			if archive_ext == "tar.gz" || archive_ext == "tgz"
-				untar(archive_path, tmp_dir)
-			elsif archive_ext == "zip"
+		begin		
+			if archive_ext == "zip"
 				unzip(archive_path, tmp_dir)
 			end
 		rescue => exception
@@ -374,20 +379,23 @@ class CorporaController < ApplicationController
 			@corpus.errors[:internal] = " issue extracting your archive"
 			
 			clear_directory(tmp_dir); #UNLOCKED
+			delete_archive(archive_path)
 			return false
 		end
 		
 		initial_commit = false
 		
 		if Dir.glob("#{@corpus.svn_path}/*").empty?
+			# Initial commit
+			
 			Dir.chdir Rails.root
 			`svnadmin create #{@corpus.svn_path}` 
 		
 			Dir.chdir @corpus.tmp_path
-			`svn import . #{@corpus.svn_file_url} -m "#{Shellwords.escape(msg)}"`
+			`svn import . #{@corpus.svn_file_url} -m #{Shellwords.escape(msg)}`
 			
-			Dir.chdir Rails.root
-			`rm -f #{archive_path}` # Original archive path is not svn working copy
+			# Original archive path is not svn working copy
+			# delete_archive(archive_path)
 			
 			initial_commit = true
 		else
@@ -399,39 +407,62 @@ class CorporaController < ApplicationController
 				@corpus.errors[:your_upload] = " is not a recent svn working copy"
 				
 				clear_directory(tmp_dir); #UNLOCKED
+				delete_archive(archive_path)
 				return false
 			end
-			
 			#--In /tmp Directory--
+			
+			#--Replace the .svn folder in tmp with the head .svn---
+			# We will pretend that this folder was updated
+			# Temporary Solution to bug: 40814985
+			# assumes that it is always the latest version
+			# fork project here
+			# two workarounds
+			# 	-use zip update feature / eliminate .tar.gz
+			#	-keep track of when user downloaded corpus & force
+			#	 user to always have upload from the latest version
+			#	 * this is silly so I've implemented the first solution
+			#-------------------------------------------------------
+			#`cp -rf ../head/.svn .`
+			# Uncomment the above line for simple archive based 
+			# version control. This line renders svn useless
+			
 			`svn add . --force`
 			
 			require 'open3'
 			stdin, stdout, stderr = Open3.popen3('svn merge --dry-run -r BASE:HEAD .')
 			
-			out_lines = stdout.readlines.split("\n")
+			out_lines = stdout.readlines
 			err_lines = stderr.readlines
 			
 			conflicts = []
 			errors = []
 			
 			out_lines.each do |line|
-				conflicts << line.gsub!(/^C\s+/, '') if line[0] == 'C'
+				conflicts << line.gsub(/^\s*C\s+/, '') if line =~ /^\s*[C]/
 			end
+			
+			#@corpus.errors[:SVN_Error] = err_lines
+			#clear_directory(tmp_dir);
+			#delete_archive(archive_path)
+			#return false;
 			
 			if err_lines && !err_lines.blank? 
 				err_lines = err_lines.split("\n")
 				
 				err_lines.each do |e|
 					e = e[0]
-					@corpus.errors[:SVN_Error] = " => " + e.gsub!(/^.+E\d+\:/, '') if e
+					#@corpus.errors[:SVN_Error] = " => " + e.gsub!(/^.+E\d+\:/, '') if e
+					@corpus.errors[:SVN_Error] = e if e
 				end
 				
 				@corpus.errors[:SVN_Errors] = " found. #{err_lines.join(' ')}"
+				
 				clear_directory(tmp_dir); #UNLOCKED
+				delete_archive(archive_path)
 				return false
 			end
 	
-
 			
 			if conflicts.size > 0
 				conflicts.each do |c|
@@ -439,11 +470,13 @@ class CorporaController < ApplicationController
 				end
 				
 				@corpus.errors[:conflicts] = " exist."
+				
 				clear_directory(tmp_dir); #UNLOCKED
+				delete_archive(archive_path)
 				return false
 			end
 			
-			`svn commit -m "#{Shellwords.escape(msg)}"`
+			`svn commit -m #{Shellwords.escape(msg)}`
 		end
 		
 		#SVN Checkout to uuid/head
@@ -454,14 +487,31 @@ class CorporaController < ApplicationController
 		else
 			`svn update`
 		end
+
 		
-		`zip -9 -r ../#{Corpus.archives_subFolder}/#{archive_name}.0.zip .` if initial_commit
+		Dir.chdir Rails.root
+		Dir.chdir @corpus.head_path
 		
-		clear_directory(tmp_dir); #UNLOCKED
+		if initial_commit
+			delete_archive(archive_path)
+			Dir.chdir @corpus.head_path
+			`zip -r ../#{Corpus.archives_subFolder}/#{archive_name}.0.zip .`
+		else
+			`zip -u ../#{Corpus.archives_subFolder}/#{archive_name}.#{version}.zip`
+		end
+		
+		clear_directory(tmp_dir); 
+		#----------------------------UNLOCKED--------------------------------------
 		return true
 		#--------------------------------------------------------------------------
 	end
 	
+	# Used to delete the most recent uploaded archive because something went wrong
+	def delete_archive(archive_path)
+		Dir.chdir Rails.root
+		`rm -f #{archive_path}`
+	end
+		
 	def clear_directory(path)
 		Dir.chdir Rails.root
 		Dir.chdir path
@@ -519,8 +569,6 @@ class CorporaController < ApplicationController
 	end
   
 	def get_archive_ext(string)
-		return "tar.gz" if string =~ /\.tar\.gz$/
-		return "tgz" 		if string =~ /\.tgz$/
 		return "zip"		if string =~ /\.zip$/
 		return nil
 	end

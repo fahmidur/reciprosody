@@ -6,6 +6,8 @@ module ApplicationHelper
 	
 	def snippet(html)
 		doc = ::Nokogiri::HTML(html)
-		doc.at_css("p:first").inner_html
+		first_paragraph = doc.at_css("p:first")
+		return first_paragraph.inner_html if first_paragraph
+		return ""
 	end
 end
