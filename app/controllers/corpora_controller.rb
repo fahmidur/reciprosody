@@ -2,7 +2,7 @@ class CorporaController < ApplicationController
 	before_filter :user_filter, :except => :index
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
-				  :manage_members, 
+				  :manage_members, :view_history,
 				  :add_member, :update_member,:remove_member]
 				  
 	
@@ -68,6 +68,7 @@ class CorporaController < ApplicationController
 	#
 	# FILTERED_BY: owner_filter
 	# ACTS_AS: get_members
+	#
 	def manage_members
 		@corpus = Corpus.find_by_id(params[:id])
 
@@ -79,6 +80,39 @@ class CorporaController < ApplicationController
 		  format.json { render json: [@memberships] }
 		end
 	end
+	
+	# GET /corpora/1/manage_members
+	#
+	# FILTERED_BY: owner_filter
+	# ACTS_AS: get_members
+	# 
+	def view_history
+		@corpus = Corpus.find_by_id(params[:id])
+		Dir.chdir Rails.root
+		Dir.chdir @corpus.head_path
+		
+		@log_entries = `svn log`.split("-"*72);
+		@commits = Array.new
+		
+		@log_entries.each do |e|
+			e = e.gsub(/\| \d+ line$/, "")
+			version = 0
+			if e =~ /^\s*r(\d+)/
+				version = $1
+			end
+			e = e.gsub(/^\s*r(\d+) \| [^\|]+? \| /, "")
+			
+			(dateString, blank, msg) = e.split("\n");
+			
+			@commits << [version, dateString, msg] if version != 0
+		end
+		
+		respond_to do |format|	
+			format.html
+		end
+		
+	end
+	
 	
 	# GET corpora/1/add_member
 	# Ajax - Adds Member. i.e.

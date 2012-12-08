@@ -2,15 +2,7 @@
 
 <!--<span class='corpus_header'><%= @corpus.name %><span class='corpus_icon pull-right'></span></span>-->
 
-<ul class="nav nav-tabs">
-	<li class='corpus_name'><%= @corpus.name %></li>
-	<li class='pull-right active'><a href="#details">Details</a></li>
-	
-	<% if @corpus.canEdit?(current_user())%>
-		<li class='pull-right'><a href="<%=manage_members_corpus_path(@corpus)%>">Manage Members</a></li>
-	<% end %>
-
-</ul>
+<%= render :partial => 'tabs', :locals => {:tab => 'details'} %>
 
 <br/>
 

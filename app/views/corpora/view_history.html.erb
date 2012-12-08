@@ -1,0 +1,26 @@
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag "manage_members.js" %>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+<!--<span class='corpus_header'><%= @corpus.name %><span class='corpus_icon pull-right'></span></span>-->
+
+<%= render :partial => 'tabs', :locals => {:tab => 'history'} %>
+
+<br/>
+<% @commits.each do |c| %>
+	<div class="logEntry box">
+		<h6>Version <%= c[0] %> <span class='pull-right'> <%= c[1] %></span></h6>
+		<%=raw c[2] %>
+	</div>
+<% end %>
+<br/>
+
+<%= link_to 'Edit', edit_corpus_path(@corpus), :class => 'btn' %> &nbsp;
+<%= link_to 'Back', 'javascript:history.go(-1)', :class => 'btn' %> &nbsp;
+<%= link_to 'All Corpora', corpora_path, :class => 'btn' %>
+
+
+
+    

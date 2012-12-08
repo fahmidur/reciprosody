@@ -4,6 +4,7 @@ Reciprosody2::Application.routes.draw do
   	  	post :update
   		get :download
   		get :manage_members
+  		get :view_history
   		get :add_member
   		get :update_member
   		delete :remove_member
