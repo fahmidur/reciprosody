@@ -11,8 +11,12 @@
 <br/>
 <% @commits.each do |c| %>
 	<div class="logEntry box">
-		<h6>Version <%= c[0] %> <span class='pull-right'> <%= c[1] %></span></h6>
-		<%=raw c[2] %>
+		<h6>Version <%= c[:version] %> <span class='pull-right'> <%= c[:dateString] %></span></h6>
+		<%=raw c[:msg] %>
+		<br/>
+		<span class="member_email pull-right" title="<%= c[:name] %>"><a href="/users/<%= c[:email] %>" class="btn btn-mini" target="_BLANK">
+			<i class="icon-user"></i>&nbsp;<%= c[:name]%></a>
+		</span>
 	</div>
 <% end %>
 <br/>

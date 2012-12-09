@@ -104,7 +104,22 @@ class CorporaController < ApplicationController
 			
 			(dateString, blank, msg) = e.split("\n");
 			
-			@commits << [version, dateString, msg] if version != 0
+			if version != 0
+				msg = msg.split("<br/>")
+				name = ""
+				if(msg.shift =~ /User Name: (.+)$/)
+					name = $1
+				end
+				
+				email = ""
+				if(msg.shift =~ /User Email: (.+)$/)
+					email = $1
+				end
+				
+				msg = msg.join("<br/>")
+				
+				@commits << {:version => version, :dateString => dateString, :msg => msg, :name => name, :email => email}
+			end
 		end
 		
 		respond_to do |format|	
@@ -389,8 +404,6 @@ class CorporaController < ApplicationController
 			@corpus.errors[:upload_in_use] = ": Please try again in just a minute."
 			return false
 		end
-		
-		msg.gsub!("\n", " ");
 		
 		
 		#---------Extract Archive-------------------------------------------------
