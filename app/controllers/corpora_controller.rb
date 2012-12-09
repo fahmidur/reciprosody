@@ -313,6 +313,8 @@ class CorporaController < ApplicationController
 		@corpus.upload = params[:corpus][:upload]
 		msg = params[:msg]
 		
+		msg.gsub!(/(\r+\n+)+/m, "<br/>") if msg
+		
 		@file = @corpus.upload_file
 		logger.info "---------------FILE = #{@file}"
 
@@ -417,8 +419,9 @@ class CorporaController < ApplicationController
 			return false
 		end
 		
-		initial_commit = false
+		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
 		
+		initial_commit = false
 		if Dir.glob("#{@corpus.svn_path}/*").empty?
 			# Initial commit
 			
@@ -426,6 +429,7 @@ class CorporaController < ApplicationController
 			`svnadmin create #{@corpus.svn_path}` 
 		
 			Dir.chdir @corpus.tmp_path
+			
 			`svn import . #{@corpus.svn_file_url} -m #{Shellwords.escape(msg)}`
 			
 			# Original archive path is not svn working copy
