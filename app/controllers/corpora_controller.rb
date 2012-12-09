@@ -376,7 +376,6 @@ class CorporaController < ApplicationController
 		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
 		
 		
-		
 		# Generate uToken
 		@corpus.utoken = gen_unique_token() if !@corpus.utoken
 		corpus_dir = Corpus.corpora_folder() + "/" + @corpus.utoken
@@ -446,7 +445,7 @@ class CorporaController < ApplicationController
 			
 			`svn import . #{@corpus.svn_file_url} -m #{Shellwords.escape(msg)}`
 			
-			# Original archive path is not svn working copy
+			# Original archive is not svn working copy
 			# delete_archive(archive_path)
 			
 			initial_commit = true
@@ -481,54 +480,17 @@ class CorporaController < ApplicationController
 			
 			`svn add . --force`
 			
-			require 'open3'
-			stdin, stdout, stderr = Open3.popen3('svn merge --dry-run -r BASE:HEAD .')
-			
-			out_lines = stdout.readlines
-			err_lines = stderr.readlines
-			
-			conflicts = []
-			errors = []
-			
-			out_lines.each do |line|
-				conflicts << line.gsub(/^\s*C\s+/, '') if line =~ /^\s*[C]/
-			end
-			
-			#@corpus.errors[:SVN_Error] = err_lines
-			#clear_directory(tmp_dir);
-			#delete_archive(archive_path)
-			#return false;
-			
-			if err_lines && !err_lines.blank? 
-				err_lines = err_lines.split("\n")
-				
-				err_lines.each do |e|
-					e = e[0]
-					#@corpus.errors[:SVN_Error] = " => " + e.gsub!(/^.+E\d+\:/, '') if e
-					@corpus.errors[:SVN_Error] = e if e
-				end
-				
-				@corpus.errors[:SVN_Errors] = " found. #{err_lines.join(' ')}"
-				
-				clear_directory(tmp_dir); #UNLOCKED
-				delete_archive(archive_path)
-				return false
-			end
-	
-			
-			if conflicts.size > 0
-				conflicts.each do |c|
-					@corpus.errors[:file_conflict] = " on #{c}"
-				end
-				
-				@corpus.errors[:conflicts] = " exist."
-				
+			if !safe_shell_execute('svn merge --dry-run -r BASE:HEAD .')	
 				clear_directory(tmp_dir); #UNLOCKED
 				delete_archive(archive_path)
 				return false
 			end
 			
-			`svn commit -m #{Shellwords.escape(msg)}`
+			if !safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")	
+				clear_directory(tmp_dir); #UNLOCKED
+				delete_archive(archive_path)
+				return false
+			end
 		end
 		
 		#SVN Checkout to uuid/head
@@ -556,6 +518,46 @@ class CorporaController < ApplicationController
 		#----------------------------UNLOCKED--------------------------------------
 		return true
 		#--------------------------------------------------------------------------
+	end
+	
+	def safe_shell_execute(string)
+			require 'open3'
+			stdin, stdout, stderr = Open3.popen3(string)
+			
+			out_lines = stdout.readlines
+			err_lines = stderr.readlines
+			
+			conflicts = []
+			
+			if out_lines
+				out_lines.each do |line|
+					conflicts << line.gsub(/^\s*C\s+/, '') if line =~ /^\s*[C]\s+/
+				end
+			end
+			
+			if conflicts.size > 0
+				conflicts.each do |c|
+					@corpus.errors[:file_conflict] = " on #{c}"
+				end
+				
+				@corpus.errors[:conflicts] = " exist."
+				
+				return false
+			end
+			
+			if err_lines && !err_lines.blank? 
+				err_lines = err_lines.split("\n")
+				
+				err_lines.each do |e|
+					e = e[0]
+					@corpus.errors[:SVN_Error] = e if e
+				end
+				
+				@corpus.errors[:SVN_Errors] = " found."
+				return false
+			end
+	
+			return true
 	end
 	
 	# Used to delete the most recent uploaded archive because something went wrong
