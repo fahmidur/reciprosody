@@ -20,3 +20,5 @@ corpora/*
 *~
 public/assets/*
 .sass-cache/*
+vendor/*
+vendor/**

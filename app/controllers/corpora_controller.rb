@@ -360,11 +360,7 @@ class CorporaController < ApplicationController
 		# create corpora directory if necessary
 		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
 		
-		archive_ext = get_archive_ext(@file.original_filename);
-		if !archive_ext
-			@corpus.errors[:file_type] = "must be zip"
-			return false
-		end
+		
 		
 		# Generate uToken
 		@corpus.utoken = gen_unique_token() if !@corpus.utoken
@@ -382,6 +378,11 @@ class CorporaController < ApplicationController
 		end
 		
 		return true if !@file #--We're done if there's no file---
+		archive_ext = get_archive_ext(@file.original_filename);
+		if !archive_ext
+			@corpus.errors[:file_type] = "must be zip"
+			return false
+		end
 		
 		#--Locking for Multiple Users--
 		if !Dir.glob(tmp_dir + "/*").empty?
