@@ -383,29 +383,21 @@ class CorporaController < ApplicationController
 		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
 		
 		
-		# Generate uToken
-		@corpus.utoken = gen_unique_token() if !@corpus.utoken
-		Dir.mkdir @corpus.home_path unless Dir.exists? @corpus.home_path
-		sub_dir = []
-		sub_dir << @corpus.archives_path;
-		sub_dir << @corpus.tmp_path;
-		sub_dir << @corpus.head_path;
-		sub_dir << @corpus.svn_path;
-		sub_dir.each do |d|
-			Dir.mkdir d unless Dir.exists? d
-		end
+		# Generate uToken		
+		@corpus.utoken = gen_unique_token() unless @corpus.utoken
+		@corpus.create_dirs
 		
-		return true if !@file 
+		return true unless @file 
 		#-------------We're done if there's no file-----------------------
 		
 		archive_ext = get_archive_ext(@file.original_filename);
-		if !archive_ext
+		unless archive_ext
 			@corpus.errors[:file_type] = "must be zip"
 			return false
 		end
 		
 		#------------Locking for Multiple Users----------------------------
-		if !Dir.glob(@corpus.tmp_path + "/*").empty?
+		unless Dir.glob(@corpus.tmp_path + "/*").empty?
 			@corpus.errors[:upload_in_use] = ": Please try again in just a minute."
 			return false
 		end
@@ -456,7 +448,7 @@ class CorporaController < ApplicationController
 			Dir.chdir @corpus.tmp_path
 			
 			# Check if tmp is a valid SVN Working Copy
-			if !Dir.exists? "./.svn"
+			unless Dir.exists? "./.svn"
 				@corpus.errors[:your_upload] = " is not a recent svn working copy"
 				
 				#-----------
@@ -464,41 +456,30 @@ class CorporaController < ApplicationController
 			end
 			#--In /tmp Directory--
 			
-			#--Replace the .svn folder in tmp with the head .svn---
-			# We will pretend that this folder was updated
-			# Temporary Solution to bug: 40814985
-			# assumes that it is always the latest version
-			# fork project here
-			# two workarounds
-			# 	-use zip update feature / eliminate .tar.gz
-			#	-keep track of when user downloaded corpus & force
-			#	 user to always have upload from the latest version
-			#	 * this is silly so I've implemented the first solution
-			#-------------------------------------------------------
-			#`cp -rf ../head/.svn .`
-			# Uncomment the above line for simple archive based 
-			# version control. This line renders svn useless
-			
-			`svn add . --force`
+			# Forcefully add all new files
+			`svn add . --force`	
+			# If anything is still untracked '?' then add it
+			`svn st | grep ^\? | awk '{print $2}' | xargs svn add`
+			# If anything is missing '!' then mark for deletion
+			`svn st | grep ^\! | awk '{print $2}' | xargs svn delete --force`
 			
 			# TO-Do:
 			# http://vcs.atspace.co.uk/2012/06/20/missing-pristines-in-svn-working-copy/
 			# until then enable overwrite
 			
-			if !safe_shell_execute('svn merge --dry-run -r BASE:HEAD .')	
-				#-----------
+			unless safe_shell_execute('svn merge --dry-run -r BASE:HEAD .')	
 				return false
 			end
 			
-			if !safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")	
-				#----------
+			unless safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")
 				return false
 			end
 		end
 		
-		#SVN Checkout to uuid/head
+		#SVN Checkout to @corpus.head_path
 		Dir.chdir Rails.root
 		Dir.chdir @corpus.head_path
+		
 		if Dir.glob("*").empty?
 			`svn co #{@corpus.svn_file_url} .`
 		else
@@ -512,11 +493,26 @@ class CorporaController < ApplicationController
 		if initial_commit
 			delete_archive(@archive)
 			Dir.chdir @corpus.head_path
+			
 			`zip -r ../#{Corpus.archives_subFolder}/#{archive_name}.0.zip .`
 		else
-			`zip -u ../#{Corpus.archives_subFolder}/#{archive_name}.#{version}.zip`
+			delete_archive(@archive)
+			Dir.chdir @corpus.head_path
+			`zip -r ../#{Corpus.archives_subFolder}/#{archive_name}.#{version}.zip .`
+			
+			# Ah yes, now we know that zip -u (update)
+			# doesn't always work.
+			# testing to see if what happens below is corruptive
+			
+			# update the zip file
+			#`zip -u ../#{Corpus.archives_subFolder}/#{archive_name}.#{version}.zip`
 		end
-		 
+		
+		revision = `svn info | grep Revision: `[/\d+/].to_i
+		unless revision == version+1
+			@corpus.errors[:commit] = " issue. #{revision} != #{version}"
+			return false
+		end
 		#----------------------------UNLOCKED--------------------------------------
 		return true
 		#--------------------------------------------------------------------------

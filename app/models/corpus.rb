@@ -106,6 +106,23 @@ class Corpus < ActiveRecord::Base
 	def remove_dirs
 		FileUtils.rm_rf("#{Corpus.corpora_folder}/#{self.utoken}");
 	end
+	
+	def create_dirs
+		return if Dir.exists? self.home_path
+
+		Dir.mkdir self.home_path 
+		sub_dir = []
+		
+		sub_dir << self.archives_path;
+		sub_dir << self.tmp_path;
+		sub_dir << self.head_path;
+		sub_dir << self.svn_path;
+	
+		sub_dir.each do |d|
+			Dir.mkdir d unless Dir.exists? d
+		end
+		
+	end
 
 	#--Returns human-readable duration
 	def human_duration
