@@ -123,7 +123,7 @@
 	<div class='row-fluid'>
 		<div class="actions">
 			<!--<%= f.submit :class => 'btn' %>-->
-			<input type='submit' value="Create Corpus" class="btn btn-primary span12"/>
+			<input type='submit' value="Create Corpus" class="btn btn-primary span12" onclick="return sendForm(this.form)"/>
 		</div>
 	</div>
 
@@ -131,7 +131,7 @@
 <% end %>
 
 <div class="progress progress-striped active">
-	<div class="bar" style="width: 10%;"></div>
+	<div class="bar" style="width: 0%;" id="pbar"></div>
 </div>
 
 <script type='text/javascript'>
@@ -151,6 +151,30 @@
 	
 		$(window).resize(dw);
 	});
+	
+	function sendForm(form) {
+		var formData = new FormData(form);
+		
+		var xhr = new XMLHttpRequest();
+		
+		xhr.open('POST', form.action, true);
+		xhr.onload = function(e) {
+			
+		};
+		
+		var progressBar = $("#pbar");
+		
+		xhr.upload.onprogress = function(e) {
+			if(e.lengthComputable) {
+				progressBar.width(((e.loaded/e.total)*100) + '%');
+			}
+		};
+		
+		xhr.send(formData);
+		
+		return false;
+	}
+	
 	function dw() {
 		$('#help_sticker').width($('#primaryOwner').width()-10);
 		if(isMobile() && popOversEnabled) {
