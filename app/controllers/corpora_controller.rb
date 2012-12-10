@@ -309,9 +309,14 @@ class CorporaController < ApplicationController
 		
 		respond_to do |format|
 			if @corpus.errors.none? && create_corpus("Initial") && @corpus.save
+				clear_directory(@corpus.tmp_path) if @corpus.utoken
+				
 				Membership.create(:user_id => @owner.id, :corpus_id => @corpus.id, :role => 'owner');
 				format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
 			else
+				clear_directory(@corpus.tmp_path) if @corpus.utoken
+				delete_archive(@archive) if @archive
+				
 				format.html { render action: "new" }
 			end
 		end
@@ -335,13 +340,15 @@ class CorporaController < ApplicationController
 
 		@corpus.valid?
 		
-		capture = 1
-		
 		respond_to do |format|
-			if @corpus.update_attributes(params[:corpus]) && (capture=create_corpus(msg))  && @corpus.save
+			if @corpus.update_attributes(params[:corpus]) && create_corpus(msg)  && @corpus.save
+				clear_directory(@corpus.tmp_path) if @corpus.utoken
 				format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
 				format.json { head :no_content }
 			else
+				clear_directory(@corpus.tmp_path) if @corpus.utoken
+				delete_archive(@archive) if @archive
+				
 				format.html { render action: "edit" }
 				format.json { render json: @corpus.errors, status: :unprocessable_entity }
 			end
@@ -378,32 +385,30 @@ class CorporaController < ApplicationController
 		
 		# Generate uToken
 		@corpus.utoken = gen_unique_token() if !@corpus.utoken
-		corpus_dir = Corpus.corpora_folder() + "/" + @corpus.utoken
-		Dir.mkdir corpus_dir unless Dir.exists? corpus_dir
-		
+		Dir.mkdir @corpus.home_path unless Dir.exists? @corpus.home_path
 		sub_dir = []
-		archive_dir		= corpus_dir		+ "/" + Corpus.archives_subFolder;	sub_dir << archive_dir;
-		tmp_dir			= corpus_dir		+ "/" + Corpus.tmp_subFolder; 		sub_dir << tmp_dir;
-		head_dir		= corpus_dir		+ "/" + Corpus.head_subFolder;		sub_dir << head_dir;
-		svn_dir			= corpus_dir		+ "/" + Corpus.svn_subFolder;		sub_dir << svn_dir;
-		
+		sub_dir << @corpus.archives_path;
+		sub_dir << @corpus.tmp_path;
+		sub_dir << @corpus.head_path;
+		sub_dir << @corpus.svn_path;
 		sub_dir.each do |d|
 			Dir.mkdir d unless Dir.exists? d
 		end
 		
-		return true if !@file #--We're done if there's no file---
+		return true if !@file 
+		#-------------We're done if there's no file-----------------------
+		
 		archive_ext = get_archive_ext(@file.original_filename);
 		if !archive_ext
 			@corpus.errors[:file_type] = "must be zip"
 			return false
 		end
 		
-		#--Locking for Multiple Users--
-		if !Dir.glob(tmp_dir + "/*").empty?
+		#------------Locking for Multiple Users----------------------------
+		if !Dir.glob(@corpus.tmp_path + "/*").empty?
 			@corpus.errors[:upload_in_use] = ": Please try again in just a minute."
 			return false
 		end
-		
 		
 		#---------Extract Archive-------------------------------------------------
 		# Archive should be deleted should this function return false
@@ -412,41 +417,38 @@ class CorporaController < ApplicationController
 		
 		archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
 		archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, '');
-		version = file_count(archive_dir)
-		archive_path = "#{archive_dir}/#{archive_name}.#{version}.#{archive_ext}"
-		File.open(archive_path, "wb") {|f| f.write(@file.read)}
+		version = file_count(@corpus.archives_path)
+		
+		@archive = @corpus.archives_path + "/#{archive_name}.#{version}.#{archive_ext}"
+		File.open(@archive, "wb") {|f| f.write(@file.read)}
 		
 		#------------------LOCKED------------------------------------------------------------
 		# /tmp Directory Locked. Must UNLOCK prior to any return via clear_directory(tmp_dir)
 		#------------------------------------------------------------------------------------
 		begin		
 			if archive_ext == "zip"
-				unzip(archive_path, tmp_dir)
+				unzip(@archive, @corpus.tmp_path)
 			end
 		rescue => exception
 			@corpus.remove_dirs
-			@corpus.errors[:internal] = " issue extracting your archive"
+			@corpus.errors[:internal] = " issue extracting your archive #{exception}"
 			
-			clear_directory(tmp_dir); #UNLOCKED
-			delete_archive(archive_path)
+			#----------
 			return false
 		end
 		
 		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
-		
 		initial_commit = false
+		
 		if Dir.glob("#{@corpus.svn_path}/*").empty?
 			# Initial commit
-			
+				
 			Dir.chdir Rails.root
-			`svnadmin create #{@corpus.svn_path}` 
+			`svnadmin create #{@corpus.svn_path}` #initialize svn storage
 		
 			Dir.chdir @corpus.tmp_path
 			
 			`svn import . #{@corpus.svn_file_url} -m #{Shellwords.escape(msg)}`
-			
-			# Original archive is not svn working copy
-			# delete_archive(archive_path)
 			
 			initial_commit = true
 		else
@@ -457,8 +459,7 @@ class CorporaController < ApplicationController
 			if !Dir.exists? "./.svn"
 				@corpus.errors[:your_upload] = " is not a recent svn working copy"
 				
-				clear_directory(tmp_dir); #UNLOCKED
-				delete_archive(archive_path)
+				#-----------
 				return false
 			end
 			#--In /tmp Directory--
@@ -480,15 +481,17 @@ class CorporaController < ApplicationController
 			
 			`svn add . --force`
 			
+			# TO-Do:
+			# http://vcs.atspace.co.uk/2012/06/20/missing-pristines-in-svn-working-copy/
+			# until then enable overwrite
+			
 			if !safe_shell_execute('svn merge --dry-run -r BASE:HEAD .')	
-				clear_directory(tmp_dir); #UNLOCKED
-				delete_archive(archive_path)
+				#-----------
 				return false
 			end
 			
 			if !safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")	
-				clear_directory(tmp_dir); #UNLOCKED
-				delete_archive(archive_path)
+				#----------
 				return false
 			end
 		end
@@ -507,14 +510,13 @@ class CorporaController < ApplicationController
 		Dir.chdir @corpus.head_path
 		
 		if initial_commit
-			delete_archive(archive_path)
+			delete_archive(@archive)
 			Dir.chdir @corpus.head_path
 			`zip -r ../#{Corpus.archives_subFolder}/#{archive_name}.0.zip .`
 		else
 			`zip -u ../#{Corpus.archives_subFolder}/#{archive_name}.#{version}.zip`
 		end
-		
-		clear_directory(tmp_dir); 
+		 
 		#----------------------------UNLOCKED--------------------------------------
 		return true
 		#--------------------------------------------------------------------------
@@ -540,20 +542,20 @@ class CorporaController < ApplicationController
 					@corpus.errors[:file_conflict] = " on #{c}"
 				end
 				
-				@corpus.errors[:conflicts] = " exist."
+				@corpus.errors[:conflicts] = " exist. #{string}"
 				
 				return false
 			end
 			
 			if err_lines && !err_lines.blank? 
 				err_lines = err_lines.split("\n")
+				err_lines.flatten! if err_lines.kind_of?(Array)
 				
 				err_lines.each do |e|
-					e = e[0]
 					@corpus.errors[:SVN_Error] = e if e
 				end
 				
-				@corpus.errors[:SVN_Errors] = " found."
+				@corpus.errors[:SVN_Errors] = " found. #{string}"
 				return false
 			end
 	
@@ -561,15 +563,17 @@ class CorporaController < ApplicationController
 	end
 	
 	# Used to delete the most recent uploaded archive because something went wrong
-	def delete_archive(archive_path)
+	def delete_archive(archive)
 		Dir.chdir Rails.root
-		`rm -f #{archive_path}`
+		`rm -f #{archive}` if File.exists?(archive)
 	end
 		
 	def clear_directory(path)
 		Dir.chdir Rails.root
-		Dir.chdir path
-		`rm -rf * .*`
+		if File.exists?(path)
+			Dir.chdir path
+			`rm -rf * .*` if !Dir.glob("./*").empty?
+		end
 		Dir.chdir Rails.root
 	end
   
