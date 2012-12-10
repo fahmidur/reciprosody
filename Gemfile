@@ -23,6 +23,7 @@ group :assets do
 
   gem 'font-awesome-rails'
   gem 'less-rails'
+  gem 'libv8'
   gem 'therubyracer', :require => 'v8'
 end
 
