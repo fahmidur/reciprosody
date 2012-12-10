@@ -375,7 +375,66 @@ class CorporaController < ApplicationController
 	private #-------------------------------------------------------------------
 	#---------------------------------------------------------------------------
   
-	def create_corpus(msg = "unspecified")
+  	def create_corpus(msg = "unspecified")
+		require 'shellwords'
+		Dir.chdir(Rails.root)
+		
+		# create corpora directory if necessary
+		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
+		
+		# Generate uToken		
+		@corpus.utoken = gen_unique_token() unless @corpus.utoken
+		@corpus.create_dirs
+		
+		return true unless @file 
+		#-------------We're done if there's no file-----------------------
+		
+		archive_ext = get_archive_ext(@file.original_filename);
+		unless archive_ext
+			@corpus.errors[:file_type] = "must be zip"
+			return false
+		end
+		
+		#------------Locking for Multiple Users----------------------------
+		unless Dir.glob(@corpus.tmp_path + "/*").empty?
+			@corpus.errors[:upload_in_use] = ": Please try again in just a minute."
+			return false
+		end
+		
+		#---------Extract Archive-------------------------------------------------
+		# Archive should be deleted should this function return false
+		# at any point
+		#-------------------------------------------------------------------------
+		
+		archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
+		archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, '');
+		version = file_count(@corpus.archives_path)
+		
+		@archive = @corpus.archives_path + "/#{archive_name}.#{version}.#{archive_ext}"
+		File.open(@archive, "wb") {|f| f.write(@file.read)}
+		
+		begin		
+			if archive_ext == "zip"
+				unzip(@archive, @corpus.tmp_path)
+			end
+		rescue => exception
+			@corpus.remove_dirs
+			@corpus.errors[:internal] = " issue extracting your archive #{exception}"
+			
+			#----------
+			return false
+		end
+		
+		#------------------LOCKED------------------------------------------------------------
+		# /tmp Directory Locked. Must UNLOCK after this method is called
+		#------------------------------------------------------------------------------------
+		
+		#----------------------------UNLOCKED--------------------------------------
+		return true
+		#--------------------------------------------------------------------------
+	end
+	
+	def unused_create_corpus(msg = "unspecified")
 		require 'shellwords'
 		Dir.chdir(Rails.root)
 		
