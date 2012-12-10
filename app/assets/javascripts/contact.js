@@ -1,5 +1,6 @@
 $(function() {
-	$('#sug_wrapper').hide();
+	//$('#sug_wrapper').hide();
+	
 	$('#sug_toggle').click(function() {
 		$('#sug_wrapper').toggle("fast");
 	});

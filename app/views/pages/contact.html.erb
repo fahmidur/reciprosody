@@ -2,7 +2,9 @@
 	<%= javascript_include_tag "contact.js" %>
 <% end %>
 
-<div class='center hero-unit'>
+<div class='hero-unit'>
+	<center>
+	
 	<h1>Contact Us</h1>
 	
 	<div class='about'>
@@ -10,23 +12,27 @@
 		<a href='http://speech.cs.qc.cuny.edu/' target='_blank'>Speech Lab @ Queens College </a>in Flushing, Queens, New York, New York.</p>
 		
 		<p>Please contact Andrew Rosenberg (<a href='mailto:andrew@cs.qc.cuny.edu' target='_blank'>andrew@cs.qc.cuny.edu</a>) with any questions or comments about Reciprosody.</p>
-		
 	</div>
-
-</div>
-
-<div class='quick_question'>
-	<a class='btn btn-large' href='#' id='sug_toggle'>Suggestion Box</a>
-	<div id='sug_wrapper'>
-		<%= form_tag '/sug_submit', :remote => true, :method => 'get', 'data-type' => :json, :id => 'sug_form' do%>
-		<%= text_field_tag "name", nil, :placeholder => 'Your Name', :id => 'sug_name'%> 
-		<%= text_field_tag "email", nil, :placeholder => 'you@gmail.com', :id => 'sug_email' %><br/>
-		<%= text_area "text", nil, :placeholder => 'I think you should...', :id => 'sug_text' %>
-		<%= recaptcha_tags :ajax => true, :display => {:theme => 'clean'}%>
-		<%= submit_tag "Send", :id => 'submit', :class => 'btn btn-large' %>
-		<% end %>
-		<div id='response'>
+	
+	</center>
+	
+	<div class='quick_question'>
+		<a class='btn btn-large' href='#' id='sug_toggle'>Message</a>
+		<div id='sug_wrapper'>
+			<%= form_tag '/sug_submit', :remote => true, :method => 'get', 'data-type' => :json, :id => 'sug_form' do%>
+			<%= text_field_tag "name", nil, :placeholder => 'Your Name', :id => 'sug_name'%> 
+			<%= text_field_tag "email", nil, :placeholder => 'you@gmail.com', :id => 'sug_email' %><br/>
+			<%= text_area "text", nil, :placeholder => 'I think you should...', :id => 'sug_text' %>
+			<%= recaptcha_tags :ajax => true, :display => {:theme => 'clean'}%>
+			<%= submit_tag "Send", :id => 'submit', :class => 'btn btn-large'%>
+			<% end %>
+			
+			<div id='response'>
+			</div>
 		</div>
 	</div>
+
 </div>
+
+
 

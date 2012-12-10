@@ -12,19 +12,25 @@ gem 'mysql'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
-
+  #gem 'sass-rails',   '~> 3.2.5' 
+  # sass fails to compile bootstrap
+  # therefore had to be removed
+  
+  # to hell with coffee-script.
+  #gem 'coffee-rails', '~> 3.2.1'
+  
   gem 'uglifier', '>= 1.0.3'
+
+  gem 'font-awesome-rails'
+  gem 'less-rails'
+  gem 'therubyracer', :require => 'v8'
 end
 
 gem 'jquery-rails'
 
 #---Modified by Me -SFR----------------
-gem 'twitter-bootstrap-rails'
+gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
+
 gem 'devise'
 gem "recaptcha", :require => "recaptcha/rails"
 gem 'nifty-generators'

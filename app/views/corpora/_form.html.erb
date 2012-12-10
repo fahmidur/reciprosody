@@ -20,7 +20,7 @@
 
 		<div class="field span4">
 			<%= f.label :name %>
-			<%= f.text_field :name, :title => 'Reminder', 'data-content' => "Please choose an appropriate name.<hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
+			<%= f.text_field :name, :title => 'Reminder', 'data-content' => "Please choose an appropriate name. This field is required.<hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
 		</div>
 
 		<div class="field span4">
@@ -38,17 +38,17 @@
 	<div class='row-fluid'>
 		<div class='field span4'>
 			<%= f.label :hours, "Hours"%>
-			<%= f.number_field :hours, :value => 0%>
+			<%= f.number_field :hours, :value => 0, :title => 'Reminder', 'data-content' => "The total time must be greater than zero. <hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
 		</div>
 
 		<div class='field span4'>
 			<%= f.label :minutes, "Minutes"%>
-			<%= f.number_field :minutes, :value => 0%>
+			<%= f.number_field :minutes, :value => 0,  :title => 'Reminder', 'data-content' => "The total time must be greater than zero. <hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
 		</div>
 
 		<div class='field span4'>
 			<%= f.label :seconds, "Seconds"%>
-			<%= f.number_field :seconds, :value => 0%>
+			<%= f.number_field :seconds, :value => 0,  :title => 'Reminder', 'data-content' => "The total time must be greater than zero. <hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
 		</div>
 
 	</div>
@@ -92,12 +92,12 @@
 	
 		<div class="field span4">
 			<%= f.label :description %>
-			<%= f.text_area :description , :class => 'big_desc', :title => 'Reminder', 'data-content' => "This field supports Markdown"%>
+			<%= f.text_area :description , :class => 'big_desc', :title => 'Reminder', 'data-content' => "This field supports <a href='http://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>"%>
 		</div>
 
 		<div class="field span4">
 			<%= f.label :citation %>
-			<%= f.text_area :citation , :class => 'big_desc', :title => 'Reminder', 'data-content' => "This field also supports Markdown"%>
+			<%= f.text_area :citation , :class => 'big_desc', :title => 'Reminder', 'data-content' => "This field also supports <a href='http://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>"%>
 		</div>
 
 		<div class="field span4">

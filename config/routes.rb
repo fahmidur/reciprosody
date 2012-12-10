@@ -31,12 +31,13 @@ Reciprosody2::Application.routes.draw do
 	
 	#--------only a few static pages-------------------
 	resources :pages
-	root :to 					=> 'pages#index'
+	root :to 			=> 'pages#index'
 	match 'about' 		=> 'pages#about'
-	match 'faq' 			=> 'pages#faq'
+	match 'faq' 		=> 'pages#faq'
 	match 'contact'		=> 'pages#contact'
-	match 'perm'			=> 'pages#permission'
+	match 'perm'		=> 'pages#permission'
 	match 'welcome'		=> 'pages#welcome'
+	match 'how-to'		=> 'pages#how_to'
 	#--------------------------------------------------
 	
 	match '/faq_submit'	=> 'pages#faq_submit', :via => :get
