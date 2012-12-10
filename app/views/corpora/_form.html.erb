@@ -123,9 +123,13 @@
 <% end %>
 
 <script type='text/javascript'>
+	
 	var popOversEnabled = false;
 	$(function() {
 		dw();
+		
+		
+	
 		$(window).resize(dw);
 	});
 	function dw() {
@@ -138,7 +142,7 @@
 		}
 		if(!isMobile() && !popOversEnabled) {
 
-			$('input, textarea').popover({trigger:'focus', placement: 'right'});
+			$('input, textarea').popover({trigger:'focus', placement: 'right', html: true});
 			popOversEnabled = true;
 			return;
 		}
