@@ -30,7 +30,7 @@ end
 gem 'jquery-rails'
 
 #---Modified by Me -SFR----------------
-gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
+gem 'twitter-bootstrap-rails'
 
 gem 'devise'
 gem "recaptcha", :require => "recaptcha/rails"
