@@ -502,7 +502,7 @@ class CorporaController < ApplicationController
 			
 			# Ah yes, now we know that zip -u (update)
 			# doesn't always work.
-			# testing to see if what happens below is corruptive
+			# testi				ng to see if what happens below is corruptive
 			
 			# update the zip file
 			#`zip -u ../#{Corpus.archives_subFolder}/#{archive_name}.#{version}.zip`
