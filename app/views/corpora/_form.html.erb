@@ -1,20 +1,18 @@
-<%= form_for(@corpus, :multipart => true) do |f| %>
+<%= form_for(@corpus, :multipart => true, :remote => true, :html => {'data-type' => 'json'}) do |f| %>
 
-<% if @corpus.errors.any? %>
+
 	<div class='row-fluid'>
 
-		<div id="error_explanation" class='alert alert-error span11'>
-			<%= render :partial => 'shared/remove_alert_button' %>
-			<p><%= pluralize(@corpus.errors.count, "error") %> prohibited this corpus from being saved:</p>
-			<ul>
-				<% @corpus.errors.full_messages.each do |msg| %>
-				<li><%= msg %></li>
-				<% end %>
-			</ul>
+		<div id="error_box" class='alert alert-error span11'>
+			
+			<div id='errors'>
+				
+			</div>
+			
 		</div>
 		
 	</div>
-<% end %>
+
 	
 	<div class='row-fluid'>
 
@@ -48,7 +46,7 @@
 
 		<div class='field span4'>
 			<%= f.label :seconds, "Seconds"%>
-			<%= f.number_field :seconds, :value => 0,  :title => 'Reminder', 'data-content' => "The total time must be greater than zero. <hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
+			<%= f.number_field :seconds, :value => 0 %>
 		</div>
 
 	</div>
@@ -137,6 +135,8 @@
 <script type='text/javascript'>
 	
 	var popOversEnabled = false;
+	var current_inputId = 0;
+	var inputIds = [];
 	$(function() {
 		dw();
 		
@@ -148,29 +148,70 @@
 			
 			
 		});
-	
+		
 		$(window).resize(dw);
+		
+		$('.progress').slideUp(0);
+		$('#error_box').hide();
+		
+		$('input, textarea').focus(function() {
+			current_inputId = inputIds.indexOf($(this).attr('id'));
+		});
+		
+		$('input, textarea').each(function() { 
+			if($(this).attr('type') != "hidden") {
+				inputIds.push($(this).attr('id'));
+			}
+		});
+		
+		$(window).bind('keydown', function(e) {
+			if(e.keyCode == 9) {
+				setTimeout('$("#'+inputIds[++current_inputId % inputIds.length]+'").focus()', 300);
+			}
+		});
+		
+		
 	});
 	
 	function sendForm(form) {
+		$('.progress').slideDown();
+		
 		var formData = new FormData(form);
+		
+		formData.append('data-type', 'json');
 		
 		var xhr = new XMLHttpRequest();
 		
 		xhr.open('POST', form.action, true);
+		
 		xhr.onload = function(e) {
-			
+			var data = JSON.parse(this.response);
+			if(data.ok) {
+				window.location.href = "/corpora/" + data.id;
+			} else {
+				$('#error_box').show();
+				$('#errors').html(data.errors.join("<br>"));
+				$('html, body').animate({ scrollTop: 0 }, 'fast');
+			}
 		};
+		
 		
 		var progressBar = $("#pbar");
 		
 		xhr.upload.onprogress = function(e) {
 			if(e.lengthComputable) {
-				progressBar.width(((e.loaded/e.total)*100) + '%');
+				var percent = (e.loaded/e.total)*100;
+				progressBar.width(percent + '%');
+				progressBar.attr('title', percent + " %");
+				
+				if(percent == 100) {
+					$('.progress').delay(1000).slideUp();
+				}
 			}
 		};
 		
 		xhr.send(formData);
+		
 		
 		return false;
 	}

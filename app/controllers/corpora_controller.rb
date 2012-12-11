@@ -307,20 +307,21 @@ class CorporaController < ApplicationController
 		end
 
 		
-		respond_to do |format|
-			if @corpus.errors.none? && create_corpus("Initial") && @corpus.save
-				clear_directory(@corpus.tmp_path) if @corpus.utoken
-				
-				Membership.create(:user_id => @owner.id, :corpus_id => @corpus.id, :role => 'owner');
-				format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
-			else
-				clear_directory(@corpus.tmp_path) if @corpus.utoken
-				delete_archive(@archive) if @archive
-				
-				format.html { render action: "new" }
-			end
+		
+		if @corpus.errors.none? && create_corpus("Initial") && @corpus.save
+			clear_directory(@corpus.tmp_path) if @corpus.utoken
+			
+			Membership.create(:user_id => @owner.id, :corpus_id => @corpus.id, :role => 'owner');
+			
+			#format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
+			render :json => {:ok => true, :id => @corpus.id}
+		else
+			clear_directory(@corpus.tmp_path) if @corpus.utoken
+			delete_archive(@archive) if @archive
+			
+			#format.html { render action: "new" }
+			render :json => {:ok => false, :errors => @corpus.errors.to_a}
 		end
-
 	end
  
 	# POST /corpora/1 
