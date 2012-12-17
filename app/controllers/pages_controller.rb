@@ -31,8 +31,8 @@ class PagesController < ApplicationController
   def ajx_upload
   	uid = params[:uid]
   	file = params[:file]
-  	chunks = params[:chunks]
-	chunkID = params[:chunkID]
+  	chunks = params[:chunks].to_i
+	chunkID = params[:chunkID].to_i
 	fileName = params[:fileName]
 	
 	Dir.chdir Rails.root
@@ -42,14 +42,14 @@ class PagesController < ApplicationController
 	Dir.mkdir uid unless Dir.exists? uid
 	
 	Dir.chdir uid
-	File.open("%020d" % chunkID.to_i, "wb") {|f| f.write(file.read)}
+	File.open("%020d.chunk" % chunkID, "wb") {|f| f.write(file.read)}
 	
-	if chunkID.to_i == chunks.to_i - 1
+	if chunks == chunkID + 1
 		logger.info("chunks = #{chunks}, chunkID = #{chunkID}");
 		logger.info("about to extract");
+		sleep(1);
 		
-		`cat * >> #{fileName}`
-			
+		`cat *.chunk >> #{fileName}`
 	end
 	
   	render :json => {:ok => true, :chunks => chunks}
