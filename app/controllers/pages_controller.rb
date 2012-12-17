@@ -22,6 +22,38 @@ class PagesController < ApplicationController
   def how_to
   end
   
+  def upload_test
+	@uid = SecureRandom.uuid
+  end
+  
+  # POST upload handler
+  # Returns JSON
+  def ajx_upload
+  	uid = params[:uid]
+  	file = params[:file]
+  	chunks = params[:chunks]
+	chunkID = params[:chunkID]
+	fileName = params[:fileName]
+	
+	Dir.chdir Rails.root
+	Dir.mkdir "upload" unless Dir.exist? "upload"
+	
+	Dir.chdir "upload"
+	Dir.mkdir uid unless Dir.exists? uid
+	
+	Dir.chdir uid
+	File.open(chunkID, "wb") {|f| f.write(file.read)}
+	
+	if chunkID.to_i == chunks.to_i - 1
+		logger.info("chunks = #{chunks}, chunkID = #{chunkID}");
+		logger.info("about to extract");
+		
+		`cat * >> #{fileName}`
+	end
+	
+  	render :json => {:ok => true, :chunks => chunks}
+  end
+  
   #-- submit a new faq --
   def faq_submit
   	question = params[:question]
@@ -67,7 +99,7 @@ class PagesController < ApplicationController
   end
   
   def contact
-  	
+	  	
   end
   
   private

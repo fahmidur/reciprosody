@@ -12,7 +12,6 @@
 		</div>
 		
 	</div>
-
 	
 	<div class='row-fluid'>
 
@@ -137,6 +136,8 @@
 	var popOversEnabled = false;
 	var current_inputId = 0;
 	var inputIds = [];
+	
+	
 	$(function() {
 		dw();
 		
@@ -144,14 +145,14 @@
 			var val = $(this).val();
 			if(val == "" || val.match(/^\s+$/))
 				val = "New Corpus";
-			$('#corpus_header').html(val);
-			
+			$('#corpus_header').html(val);	
 			
 		});
 		
 		$(window).resize(dw);
 		
 		$('.progress').slideUp(0);
+		
 		$('#error_box').hide();
 		
 		$('input, textarea').focus(function() {
@@ -170,8 +171,17 @@
 			}
 		});
 		
+		$('#error_box').click(function() {
+			$(this).slideUp("fast");
+		});
+		
+		$('#corpus_upload').live('change', function() {	
+			//upload the file not the form		
+		});
+		
 		
 	});
+
 	
 	function sendForm(form) {
 		$('.progress').slideDown();
@@ -198,7 +208,7 @@
 		
 		var progressBar = $("#pbar");
 		
-		xhr.upload.onprogress = function(e) {
+		xhr.upload.onprogress = (function(e) {
 			if(e.lengthComputable) {
 				var percent = (e.loaded/e.total)*100;
 				progressBar.width(percent + '%');
@@ -208,7 +218,7 @@
 					$('.progress').delay(1000).slideUp();
 				}
 			}
-		};
+		});
 		
 		xhr.send(formData);
 		
@@ -219,10 +229,11 @@
 	function dw() {
 		$('#help_sticker').width($('#primaryOwner').width()-10);
 		if(isMobile() && popOversEnabled) {
-
+		
 			$('input, textarea').popover('destroy');
 			popOversEnabled = false;
 			return;
+			
 		}
 		if(!isMobile() && !popOversEnabled) {
 
@@ -231,6 +242,7 @@
 			return;
 		}
 	}
+	
 	function isMobile() {
 		if($('div.btn.btn-navbar').is(":visible") && $(window).width() < 520) {
 			return true;

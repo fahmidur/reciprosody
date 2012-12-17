@@ -22,3 +22,5 @@ public/assets/*
 .sass-cache/*
 vendor/*
 vendor/**
+upload/*
+upload/**

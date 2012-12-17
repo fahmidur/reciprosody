@@ -406,7 +406,6 @@ class CorporaController < ApplicationController
 		# Archive should be deleted should this function return false
 		# at any point
 		#-------------------------------------------------------------------------
-		
 		archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
 		archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, '');
 		version = file_count(@corpus.archives_path)
@@ -425,7 +424,6 @@ class CorporaController < ApplicationController
 			#----------
 			return false
 		end
-		
 		#------------------LOCKED------------------------------------------------------------
 		# /tmp Directory Locked. Must UNLOCK after this method is called
 		#------------------------------------------------------------------------------------

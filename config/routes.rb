@@ -43,6 +43,10 @@ Reciprosody2::Application.routes.draw do
 	match '/faq_submit'	=> 'pages#faq_submit', :via => :get
 	match '/sug_submit' => 'pages#sug_submit', :via => :get
 	
+	#--upload testing
+	match 'upload_test' => 'pages#upload_test', :via => :get
+	match '/upload'		=> 'pages#ajx_upload', :via => :post
+	
 	
   # The priority is based upon order of creation:
   # first created -> highest priority.
