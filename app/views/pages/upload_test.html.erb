@@ -100,8 +100,8 @@
 			console.log("Upload Complete");
 		};
 		
-		$('#pbar_holder').prepend(
-			"<div class='progress progress-striped active'>" +
+		$('#pbar_holder').append(
+			"<div class='progress progress-striped active' title='Chunk "+chunkID+"'>" +
 			"<div class='bar' style='width: 0%;' id='pbar-"+chunkID+"'></div>" +
 			"</div>");
 			
