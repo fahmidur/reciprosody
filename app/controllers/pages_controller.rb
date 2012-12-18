@@ -29,12 +29,14 @@ class PagesController < ApplicationController
   # POST upload handler
   # Returns JSON
   def ajx_upload
+  	require 'shellwords'
+  	
   	uid = params[:uid]
   	file = params[:file]
   	chunks = params[:chunks].to_i
 	chunkID = params[:chunkID].to_i
 	totalBytes = params[:totalSize].to_i
-	fileName = params[:fileName]
+	fileName = Shellwords.escape(params[:fileName])
 	
 	Dir.chdir Rails.root
 	Dir.mkdir "upload" unless Dir.exist? "upload"
@@ -81,7 +83,11 @@ class PagesController < ApplicationController
 			end
 		end
 		
+		`rm #{fileName}` if File.exists?(fileName)
+		
 		`cat *.chunk >> #{fileName}`
+		
+		`rm *.chunk`
 	end
 	
   	render :json => {:ok => ok, :errors => errors}
