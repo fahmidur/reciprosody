@@ -33,6 +33,7 @@ class PagesController < ApplicationController
   	file = params[:file]
   	chunks = params[:chunks].to_i
 	chunkID = params[:chunkID].to_i
+	totalBytes = params[:totalSize].to_i
 	fileName = params[:fileName]
 	
 	Dir.chdir Rails.root
@@ -44,10 +45,21 @@ class PagesController < ApplicationController
 	Dir.chdir uid
 	File.open("%020d.chunk" % chunkID, "wb") {|f| f.write(file.read)}
 	
-	if chunks == chunkID + 1
+	# pick an arbitrary thread to combine files
+	if chunks == chunkID+1
 		logger.info("chunks = #{chunks}, chunkID = #{chunkID}");
 		logger.info("about to extract");
-		sleep(1);
+		
+		# wait for all chunks
+		1 == 1 until chunks == Dir.glob("*.chunk").size
+		
+		while true	
+			savedBytes = 0
+			Dir.glob("*.chunk").each do |chunk|
+				savedBytes += File.new(chunk).size
+			end
+			break if savedBytes >= totalBytes
+		end
 		
 		`cat *.chunk >> #{fileName}`
 	end
