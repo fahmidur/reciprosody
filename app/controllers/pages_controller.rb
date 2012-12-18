@@ -45,26 +45,46 @@ class PagesController < ApplicationController
 	Dir.chdir uid
 	File.open("%020d.chunk" % chunkID, "wb") {|f| f.write(file.read)}
 	
+	ok = true
+	errors = []
 	# pick an arbitrary thread to combine files
 	if chunks == chunkID+1
 		logger.info("chunks = #{chunks}, chunkID = #{chunkID}");
 		logger.info("about to extract");
 		
-		# wait for all chunks
-		1 == 1 until chunks == Dir.glob("*.chunk").size
+		baseTime = Time.now
+		# wait a maximum of an hour for all chunks
+		# to-do: make this dynamic: estimate max wait time as f(totalBytes)
+		until chunks == Dir.glob("*.chunk").size
+			if (Time.now - baseTime)/60 > 60
+				ok = false;
+				errors.push("Chunks took too long to arrive")
+				break;
+			end
+		end
 		
-		while true	
+		baseTime == Time.now
+		# wait for confirmation that all bytes were written to disk
+		while true
 			savedBytes = 0
 			Dir.glob("*.chunk").each do |chunk|
 				savedBytes += File.new(chunk).size
 			end
 			break if savedBytes >= totalBytes
+			
+			# should not take more than 10 minutes to write
+			# thid data
+			if (Time.now - baseTime)/60 > 10
+				ok = false
+				errors.push("Chunks took too long to write")
+				break;
+			end
 		end
 		
 		`cat *.chunk >> #{fileName}`
 	end
 	
-  	render :json => {:ok => true, :chunks => chunks}
+  	render :json => {:ok => ok, :errors => errors}
   end
   
   #-- submit a new faq --
