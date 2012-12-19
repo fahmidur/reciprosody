@@ -70,11 +70,11 @@
 				<%=raw markdown(@corpus.citation) %>
 			</div>
 	
-			<div class='box span4 row-fluid'>
+			<div class='span4 row-fluid'>
 				<%= form_tag("/corpora/#{@corpus.id}/download", :method => :get) do%>
 					<div class='btn-group'>
-						<%= select_tag(:name, options_for_select(@archives), :class=>'span8 vSelect') %>
-						<input type='submit' class='btn btn-primary cdownload span4' value="Download">
+						<%= select_tag(:name, options_for_select(@archives), :class=>'span6 vSelect') %>
+						<input type='submit' class='btn btn-primary cdownload span5' value="Download">
 					</div>
 				<% end %>
 				<br/>
