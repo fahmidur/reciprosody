@@ -1,4 +1,6 @@
 class CorporaController < ApplicationController
+	include UsesUpload
+	
 	before_filter :user_filter, :except => :index
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
@@ -282,10 +284,11 @@ class CorporaController < ApplicationController
 	def create
 		paramHash = params[:corpus]
 		owner_text = paramHash.delete('owner')
-
 		@corpus = Corpus.new(paramHash)
-		@file = @corpus.upload_file
-
+		
+		
+		@file =	get_upload_file
+		
 		logger.info "FILE = #{@file}"
 
 
@@ -331,29 +334,29 @@ class CorporaController < ApplicationController
 	#
 	def update
 		@corpus = Corpus.find(params[:id])
-		@corpus.upload = params[:corpus][:upload]
 		msg = params[:msg]
 		
 		msg.gsub!(/(\r+\n+)+/m, "<br/>") if msg
 		
-		@file = @corpus.upload_file
+		@file =	get_upload_file
+		
 		logger.info "---------------FILE = #{@file}"
 
 		@corpus.valid?
 		
-		respond_to do |format|
-			if @corpus.update_attributes(params[:corpus]) && create_corpus(msg)  && @corpus.save
-				clear_directory(@corpus.tmp_path) if @corpus.utoken
-				format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
-				format.json { head :no_content }
-			else
-				clear_directory(@corpus.tmp_path) if @corpus.utoken
-				delete_archive(@archive) if @archive
-				
-				format.html { render action: "edit" }
-				format.json { render json: @corpus.errors, status: :unprocessable_entity }
-			end
+
+		if @corpus.update_attributes(params[:corpus]) && create_corpus(msg)  && @corpus.save
+			clear_directory(@corpus.tmp_path) if @corpus.utoken
+			#format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
+			render :json => {:ok => true, :id => @corpus.id}
+		else
+			clear_directory(@corpus.tmp_path) if @corpus.utoken
+			delete_archive(@archive) if @archive
+			
+			#format.html { render action: "edit" }
+			render :json => {:ok => false, :errors => @corpus.errors.to_a}
 		end
+
 	end
 
 	# DELETE /corpora/1
@@ -390,7 +393,7 @@ class CorporaController < ApplicationController
 		return true unless @file 
 		#-------------We're done if there's no file-----------------------
 		
-		archive_ext = get_archive_ext(@file.original_filename);
+		archive_ext = get_archive_ext(@file.path);
 		unless archive_ext
 			@corpus.errors[:file_type] = "must be zip"
 			return false

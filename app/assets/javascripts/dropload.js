@@ -1,5 +1,4 @@
 /**
- * Send_File_Rails
  * @author Syed Reza
  */
 var dropbox = document.getElementById("dropbox");
@@ -19,7 +18,6 @@ $(function() {
 	document.addEventListener("dragexit", stopEvent, false);
 	document.addEventListener("dragOver", stopEvent, false);
 	document.addEventListener("drop", drop, false);
-	
 	dropbox = document.getElementById("dropbox");
 	droplabel = document.getElementById("droplabel");
 	
@@ -28,7 +26,6 @@ $(function() {
 function stopEvent(e) {
 	e.stopPropagation();
 	e.preventDefault();
-	
 	console.log("Event Stopped");
 }
 
@@ -67,7 +64,7 @@ function sendFile(file) {
 		"</div>");
 	dropbar = $('#dropbar');
 	
-	chunksUploaded = 0;
+	chunksUploaded = 0; uploadComplete = false;
 	while(start < fileSize) {
 		upload(file.slice(start, end), chunkID);
 		
@@ -101,6 +98,8 @@ function upload(chunk, chunkID) {
 		console.log("Upload Complete." + chunksUploaded);
 		var percent = (++chunksUploaded / numChunks * 100);
 		dropbar = dropbar.width(percent + '%');
+		if(percent == 100)
+			uploadComplete = true;
 	};
 	
 	xhr.upload.onprogress = function(e) {
