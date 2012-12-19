@@ -15,7 +15,6 @@ class UploadController < ApplicationController
   	numChunks = params[:numChunks].to_i
 	chunkID = params[:chunkID].to_i
 	
-	
 	Dir.chdir Rails.root
 	Dir.mkdir "upload" unless Dir.exist? "upload"
 	
@@ -27,7 +26,9 @@ class UploadController < ApplicationController
 	
 	ok = true
 	errors = []
+	
 	# Pick an arbitrary thread to combine files
+	# We pick the last thread, since it usually finishes last
 	if numChunks == chunkID+1
 		baseTime = Time.now
 		# Wait a maximum of 30 minutes for all chunks
@@ -41,7 +42,7 @@ class UploadController < ApplicationController
 		end
 		
 		baseTime == Time.now
-		# wait for confirmation that all bytes were written to disk
+		# Wait for confirmation that all bytes were written to disk
 		while true
 			savedBytes = 0
 			Dir.glob("*.chunk").each do |chunk|
@@ -49,8 +50,7 @@ class UploadController < ApplicationController
 			end
 			break if savedBytes >= fileSize
 			
-			# should not take more than 10 minutes to write
-			# thid data
+			# Should not take more than 10 minutes to write data
 			if (Time.now - baseTime)/60 > 10
 				ok = false
 				errors.push("Chunks took too long to write")
@@ -67,5 +67,6 @@ class UploadController < ApplicationController
 	
   	render :json => {:ok => ok, :errors => errors}
   end
+  
   
 end

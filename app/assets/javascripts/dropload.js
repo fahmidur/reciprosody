@@ -1,5 +1,10 @@
+/**
+ * Send_File_Rails
+ * @author Syed Reza
+ */
 var dropbox = document.getElementById("dropbox");
 var droplabel = document.getElementById("droplabel");
+var dropbar = $('#dropbar');
 
 const BYTES_PER_CHUNK = 1024 * 1024; // 1 MB
 
@@ -10,13 +15,14 @@ var fileSize = 0;
 var fileName;
 
 $(function() {
-
 	document.addEventListener("dragenter", stopEvent, false);
 	document.addEventListener("dragexit", stopEvent, false);
 	document.addEventListener("dragOver", stopEvent, false);
 	document.addEventListener("drop", drop, false);
+	
 	dropbox = document.getElementById("dropbox");
 	droplabel = document.getElementById("droplabel");
+	dropbar = $('#dropbar');
 });
 
 function stopEvent(e) {
@@ -57,6 +63,13 @@ function sendFile(file) {
 	
 	$('#pbar_holder').html("");
 	
+	$('#pbar_holder').prepend(
+		"<div class='progress progress-striped active'>" +
+			"<div class='bar' style='width: 0%;' id='dropbar'></div>" +
+		"</div>");
+	dropbar = $('#dropbar');
+	
+	chunksUploaded = 0;
 	while(start < fileSize) {
 		upload(file.slice(start, end), chunkID);
 		
@@ -72,8 +85,9 @@ function upload(chunk, chunkID) {
 	var formData = new FormData();
 	
 	formData.append('chunkID', chunkID);
-	formData.append('numChunks', numChunks);
 	formData.append('fileChunk', chunk);
+	
+	formData.append('numChunks', numChunks);
 	formData.append('fileName', fileName);
 	formData.append('fileSize', fileSize);
 	
@@ -89,22 +103,27 @@ function upload(chunk, chunkID) {
 	xhr.onload = function(e) {
 		data = JSON.parse(this.response);
 		console.log(data);
-		console.log("Upload Complete");	
+		console.log("Upload Complete." + chunksUploaded);
+		var percent = (++chunksUploaded / numChunks * 100);
+		dropbar = dropbar.width(percent + '%');
 	};
 	
+	/*
 	$('#pbar_holder').append(
 		"<div class='progress progress-striped active' title='Chunk "+chunkID+"'>" +
 		"<div class='bar' style='width: 0%;' id='pbar-"+chunkID+"'></div>" +
 		"</div>");
+	*/
 	
 	var progressBar = $('#pbar-'+chunkID);
 	
 	xhr.upload.onprogress = function(e) {
+		/*
 		if(e.lengthComputable) {
 			var percent = (e.loaded/e.total) * 100;
-			
 			progressBar.width(percent + '%');
 		}
+		*/
 	};
 	
 	xhr.send(formData);
