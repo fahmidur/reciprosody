@@ -43,7 +43,6 @@ Reciprosody2::Application.routes.draw do
 	match '/sug_submit' => 'pages#sug_submit', :via => :get
 	#-----------------------------------------------------
 	
-
 	#------------Upload Controller-------------------------
 	match 'upload_test' => 'upload#upload_test',	:via => :get
 	match '/upload'		=> 'upload#ajx_upload',		:via => :post

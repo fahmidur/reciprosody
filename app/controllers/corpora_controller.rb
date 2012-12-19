@@ -185,7 +185,7 @@ class CorporaController < ApplicationController
 			
 			format.json do
 				if(errors.length == 0)
-					render :json => {:ok => true, :resp => render_to_string(:partial => 'member', :layout => false, :locals => {:mem => membership}) }
+					render :json => {:ok => true, :resp => render_to_string(:partial => 'member', :layout => false, :locals => {:mem => membership}, :formats => [:html]) }
 				else
 					render :json => {:ok => false, :resp => "#{errors.join("\n")}"}
 				end

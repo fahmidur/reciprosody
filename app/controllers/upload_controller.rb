@@ -1,6 +1,6 @@
 class UploadController < ApplicationController
   def upload_test
-	@uid = SecureRandom.uuid
+	session[:upload_token] = SecureRandom.uuid
   end
   
   # POST upload handler
@@ -8,7 +8,7 @@ class UploadController < ApplicationController
   def ajx_upload
   	require 'shellwords'
   	
-  	uid = params[:uid]
+  	uid = session[:upload_token] #params[:uid]
   	file = params[:file]
   	chunks = params[:chunks].to_i
 	chunkID = params[:chunkID].to_i
