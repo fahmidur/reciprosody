@@ -74,7 +74,7 @@
 				<%= form_tag("/corpora/#{@corpus.id}/download", :method => :get) do%>
 					<div class='btn-group'>
 						<%= select_tag(:name, options_for_select(@archives), :class=>'span6 vSelect') %>
-						<input type='submit' class='btn btn-primary cdownload span5' value="Download">
+						<input type='submit' class='btn btn-primary cdownload span4' value="Download">
 					</div>
 				<% end %>
 				<span class='corpus_show_name'>Last Modified:</span> 
