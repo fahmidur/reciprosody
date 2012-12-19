@@ -29,7 +29,7 @@ Reciprosody2::Application.routes.draw do
 	end
 	
 	
-	#--------only a few static pages-------------------
+	#--------only a few static pages----------------------
 	resources :pages
 	root :to 			=> 'pages#index'
 	match 'about' 		=> 'pages#about'
@@ -38,14 +38,15 @@ Reciprosody2::Application.routes.draw do
 	match 'perm'		=> 'pages#permission'
 	match 'welcome'		=> 'pages#welcome'
 	match 'how-to'		=> 'pages#how_to'
-	#--------------------------------------------------
 	
 	match '/faq_submit'	=> 'pages#faq_submit', :via => :get
 	match '/sug_submit' => 'pages#sug_submit', :via => :get
+	#-----------------------------------------------------
 	
-	#--upload testing
-	match 'upload_test' => 'pages#upload_test', :via => :get
-	match '/upload'		=> 'pages#ajx_upload', :via => :post
+
+	#------------Upload Controller-------------------------
+	match 'upload_test' => 'upload#upload_test',	:via => :get
+	match '/upload'		=> 'upload#ajx_upload',		:via => :post
 	
 	
   # The priority is based upon order of creation:
