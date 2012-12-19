@@ -69,6 +69,8 @@ function sendForm(form) {
 
 function dw() {
 	$('#help_sticker').width($('#primaryOwner').width()-10);
+	$('#dropbox').width($('input').width()-16);
+	
 	if(isMobile() && popOversEnabled) {
 	
 		$('input, textarea').popover('destroy');
