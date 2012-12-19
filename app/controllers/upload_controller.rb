@@ -2,7 +2,7 @@ class UploadController < ApplicationController
   require 'shellwords'
   
   def upload_test
-	session[:upload_token] = SecureRandom.uuid
+
   end
   
   # POST upload handler
@@ -58,11 +58,16 @@ class UploadController < ApplicationController
 			end
 		end
 		
-		`rm #{fileName}` if File.exists?(fileName)
+		#remove all other non-chunk files
+		`find . -maxdepth 1 -type f -not -name '*.chunk' -exec rm {} ';'`
+		
+		#`rm #{fileName}` if File.exists?(fileName)
 		
 		`cat *.chunk >> #{fileName}`
 		
 		`rm *.chunk`
+		
+		session[:upload_file] = Dir.pwd + "/" + fileName
 	end
 	
   	render :json => {:ok => ok, :errors => errors}

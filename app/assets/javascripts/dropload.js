@@ -4,7 +4,7 @@
  */
 var dropbox = document.getElementById("dropbox");
 var droplabel = document.getElementById("droplabel");
-var dropbar = $('#dropbar');
+var dropbar;
 
 const BYTES_PER_CHUNK = 1024 * 1024; // 1 MB
 
@@ -22,7 +22,7 @@ $(function() {
 	
 	dropbox = document.getElementById("dropbox");
 	droplabel = document.getElementById("droplabel");
-	dropbar = $('#dropbar');
+	
 });
 
 function stopEvent(e) {
@@ -61,9 +61,7 @@ function sendFile(file) {
 	
 	var chunkID = 0;
 	
-	$('#pbar_holder').html("");
-	
-	$('#pbar_holder').prepend(
+	$('#dropbar_holder').html(
 		"<div class='progress progress-striped active'>" +
 			"<div class='bar' style='width: 0%;' id='dropbar'></div>" +
 		"</div>");
@@ -90,11 +88,8 @@ function upload(chunk, chunkID) {
 	formData.append('numChunks', numChunks);
 	formData.append('fileName', fileName);
 	formData.append('fileSize', fileSize);
-	
-	console.log(progressBar);
 		
 	var xhr = new XMLHttpRequest();
-	
 	
 	xhr.open("POST", '/upload', true);
 	
@@ -108,22 +103,7 @@ function upload(chunk, chunkID) {
 		dropbar = dropbar.width(percent + '%');
 	};
 	
-	/*
-	$('#pbar_holder').append(
-		"<div class='progress progress-striped active' title='Chunk "+chunkID+"'>" +
-		"<div class='bar' style='width: 0%;' id='pbar-"+chunkID+"'></div>" +
-		"</div>");
-	*/
-	
-	var progressBar = $('#pbar-'+chunkID);
-	
 	xhr.upload.onprogress = function(e) {
-		/*
-		if(e.lengthComputable) {
-			var percent = (e.loaded/e.total) * 100;
-			progressBar.width(percent + '%');
-		}
-		*/
 	};
 	
 	xhr.send(formData);

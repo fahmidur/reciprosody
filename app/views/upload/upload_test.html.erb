@@ -2,18 +2,13 @@
 	<%= javascript_include_tag 'dropload.js' %>
 <% end %>
 
+<!--<%= setup_upload %>-->
 
-
-
-<div id='dropbox' class='drop_box'>
-	<span id='droplabel' class='drop_label'>
-		Drop Archive Here
-	</span>
-</div>
+<%= render :partial => 'shared/dropbox' %>
 
 <br/>
 
-<div id='pbar_holder'>
+<div id='dropbar_holder'>
 	
 </div>
 
