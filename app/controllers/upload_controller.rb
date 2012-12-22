@@ -3,10 +3,12 @@ class UploadController < ApplicationController
 
 	before_filter :user_filter, :only => [:ajx_upload, :upload_test]
 
+	# GET /upload_test
 	def upload_test
+		# Renders default upload_test.html.erb
 	end
 
-	# POST upload handler
+	# POST /ajx_upload
 	# Returns JSON
 	def ajx_upload	
 		uid = session[:upload_token]
@@ -34,6 +36,8 @@ class UploadController < ApplicationController
 		# Pick an arbitrary thread to combine files
 		# We pick the last thread, since it usually finishes last
 		if numChunks == chunkID+1
+
+			# Establish a basetime
 			baseTime = Time.now
 			# Wait a maximum of 30 minutes for all chunks
 			# To-do: make this dynamic: estimate max wait time as f(totalBytes)
@@ -44,9 +48,11 @@ class UploadController < ApplicationController
 					break;
 				end
 			end
-	
+			
+			# Establish a basetime
 			baseTime == Time.now
-			# Wait for confirmation that all bytes were written to disk
+			# Wait for all bytes to be written to disk
+			# Wait a maximum of 10 minutes
 			while true
 				savedBytes = 0
 				Dir.glob("*.chunk").each do |chunk|
@@ -62,13 +68,13 @@ class UploadController < ApplicationController
 				end
 			end
 	
-			#remove all other non-chunk files
+			# remove all other non-chunk files
 			`find . -maxdepth 1 -type f -not -name '*.chunk' -exec rm {} ';'`
-	
-			#`rm #{fileName}` if File.exists?(fileName)
-	
+
+			# combine chunks
 			`cat *.chunk >> #{fileName}`
-	
+			
+			# rm all chunks
 			`rm *.chunk`
 	
 			session[:upload_file] = Dir.pwd + "/" + fileName
@@ -77,6 +83,8 @@ class UploadController < ApplicationController
 		render :json => {:ok => ok, :errors => errors}
 	end
 
+	private 
+	
 	def user_filter
 		redirect_to '/perm' unless user_signed_in?
 	end
