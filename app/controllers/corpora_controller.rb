@@ -414,7 +414,11 @@ class CorporaController < ApplicationController
 		version = file_count(@corpus.archives_path)
 		
 		@archive = @corpus.archives_path + "/#{archive_name}.#{version}.#{archive_ext}"
+
+		# This is essentially a copy operation - but we'll keep it
 		File.open(@archive, "wb") {|f| f.write(@file.read)}
+		# Delete the uploaded_file @file
+		remove_upload_file(@file)
 		
 		begin		
 			if archive_ext == "zip"
