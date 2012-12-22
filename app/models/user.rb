@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
 	end
 	
 	def email_format
-	"#{self.name}<#{self.email}>"
+		"#{self.name}<#{self.email}>"
 	end
 
 end
