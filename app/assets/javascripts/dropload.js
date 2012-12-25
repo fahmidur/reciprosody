@@ -62,8 +62,10 @@ function sendFile(file) {
 		"<div class='progress progress-striped active'>" +
 			"<div class='bar' style='width: 0%;' id='dropbar'></div>" +
 		"</div>");
+
 	dropbar = $('#dropbar');
-	
+	$('#dropbox').css("border-style", "dashed");
+
 	chunksUploaded = 0; uploadComplete = false;
 	while(start < fileSize) {
 		upload(file.slice(start, end), chunkID);
@@ -97,9 +99,14 @@ function upload(chunk, chunkID) {
 		console.log(data);
 		console.log("Upload Complete." + chunksUploaded);
 		var percent = (++chunksUploaded / numChunks * 100);
-		dropbar = dropbar.width(percent + '%');
-		if(percent == 100)
+
+		dropbar.width(percent + '%');
+		dropbar.attr("title", percent + "% Complete");
+
+		if(percent == 100) {
 			uploadComplete = true;
+			$('#dropbox').css("border-style", "solid");
+		}
 	};
 	
 	xhr.upload.onprogress = function(e) {

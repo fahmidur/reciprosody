@@ -22,7 +22,7 @@ class UploadController < ApplicationController
 		Dir.mkdir "upload" unless Dir.exist? "upload"
 
 		Dir.chdir "upload"
-		Dir.mkdir uid unless Dir.exists? uid
+		Dir.mkdir uid unless Dir.exist? uid
 
 		Dir.chdir uid
 		File.open("%020d.chunk" % chunkID, "wb") {|f| f.write(fileChunk.read)}
