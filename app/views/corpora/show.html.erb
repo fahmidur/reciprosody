@@ -1,3 +1,10 @@
+<%= content_for :javascript_includes do%>
+	<%= javascript_include_tag 'dropload.js' %>
+	<%= javascript_include_tag 'corpora_show.js' %>
+<% end %>
+
+<!--<%= setup_upload %>-->
+
 <p id="notice"><%= notice %></p>
 
 <!--<span class='corpus_header'><%= @corpus.name %><span class='corpus_icon pull-right'></span></span>-->
@@ -45,7 +52,7 @@
 
 
 		<div class='row-fluid'>
-			<div class='box span4'>
+			<div class='box span4 r1-box'>
 				<% unless @corpus.speaker_desc.blank? %>
 					<span class='corpus_show_name'>Speaker Description:</span>
 					<span class='corpus_show_value'><%= @corpus.speaker_desc %></span>
@@ -77,11 +84,11 @@
 				
 			</div>
 
-			<div class='box span4'>
-				
+			<div class='box span4 r1-box'>
+				<%= render :partial => 'shared/dropbox' %>
 			</div>
 	
-			<div class='box span4 row-fluid'>
+			<div class='box span4 row-fluid r1-box'>
 				<%= form_tag("/corpora/#{@corpus.id}/download", :method => :get) do%>
 					<div class='row-fluid'>
 						<%= select_tag(:name, options_for_select(@archives), :class=>'span6 vSelect') %>
@@ -104,11 +111,12 @@
 	
 		</div>
 
-		<!---Memberships row--->
+		<!---Memberships row-->
+
 		<% if @corpus.memberships.size > 0 %>
 		<div class='row-fluid'>
 			<% if @corpus.owners.size > 0 %>
-			<div class='box span4'>
+			<div class='box span4 r2-box'>
 				<h5 id='owners_hd'><%= pluralize(@corpus.owners.size, 'Owner', 'Owners') %></h5>
 
 					<% @corpus.owners.each do |owner| %>
@@ -119,7 +127,7 @@
 			<% end %>
 			
 			<% if @corpus.approvers.size > 0 %>
-			<div class='box span4'>
+			<div class='box span4 r2-box'>
 				<h5 id='approvers_hd'><%= pluralize(@corpus.approvers.size, 'Approver', 'Approvers') %> </h5>
 								
 				<% @corpus.approvers.each do |approver| %>
@@ -130,7 +138,7 @@
 			<% end %>
 			
 			<% if @corpus.members.size > 0 %>
-			<div class='box span4'>
+			<div class='box span4 r2-box'>
 				<h5 id='members_hd'><%= pluralize(@corpus.members.size, 'Member', 'Members') %> </h5>
 				<% @corpus.members.each do |member| %>
 					<%= render :partial => 's.member', :locals => {:mem =>  member} %>
