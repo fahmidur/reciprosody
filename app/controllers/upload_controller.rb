@@ -1,5 +1,6 @@
 class UploadController < ApplicationController
 	require 'shellwords'
+	require 'thread'
 
 	before_filter :user_filter, :only => [:ajx_upload, :upload_test]
 
@@ -10,7 +11,7 @@ class UploadController < ApplicationController
 
 	# POST /ajx_upload
 	# Returns JSON
-	def ajx_upload	
+	def ajx_upload
 		uid = session[:upload_token]
 		fileChunk = params[:fileChunk]
 		fileSize = params[:fileSize].to_i
@@ -18,20 +19,21 @@ class UploadController < ApplicationController
 		numChunks = params[:numChunks].to_i
 		chunkID = params[:chunkID].to_i
 
-		Dir.chdir Rails.root
-		Dir.mkdir "upload" unless Dir.exist? "upload"
+		#Signal that upload file is not ready
+		session[:upload_file] = nil
 
-		Dir.chdir "upload"
-		Dir.mkdir uid unless Dir.exist? uid
+		logger.info "CWD = #{Dir.pwd}"
+		cwd = "upload"
+		Dir.mkdir cwd unless Dir.exist?(cwd)
 
-		Dir.chdir uid
-		File.open("%020d.chunk" % chunkID, "wb") {|f| f.write(fileChunk.read)}
+		cwd += "/" + uid
+		Dir.mkdir cwd unless Dir.exist?(cwd)
+		File.open("#{cwd}/%020d.chunk" % chunkID, "wb") {|f| f.write(fileChunk.read)}
+
 
 		ok = true
 		errors = []
-
-		#Signal that upload file is not ready
-		session[:upload_file] = nil
+		
 
 		# Pick an arbitrary thread to combine files
 		# We pick the last thread, since it usually finishes last
@@ -41,7 +43,7 @@ class UploadController < ApplicationController
 			baseTime = Time.now
 			# Wait a maximum of 30 minutes for all chunks
 			# To-do: make this dynamic: estimate max wait time as f(totalBytes)
-			until numChunks == Dir.glob("*.chunk").size
+			until numChunks == Dir.glob("#{cwd}/*.chunk").size
 				if (Time.now - baseTime)/60 > 30
 					ok = false;
 					errors.push("Chunks took too long to arrive")
@@ -55,7 +57,7 @@ class UploadController < ApplicationController
 			# Wait a maximum of 10 minutes
 			while true
 				savedBytes = 0
-				Dir.glob("*.chunk").each do |chunk|
+				Dir.glob("#{cwd}/*.chunk").each do |chunk|
 					savedBytes += File.new(chunk).size
 				end
 				break if savedBytes >= fileSize
@@ -69,15 +71,15 @@ class UploadController < ApplicationController
 			end
 	
 			# remove all other non-chunk files
-			`find . -maxdepth 1 -type f -not -name '*.chunk' -exec rm {} ';'`
+			`find #{cwd} -maxdepth 1 -type f -not -name '*.chunk' -exec rm {} ';'`
 
 			# combine chunks
-			`cat *.chunk >> #{fileName}`
+			`cat #{cwd}/*.chunk >> #{cwd}/#{fileName}`
 			
 			# rm all chunks
-			`rm *.chunk`
+			`rm #{cwd}/*.chunk`
 	
-			session[:upload_file] = Dir.pwd + "/" + fileName
+			session[:upload_file] = cwd + "/" + fileName
 		end
 
 		render :json => {:ok => ok, :errors => errors}
