@@ -1,5 +1,6 @@
 <% content_for :javascript_includes do %>
 	<%= javascript_include_tag "corpus_index.js" %>
+	<%= javascript_include_tag "user_home.js" %>
 <% end %>
 
 <div class='center hero-unit grad1'>
@@ -29,7 +30,7 @@
 	<div class='span5'>
 		<h5>My Corpora</h5>
 		<% current_user().owner_of.each do |corpus| %>
-			<div class='corpi_item'>
+			<div class='corpi_item' id='corpi-<%= corpus.id %>'>
 				<h4><%= corpus.name %></h4>
 				
 				<span class='corpi_l'><%= corpus.language %></span>
@@ -41,7 +42,9 @@
 					<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
 					<!--<%= link_to 'Destroy', corpus, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini' %>-->
 					<% if corpus.owners.include?(current_user())%>
-						<a href="#delete-confirm-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><i class='icon-remove'></i></a>
+						<a href="#delete-confirm-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
+							<%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>
+						</a>
 					<% end %>
 				
 				 <% end %>
@@ -56,7 +59,12 @@
 					<p>Just checking.</p>
 				</div>
 				<div class="modal-footer">
-					<%= link_to 'Destroy', 'corpora/'+corpus.id.to_s, method: :delete, :class => 'btn' %>
+					<%= link_to 'Destroy', 'corpora/'+corpus.id.to_s, 
+						:method => :delete,
+						:remote => true, 
+						:class => 'btn', 
+						:id => 'delete_corpus',
+						'data-id' => corpus.id.to_s %>
 					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
 				</div>
 			</div>

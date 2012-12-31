@@ -29,7 +29,6 @@ function setMaxWidth(set) {
 		}
 	});
 	set.each(function(el) {
-		console.log($(this));
 		$(this).width(max);
 	});
 }
