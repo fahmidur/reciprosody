@@ -24,10 +24,17 @@ class UploadController < ApplicationController
 
 		logger.info "CWD = #{Dir.pwd}"
 		cwd = "upload"
-		Dir.mkdir cwd unless Dir.exist?(cwd)
+
+		Thread.exclusive do
+			Dir.mkdir cwd unless Dir.exist?(cwd)
+		end
 
 		cwd += "/" + uid
-		Dir.mkdir cwd unless Dir.exist?(cwd)
+
+		Thread.exclusive do
+			Dir.mkdir cwd unless Dir.exist?(cwd)
+		end
+		
 		File.open("#{cwd}/%020d.chunk" % chunkID, "wb") {|f| f.write(fileChunk.read)}
 
 
