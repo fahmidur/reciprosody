@@ -6,6 +6,9 @@ class CorporaController < ApplicationController
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :view_history,
 				  :add_member, :update_member,:remove_member]
+
+	before_filter :assoc_filter,
+		:only => [:add_comment, :remove_comment, :refresh_comments]
 				  
 	
 	autocomplete :language, :name
@@ -82,7 +85,117 @@ class CorporaController < ApplicationController
 		  format.json { render json: [@memberships] }
 		end
 	end
+
+	# GET /corpora/1/comments
+	# Just the comments page
+	def comments
+		@corpus = Corpus.find_by_id(params[:id])
+		@comments = @corpus.comments
+	end
+
+	# GET /corpora/1/add_comment
+	# params[:msg] = comment
+	# FILTERED_BY: assoc_filter
+	#
+	def add_comment
+		@corpus = Corpus.find_by_id(params[:id])
+
+		msg = params[:msg]
+		user = current_user()
+		
+		respond_to do |format|	
+
+			format.json do
+				if @corpus && msg && !msg.blank? && user
+					comment = Comment.build_from(@corpus, user.id, msg)
+					comment.save
+					render :json => {
+						:ok => true, 
+						:resp => render_to_string(
+							:partial => 'comment', 
+							:locals => {:comment => comment}, 
+							:formats => [:html])
+						}
+				
+				else
+					render :json => {:ok => false}
+				end
+			end
+
+
+		end
+	end
 	
+	# GET /corpora/1/remove_comment
+	# FILTERED_BY assoc_filter
+	# Internally allows only comment owners
+	#
+	# comment_id = params[:comment_id]
+	#
+	def remove_comment
+		@corpus = Corpus.find_by_id(params[:id])
+		user = current_user();
+		comment_id = params[:comment_id]
+		comment = Comment.find_by_id(comment_id)
+
+		respond_to do |format|
+			format.html do
+				if comment && comment.user_id == user.id
+					comment.destroy
+					render :text => comment_id
+				else
+					render :text => "ERROR"
+				end
+			end
+			format.json do
+				if comment && comment.user_id == user.id
+					comment.destroy
+					render :json => {:ok => true}
+				else
+					render :json => {:ok => false}
+				end
+			end
+		end
+
+	end
+
+	# GET /corpora/1/refresh_comments
+	# FILTERED_BY assoc_filter
+	# params[:num_comments]
+	def refresh_comments
+		@corpus = Corpus.find_by_id(params[:id])
+		num_comments_on_page = params[:num_comments].to_i
+		num_comments = @corpus.comments.length
+
+		respond_to do |format|
+			format.json do
+				if(num_comments_on_page != num_comments)
+					diff = num_comments - num_comments_on_page
+
+					if(diff > 0) #comments added
+						new_comments = @corpus.comments.where("user_id != ?", current_user().id).limit(diff)
+
+						if new_comments
+							new_comments.map! do |com|
+								render_to_string(:partial => 'comment', :formats => [:html], 
+								:locals => {:comment => com})
+							end
+							render :json => {:ok => true, :num => num_comments, :add => true, :comms => new_comments}
+						else
+							render :json => {:ok => false, :num => num_comments}
+						end
+					else #comments removed
+						# CURRENTLY UNSUPPORTED
+						render :json => {:ok => false, :add => false, :num => num_comments}
+					end
+				else #comments = comments_on_page
+					render :json => {:ok => false, :num => num_comments}
+				end
+			end
+		end
+	end
+
+
 	# GET /corpora/1/manage_members
 	#
 	# FILTERED_BY: owner_filter
@@ -708,13 +821,30 @@ class CorporaController < ApplicationController
   	#--------FILTERS--------------------------------------------------------
   	# 
   	#-----------------------------------------------------------------------
+
+  	# Allows only users
 	def user_filter
 		redirect_to '/perm' unless user_signed_in?
 	end
   
+  	# Allows only owners
+  	# Is applied in combination with user_filter
 	def owner_filter
 		@corpus = Corpus.find_by_id(params[:id])
+
+		#Dont filter super_key holders
 		return if current_user().super_key != nil
+
 		redirect_to '/perm' unless @corpus && @corpus.owners.include?(current_user())
+	end
+
+	# Allows owners || approvers || members
+	def assoc_filter
+		@corpus = Corpus.find_by_id(params[:id])
+
+		# Dont filter super_key holders
+		return if current_user().super_key != nil
+
+		redirect_to '/perm' unless @corpus && @corpus.owners.include?(current_user()) || @corpus.approvers.include?(current_user()) || @corpus.members.include?(current_user())
 	end
 end

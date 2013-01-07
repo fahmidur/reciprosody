@@ -1,6 +1,7 @@
 <ul class="nav nav-tabs">
 	<li class='corpus_name'><%= @corpus.name %></li>
 	<li class='pull-right <%= "active" if tab=="details"%> '><a href="<%=corpus_path(@corpus)%>">Details</a></li>
+	<li class='pull-right <%= "active" if tab=="comments" %>'><a href="<%= comments_corpus_path(@corpus)%>">Comments</a></li>
 	<% if @corpus.canEdit?(current_user())%>
 		<li class='pull-right <%= "active" if tab=="members"%> '><a href="<%=manage_members_corpus_path(@corpus)%>">Manage Members</a></li>
 		<li class='pull-right <%= "active" if tab=="history"%> '><a href="<%=view_history_corpus_path(@corpus)%>">History</a></li>

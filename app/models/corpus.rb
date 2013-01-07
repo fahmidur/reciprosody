@@ -1,8 +1,12 @@
 class Corpus < ActiveRecord::Base
+	acts_as_commentable
+
 	attr_accessible :description, :language, :name, :upload, :duration, :num_speakers, :speaker_desc, :genre, :annotation, :license, :citation, :hours, :minutes, :seconds
 
 	has_many :users, :through => :memberships
 	has_many :memberships, :dependent => :delete_all #cascading delete
+
+	has_many :comments, :as => :commentable, :order => 'updated_at DESC'
 
 	before_destroy :remove_dirs
 
@@ -18,7 +22,6 @@ class Corpus < ActiveRecord::Base
 	after_find :set_times
 
 	#---Static Methods  -----------------------------------
-	 
 	def self.corpora_folder
 		"corpora"
 	end

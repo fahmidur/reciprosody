@@ -1,17 +1,24 @@
 Reciprosody2::Application.routes.draw do
   resources :corpora do
   	member do
-  	  	post :update
+  	  post :update
   		get :download
-  		get :manage_members
   		get :view_history
+
+      get :manage_members
   		get :add_member
   		get :update_member
   		delete :remove_member
+
+      get :comments
+      get :add_comment
+      get :remove_comment
+      get :refresh_comments
+        
   	end
   	get :autocomplete_language_name,	:on => :collection
   	get :autocomplete_license_name,		:on => :collection
-  	get :autocomplete_user_name,		:on => :collection
+  	get :autocomplete_user_name,	    :on => :collection
   end
 	
 	

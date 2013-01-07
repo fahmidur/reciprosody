@@ -1,0 +1,37 @@
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag "comments.js" %>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+<%= render :partial => 'tabs', :locals => {:tab => 'comments'} %>
+
+<br/>
+<%= form_tag add_comment_corpus_path(@corpus), :remote => true, :method => 'get', 'data-type' => :json, :id => 'newComment_form' do%>
+
+	<div class='row-fluid'>
+		<div class='box span12'>
+			<textarea class='newCommentBox' name="msg" id='input' placeholder="New Comment" data-cid="<%= @corpus.id %>"></textarea>
+			<center>
+				<input type='submit' class='btn btn-small btn-primary span12' id='submit' value='Post!'/>
+			</center>
+		</div>
+	</div>
+
+
+<% end %>
+<div id="comments_holder">
+	<% @comments.each do |comment| %>
+		<%= render :partial => 'comment', :locals => {:comment => comment} %>
+	<% end %>
+</div>
+
+<br/>
+
+<%= link_to 'Edit', edit_corpus_path(@corpus), :class => 'btn' %> &nbsp;
+<%= link_to 'Back', 'javascript:history.go(-1)', :class => 'btn' %> &nbsp;
+<%= link_to 'All Corpora', corpora_path, :class => 'btn' %>
+
+
+
+    
