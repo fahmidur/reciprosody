@@ -13,7 +13,7 @@
 <%= form_for(@pub) do |f|%>
 	<div class='row-fluid'>
 		<div class='field span4'>
-			<%= f.label :name %>
+			<%= f.label :name, "Title" %>
 			<input id="publication_name" name="publication[name]" size="30" type="text" value="<%= @pub.name %>" required>
 		</div>
 
@@ -45,6 +45,16 @@
 			<%= f.text_area :authors, :class => 'big_desc' %>
 		</div>
 		
+	</div>
+
+	<div class='row-fluid'>
+		
+
+		<div class='field span4'>
+			<%= f.label :citation, "citations" %>
+			<%= f.text_area :citation, :class => 'big_desc' %>
+		</div>
+
 	</div>
 
 	<input type='submit' class='btn btn-small btn-primary span12' value="Edit Publication"/>

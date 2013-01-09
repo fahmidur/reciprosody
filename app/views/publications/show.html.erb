@@ -32,7 +32,6 @@
 		<%=raw markdown(@pub.authors) %>
 	</div>
 
-
 	
 	<div class='box span4 r1-box'>
 		<h5 class='boxheader'>External Link</h5>
@@ -58,6 +57,8 @@
 	</div>
 </div>
 
+
+
 <div class='row-fluid'>
 	<div class='box span4 r2-box'>
 		<h5 id='owners_hd'><%= pluralize(@pub.owners.size, 'Owner', 'Owners') %></h5>
@@ -81,4 +82,12 @@
 	</div>
 </div>
 
+<% if @pub.citation && !@pub.citation.blank? %>
+	<div class='row-fluid'>
+		<div class='box span12'>
+			<h5 class='boxheader'>Citation</h5>
+			<%=raw markdown(@pub.citation) %>
+		</div>
+	</div>
+<% end %>
 <%= render :partial => 'footer' %>

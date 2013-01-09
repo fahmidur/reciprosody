@@ -1,5 +1,5 @@
 class Publication < ActiveRecord::Base
-	attr_accessible :description, :keywords, :local, :name, :url, :authors
+	attr_accessible :description, :keywords, :local, :name, :url, :authors, :citation
 
 	has_many :corpora, :through => :publication_corpus_relationship
 	has_many :users, :through => :publication_memberships
