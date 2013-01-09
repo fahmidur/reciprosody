@@ -9,7 +9,8 @@ class User < ActiveRecord::Base
 	attr_accessible :email, :password, :password_confirmation, :remember_me, :name
 
 	has_many :corpora, :through => :memberships
-	has_many :publications, :through => :memberships
+
+	has_many :publications, :through => :publication_memberships
 
 	has_many :memberships #to corpora
 	has_many :publication_memberships
@@ -23,7 +24,15 @@ class User < ActiveRecord::Base
 
 	scope :publication_owners,			where(:publication_memberships => {role: 'owner'})
 	scope :publication_reviewers,		where(:publication_memberships => {role: 'reviewer'})
-	scope :publication_members,		where(:publication_memberships => {role: 'member'})
+	scope :publication_members,			where(:publication_memberships => {role: 'member'})
+
+
+	#--Memberships to Publications--
+	def publication_owner_of
+		self.publications.publication_owner_of
+	end
+
+	#--Memberships to Corpora--
 
 	def owner_of
 		self.corpora.owner_of.all

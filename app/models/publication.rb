@@ -8,6 +8,11 @@ class Publication < ActiveRecord::Base
 
 	accepts_nested_attributes_for :publication_memberships, :users
 
+	scope :publication_owner_of,	where(publication_memberships: {role: 'owner'})
+
+	accepts_nested_attributes_for :publication_memberships, :users
+
+
 	def owners
 		self.users.publication_owners.all
 	end

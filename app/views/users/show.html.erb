@@ -3,17 +3,21 @@
 	<%= javascript_include_tag "user_home.js" %>
 <% end %>
 
+<!--
 <div class='center hero-unit grad1'>
 	<h1><%= current_user.name%></h1>
 	<small><%= current_user.email %></small>
-	
-	<p>
-	<!--Not you? Then <%= link_to "Sign out", destroy_user_session_path, :method => :delete %><br/>-->
-	</p>
-</div>
+</div>-->
 
 <div class='row-fluid'>
 	<div class="span2">
+		<div class='box'> 
+			<center>
+				<h4><%= current_user.name%></h4>
+				<small><%= current_user.email %></small>
+			</center>
+		</div>
+
 		<ul class="nav nav-tabs nav-stacked">
 			<li class='l-nav'><a href='/users' class=''>Show All Users</a></li>
 			<li class='l-nav'><a href='/user/invite' class=''>Invite a Friend</a></li>
@@ -27,7 +31,48 @@
 	</div>
 	
 	<div class='span5'>
-		<h5>Recent Activity</h5>
+		<h5>Publications</h5>
+
+		<% current_user().publication_owner_of.each do |pub| %>
+			<div class='corpi_item' id='pubi-<%= pub.id %>'>
+				<h4><%= pub.name %></h4>
+				
+				<br/>
+				
+				<% if user_signed_in? %>
+					<%= link_to 'Show', pub, :class => 'btn btn-mini' %>
+					<%= link_to 'Edit', edit_publication_path(pub), :class => 'btn btn-mini' %>
+
+					<% if pub.owners.include?(current_user()) %>
+						<a href="#delete-confirm-pub-<%= pub.id%>" data-id="<%= pub.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
+							<%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>
+						</a>
+					<% end %>
+				
+				 <% end %>
+			</div>
+		
+			<div class="modal fade" id="delete-confirm-pub-<%= pub.id %>">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Are you sure?</h3>
+				</div>
+				<div class="modal-body">
+					<p>Just checking.</p>
+				</div>
+				<div class="modal-footer">
+					<%= link_to 'Destroy', 'publications/'+pub.id.to_s, 
+						:method => :delete,
+						:remote => true, 
+						:class => 'btn', 
+						:id => 'delete_pub',
+						'data-id' => pub.id.to_s %>
+					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+				</div>
+			</div>
+		<% end %>
+
+
 	</div>
 	
 	<div class='span5'>
@@ -43,7 +88,7 @@
 				<% if user_signed_in? %>
 					<%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
 					<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
-					<!--<%= link_to 'Destroy', corpus, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini' %>-->
+					
 					<% if corpus.owners.include?(current_user())%>
 						<a href="#delete-confirm-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
 							<%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>
