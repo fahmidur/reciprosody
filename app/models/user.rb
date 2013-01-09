@@ -9,7 +9,10 @@ class User < ActiveRecord::Base
 	attr_accessible :email, :password, :password_confirmation, :remember_me, :name
 
 	has_many :corpora, :through => :memberships
-	has_many :memberships
+	has_many :publications, :through => :memberships
+
+	has_many :memberships #to corpora
+	has_many :publication_memberships
 	
 	has_one :super_key
 
@@ -17,6 +20,10 @@ class User < ActiveRecord::Base
 	scope :approvers,	where(:memberships => {role: 'approver'})
 	scope :members,		where(:memberships => {role: 'member'})
 
+
+	scope :publication_owners,			where(:publication_memberships => {role: 'owner'})
+	scope :publication_reviewers,		where(:publication_memberships => {role: 'reviewer'})
+	scope :publication_members,		where(:publication_memberships => {role: 'member'})
 
 	def owner_of
 		self.corpora.owner_of.all

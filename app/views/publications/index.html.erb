@@ -1,15 +1,44 @@
+<% content_for :javascript_includes do %>
+	<%= javascript_include_tag "corpus_index.js" %>
+<% end %>
+
 <h1>Publications</h1>
 
 <br/>
 
 <% @pubs.each do |p| %>
 	<div class='corpi_item'>
+
 		<h4><%= p.name %></h4>
 		<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
 		<% if p.url && !p.url.blank? %>
 			<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
 		<% end %>
+
+		<% if p.owners.include?(current_user()) %>
+		<a href="#delete-confirm-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
+		<% end %>
+
 	</div>
+
+
+	<div class="modal fade" id="delete-confirm-<%= p.id %>">
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">×</a>
+			<h3>Are you sure?</h3>
+		</div>
+		<div class="modal-body">
+			<p>Just checking.</p>
+		</div>
+		<div class="modal-footer">
+			<%= link_to 'Destroy', '/publications/'+ p.id.to_s, :method => :delete, 
+				:class => 'btn' %>
+			<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+		</div>
+	</div>
+
 <% end %>
+
+
 
 <a class='btn' href='/publications/new'>New Publication</a>

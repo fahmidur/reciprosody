@@ -1,0 +1,64 @@
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag "pub_manage_members.js" %>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+
+<%= render :partial => 'tabs', :locals => {:tab => 'members'} %>
+
+<br/>
+
+	<div id='response'>
+	</div>
+	<%= form_tag add_member_publication_path(@pub), :remote => true, :method => 'get', 'data-type' => :json, :id => 'addMem_form' do%>
+
+
+		<div class='row-fluid memberListItem'>
+			<div class="span5 input-prepend">
+				<span class="add-on"><i class="icon-user"></i></span>
+				<input id="newMem" class="ui-autocomplete-input" data-autocomplete="/corpora/autocomplete_user_name" id="corpus_member" name="member[email]" size="30" type="text" value="" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+			</div>
+
+			<div class="span5 input-prepend">
+				<span class="add-on"><i class="icon-list"></i></span>
+				<%= select_tag "member[role]", options_for_select(PublicationMembership.roles.map {|m| [m.capitalize, m] }, 'member') %>
+			</div>
+
+			<div class="span2">
+				<button id='addMember' class="btn btn-primary" type='submit'><i class='icon-plus-sign'></i></button>
+			</div>
+	
+		</div>
+		
+	<% end %>
+
+	<div id='memberList'>
+		<% @memberships.each do |mem| %>
+			<%= render :partial => 'member', :locals => {:mem => mem} %>
+		<% end %>
+	</div>
+
+
+
+
+<div class="modal fade" id="delete-confirm">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Are you sure?</h3>
+	</div>
+	<div class="modal-body">
+		<p id='deleteMsg'>You're about to remove <span id='memName'>MEMNAME</span> as <span id='memRole'>MEMROLE</span> of <span class='corpusName'><i class='icon-book'></i>&nbsp;<%= @pub.name %></span></p>
+	</div>
+	<div class="modal-footer">
+		<%= form_tag remove_member_publication_path(@pub), :remote => true, :method => 'delete', 'data-type' => :json, :id => 'remMem_form' do %>
+			<input type='hidden' name='mem_id' value='' id='yesDelete'/>
+			<button class='btn' id='yesDelete' type='submit'>Yes</button>
+			<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+		<% end %>
+	</div>
+</div> <!--End of Delete Modal-->
+
+<br/>
+
+<%= render :partial => 'footer' %>

@@ -24,7 +24,7 @@
 
 <div class='row-fluid'>
 	<div class='box span4'>
-		<h5 class='boxheader'>Authors</h5>
+		<h5 class='boxheader'>Publication Authors</h5>
 		<%=raw markdown(@pub.authors) %>
 	</div>
 
@@ -47,6 +47,29 @@
 					<input type='submit' class='btn btn-primary cdownload span6' value="Download">
 			<% end %>
 			</center>
+		<% end %>
+	</div>
+</div>
+
+<div class='row-fluid'>
+	<div class='box span4'>
+		<h5 id='owners_hd'><%= pluralize(@pub.owners.size, 'Owner', 'Owners') %></h5>
+		<% @pub.owners.each do |m| %>
+			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
+		<% end %>
+	</div>
+
+	<div class='box span4'>
+		<h5 id='owners_hd'><%= pluralize(@pub.reviewers.size, 'Reviewer', 'Reviewers') %></h5>
+		<% @pub.reviewers.each do |m| %>
+			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
+		<% end %>
+	</div>
+
+	<div class='box span4'>
+		<h5 id='owners_hd'><%= pluralize(@pub.members.size, 'Member', 'Members') %></h5>
+		<% @pub.members.each do |m| %>
+			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
 		<% end %>
 	</div>
 </div>
