@@ -11,7 +11,6 @@ $(function() {
 		if(val == "" || val.match(/^\s+$/))
 			val = "New Corpus";
 		$('#corpus_header').html(val);	
-		
 	});
 	
 	$(window).resize(dw);
@@ -33,39 +32,41 @@ $(function() {
 			setTimeout('$("#'+inputIds[++current_inputId % inputIds.length]+'").focus()', 300);
 		}
 	});
-	
+		
 	$('#error_box').click(function() {
 		$(this).slideUp("fast");
 	});
-	
-});
 
+	
+	$('#new_corpus').on('ajax:beforeSend', function(e) {
+		console.log("beforeSend!");
 
-function sendForm(form) {
-	var formData = new FormData(form);
-	
-	formData.append('data-type', 'json');
-	
-	var xhr = new XMLHttpRequest();
-	
-	xhr.open('POST', form.action, true);
-	
-	xhr.onload = function(e) {
-		var data = JSON.parse(this.response);
+		var percent = parseInt($('#dropbar').attr('data-percent'));
+		if($('#dropbar').is(':visible') && percent != 100) {
+			$('#upload-progress-warning').modal('show');
+			return false;
+		}
+		$('#submit_btn').hide();
+		$('#please-wait-warning').modal('show');
+	});
+
+	$('#new_corpus').on('ajax:success', function(e, data) {
+		console.log("success!");
+		console.log(data);
+
 		if(data.ok) {
-			window.location.href = "/corpora/" + data.id;
+			window.location.href = "/corpora/"+ data.id;
 		} else {
+			$('#please-wait-warning').modal('hide');
+			$('#submit_btn').show();
+
 			$('#error_box').show();
 			$('#errors').html(data.errors.join("<br>"));
 			$('html, body').animate({ scrollTop: 0 }, 'fast');
 		}
-	};
-	
-	xhr.send(formData);
-	
-	
-	return false;
-}
+
+	});	
+});
 
 function dw() {
 	$('#help_sticker').width($('#primaryOwner').width()-10);

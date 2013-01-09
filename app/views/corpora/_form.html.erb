@@ -5,6 +5,33 @@
 
 <!--<%= setup_upload %>-->
 
+<div class="modal fade" id="upload-progress-warning">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Please Wait</h3>
+	</div>
+	<div class="modal-body">
+		<p>Your upload is in progress.</p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" data-dismiss="modal" class="btn">Ok</a>
+	</div>
+</div>
+
+<div class="modal fade" id="please-wait-warning">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Please Wait</h3>
+	</div>
+	<div class="modal-body">
+		<p>This might take some time</p>
+	</div>
+	<div class="modal-footer">
+		<!--<a href="#" data-dismiss="modal" class="btn">Ok</a>-->
+	</div>
+</div>
+
+
 <%= form_for(@corpus, :multipart => true, :remote => true, :html => {'data-type' => 'json'}) do |f| %>
 
 	<div class='row-fluid'>
@@ -130,9 +157,12 @@
 	
 	<div class='row-fluid'>
 		<div class="actions">
-			<input type='submit' value="Create Corpus" class="btn btn-primary span12" onclick="return sendForm(this.form)"/>
+
+			<input type='submit' value="Create Corpus" class="btn btn-primary span12" id='submit_btn'/>
 		</div>
 	</div>
 
   
 <% end %>
+
+

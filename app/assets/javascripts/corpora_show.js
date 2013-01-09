@@ -2,6 +2,7 @@ $(function() {
 	$(window).resize(dw);
 	dw();
 });
+
 function dw() {
 	fixEmailSize();
 	fixBoxHeight();

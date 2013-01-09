@@ -38,6 +38,7 @@
 		<h5 class='boxheader'>External Link</h5>
 		<% if @pub.url && !@pub.url.blank? %>
 		<center>
+		<p class='label label-default' href='<%= @pub.url %>'><%= @pub.url %></p><br/>
 		<a href='<%= @pub.url %>' target='_blank' class='btn btn-primary'>Follow Link</a>
 		<br/><br/>
 		</center>

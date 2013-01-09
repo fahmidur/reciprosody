@@ -102,6 +102,7 @@ function upload(chunk, chunkID) {
 
 		dropbar.width(percent + '%');
 		dropbar.attr("title", percent + "% Complete");
+		dropbar.attr("data-percent", percent);
 
 		if(percent == 100) {
 			uploadComplete = true;
