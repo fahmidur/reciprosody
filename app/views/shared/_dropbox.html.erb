@@ -1,5 +1,9 @@
 <div id='dropbox' class='drop_box'>
 	<span id='droplabel' class='drop_label'>
-		Drop Archive Here
+		<% if defined? text %>
+			<%= text %>
+		<% else %>
+			Drop Archive Here
+		<% end %>
 	</span>
 </div>

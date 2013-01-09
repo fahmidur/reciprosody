@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
 	scope :approvers,	where(:memberships => {role: 'approver'})
 	scope :members,		where(:memberships => {role: 'member'})
 
+
 	def owner_of
 		self.corpora.owner_of.all
 	end

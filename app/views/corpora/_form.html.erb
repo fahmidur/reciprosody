@@ -114,6 +114,7 @@
 				<span class="add-on"><i class="icon-user"></i></span>
 				<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user.email_format, :class => 'memberInput', :id => 'primaryOwner' %> 
 			</div>
+			
 			<br/>
 			<div id='help_sticker' class='alert alert-info'>
 				<%= render :partial => 'shared/remove_alert_button' %>

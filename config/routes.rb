@@ -14,11 +14,21 @@ Reciprosody2::Application.routes.draw do
       get :add_comment
       get :remove_comment
       get :refresh_comments
-        
+      
+      get :publications
   	end
+
   	get :autocomplete_language_name,	:on => :collection
   	get :autocomplete_license_name,		:on => :collection
   	get :autocomplete_user_name,	    :on => :collection
+  end
+
+  match 'publications/new' => 'publications#new'
+
+  resources :publications do
+    member do
+      get :manage_members
+    end
   end
 	
 	

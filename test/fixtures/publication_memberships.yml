@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  role: MyString
+  corpus: 
+  publication: 
+
+two:
+  role: MyString
+  corpus: 
+  publication: 

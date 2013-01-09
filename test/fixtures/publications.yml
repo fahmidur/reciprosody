@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  corpus: 
+  name: MyString
+  keywords: MyText
+  description: MyText
+  url: MyString
+  local: MyString
+
+two:
+  corpus: 
+  name: MyString
+  keywords: MyText
+  description: MyText
+  url: MyString
+  local: MyString

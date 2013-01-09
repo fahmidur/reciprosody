@@ -1,0 +1,14 @@
+
+<ul class="nav nav-tabs">
+	<li class='corpus_name'><%= @pub.name %></li>
+
+	<li class='pull-right <%= "active" if tab=="details"%> '>
+		<a href="<%=publication_path(@pub)%>">Details</a>
+	</li>
+
+	
+	<li class='pull-right <%= "active" if tab=="members"%> '>
+		<a href="<%=manage_members_publication_path(@pub)%>">Manage Members</a>
+	</li>
+
+</ul>

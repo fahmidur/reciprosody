@@ -1,0 +1,51 @@
+<%= content_for :javascript_includes do%>
+	<%= javascript_include_tag 'dropload.js' %>
+	<%= javascript_include_tag 'publications_form.js' %>
+
+<% end %>
+
+<!--<%= setup_upload %>-->
+
+<div class='row-fluid'>
+	<div id='dropbar_holder' class='span11'></div>
+</div>
+
+<%= form_for(@pub) do |f|%>
+	<div class='row-fluid'>
+		<div class='field span4'>
+			<%= f.label :name %>
+			<input id="publication_name" name="publication[name]" size="30" type="text" value="<%= @pub.name %>" required>
+		</div>
+
+
+		<div class='field span4'>
+				<%= f.label :url, "URL" %>
+				<input id="publication_url" name="publication[url]" size="30" type="text" value="<%= @pub.url %>">
+		</div>
+
+		<div class="field span4">
+			<%= render :partial => 'shared/dropbox', :locals => {:text => "Drop Document Here"} %>
+		</div>
+
+	</div>
+
+	<div class='row-fluid'>
+		<div class='field span4'>
+			<%= f.label :description %>
+			<%= f.text_area :description, :class => 'big_desc' %>
+		</div>
+
+		<div class='field span4'>
+			<%= f.label :keywords %>
+			<%= f.text_area :keywords, :class => 'big_desc' %>
+		</div>
+
+		<div class='field span4'>
+			<%= f.label :authors, "Authors" %>
+			<%= f.text_area :authors, :class => 'big_desc' %>
+		</div>
+		
+	</div>
+
+	<input type='submit' class='btn btn-small btn-primary span12' value="Edit Publication"/>
+<% end %>

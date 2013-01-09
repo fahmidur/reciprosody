@@ -6,6 +6,8 @@ class Corpus < ActiveRecord::Base
 	has_many :users, :through => :memberships
 	has_many :memberships, :dependent => :delete_all #cascading delete
 
+	has_many :publications, :through => :publication_corpus_relationships
+
 	has_many :comments, :as => :commentable, :order => 'updated_at DESC'
 
 	before_destroy :remove_dirs

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130107094304) do
+ActiveRecord::Schema.define(:version => 20130109014006) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -66,6 +66,39 @@ ActiveRecord::Schema.define(:version => 20130107094304) do
     t.string   "role"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "publication_corpora_relationship", :force => true do |t|
+    t.integer  "publication_id"
+    t.integer  "corpus_id"
+    t.string   "name"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "publication_corpora_relationship", ["corpus_id"], :name => "index_publication_corpora_relationship_on_corpus_id"
+  add_index "publication_corpora_relationship", ["publication_id"], :name => "index_publication_corpora_relationship_on_publication_id"
+
+  create_table "publication_memberships", :force => true do |t|
+    t.string   "role"
+    t.integer  "user_id"
+    t.integer  "publication_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "publication_memberships", ["publication_id"], :name => "index_publication_memberships_on_publication_id"
+  add_index "publication_memberships", ["user_id"], :name => "index_publication_memberships_on_user_id"
+
+  create_table "publications", :force => true do |t|
+    t.string   "name"
+    t.text     "keywords"
+    t.text     "description"
+    t.text     "authors"
+    t.string   "url"
+    t.string   "local"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "sessions", :force => true do |t|

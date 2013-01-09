@@ -32,7 +32,12 @@ class CorporaController < ApplicationController
 	# GET /corpora/1
 	# GET /corpora/1.json
 	def show
-		@corpus = Corpus.find(params[:id])
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+
 		@archives = []
 		
 		Dir.chdir(Rails.root.to_s)
@@ -60,13 +65,19 @@ class CorporaController < ApplicationController
 		archive_path = "#{@corpus.archives_path}/#{@archive_names.first}"
 		@last_modified = File.new(archive_path).mtime
 		
-		
-		
 
 		respond_to do |format|
-		  format.html # show.html.erb
-		  format.json { render json: @corpus }
+	  		format.html # show.html.erb
+	  		format.json { render json: @corpus }
+	
 		end
+	end
+	
+	# GET /corpora/1/publications
+	# See all publications using this Corpus
+	def publications
+		@corpus = Corpus.find_by_id(params[:id])
+
 	end
 
 	# GET /corpora/1/manage_members

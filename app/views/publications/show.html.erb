@@ -1,0 +1,54 @@
+<%= render :partial => 'tabs', :locals => {:tab => 'details'} %>
+<br/>
+
+<% unless @pub.description.blank? %>
+	<div class='row-fluid'>
+		<div class='box span12'>
+			<h5 class='boxheader'>Description</h5>
+				
+			<%=raw markdown(@pub.description) %>
+		</div>
+	</div>
+<% end %>
+
+<% if @pub.keywords && !@pub.keywords.blank? %>
+	<div class='row-fluid'>
+		<div class='box span12'>
+			<h5 class='boxheader'>Keywords</h5>
+			<% @keywords.each do |kw| %>
+				<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+			<% end %>
+		</div>
+	</div>
+<% end %>
+
+<div class='row-fluid'>
+	<div class='box span4'>
+		<h5 class='boxheader'>Authors</h5>
+		<%=raw markdown(@pub.authors) %>
+	</div>
+
+
+	<% if @pub.url && !@pub.url.blank? %>
+		<div class='box span4'>
+			<h5 class='boxheader'>External Link</h5>
+			<center>
+			<a href='<%= @pub.url %>' target='_blank' class='btn btn-primary'>Follow Link</a>
+			<br/><br/>
+			</center>
+		</div>
+	<% end %>
+
+	<div class='box span4'>
+		<h5 class='boxheader'>Our Copy</h5>
+		<% if @pub.local %>
+			<center class='row-fluid'>
+			<%= form_tag("/publications/#{@pub.id}/download", :method => :get) do%>
+					<input type='submit' class='btn btn-primary cdownload span6' value="Download">
+			<% end %>
+			</center>
+		<% end %>
+	</div>
+</div>
+
+<%= render :partial => 'footer' %>

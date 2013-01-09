@@ -1,0 +1,15 @@
+<h1>Publications</h1>
+
+<br/>
+
+<% @pubs.each do |p| %>
+	<div class='corpi_item'>
+		<h4><%= p.name %></h4>
+		<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
+		<% if p.url && !p.url.blank? %>
+			<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
+		<% end %>
+	</div>
+<% end %>
+
+<a class='btn' href='/publications/new'>New Publication</a>
