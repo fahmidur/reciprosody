@@ -7,6 +7,7 @@ function dw() {
 	fixEmailSize();
 	fixBoxHeight();
 }
+
 function fixBoxHeight() {
 	if($(window).width() - $('.r1-box:first').width() < 100) {
 		unsetMaxHeight($('.r1-box'));
@@ -16,6 +17,7 @@ function fixBoxHeight() {
 		setMaxHeight($('.r2-box'));
 	}	
 }
+
 function fixEmailSize() {
 	setMaxWidth($('.mem-email'));
 }
