@@ -10,14 +10,24 @@
 	<div class='corpi_item'>
 
 		<h4><%= p.name %></h4>
+		<span class='corpi_l'><%= p.authors.split("\n").join(", " )%></span>
+		<br/> <br/>
+
 		<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
 		<% if p.url && !p.url.blank? %>
 			<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
+		<% end %>
+		<% if p.local && !p.local.blank? %>
+			<%= form_tag("/publications/#{p.id}/download", :method => :get, :class => 'f-inline-block') do%>
+				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
+			<% end %>
 		<% end %>
 
 		<% if p.owners.include?(current_user()) %>
 		<a href="#delete-confirm-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
 		<% end %>
+		<br/>
+		<%=raw snippet(markdown(p.description)) %>
 
 	</div>
 
