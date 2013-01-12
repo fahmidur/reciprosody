@@ -1,3 +1,6 @@
+<%= content_for :javascript_includes do%>
+	<%= javascript_include_tag 'tabs.js' %>
+<% end %>
 
 <ul class="nav nav-tabs">
 	<li class='corpus_name'><%= @pub.name %></li>
