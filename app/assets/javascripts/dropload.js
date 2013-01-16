@@ -14,10 +14,13 @@ var fileSize = 0;
 var fileName;
 
 $(function() {
+	
 	document.addEventListener("dragenter", stopEvent, false);
 	document.addEventListener("dragexit", stopEvent, false);
-	document.addEventListener("dragOver", stopEvent, false);
+	document.addEventListener("dragover", stopEvent, false);
 	document.addEventListener("drop", drop, false);
+	
+
 	dropbox = document.getElementById("dropbox");
 	droplabel = document.getElementById("droplabel");
 	
@@ -27,18 +30,27 @@ function stopEvent(e) {
 	e.stopPropagation();
 	e.preventDefault();
 	console.log("Event Stopped");
+
+	return false;
 }
 
 function drop(e) {
 	e.stopPropagation();
 	e.preventDefault();
 	
+	console.log(e);
 	var files = e.dataTransfer.files;
+	if(!files) {
+		console.log("files not found");
+		return false;
+	}
 	
 	var count = files.length;
 	
 	if(count > 0)
 		handleFiles(files);
+
+	return false;
 }
 
 function handleFiles(files) {
