@@ -6,8 +6,11 @@ class PublicationsController < ApplicationController
 		@pubs = Publication.all
 	end
 
+	# GET /publications/new
+	# params[:corpus_id]
 	def new
 		@publication = Publication.new
+		@corpus = Corpus.find_by_id(params[:corpus_id]) if params[:corpus_id]
 	end
 
 	def create

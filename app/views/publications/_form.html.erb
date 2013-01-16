@@ -55,8 +55,13 @@
 		</div>
 
 		<div class="field span4">
-			<label>New External Members?</label>
-			<a href='/user/invite' class='btn' target="_blank">Invite a Friend</a>
+			<label for="corpus">Uses Corpus</label>
+			<div class='input-prepend'>
+				<span class="add-on"><i class="icon-book"></i></span>
+				<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user().email_format, :class => 'memberInput', :id => 'primaryOwner' %>
+			</div>
+
+			
 		</div>
 
 		<div class='field span4'>
@@ -67,6 +72,11 @@
 				<span class="add-on"><i class="icon-user"></i></span>
 				<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user().email_format, :class => 'memberInput', :id => 'primaryOwner' %> 
 			</div>
+			<br/>
+			<label>New External Members?</label>
+			<a href='/user/invite' class='btn' target="_blank">Invite a Friend</a>
+
+			
 		</div>
 
 	</div>
