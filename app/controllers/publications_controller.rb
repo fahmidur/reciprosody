@@ -32,7 +32,7 @@ class PublicationsController < ApplicationController
 		end
 
 		respond_to do |format|
-			if @pub.errors.none? && create_publication() && @pub.save
+			if @pub.errors.none? && @pub.save && create_publication
 				PublicationMembership.create(
 					:publication_id	=> @pub.id, 
 					:user_id		=> @owner.id,
@@ -52,6 +52,7 @@ class PublicationsController < ApplicationController
 		path = "publications/#{@pub.id}"
 
 		`mkdir -p #{path}`
+
 		`rm #{path}/*`
 		
 		path += "/#{File.basename(@file.path)}"
@@ -59,6 +60,9 @@ class PublicationsController < ApplicationController
 		File.open(path, "wb") {|f| f.write(@file.read)}
 
 		@pub.local = path
+
+		@pub.save
+		
 		return true
 	end
 

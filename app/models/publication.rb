@@ -12,6 +12,7 @@ class Publication < ActiveRecord::Base
 
 	accepts_nested_attributes_for :publication_memberships, :users
 
+	before_destroy :remove_dirs
 
 	def owners
 		self.users.publication_owners.all
@@ -23,5 +24,13 @@ class Publication < ActiveRecord::Base
 
 	def members
 		self.users.publication_members.all
+	end
+
+	def dir_path
+		"publications/#{self.id}"
+	end
+
+	def remove_dirs
+		FileUtils.rm_rf(dir_path) if Dir.exists? dir_path
 	end
 end
