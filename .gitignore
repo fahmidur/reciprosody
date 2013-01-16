@@ -24,5 +24,6 @@ vendor/*
 vendor/**
 upload/*
 upload/**
+
 publications/*
 publications/**
