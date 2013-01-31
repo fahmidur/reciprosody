@@ -116,6 +116,17 @@ class PublicationsController < ApplicationController
 		end
 	end
 
+	def manage_corpora
+		@pub = Publication.find_by_id(params[:id])
+		@publication_corpus_relationships = @pub.publication_corpus_relationships.includes(:corpus)
+
+
+		respond_to do |format|
+		  format.html
+		  #format.json { render json: [@memberships] }
+		end
+	end
+
 	def add_member
 		@pub = Publication.find_by_id(params[:id])
 		errors = []

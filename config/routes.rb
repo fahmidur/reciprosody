@@ -34,6 +34,9 @@ Reciprosody2::Application.routes.draw do
       get :update_member
       delete :remove_member
 
+      get :manage_corpora
+      
+      
       get :download
     end
   end

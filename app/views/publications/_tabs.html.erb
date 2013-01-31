@@ -14,4 +14,10 @@
 		<a href="<%=manage_members_publication_path(@pub)%>">Manage Members</a>
 	</li>
 
+	<% if @pub.owners.include?(current_user()) %>
+		<li class='pull-right <%= "active" if tab=="corpora"%> '>
+			<a href="<%=manage_corpora_publication_path(@pub)%>">Manage Corpora</a>
+		</li>
+	<% end %>
+
 </ul>
