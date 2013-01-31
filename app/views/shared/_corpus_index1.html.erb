@@ -1,0 +1,20 @@
+<div class='corpi_item'>	
+    <h4><%= corpus.name %></h4>
+    
+    <span class='corpi_l'><%= corpus.language %></span>
+    <span class='corpi_l pull-right'>Duration: <%= corpus.human_duration %> </span>
+    <br/>
+    <p><%=raw snippet(markdown(corpus.description)) %></p>
+
+
+	<% if user_signed_in? %>
+		<%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
+		<%= link_to 'Comments', comments_corpus_path(corpus), :class => 'btn btn-mini' %>
+
+	  	<% if corpus.canEdit?(current_user())%>
+	    	<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
+	    	<%= link_to 'Manage Members', manage_members_corpus_path(corpus), :class => 'btn btn-mini' %>
+	  	<% end %>
+	  
+	 <% end %>
+</div>

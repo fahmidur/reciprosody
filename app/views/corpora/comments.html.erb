@@ -8,6 +8,8 @@
 
 <br/>
 
+<input type='hidden' id='cid' data-cid='<%= @corpus.id %>'/>
+
 <% if current_user().corpora.to_a.include?(@corpus) #association filter %>
 
 	<%= form_tag add_comment_corpus_path(@corpus), :remote => true, :method => 'get', 'data-type' => :json, :id => 'newComment_form' do%>

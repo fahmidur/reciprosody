@@ -31,7 +31,6 @@ gem 'jquery-rails'
 
 #---Modified by Me -SFR----------------
 gem 'twitter-bootstrap-rails'
-
 gem 'devise'
 gem "recaptcha", :require => "recaptcha/rails"
 gem 'nifty-generators'
@@ -42,6 +41,12 @@ gem "activerecord-mysql2-adapter"
 gem "redcarpet", "1.17.2"
 gem "nokogiri"
 gem 'acts_as_commentable_with_threading'
+
+group :bdd do
+  gem 'cucumber-rails', :require => false
+  gem 'database_cleaner'
+end
+
 #--------------------------------------
 
 

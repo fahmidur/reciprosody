@@ -34,6 +34,8 @@
 					<%else%>
 						<li><a href='/users/sign_in'>Sign in</a></li>
 					<%end%>
+
+
 				</ul>
 				
 
@@ -70,6 +72,15 @@
 			<a href='/contact' class='pull-right padleft'>Contact</a>
 			<a href='/faq' class='pull-right padleft'>FAQ</a>
 			<a href='/about' class='pull-right padleft'>About</a>
+		</div><br/>
+	</div>
+
+	<div class='row-fluid' id>
+		<div class='span4 pull-right'>
+			<a href='/#' class='pull-right padleft'>
+			<%= render :partial => 'shared/browser_icon', :locals => {:browser => 'firefox'} %>
+			<%= render :partial => 'shared/browser_icon', :locals => {:browser => 'chrome'} %>
+			</a>
 		</div>
 	</div>
 </div>

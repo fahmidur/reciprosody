@@ -6,5 +6,5 @@ $(function() {
 });
 function dw() {
 	$('#help_sticker').width($('#primaryOwner').width()-10);
-	$('#dropbox').width($('input').width()-16);
+	//$('#dropbox').width($('textarea').width()-16);
 }

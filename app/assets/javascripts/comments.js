@@ -29,8 +29,10 @@ $(function() {
 			});
 		}
 	});
-
-	window.setInterval(refreshComments, 500);
+	var cid = $('#input').attr('data-cid');
+	if(cid) {
+		window.setInterval(refreshComments, 500);
+	}
 });
 function addComment(resp) {
 	$(resp).prependTo('#comments_holder').hide().slideDown();

@@ -1,3 +1,4 @@
+# Should eventually be refactored to CorpusMembership
 class Membership < ActiveRecord::Base
 	attr_accessible :corpus_id, :role, :user_id
 

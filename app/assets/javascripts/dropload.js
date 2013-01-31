@@ -40,6 +40,7 @@ function drop(e) {
 	
 	console.log(e);
 	var files = e.dataTransfer.files;
+	
 	if(!files) {
 		console.log("files not found");
 		return false;

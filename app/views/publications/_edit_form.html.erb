@@ -7,55 +7,54 @@
 <!--<%= setup_upload %>-->
 
 <div class='row-fluid'>
-	<div id='dropbar_holder' class='span11'></div>
+	<div id='dropbar_holder' class='span12'></div>
 </div>
 
 <%= form_for(@pub) do |f|%>
 	<div class='row-fluid'>
-		<div class='field span4'>
+		<div class='field span12'>
 			<%= f.label :name, "Title" %>
-			<input id="publication_name" name="publication[name]" size="30" type="text" value="<%= @pub.name %>" required>
+			<input id="publication_name" name="publication[name]" size="30" type="text" class='span12' value='<%= @pub.name %>' required>
 		</div>
-
-
-		<div class='field span4'>
-				<%= f.label :url, "URL" %>
-				<input id="publication_url" name="publication[url]" size="30" type="text" value="<%= @pub.url %>">
-		</div>
-
-		<div class="field span4">
-			<%= render :partial => 'shared/dropbox', :locals => {:text => "Drop Document Here"} %>
-		</div>
-
 	</div>
+
 
 	<div class='row-fluid'>
 		<div class='field span4'>
 			<%= f.label :description %>
-			<%= f.text_area :description, :class => 'big_desc' %>
+			<%= f.text_area :description, :class => 'big_desc span12' %>
 		</div>
 
 		<div class='field span4'>
 			<%= f.label :keywords %>
-			<%= f.text_area :keywords, :class => 'big_desc' %>
+			<%= f.text_area :keywords, :class => 'big_desc span12' %>
 		</div>
 
 		<div class='field span4'>
 			<%= f.label :authors, "Authors" %>
-			<%= f.text_area :authors, :class => 'big_desc' %>
+			<%= f.text_area :authors, :class => 'big_desc span12' %>
 		</div>
 		
 	</div>
 
 	<div class='row-fluid'>
 		
+		<div class='field span4'>
+			<%= f.label :citation, "BibTeX" %>
+			<%= f.text_area :citation, :class => 'big_desc span12' %>
+		</div>
+
+		<div class="field span4">
+			<br/>
+			<%= render :partial => 'shared/dropbox2', :locals => {:text => "Drop Document Anywhere On This Page"} %>
+		</div>
 
 		<div class='field span4'>
-			<%= f.label :citation, "citations" %>
-			<%= f.text_area :citation, :class => 'big_desc' %>
+				<%= f.label :url, "URL" %>
+				<input id="publication_url" name="publication[url]" size="30" type="text" value="<%= @pub.url %>", class='span12'>
 		</div>
 
 	</div>
-
+ 
 	<input type='submit' class='btn btn-small btn-primary span12' value="Edit Publication"/>
 <% end %>

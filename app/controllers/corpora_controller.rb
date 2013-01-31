@@ -14,6 +14,8 @@ class CorporaController < ApplicationController
 	autocomplete :language, :name
 	autocomplete :license, :name
 	autocomplete :user, :name, :full => true, :display_value => :email_format, :extra_data => [:email]
+
+	autocomplete :corpus, :name, :display_value => :ac_small_format, :extra_data => [:id, :duration]
 	
 	# GET /corpora
 	# GET /corpora.json

@@ -19,7 +19,7 @@
 	<div class='row-fluid'>
 		<div class='box span12'>
 			<h5 class='boxheader'>Keywords</h5>
-			<% @keywords.each do |kw| %>
+			<% @pub.keywords_array.each do |kw| %>
 				<%= render :partial => 'keyword', :locals => {:kw => kw} %>
 			<% end %>
 		</div>
@@ -89,8 +89,19 @@
 <% if @pub.citation && !@pub.citation.blank? %>
 	<div class='row-fluid'>
 		<div class='box span12'>
-			<h5 class='boxheader'>Citation</h5>
+			<h5 class='boxheader'>BibTex Citation</h5>
 			<%=raw markdown(@pub.citation) %>
+		</div>
+	</div>
+<% end %>
+<% if @pub.corpora %>
+	<div class='row-fluid'>
+		<div class='box span12'>
+			<h5 class='boxheader'>Uses <%= pluralize(@pub.corpora.length, "Corpus",
+			"Corpora") %></h5>
+			<% @pub.corpora.each do |c|%>
+				<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => c} %>
+			<% end %>
 		</div>
 	</div>
 <% end %>

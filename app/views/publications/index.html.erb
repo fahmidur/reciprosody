@@ -11,7 +11,11 @@
 
 		<h4><%= p.name %></h4>
 		<span class='corpi_l'><%= p.authors.split("\n").join(", " )%></span>
-		<br/> <br/>
+		<br/> 
+		<% p.keywords_array.each do |kw| %>
+			<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+		<% end %>
+		<br/><br/>
 
 		<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
 		<% if p.url && !p.url.blank? %>

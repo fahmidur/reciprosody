@@ -1,7 +1,9 @@
 class Publication < ActiveRecord::Base
-	attr_accessible :description, :keywords, :local, :name, :url, :authors, :citation
+	attr_accessible :description, :keywords, :local, :name, :url, :authors, :citation, :pubdate, :venue
 
-	has_many :corpora, :through => :publication_corpus_relationship
+	has_many :corpora, :through => :publication_corpus_relationships
+	has_many :publication_corpus_relationships, :dependent => :delete_all
+
 	has_many :users, :through => :publication_memberships
 
 	has_many :publication_memberships
@@ -32,5 +34,9 @@ class Publication < ActiveRecord::Base
 
 	def remove_dirs
 		FileUtils.rm_rf(dir_path) if Dir.exists? dir_path
+	end
+
+	def keywords_array
+		self.keywords.to_s.split(/[^\w,\-]+/)
 	end
 end

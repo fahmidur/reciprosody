@@ -7,6 +7,7 @@ class Corpus < ActiveRecord::Base
 	has_many :memberships, :dependent => :delete_all #cascading delete
 
 	has_many :publications, :through => :publication_corpus_relationships
+	has_many :publication_corpus_relationships, :dependent => :delete_all
 
 	has_many :comments, :as => :commentable, :order => 'updated_at DESC'
 
@@ -22,6 +23,10 @@ class Corpus < ActiveRecord::Base
 	attr_accessor :upload_file, :hours, :minutes, :seconds
 
 	after_find :set_times
+
+	def ac_small_format
+		"#{self.name}<#{self.id}>"
+	end
 
 	#---Static Methods  -----------------------------------
 	def self.corpora_folder
