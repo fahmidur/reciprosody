@@ -41,6 +41,8 @@ gem "activerecord-mysql2-adapter"
 gem "redcarpet", "1.17.2"
 gem "nokogiri"
 gem 'acts_as_commentable_with_threading'
+gem 'bibtex-ruby'
+gem 'citeproc-ruby'
 
 group :bdd do
   gem 'cucumber-rails', :require => false
