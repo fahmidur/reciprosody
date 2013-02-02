@@ -50,11 +50,10 @@
   
 <% end %>
 
-
-
-
-
 <br />
+
 <%if user_signed_in? %>
-	<%= link_to 'New Corpus', new_corpus_path, :class => 'btn' %>
+	<div class='row-fluid'>
+		<%= link_to 'New Corpus', new_corpus_path, :class => 'btn span12' %>
+	</div>
 <% end %>

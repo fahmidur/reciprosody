@@ -115,7 +115,6 @@
 
 		<% if @corpus.memberships.size > 0 %>
 		<div class='row-fluid'>
-			<% if @corpus.owners.size > 0 %>
 			<div class='box span4 r2-box'>
 				<h5 id='owners_hd'><%= pluralize(@corpus.owners.size, 'Owner', 'Owners') %></h5>
 
@@ -124,9 +123,7 @@
 					<% end %>
 
 			</div>
-			<% end %>
 			
-			<% if @corpus.approvers.size > 0 %>
 			<div class='box span4 r2-box'>
 				<h5 id='approvers_hd'><%= pluralize(@corpus.approvers.size, 'Approver', 'Approvers') %> </h5>
 								
@@ -135,16 +132,13 @@
 				<% end %>								
 				
 			</div>
-			<% end %>
 			
-			<% if @corpus.members.size > 0 %>
 			<div class='box span4 r2-box'>
 				<h5 id='members_hd'><%= pluralize(@corpus.members.size, 'Member', 'Members') %> </h5>
 				<% @corpus.members.each do |member| %>
 					<%= render :partial => 's.member', :locals => {:mem =>  member} %>
 				<% end %>
 			</div>
-			<% end %>
 			
 		</div> <!--End of row-fluid for Memberships-->
 		<% end %>

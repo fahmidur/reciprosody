@@ -11,6 +11,11 @@
 			:locals => {:p => p} %>
 <% end %>
 
+<% if user_signed_in? %>
+	<div class='row-fluid'>
+		<a class='btn span12' href='/publications/new'>New Publication</a>
+	</div>
+<% end %>
 
 
-<a class='btn' href='/publications/new'>New Publication</a>
+

@@ -412,7 +412,6 @@ class CorporaController < ApplicationController
 		owner_text = paramHash.delete('owner')
 		@corpus = Corpus.new(paramHash)
 		
-		
 		@file =	get_upload_file
 		
 		logger.info "FILE = #{@file}"
@@ -441,6 +440,12 @@ class CorporaController < ApplicationController
 			clear_directory(@corpus.tmp_path) if @corpus.utoken
 			
 			Membership.create(:user_id => @owner.id, :corpus_id => @corpus.id, :role => 'owner');
+
+			#If the License does not exist add the License
+			license_text = paramHash['license']
+			license = License.find_by_name(license_text)
+			License.create(:name => license_text) unless license
+
 			
 			#format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
 			render :json => {:ok => true, :id => @corpus.id}
