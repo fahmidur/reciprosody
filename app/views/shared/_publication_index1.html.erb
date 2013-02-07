@@ -24,7 +24,7 @@
 			<input type='submit' class='btn btn-mini cdownlaod' value="Download">
 		<% end %>
 	<% end %>
-	<% if p.owners.include?(current_user()) %>
+	<% if p.canEdit?(current_user) %>
 		<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'>Edit</a>
 		<a href="#delete-confirm-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
 	<% end %>
