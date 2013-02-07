@@ -1,6 +1,12 @@
 class PublicationsController < ApplicationController
 	include UsesUpload
 
+	before_filter :user_filter, :except => :index
+	before_filter :owner_filter, 
+		:only => [:edit, :update, :destroy, 
+				  :manage_members, :add_member, :update_member,:remove_member]
+
+
 	autocomplete :publication_keyword, :name, :full => true
 
 	def index
@@ -118,6 +124,17 @@ class PublicationsController < ApplicationController
 		end
 	end
 
+	def manage_corpora
+		@pub = Publication.find_by_id(params[:id])
+		@publication_corpus_relationships = @pub.publication_corpus_relationships.includes(:corpus)
+
+
+		respond_to do |format|
+		  format.html
+		  #format.json { render json: [@memberships] }
+		end
+	end
+
 	def manage_members
 		@pub = Publication.find_by_id(params[:id])
 		@memberships = @pub.publication_memberships.includes(:user)
@@ -129,16 +146,6 @@ class PublicationsController < ApplicationController
 		end
 	end
 
-	def manage_corpora
-		@pub = Publication.find_by_id(params[:id])
-		@publication_corpus_relationships = @pub.publication_corpus_relationships.includes(:corpus)
-
-
-		respond_to do |format|
-		  format.html
-		  #format.json { render json: [@memberships] }
-		end
-	end
 
 	def add_member
 		@pub = Publication.find_by_id(params[:id])
@@ -282,6 +289,26 @@ class PublicationsController < ApplicationController
 			end
 		end
 		return corpora
+	end
+
+	#--------FILTERS--------------------------------------------------------
+  	# 
+  	#-----------------------------------------------------------------------
+
+  	# Allows only users
+	def user_filter
+		redirect_to '/perm' unless user_signed_in?
+	end
+  
+  	# Allows only owners
+  	# Is applied in combination with user_filter
+	def owner_filter
+		@pub = Publication.find_by_id(params[:id])
+
+		#Dont filter super_key holders
+		return if current_user().super_key != nil
+
+		redirect_to '/perm' unless @pub && @pub.owners.include?(current_user())
 	end
 
 end

@@ -18,6 +18,18 @@ class Publication < ActiveRecord::Base
 	#---Validations------------------------
 	validates :name, :presence => true
 	#--------------------------------------
+
+
+	#---Permissions-----
+	# this should be called canBeEditedBy?
+	# refactor later
+	def canEdit?(user)
+		return true if self.owners.include? user
+		return true if user.super_key != nil
+		return false
+	end
+	#-------------------
+
 	def owners
 		self.users.publication_owners.all
 	end
