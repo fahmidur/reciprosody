@@ -15,12 +15,16 @@ class Corpus < ActiveRecord::Base
 
 	before_validation :set_duration
 
+
+	#-----Validations--------------------------------------
 	validates :name, :presence => true
 	validates :language, :presence => true
 	validates :num_speakers, :inclusion => 1..9999
 	validates :duration, :inclusion => {:in => 1..86399, :message => "must be at least 1 second and less than 24 hours"}, :if => :times_in_correct_format
-
+	#------------------------------------------------------
+	
 	attr_accessor :upload_file, :hours, :minutes, :seconds
+
 
 	after_find :set_times
 

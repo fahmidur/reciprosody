@@ -1,17 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  corpus: 
-  name: MyString
-  keywords: MyText
-  description: MyText
-  url: MyString
-  local: MyString
+  name: Publication One
+  keywords: awesome amazing
+  description: Description for Publication One
+  url: http://www.reddit.com
+  local: 
 
 two:
-  corpus: 
-  name: MyString
-  keywords: MyText
-  description: MyText
-  url: MyString
-  local: MyString
+  name: Publication Two
+  keywords: Great Fantastic
+  description: Description for Publication Two
+  url: http://www.google.com
+  local: 

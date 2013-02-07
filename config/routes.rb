@@ -39,6 +39,8 @@ Reciprosody2::Application.routes.draw do
       
       get :download
     end
+
+    get :autocomplete_publication_keyword_name, :on => :collection
   end
 	
 	

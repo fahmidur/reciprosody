@@ -3,9 +3,9 @@
 one:
   user_id: 1
   corpus_id: 1
-  role: MyString
+  role: owner
 
 two:
   user_id: 1
   corpus_id: 1
-  role: MyString
+  role: owner

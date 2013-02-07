@@ -5,7 +5,6 @@ class Publication < ActiveRecord::Base
 	has_many :publication_corpus_relationships, :dependent => :delete_all
 
 	has_many :users, :through => :publication_memberships
-
 	has_many :publication_memberships
 
 	accepts_nested_attributes_for :publication_memberships, :users
@@ -16,6 +15,9 @@ class Publication < ActiveRecord::Base
 
 	before_destroy :remove_dirs
 
+	#---Validations------------------------
+	validates :name, :presence => true
+	#--------------------------------------
 	def owners
 		self.users.publication_owners.all
 	end

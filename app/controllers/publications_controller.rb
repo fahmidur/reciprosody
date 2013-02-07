@@ -1,6 +1,8 @@
 class PublicationsController < ApplicationController
 	include UsesUpload
 
+	autocomplete :publication_keyword, :name, :full => true
+
 	def index
 		#renders view/publications/index.html.erb
 		@pubs = Publication.all
@@ -53,9 +55,15 @@ class PublicationsController < ApplicationController
 					:publication_id	=> @pub.id, 
 					:user_id		=> @owner.id,
 					:role			=> 'owner')
-				format.html {redirect_to @pub}
-			else
 
+				format.html {redirect_to @pub}
+				format.json do
+					render :json => {:ok => true, :res => @pub.id}
+				end
+			else
+				format.json do 
+					render :json => {:ok => false, :res => "#{@pub.errors.full_messages}"}
+				end
 			end
 		end
 	end
@@ -99,8 +107,14 @@ class PublicationsController < ApplicationController
 			if @pub && create_publication() && @pub.update_attributes(params[:publication])
 
 				format.html { redirect_to @pub}
+				format.json do
+					render :json => {:ok => true, :res => @pub.id}
+				end
 			else
 				format.html { render :action => 'edit'}
+				format.json do
+					render :json => {:ok => true, :res => @pub.errors.full_messages}
+				end
 			end
 		end
 	end
