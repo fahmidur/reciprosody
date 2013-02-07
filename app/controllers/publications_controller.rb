@@ -17,7 +17,7 @@ class PublicationsController < ApplicationController
 
 	def create
 		owner_text = params[:publication].delete(:owner)
-		corpus_text = params[:publication].delete(:corpus)
+		corpora_text = params[:publication].delete(:corpora)
 
 		pub_date = params[:publication].delete(:pubdate)
 
@@ -31,21 +31,12 @@ class PublicationsController < ApplicationController
 		if owner_text =~ /\<(.+)\>/
 			owner_email = $1
 		end
-
-
 		@owner = User.find_by_email(owner_email);
-
 		if !@owner
 			@pub.errors[:owner] = " does not exist."  	
 		end
 
-		corpus_id = ""
-		if corpus_text && !corpus_text.blank? && corpus_text =~ /\<(\d+)\>/
-			corpus_id = $1
-		end
-		logger.debug "CORPUS ID = #{corpus_id}"
-		@corpus = Corpus.find_by_id(corpus_id);
-		logger.debug "CORPUS = #{@corpus}"
+		@corpora = corpora_from_text(corpora_text)
 
 		respond_to do |format|
 			if @pub.errors.none? && @pub.save && create_publication
@@ -69,13 +60,18 @@ class PublicationsController < ApplicationController
 	end
 
 	def create_publication
-		if @corpus
-			# This publication uses a Corpus
-			# Create this relationship
-			PublicationCorpusRelationship.create(
-				:publication_id => @pub.id,
-				:corpus_id		=> @corpus.id,
-				:name 			=> "uses");
+		if @corpora
+			PublicationCorpusRelationship.where(:publication_id => @pub.id).destroy_all
+			@corpora.each do |corp|
+				PublicationCorpusRelationship.create(
+					:publication_id => @pub.id,
+					:corpus_id		=> corp.id,
+					:name 			=> "uses");
+			end
+		end
+		
+		@pub.keywords_array.each do |kw|
+			PublicationKeyword.create(:name => kw) unless PublicationKeyword.find_by_name(kw)
 		end
 
 		@file = get_upload_file
@@ -98,13 +94,16 @@ class PublicationsController < ApplicationController
 
 	def edit
 		@pub = Publication.find_by_id(params[:id])
+		@corpora = @pub.corpora
 	end
 
 	def update
 		@pub = Publication.find_by_id(params[:id])
+		corpora_text = params[:publication].delete(:corpora)
+		@corpora = corpora_from_text(corpora_text)
 
 		respond_to do |format|
-			if @pub && create_publication() && @pub.update_attributes(params[:publication])
+			if @pub && @pub.update_attributes(params[:publication]) && create_publication()
 
 				format.html { redirect_to @pub}
 				format.json do
@@ -270,6 +269,19 @@ class PublicationsController < ApplicationController
 			redirect_to '/perm'
 			return
 		end
+	end
+
+	private
+
+	def corpora_from_text(corpora_text)
+		corpora = []
+		if corpora_text && !corpora_text.blank?
+			corpora_text.split("\n").each do |cid|
+				corp = Corpus.find_by_id(cid)
+				corpora << corp if corp
+			end
+		end
+		return corpora
 	end
 
 end

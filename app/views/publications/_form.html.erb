@@ -71,17 +71,13 @@
 			<label for="corpus">Uses Corpus</label>
 
 			<div class='input-prepend'>
-			<% if @corpus %>
 				<span class="add-on"><i class="icon-book"></i></span>
-				<%= f.autocomplete_field :corpus, '/corpora/autocomplete_corpus_name', :value => @corpus.ac_small_format, :class => 'memberInput span11', :id => 'primaryOwner' %>
-			<% else %>
-				<span class="add-on"><i class="icon-book"></i></span>
-				<%= f.autocomplete_field :corpus, '/corpora/autocomplete_corpus_name', :value => "", :class => 'memberInput span11', :id => 'primaryOwner' %>
-			<% end %>
+				<%= f.autocomplete_field :corpus, '/corpora/autocomplete_corpus_name', :value => ((@corpus) ? @corpus.ac_small_format : ""), :class => 'memberInput span11', :id => 'uses_corpus_in' %>
 			</div>
-
-			<br/><br/>
-			
+			<br/>
+			<div id='corpora_holder'>
+			</div>
+			<br/>
 			
 		</div>
 
