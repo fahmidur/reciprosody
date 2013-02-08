@@ -7,6 +7,8 @@ $(function() {
 	$(window).resize(dw);
 
 	$('#new_publication').on('ajax:beforeSend', function(e, xhr, settings) {
+		console.log("ORIGINAL = " + settings.data);
+
 		var obj = uri_to_obj(settings.data);
 		var keywords = "";
 		var corpora = "";
@@ -30,8 +32,8 @@ $(function() {
 		obj['publication[corpora]'] = corpora;
 
 		settings.data = obj_to_uri(obj);
-		console.log(settings.data);
 
+		console.log(settings.data);
 
 	});
 	$('#new_publication').on('ajax:success', function(e, data) {
@@ -105,7 +107,7 @@ function dw() {
 }
 function uri_to_obj(uricomp) {
 	var obj = {}, a,
-		els = decodeURIComponent(uricomp).split('&');
+		els = decodeURIComponent(uricomp.replace(/\+/g, ' ')).split('&');
 
 	for(i in els) {
 		a = els[i].split('=');
