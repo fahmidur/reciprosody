@@ -85,6 +85,7 @@ class Corpus < ActiveRecord::Base
 	# Not exactly the same as memberships
 	#-------------------------------------------------------
 	def canEdit?(user)
+		return false unless user
 		return true if self.owners.include? user
 		return true if user.super_key != nil
 		return false

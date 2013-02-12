@@ -24,6 +24,7 @@ class Publication < ActiveRecord::Base
 	# this should be called canBeEditedBy?
 	# refactor later
 	def canEdit?(user)
+		return false unless user
 		return true if self.owners.include? user
 		return true if user.super_key != nil
 		return false

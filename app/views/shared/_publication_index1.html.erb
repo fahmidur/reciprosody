@@ -10,32 +10,32 @@
 		<% p.keywords_array.each do |kw| %>
 			<%= render :partial => 'keyword', :locals => {:kw => kw} %>
 		<% end %>
-		<br/><br/>
+		<br/>
 	<% end %>
 
 	
-
-	<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
-	<% if p.url && !p.url.blank? %>
-		<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
-	<% end %>
-	<% if p.local && !p.local.blank? %>
-		<%= form_tag("/publications/#{p.id}/download", :method => :get, :class => 'f-inline-block') do%>
-			<input type='submit' class='btn btn-mini cdownlaod' value="Download">
+	<% if user_signed_in? %>
+		<br/>
+		<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
+		<% if p.url && !p.url.blank? %>
+			<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
 		<% end %>
-	<% end %>
-	<% if p.canEdit?(current_user) %>
-		<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'>Edit</a>
-		<a href="#delete-confirm-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
+		<% if p.local && !p.local.blank? %>
+			<%= form_tag("/publications/#{p.id}/download", :method => :get, :class => 'f-inline-block') do%>
+				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
+			<% end %>
+		<% end %>
+		<% if p.canEdit?(current_user) %>
+			<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'>Edit</a>
+			<a href="#delete-confirm-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
+		<% end %>
+		<br/>
 	<% end %>
 
-	<br/>
+	
 	<% if p.description && !p.description.blank? %>
 		<%=raw snippet(markdown(p.description)) %>
 	<% end %>
-
-	
-
 	<br/>
 </div>
 

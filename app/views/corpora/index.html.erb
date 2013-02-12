@@ -3,10 +3,10 @@
 <% end %>
 
 <h1>Corpora</h1>
-<% if !user_signed_in? %>
+<% unless user_signed_in? %>
 	<div class='alert alert-info'>
 		<button type="button" class="close" data-dismiss="alert">×</button>
-		<h5>Please Sign-in or Register for download, view, edit, and upload corpora.</h5>
+		<h5>Please Sign-in or Register to download, view, edit, and upload Corpora.</h5>
 	</div>
 <% end %>
 		 
