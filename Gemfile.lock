@@ -201,6 +201,7 @@ DEPENDENCIES
   activerecord-mysql2-adapter
   acts_as_commentable_with_threading
   bibtex-ruby
+  capybara
   citeproc-ruby
   cucumber-rails
   database_cleaner

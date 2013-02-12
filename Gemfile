@@ -44,8 +44,9 @@ gem 'acts_as_commentable_with_threading'
 gem 'bibtex-ruby'
 gem 'citeproc-ruby'
 
-group :test, :development do
+group :development, :test do
   gem 'rspec-rails', ">= 2.0"
+  gem "capybara"
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
 end
