@@ -13,6 +13,8 @@ var r = new Resumable({
             'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content'),
           }
         });
+var _resumable_upload_done = false;
+
 if(!r.support) {
 	$('.resumable-error').show();
 } else {
@@ -23,6 +25,7 @@ if(!r.support) {
   r.assignBrowse($('.resumable-browse')[0]);
 }
 r.on('fileAdded', function(file){
+  _resumable_upload_ready = false;
   // Show progress pabr
   $('.resumable-progress, .resumable-list').show();
   // Show pause, hide resume
@@ -45,18 +48,22 @@ r.on('pause', function(){
 });
 
 r.on('complete', function(){
-// Hide pause/resume when the upload has completed
-$('.resumable-progress .progress-resume-link, .resumable-progress .progress-pause-link').hide();
+  _resumable_upload_done = true;
+  // User must now wait for file to put together by server
+  // Handled by corpora_form.js
+
+  // Hide pause/resume when the upload has completed
+  $('.resumable-progress .progress-resume-link, .resumable-progress .progress-pause-link').hide();
 });
 
 r.on('fileSuccess', function(file,message){
-// Reflect that the file upload has completed
-$('.resumable-file-'+file.uniqueIdentifier+' .resumable-file-progress').html('(completed)');
+  // Reflect that the file upload has completed
+  $('.resumable-file-'+file.uniqueIdentifier+' .resumable-file-progress').html('(completed)');
 });
 
 r.on('fileError', function(file, message){
-// Reflect that the file upload has resulted in error
-$('.resumable-file-'+file.uniqueIdentifier+' .resumable-file-progress').html('(file could not be uploaded: '+message+')');
+  // Reflect that the file upload has resulted in error
+  $('.resumable-file-'+file.uniqueIdentifier+' .resumable-file-progress').html('(file could not be uploaded: '+message+')');
 });
 r.on('fileProgress', function(file){
   // Handle progress for both the file and the overall upload

@@ -92,6 +92,7 @@ Reciprosody2::Application.routes.draw do
   match '/resumable_test' => 'resumable#resumable_test', :via => :get
   match '/resumable_upload' => 'resumable#post_resumable_upload', :via => :post
   match '/resumable_upload' => 'resumable#get_resumable_upload', :via => :get
+  match '/resumable_upload_ready' => 'resumable#resumable_upload_ready', :via => :get
 	
 	
   # The priority is based upon order of creation:
