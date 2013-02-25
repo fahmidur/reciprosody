@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/37signals/mail_view.git
+  revision: c8cc1315026ce85973ef56e628ac2e38a7a95563
+  specs:
+    mail_view (1.0.1)
+      tilt
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -56,6 +63,9 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 1.0.0)
+    carrierwave (0.8.0)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
     childprocess (0.3.8)
       ffi (~> 1.0, >= 1.0.11)
     citeproc-ruby (0.0.6)
@@ -202,6 +212,7 @@ DEPENDENCIES
   acts_as_commentable_with_threading
   bibtex-ruby
   capybara
+  carrierwave
   citeproc-ruby
   cucumber-rails
   database_cleaner
@@ -210,6 +221,7 @@ DEPENDENCIES
   jquery-rails
   less-rails
   libv8
+  mail_view!
   mysql
   nifty-generators
   nokogiri

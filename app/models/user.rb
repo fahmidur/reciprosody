@@ -26,6 +26,11 @@ class User < ActiveRecord::Base
 	scope :publication_reviewers,		where(:publication_memberships => {role: 'reviewer'})
 	scope :publication_members,			where(:publication_memberships => {role: 'member'})
 
+	# get all super key holders
+	def self.supers
+		User.joins(:super_key)
+	end
+
 
 	#--Memberships to Publications--
 	def publication_owner_of

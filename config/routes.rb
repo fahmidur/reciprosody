@@ -22,7 +22,7 @@ Reciprosody2::Application.routes.draw do
   	get :autocomplete_license_name,		:on => :collection
   	get :autocomplete_user_name,	    :on => :collection
     get :autocomplete_corpus_name,    :on => :collection
-    
+  
   end
 
   match 'publications/new' => 'publications#new'
@@ -56,6 +56,19 @@ Reciprosody2::Application.routes.draw do
 			post :invite_user
 		end
 	end
+
+  #---maps to admin controller---
+  resources :admins do
+    collection do
+      get :request_a_key
+      post :process_request_form
+      get :wait
+    end
+  end
+
+  if Rails.env.development?
+    mount AdminsMailer::Preview => 'admins_mail_view'
+  end
 	
 	
 	#--------only a few static pages----------------------
@@ -73,8 +86,12 @@ Reciprosody2::Application.routes.draw do
 	#-----------------------------------------------------
 	
 	#------------Upload Controller-------------------------
-	match 'upload_test' => 'upload#upload_test',	:via => :get
+	match '/upload_test' => 'upload#upload_test',	:via => :get
 	match '/upload'		=> 'upload#ajx_upload',		:via => :post
+
+  match '/resumable_test' => 'resumable#resumable_test', :via => :get
+  match '/resumable_upload' => 'resumable#post_resumable_upload', :via => :post
+  match '/resumable_upload' => 'resumable#get_resumable_upload', :via => :get
 	
 	
   # The priority is based upon order of creation:

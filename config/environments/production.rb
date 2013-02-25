@@ -82,4 +82,6 @@ Reciprosody2::Application.configure do
       :authenticaton => :none,
       :host => "localhost:3000"
   }
+
+  config.active_support.deprecation = :log
 end

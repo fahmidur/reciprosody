@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <style type='text/css'>
+      body {
+        margin:0px;padding:20px;
+        font-family:"Helvetica Neue",Arial,Helvetica,sans-serif
+      }
+      h4 {
+        color: orange;
+        margin: 0px;
+      }
+      h5 {
+        margin: 0px;
+        margin-top:5px;
+      }
+      .user {
+        display: inline-block;
+        border: 1px solid #adadad;
+        padding:15px;
+        background-color: #efefef;
+        margin: 0 auto;
+        text-align:center;
+      }
+      a {
+        font-weight:bold; 
+        padding:10px; 
+        margin-top:10px;
+        background-color:#efefef; 
+        color: orange; 
+        text-decoration:none;
+        border: 1px solid #dedede;
+      }
+    </style>
+  </head>
+  
+  <body>
+  	<p>Reciprosody Admin,</p>
+    <p>The following user would like Super User access to Reciprosody.</p>
+
+    <div class='user'>
+      <h4><%= @user.name %></h4>
+      <h5><%= @user.email %></h5>
+    </div>
+
+    <p>
+      <a href='http://<%= ActionMailer::Base.default_url_options[:host]%>/admins/assign_key?token=<%=@token%>'>
+        Assign SuperKey To Above User
+      </a>
+    </p>
+
+    <br/>
+		<p>Reciprosody Server</p>
+
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<h1>Admin Request Form</h1>
+<br/>
+
+<% if notice %>
+	<div class='row-fluid'>
+		<div class='span12 alert alert-error'> <%= notice %> </div>
+	</div>
+<% end %>
+
+<%= form_tag '/admins/process_request_form', :method => :post do %>
+	<div class='row-fluid'>
+		<div class='span4'>
+			<%= render :partial => 'shared/member_small.html.erb', :locals => {:mem => current_user()} %>
+		</div>
+
+	</div>
+
+	<br/>
+	<div class='row-fluid'>
+		<div class='span12'>
+			<%= recaptcha_tags :ajax => true, :display => {:theme => 'clean'}%>
+		</div>
+	</div>
+	<br/>
+
+	<div class='row-fluid'>
+		<div class='span12'>
+			<input type='submit' class='btn btn-primary' value='Request A SuperKey'>
+		</div>
+	</div>
+
+<% end %>

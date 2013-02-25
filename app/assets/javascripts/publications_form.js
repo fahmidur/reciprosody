@@ -22,6 +22,7 @@ $(function() {
 		for(kw in _keywords) {
 			keywords += kw + "\n";
 		}
+		
 		for(corp in _corpora) {
 			corpora += corp + "\n";
 		}

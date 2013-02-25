@@ -1,0 +1,40 @@
+<% content_for :javascript_includes do %>
+	<%= javascript_include_tag "corpus_index.js" %>
+<% end %>
+<% if notice %>
+	<div class='alert alert-error'>
+		<button type='button' class='close' data-dismiss='alert'>×</button>
+		<%= notice %>
+	</div>
+<% end %>
+
+<% @super_users.each do |u| %>
+	<div class='corpi_item'>
+		<h4><%= u.name %></h4>
+
+		<a href="mailto:<%= u.email%>" class='btn btn-mini mem-email' target='_BLANK'>
+			<%= render :partial => 'shared/icon2', :locals => {:icon => 'envelope', :extra => 'pull-left'}%>&nbsp;<%= u.email %>
+
+		<a href="#delete-confirm-<%=u.id%>" data-id="<%= u.id %>"
+			class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
+			<%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete
+		</a> <br/>
+		
+				
+	</div>
+
+	<div class="modal fade" id="delete-confirm-<%= u.id %>" style="display:none">
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">×</a>
+			<h3>Are you sure?</h3>
+		</div>
+		<div class="modal-body">
+			<p>Just checking.</p>
+		</div>
+		<div class="modal-footer">
+			<%= link_to 'Destroy', '/admins/'+u.id.to_s, :method => :delete, :class => 'btn' %>
+			<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+		</div>
+	</div>
+
+<% end %>

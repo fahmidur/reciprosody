@@ -1,0 +1,24 @@
+----POST-----
+Parameters: {
+	"resumableChunkNumber"=>"1", 
+	"resumableChunkSize"=>"1048576",
+	"resumableCurrentChunkSize"=>"2067498", 
+	"resumableTotalSize"=>"2067498",
+	"resumableIdentifier"=>"2067498-algorithms1pdf",
+	"resumableFilename"=>"algorithms1.pdf",
+	"resumableRelativePath"=>"algorithms1.pdf",
+
+	"file"=>#<ActionDispatch::Http::UploadedFile:0x000000043b1ba0 @original_filename="blob",
+	@content_type="application/octet-stream"
+
+----GET----
+resumableChunkNumber=1
+resumableChunkSize=1048576
+resumableCurrentChunkSize=2067498
+resumableTotalSize=2067498
+resumableIdentifier=2067498-algorithms1pdf
+resumableFilename=algorithms1.pdf
+resumableRelativePath=algorithms1.pdf
+
+
+

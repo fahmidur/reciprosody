@@ -41,10 +41,13 @@ gem "activerecord-mysql2-adapter"
 gem "redcarpet", "1.17.2"
 gem "nokogiri"
 gem 'acts_as_commentable_with_threading'
+gem 'carrierwave'
+
 gem 'bibtex-ruby'
 gem 'citeproc-ruby'
 
 group :development, :test do
+  gem 'mail_view', :git => 'https://github.com/37signals/mail_view.git'
   gem 'rspec-rails', ">= 2.0"
   gem "capybara"
   gem 'cucumber-rails', :require => false

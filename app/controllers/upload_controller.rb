@@ -6,10 +6,10 @@ class UploadController < ApplicationController
 
 	# GET /upload_test
 	def upload_test
-		# Renders default upload_test.html.erb
+		# Renders upload_test.html.erb
 	end
 
-	# POST /ajx_upload
+	# OLD UPLOADER
 	# Returns JSON
 	def ajx_upload
 		uid = session[:upload_token]
@@ -45,7 +45,6 @@ class UploadController < ApplicationController
 		# Pick an arbitrary thread to combine files
 		# We pick the last thread, since it usually finishes last
 		if numChunks == chunkID+1
-
 			# Establish a basetime
 			baseTime = Time.now
 			# Wait a maximum of 30 minutes for all chunks

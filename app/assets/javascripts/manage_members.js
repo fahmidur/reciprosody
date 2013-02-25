@@ -25,8 +25,8 @@ $(function() {
 		$('#yesDelete').val(memId);
 
 		$('#newMem').val("");
-	});
-  
+	})
+;  
 	$('.mem_role').live('change', function() {
 		var role = $(this).val();
 		var memId = $(this).attr('data-id');
@@ -59,6 +59,7 @@ $(function() {
   
 	$('#addMem_form').on('ajax:success', function(event, data, status, xhr) {
 		if(data && data.ok) {
+			$('#newMem').val("");
 			$('#memberList').prepend(data.resp);
 		}
 		else {
