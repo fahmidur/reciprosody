@@ -1,5 +1,5 @@
 <%= content_for :javascript_includes do%>
-	<%= javascript_include_tag 'dropload.js' %>
+	<%= javascript_include_tag 'resumable.js' %>
 	<%= javascript_include_tag 'corpora_form.js' %>
 <% end %>
 
@@ -44,24 +44,22 @@
 		</div>
 		
 	</div>
-	
-	<div id='dropbar_holder'></div>
-	
+		
 	<div class='row-fluid'>
 
 		<div class="field span4">
 			<%= f.label :name %>
-			<%= f.text_field :name, :title => 'Reminder', 'data-content' => "Please choose an appropriate name. This field is required.<hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
+			<%= f.text_field :name, :title => 'Reminder', 'data-content' => "Please choose an appropriate name. This field is required.<hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>", :class => 'span12'%>
 		</div>
 
 		<div class="field span4">
 			<%= f.label :language, "Language" %>
-			<%= f.autocomplete_field :language, '/corpora/autocomplete_language_name', :title => 'Reminder', 'data-content' => "This field is required.<hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
+			<%= f.autocomplete_field :language, '/corpora/autocomplete_language_name', :title => 'Reminder', 'data-content' => "This field is required.<hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>", :class => 'span12'%>
 		</div>
 
 		<div class='field span4'>
 			<%= f.label :num_speakers, "Number of Speakers" %>
-			<%= f.number_field :num_speakers, :value => '1' %>
+			<%= f.number_field :num_speakers, :value => '1', :class => 'span12' %>
 		</div>
 
 	</div>
@@ -70,17 +68,17 @@
 	<div class='row-fluid'>
 		<div class='field span4'>
 			<%= f.label :hours, "Hours"%>
-			<%= f.number_field :hours, :title => 'Reminder', 'data-content' => "The total time must be greater than zero. <hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
+			<%= f.number_field :hours, :title => 'Reminder', 'data-content' => "The total time must be greater than zero. <hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>", :class => 'span12'%>
 		</div>
 
 		<div class='field span4'>
 			<%= f.label :minutes, "Minutes"%>
-			<%= f.number_field :minutes,  :title => 'Reminder', 'data-content' => "The total time must be greater than zero. <hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>"%>
+			<%= f.number_field :minutes,  :title => 'Reminder', 'data-content' => "The total time must be greater than zero. <hr/>For more help see our <a href='/how-to' target='_blank'>How-To</a>", :class => 'span12'%>
 		</div>
 
 		<div class='field span4'>
 			<%= f.label :seconds, "Seconds"%>
-			<%= f.number_field :seconds%>
+			<%= f.number_field :seconds, :class => 'span12'%>
 		</div>
 
 	</div>
@@ -88,16 +86,16 @@
 	<div class='row-fluid'>
 		<div class='field span4'>
 			<%= f.label :speaker_desc, "Speaker Description" %>
-			<%= f.text_field :speaker_desc, :placeholder => 'Male, Late 50s'%>
+			<%= f.text_field :speaker_desc, :placeholder => 'Male, Late 50s', :class => 'span12'%>
 		</div>
 		<div class='field span4'>
 			<%= f.label :genre, "Genre" %>
-			<%= f.text_field :genre, :placeholder => 'Historical' %>
+			<%= f.text_field :genre, :placeholder => 'Historical', :class => 'span12'%>
 		</div>
 
 		<div class='field span4'>
 			<%= f.label :annotation, "Annotation" %>
-			<%= f.text_field :annotation %>
+			<%= f.text_field :annotation, :class => 'span12'%>
 		</div>
 	</div>
   
@@ -109,11 +107,11 @@
 
 		<div class='field span4'>
 			<%= f.label :license, "License" %>
-			<%= f.autocomplete_field :license, '/corpora/autocomplete_license_name' %>
+			<%= f.autocomplete_field :license, '/corpora/autocomplete_license_name', :class => 'span12'%>
 		</div>
 
 		<div class="field span4">
-			<%= render :partial => 'shared/dropbox' %>
+			<%= render :partial => 'shared/resumable_stuff' %>
 		</div>
 
 	</div>
@@ -121,17 +119,17 @@
 	<div class='row-fluid'>
 		<div class="field span4">
 			<%= f.label :description %>
-			<%= f.text_area :description , :class => 'big_desc'%>
+			<%= f.text_area :description , :class => 'big_desc span12'%>
 		</div>
 
 		<div class="field span4">
 			<%= f.label :citation %>
-			<%= f.text_area :citation , :class => 'big_desc'%>
+			<%= f.text_area :citation , :class => 'big_desc span12'%>
 		</div>
 
 		<div class="field span4">
 			<label for="msg">Commit Message</label>
-			<textarea class="big_desc" cols="40" id="msg" name="msg" rows="20"></textarea>
+			<textarea class="big_desc span12" cols="40" id="msg" name="msg" rows="20"></textarea>
 		</div>
 	</div>
   
@@ -140,3 +138,5 @@
 
 	</div>
 <% end %>
+
+<%= javascript_include_tag 'use_resumable.js' %>

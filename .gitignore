@@ -25,5 +25,8 @@ vendor/**
 upload/*
 upload/**
 
+resumable_uploads/*
+resumable_uploads/**
+
 publications/*
 publications/**

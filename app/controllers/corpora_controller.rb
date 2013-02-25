@@ -1,5 +1,5 @@
-class CorporaController < ApplicationController
-	include UsesUpload
+class CorporaController < ApplicationController	
+	require 'fileutils'
 	
 	before_filter :user_filter, :except => :index
 	before_filter :owner_filter, 
@@ -378,6 +378,7 @@ class CorporaController < ApplicationController
 	# GET /corpora/new.json
 	def new
 		@corpus = Corpus.new
+		session[:resumable_filename] = nil
 
 		respond_to do |format|
 			format.html # new.html.erb
@@ -388,6 +389,7 @@ class CorporaController < ApplicationController
 	# GET /corpora/1/edit
 	def edit
 		@corpus = Corpus.find(params[:id])
+		session[:resumable_filename] = nil
 	end
   
 	# GET /corpora/1/download
@@ -412,7 +414,8 @@ class CorporaController < ApplicationController
 		owner_text = paramHash.delete('owner')
 		@corpus = Corpus.new(paramHash)
 		
-		@file =	get_upload_file
+		rfname = session[:resumable_filename]
+		@file = rfname ? File.new(rfname) : nil
 		
 		logger.info "FILE = #{@file}"
 
@@ -469,7 +472,8 @@ class CorporaController < ApplicationController
 		
 		msg.gsub!(/(\r+\n+)+/m, "<br/>") if msg
 		
-		@file =	get_upload_file
+		rfname = session[:resumable_filename]
+		@file = rfname ? File.new(rfname) : nil
 		
 		logger.info "---------------FILE = #{@file}"
 
@@ -546,10 +550,8 @@ class CorporaController < ApplicationController
 		
 		@archive = @corpus.archives_path + "/#{archive_name}.#{version}.#{archive_ext}"
 
-		# This is essentially a copy operation - but we'll keep it
-		File.open(@archive, "wb") {|f| f.write(@file.read)}
-		# Delete the uploaded_file @file
-		remove_upload_file(@file)
+		# Move the file to archive folder
+		FileUtils.mv(@file.path, @archive)
 		
 		begin		
 			if archive_ext == "zip"

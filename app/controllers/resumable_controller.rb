@@ -102,9 +102,11 @@ class ResumableController < ApplicationController
 	def combine_chunks!
 		require 'shellwords'
 		files = (1..@numberOfChunks).map {|cid| getChunkFilename(@resumableIdentifier, cid)}
-		cmd = "cat #{files.join(' ')} > #{FOLDER}/#{Shellwords.escape(@resumableFilename)}"
+		output_filename = "#{FOLDER}/#{Shellwords.escape(@resumableFilename)}"
+		cmd = "cat #{getChunkGlobString(@resumableIdentifier)} > #{output_filename}"
 		logger.info("***#{cmd}")
 		`#{cmd}`
+		session[:resumable_filename] = output_filename
 	end
 
 	def validateRequest()
@@ -159,10 +161,10 @@ class ResumableController < ApplicationController
 		return "#{FOLDER}/resumable-#{identifier}.#{chunkNumber}"
 	end
 
-
-
-
-
+	def getChunkGlobString(identifier)
+		cleanIdentifier!(identifier)
+		return "#{FOLDER}/resumable-#{identifier}.*"
+	end
 
 
 	#---Filters--
