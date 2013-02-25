@@ -42,10 +42,32 @@ class ResumableController < ApplicationController
 
 		render :json => {:ok => true, :msg => "Done. Your file is ready."}
 
-
-
-
 	end
+
+	# GET /resumable_upload_combine
+	def resumable_upload_combine
+		filename = params[:filename]
+		identifier = params[:identifier]
+		numChunks = params[:numChunks]
+
+		unless filename && identifier && numChunks
+			render :json => {:ok => false, :msg => "Invalid Arguments.\nfilename = #{filename}\nidentifier = #{identifier}\nnumChunks = #{numChunks}"}
+			return
+		end
+
+		@resumableFilename = "#{Shellwords.escape(filename)}"
+		@resumableIdentifier = identifier
+		@numberOfChunks = numChunks.to_i
+
+		unless File.exists?(@resumableFilename)
+			combine_chunks!
+			render :json => {:ok => true, :msg => "Combining Chunks"}
+			return
+		end
+
+		render :json => {:ok => false, :msg => "File already combined."}
+	end
+
 
 	# POST /upload 
 	# Used with Resumable.js
@@ -85,7 +107,7 @@ class ResumableController < ApplicationController
 
 		if(all_chunks_here?)
 			logger.info "***ALL CHUNKS HERE***"
-			combine_chunks!
+			# combine_chunks!
 			logger.info("***DONE***")
 			render :json => {}
 		else
@@ -199,7 +221,7 @@ class ResumableController < ApplicationController
 
 	def getChunkFilename(identifier, chunkNumber)
 		cleanIdentifier!(identifier)
-		return "#{FOLDER}/resumable-#{identifier}.#{chunkNumber}"
+		return "#{FOLDER}/resumable-#{identifier}.%020d" % chunkNumber
 	end
 
 	def getChunkGlobString(identifier)

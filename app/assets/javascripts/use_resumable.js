@@ -26,6 +26,11 @@ if(!r.support) {
 }
 r.on('fileAdded', function(file){
   _resumable_upload_ready = false;
+
+  // Remove all old files from list
+  for(var i = 1; i < r.files.length; i++)
+    r.removeFile(r.files[i])
+
   // Show progress pabr
   $('.resumable-progress, .resumable-list').show();
   // Show pause, hide resume
@@ -49,6 +54,14 @@ r.on('pause', function(){
 
 r.on('complete', function(){
   _resumable_upload_done = true;
+  console.log("Combining...");
+  $.getJSON('/resumable_upload_combine', {
+    identifier: r.files[0].uniqueIdentifier, 
+    filename: r.files[0].fileName,
+    numChunks: r.files[0].chunks.length
+  }, function(data) {
+    console.log(data);
+  });
   // User must now wait for file to put together by server
   // Handled by corpora_form.js
 
@@ -70,3 +83,9 @@ r.on('fileProgress', function(file){
   $('.resumable-file-'+file.uniqueIdentifier+' .resumable-file-progress').html(Math.floor(file.progress()*100) + '%');
   $('.progress-bar').css({width:Math.floor(r.progress()*100) + '%'});
 });
+
+function resumeCallback() {
+  // Show pause, hide resume
+  $('.resumable-progress .progress-resume-link').hide();
+  $('.resumable-progress .progress-pause-link').show();
+}

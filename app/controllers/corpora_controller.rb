@@ -40,6 +40,11 @@ class CorporaController < ApplicationController
 			return
 		end
 
+		# if session[:resumable_leftovers] != nil && !session[:resumable_leftovers].blank?
+		# 	FileUtils.rm Dir.glob(session[:resumable_leftovers])
+		# 	session[:resumable_leftovers] = nil
+		# end
+
 		@archives = []
 		
 		Dir.chdir(Rails.root.to_s)
@@ -551,7 +556,8 @@ class CorporaController < ApplicationController
 		@archive = @corpus.archives_path + "/#{archive_name}.#{version}.#{archive_ext}"
 
 		# Move the file to archive folder
-		FileUtils.mv(@file.path, @archive)
+		#FileUtils.mv(@file.path, @archive)
+		FileUtils.cp(@file.path, @archive)
 		
 		begin		
 			if archive_ext == "zip"
