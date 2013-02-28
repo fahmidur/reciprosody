@@ -556,8 +556,8 @@ class CorporaController < ApplicationController
 		@archive = @corpus.archives_path + "/#{archive_name}.#{version}.#{archive_ext}"
 
 		# Move the file to archive folder
-		#FileUtils.mv(@file.path, @archive)
-		FileUtils.cp(@file.path, @archive)
+		FileUtils.mv(@file.path, @archive)
+		#FileUtils.cp(@file.path, @archive)
 		
 		begin		
 			if archive_ext == "zip"

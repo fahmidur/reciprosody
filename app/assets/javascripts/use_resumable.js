@@ -27,23 +27,27 @@ if(!r.support) {
 r.on('fileAdded', function(file){
   _resumable_upload_ready = false;
 
+  console.log(r.files);
   // Remove all old files from list
-  for(var i = 1; i < r.files.length; i++)
-    r.removeFile(r.files[i])
+  for(var i = 0; i < r.files.length-1; i++) {
+    $(".resumable-file-" + r.files[i].uniqueIdentifier).remove();
+    r.removeFile(r.files[i]);
+  }
+  console.log(r.files);
 
   // Show progress pabr
   $('.resumable-progress, .resumable-list').show();
-  // Show pause, hide resume
-  $('.resumable-progress .progress-resume-link').hide();
-  $('.resumable-progress .progress-pause-link').show();
+
+  $('.resumable-progress .progress-resume-link').show();
+  $('.resumable-progress .progress-pause-link').hide();
 
   // Add the file to the list
-  $('.resumable-list').append('<li class="resumable-file-'+file.uniqueIdentifier+'">Uploading <span class="resumable-file-name"></span> <span class="resumable-file-progress"></span>');
+  $('.resumable-list').append('<li class="resumable-file-'+file.uniqueIdentifier+'"><span class="resumable-file-name"></span> <span class="resumable-file-progress"></span>');
 
   $('.resumable-file-'+file.uniqueIdentifier+' .resumable-file-name').html(file.fileName);
 
   // Actually start the upload
-  r.upload();
+  //r.upload();
 });
 
 r.on('pause', function(){
@@ -55,13 +59,16 @@ r.on('pause', function(){
 r.on('complete', function(){
   _resumable_upload_done = true;
   console.log("Combining...");
+
   $.getJSON('/resumable_upload_combine', {
     identifier: r.files[0].uniqueIdentifier, 
     filename: r.files[0].fileName,
-    numChunks: r.files[0].chunks.length
+    numChunks: r.files[0].chunks.length,
+    'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content')
   }, function(data) {
     console.log(data);
   });
+
   // User must now wait for file to put together by server
   // Handled by corpora_form.js
 
@@ -88,4 +95,15 @@ function resumeCallback() {
   // Show pause, hide resume
   $('.resumable-progress .progress-resume-link').hide();
   $('.resumable-progress .progress-pause-link').show();
+}
+
+function resumableClean() {
+  console.log("Running Resumable Clean");
+  $.getJSON('/resumable_upload_clean', {
+    identifier: r.files[0].uniqueIdentifier, 
+    filename: r.files[0].fileName,
+    'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content')
+  }, function(data) {
+    console.log(data);
+  });
 }

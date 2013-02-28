@@ -44,6 +44,17 @@ class ResumableController < ApplicationController
 
 	end
 
+	# GET /resumable_upload_clean
+	def resumable_upload_clean
+		filename = params[:filename]
+		identifier = params[:identifier]
+		
+		globstring = getChunkGlobString(identifier)
+		FileUtils.rm_rf Dir.glob(globstring)
+
+		render :json => {:filename => filename, :identifier => identifier, :globstring => globstring}
+	end
+
 	# GET /resumable_upload_combine
 	def resumable_upload_combine
 		filename = params[:filename]

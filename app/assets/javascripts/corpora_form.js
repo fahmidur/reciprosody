@@ -57,15 +57,20 @@ $(function() {
 	});
 
 	function check_if_serverside_ready() {
-		$.getJSON('/resumable_upload_ready', {filename: r.files[0].fileName, size: r.files[0].size}, function(data) {
+		$.getJSON('/resumable_upload_ready', {
+			filename: r.files[0].fileName, 
+			size: r.files[0].size,
+			'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content')
+		}, function(data) {
 			console.log(data);
 			if(data && data.ok) {
 				_resumable_upload_ready = true;
 				clearInterval(_fcheck_interval);
 				$('#submit_btn').slideDown();
 				$('#please-wait-warning').modal('hide');
+				$('#upload-ready').modal('show');
+				resumableClean();
 			}
-
 		});
 	}
 
