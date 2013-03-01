@@ -98,6 +98,8 @@ Reciprosody2::Application.routes.draw do
   match '/resumable_upload_clean' => 'resumable#resumable_upload_clean', :via => :get
   match '/resumable_upload_abort' => 'resumable#resumable_upload_abort', :via => :get
   match '/resumable_upload_savestate' => 'resumable#resumable_upload_savestate', :via => :get
+  match '/resumable_upload_deletestate' => 'resumable#resumable_upload_deletestate', :via => :get
+
   match '/resumable_list' => 'resumable#resumable_list', :via => :get
 	
 	

@@ -37,7 +37,7 @@
 					<%end%>
 					-->
 
-					<% if current_user.resumables.size > 0 %>
+					<% if user_signed_in? && (current_user.resumables.size > 0) %>
 						<li class='dropdown'><a href='/resumable_list' class='invert'>Resumables 
 							<span class='badge badge-warning'><%= current_user.resumables.size %></span>
 						</a></li>

@@ -18,6 +18,7 @@ var _resumable_upload_done = false;
 var _resumable_upload_ready = false;
 var _resumable_upload_used = false;
 
+
 if(!r.support) {
 	$('.resumable-error').show();
 } else {
@@ -155,15 +156,15 @@ function resumableAbort(f) {
 
 function resumableBeforeUnload(formID) {
   console.log("Resumable window unloading...");
-  if(_resumable_upload_used && (!_resumable_upload_ready || !_resumable_upload_done)) {
+  //if(_resumable_upload_used && (!_resumable_upload_ready || !_resumable_upload_done)) {
     console.log("Adding upload to Resumable_Incomplete");
     var file = r.files[0];
     var form = $('#'+formID);
     console.log(form);
 
     $.getJSON('/resumable_upload_savestate', {
-      identifier: file.uniqueIdentifier, 
-      filename: file.fileName,
+      identifier: file !== undefined ? file.uniqueIdentifier : "", 
+      filename: file !== undefined ? file.fileName : "",
       url: document.URL,
       formdata: encodeURIComponent(form.serialize()),
       'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content')
@@ -171,5 +172,23 @@ function resumableBeforeUnload(formID) {
       console.log(data);
     });
 
+  //}
+}
+
+function loadFormData() {
+  var url = document.URL;
+  var m;
+  if((m = url.match(/formdata\=(.+)$/))) {
+    var formdata = uri_to_obj(decodeURIComponent(m[1]));
+    console.log(formdata);
+    var obj;
+    for(name in formdata) {
+      obj = $("[name='"+name+"']");
+      if(obj !== undefined) {
+        obj.val(formdata[name]);
+      }
+    }
   }
 }
+
+loadFormData();

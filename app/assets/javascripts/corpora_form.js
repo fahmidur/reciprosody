@@ -3,6 +3,7 @@ var current_inputId = 0;
 var inputIds = [];
 
 var _fcheck_interval;
+var _original_formdata = "";
 
 $(function() {
 	dw();
@@ -93,29 +94,20 @@ $(function() {
 
 	window.onbeforeunload = function() {
 		console.log("Corpus Form Unloading...");
-		resumableBeforeUnload('new_corpus');
-		if((r.files[0] !== undefined && r.files[0].progress() > 0 && r.files[0].progress() < 1) || (!_resumable_upload_ready && _resumable_upload_used))
+
+		if($("#new_corpus").serialize() !== _original_formdata) {
+			resumableBeforeUnload('new_corpus');
+			//if((r.files[0] !== undefined && r.files[0].progress() > 0 && r.files[0].progress() < 1) || (!_resumable_upload_ready && _resumable_upload_used))
 			return "Your form will be here for you when you get back.";
-	}
-
-	loadFormData();
-});
-
-function loadFormData() {
-	var url = document.URL;
-	var m;
-	if((m = url.match(/formdata\=(.+)$/))) {
-		var formdata = uri_to_obj(decodeURIComponent(m[1]));
-		console.log(formdata);
-		var obj;
-		for(name in formdata) {
-			obj = $("[name='"+name+"']");
-			if(obj !== undefined) {
-				obj.val(formData[name]);
-			}
 		}
 	}
-}
+
+	_original_formdata = $('#new_corpus').serialize();
+	console.log(_original_formdata);
+
+});
+
+
 
 function dw() {
 	$('#help_sticker').width($('#primaryOwner').width()-10);

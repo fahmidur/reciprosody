@@ -11,7 +11,21 @@ class ResumableController < ApplicationController
 
 	def resumable_list
 		@resumables = current_user.resumables
+	end
 
+	def resumable_upload_deletestate
+		id = params[:id]
+		state = ResumableIncompleteUpload.find_by_id(id)
+
+		unless state
+			#render :json => {:ok => false}
+			redirect_to '/resumable_list'
+			return
+		end
+
+		state.destroy
+		#render :json => {:ok => true}
+		redirect_to '/resumable_list'
 
 	end
 
