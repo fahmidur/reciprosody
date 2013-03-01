@@ -97,7 +97,7 @@ $(function() {
 		var progress = (r.files[0] !== undefined && r.files[0].progress() > 0 && r.files[0].progress() < 1);
 		var completed_not_sent = (!_resumable_upload_ready && _resumable_upload_used);
 
-		if($("#new_corpus").serialize() !== _original_formdata || progress || completed_but_not_sent) {
+		if($("#new_corpus").serialize() !== _original_formdata || progress || completed_not_sent) {
 			resumableBeforeUnload('new_corpus');
 			return "Your form will be here for you when you get back.";
 		}

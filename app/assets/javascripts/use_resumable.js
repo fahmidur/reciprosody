@@ -152,6 +152,11 @@ function resumableAbort(f) {
 
   _resumable_upload_ready = false;
   _resumable_upload_done = false;
+
+  if(r.files.length == 0) {
+    // Hide progress bar
+    $('.resumable-progress, .resumable-list').hide();
+  }
 }
 
 function resumableBeforeUnload(formID) {
@@ -161,11 +166,14 @@ function resumableBeforeUnload(formID) {
     var file = r.files[0];
     var form = $('#'+formID);
     console.log(form);
+    var url = document.URL; 
+    var m = url.match(/^(.+)\?/);
+    if(m) {url = m[1];}
 
     $.getJSON('/resumable_upload_savestate', {
       identifier: file !== undefined ? file.uniqueIdentifier : "", 
       filename: file !== undefined ? file.fileName : "",
-      url: document.URL,
+      url: url,
       formdata: encodeURIComponent(form.serialize()),
       'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content')
     }, function(data) {

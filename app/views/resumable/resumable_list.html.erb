@@ -3,7 +3,7 @@
 <% @resumables.each do |r| %>
 <div class='corpi_item'>
 	<h5><!--<%= r.updated_at %> --> <span class='pull-right'><%= time_ago_in_words(r.updated_at) %> ago</span></h5>
-	<span class='corpus_show_name'>Path: </span> <span class='corpus_show_value'><%= r.url %></span>
+	<span class='corpus_show_name'>Tab: </span> <span class='corpus_show_value'><%= r.url[/corpora|publications|tools/] %></span>
 	<br/>
 	<span class='corpus_show_name'>File: </span> <span class='corpus_show_value'><%= r.filename %></span>
 	<br/><br/>
