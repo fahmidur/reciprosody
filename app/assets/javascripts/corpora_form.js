@@ -94,10 +94,11 @@ $(function() {
 
 	window.onbeforeunload = function() {
 		console.log("Corpus Form Unloading...");
+		var progress = (r.files[0] !== undefined && r.files[0].progress() > 0 && r.files[0].progress() < 1);
+		var completed_not_sent = (!_resumable_upload_ready && _resumable_upload_used);
 
-		if($("#new_corpus").serialize() !== _original_formdata) {
+		if($("#new_corpus").serialize() !== _original_formdata || progress || completed_but_not_sent) {
 			resumableBeforeUnload('new_corpus');
-			//if((r.files[0] !== undefined && r.files[0].progress() > 0 && r.files[0].progress() < 1) || (!_resumable_upload_ready && _resumable_upload_used))
 			return "Your form will be here for you when you get back.";
 		}
 	}
