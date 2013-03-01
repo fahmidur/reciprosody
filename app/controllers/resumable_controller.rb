@@ -9,6 +9,12 @@ class ResumableController < ApplicationController
 
 	end
 
+	def resumable_list
+		@resumables = current_user.resumables
+
+
+	end
+
 	# GET /resumable_upload_ready
 	# check to see if an upload is ready
 	def resumable_upload_ready
@@ -45,6 +51,9 @@ class ResumableController < ApplicationController
 	end
 
 	# GET /resumable_upload_clean
+	# get rid of all chunks
+	# upload successful
+	# what remains is the put together file
 	def resumable_upload_clean
 		filename = params[:filename]
 		identifier = params[:identifier]
@@ -53,6 +62,56 @@ class ResumableController < ApplicationController
 		FileUtils.rm_rf Dir.glob(globstring)
 
 		render :json => {:filename => filename, :identifier => identifier, :globstring => globstring}
+	end
+
+	# GET /resumable_upload_abort
+	# Different from clean because:
+	# it also removes the combined file
+	# as well as the chunks
+	def resumable_upload_abort
+		filename = params[:filename]
+		identifier = params[:identifier]
+		
+		globstring = getChunkGlobString(identifier)
+		FileUtils.rm_rf Dir.glob(globstring)
+
+		filename.gsub!(/^[\.,\\,\/]*/, "");
+
+		FileUtils.rm_f "#{FOLDER}/#{filename}"
+
+		# Forget it ever happened
+		session[:resumable_filename] = nil
+
+		render :json => {:filename => filename, :identifier => identifier, :globstring => globstring}
+	end
+
+	# GET /resumable_upload_savestate
+	def resumable_upload_savestate
+		filename = params[:filename]
+		url = params[:url]
+		formdata = params[:formdata]
+		identifier = params[:identifier]
+
+		filename.gsub!(/^[\.,\\,\/]*/, "");
+
+		logger.info "**RESUMABLE::SAVING STATE** filename=#{filename} ident=#{identifier}"
+		logger.info "URL = #{url}"
+		logger.info "formdata = #{formdata}"
+
+		ResumableIncompleteUpload.where(:identifier => identifier).delete_all if identifier && !identifier.blank?
+
+		ResumableIncompleteUpload.create(:user_id => current_user().id, :filename => filename,
+										 :identifier => identifier, :formdata => formdata, :url => url);
+
+
+		
+		render :json => {
+			:filename => filename, 
+			:identifier => identifier, 
+			:user_id => current_user().id, 
+			:formdata => formdata, 
+			:url => url
+		}
 	end
 
 	# GET /resumable_upload_combine
@@ -180,7 +239,6 @@ class ResumableController < ApplicationController
 		logger.info("***#{cmd}")
 		`#{cmd}`
 		session[:resumable_filename] = output_filename
-		session[:resumable_leftovers] = resumable_globstring
 	end
 
 	def validateRequest()

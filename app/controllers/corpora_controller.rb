@@ -40,11 +40,6 @@ class CorporaController < ApplicationController
 			return
 		end
 
-		# if session[:resumable_leftovers] != nil && !session[:resumable_leftovers].blank?
-		# 	FileUtils.rm Dir.glob(session[:resumable_leftovers])
-		# 	session[:resumable_leftovers] = nil
-		# end
-
 		@archives = []
 		
 		Dir.chdir(Rails.root.to_s)
@@ -485,9 +480,14 @@ class CorporaController < ApplicationController
 		@corpus.valid?
 		
 
-		if @corpus.update_attributes(params[:corpus]) && create_corpus(msg)  && @corpus.save
+		if @corpus.update_attributes(params[:corpus]) && create_corpus(msg) && @corpus.save
 			clear_directory(@corpus.tmp_path) if @corpus.utoken
 			#format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
+
+			#If the License does not exist add the License
+			license = License.find_by_name(@corpus.license)
+			License.create(:name => @corpus.license) unless license
+
 			render :json => {:ok => true, :id => @corpus.id}
 		else
 			clear_directory(@corpus.tmp_path) if @corpus.utoken

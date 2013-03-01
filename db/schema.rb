@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130214225009) do
+ActiveRecord::Schema.define(:version => 20130301071810) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -107,6 +107,18 @@ ActiveRecord::Schema.define(:version => 20130214225009) do
     t.text     "venue"
     t.datetime "pubdate"
   end
+
+  create_table "resumable_incomplete_uploads", :force => true do |t|
+    t.string   "filename"
+    t.string   "identifier"
+    t.integer  "user_id"
+    t.string   "url"
+    t.text     "formdata"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "resumable_incomplete_uploads", ["user_id"], :name => "index_resumable_incomplete_uploads_on_user_id"
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false

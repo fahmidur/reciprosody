@@ -1,0 +1,14 @@
+<h2>Resumable List</h2>
+
+<% @resumables.each do |r| %>
+<div class='corpi_item'>
+	<h5><!--<%= r.updated_at %> --> <span class='pull-right'><%= time_ago_in_words(r.updated_at) %> ago</span></h5>
+	<span class='corpus_show_name'>Path: </span> <span class='corpus_show_value'><%= r.url %></span>
+	<br/>
+	<span class='corpus_show_name'>File: </span> <span class='corpus_show_value'><%= r.filename %></span>
+	<br/><br/>
+	<a class='btn btn-mini btn-primary' href='<%= r.url %>?formdata=<%= r.formdata %>'>Recover</a>
+	<a class='btn btn-mini btn-danger pull-right' href='#'>Forget</a>
+
+</div>
+<% end %>

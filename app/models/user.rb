@@ -14,6 +14,8 @@ class User < ActiveRecord::Base
 
 	has_many :memberships #to corpora
 	has_many :publication_memberships
+
+
 	
 	has_one :super_key
 
@@ -25,6 +27,10 @@ class User < ActiveRecord::Base
 	scope :publication_owners,			where(:publication_memberships => {role: 'owner'})
 	scope :publication_reviewers,		where(:publication_memberships => {role: 'reviewer'})
 	scope :publication_members,			where(:publication_memberships => {role: 'member'})
+
+	def resumables
+		ResumableIncompleteUpload.where(:user_id => self.id).order("updated_at DESC")
+	end
 
 	# get all super key holders
 	def self.supers
