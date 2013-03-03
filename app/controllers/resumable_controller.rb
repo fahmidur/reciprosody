@@ -36,6 +36,7 @@ class ResumableController < ApplicationController
 		@resumableFilename = params[:filename]
 		@resumableFileSize = params[:size]
 
+
 		unless @resumableFilename && @resumableFileSize
 			render :json => {:ok => false, :msg => "Invalid Arguments.\nfilename = #{@resumableFilename}\ntarget_size=#{@resumableFileSize}"}
 			return
