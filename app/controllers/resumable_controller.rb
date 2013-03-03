@@ -36,7 +36,6 @@ class ResumableController < ApplicationController
 		@resumableFilename = params[:filename]
 		@resumableFileSize = params[:size]
 
-
 		unless @resumableFilename && @resumableFileSize
 			render :json => {:ok => false, :msg => "Invalid Arguments.\nfilename = #{@resumableFilename}\ntarget_size=#{@resumableFileSize}"}
 			return
@@ -259,6 +258,11 @@ class ResumableController < ApplicationController
 
 	def getCombinedFilename
 		"#{FOLDER}/resumable-#{@resumableIdentifier}-#{Shellwords.escape(@resumableFilename)}"
+	end
+
+	# GET
+	def getAllGlobString
+		"#{FOLDER}/resumable-#{@resumableIdentifier}*"
 	end
 
 	def validateRequest()
