@@ -84,20 +84,16 @@ class ResumableController < ApplicationController
 	# it also removes the combined file
 	# as well as the chunks
 	def resumable_upload_abort
-		filename = params[:filename]
-		identifier = params[:identifier]
+		@resumableFilename = params[:filename]
+		@resumableIdentifier = params[:identifier]
 		
-		globstring = getChunkGlobString(identifier)
+		globstring = getAllGlobString
 		FileUtils.rm_rf Dir.glob(globstring)
-
-		filename.gsub!(/^[\.,\\,\/]*/, "");
-
-		FileUtils.rm_f "#{FOLDER}/#{filename}"
 
 		# Forget it ever happened
 		session[:resumable_filename] = nil
 
-		render :json => {:filename => filename, :identifier => identifier, :globstring => globstring}
+		render :json => {:filename => @resumableFilename, :identifier => @resumableIdentifier, :globstring => globstring}
 	end
 
 	# GET /resumable_upload_savestate
@@ -260,8 +256,10 @@ class ResumableController < ApplicationController
 		"#{FOLDER}/resumable-#{@resumableIdentifier}-#{Shellwords.escape(@resumableFilename)}"
 	end
 
-	# GET
+	# get the globstring
+	# for every resumable item for the current identifier
 	def getAllGlobString
+		cleanIdentifier!(@resumableIdentifier)
 		"#{FOLDER}/resumable-#{@resumableIdentifier}*"
 	end
 
