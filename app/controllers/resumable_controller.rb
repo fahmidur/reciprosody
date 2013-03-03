@@ -41,9 +41,9 @@ class ResumableController < ApplicationController
 		end
 
 		@resumableFilename = Shellwords.escape(@resumableFilename)
-		target_filename = "#{FOLDER}/#{target_filename}"
 
-		target_size = target_size.to_i
+		target_filename = getCombinedFilename()
+		target_size = File.size(target_filename)
 
 		unless File.exists?(target_filename)
 			render :json => {:ok => false, :msg => "#{target_filename} does not exist"}
