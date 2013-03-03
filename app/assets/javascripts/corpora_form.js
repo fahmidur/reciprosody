@@ -59,6 +59,7 @@ $(function() {
 	function check_if_serverside_ready() {
 		$.getJSON('/resumable_upload_ready', {
 			filename: r.files[0].fileName, 
+			identifier: r.files[0].uniqueIdentifier,
 			size: r.files[0].size,
 			'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content')
 		}, function(data) {
