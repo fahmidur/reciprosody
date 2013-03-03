@@ -93,6 +93,7 @@ class ResumableController < ApplicationController
 		# Forget it ever happened
 		session[:resumable_filename] = nil
 
+		# echo parameters
 		render :json => {:filename => @resumableFilename, :identifier => @resumableIdentifier, :globstring => globstring}
 	end
 
