@@ -32,6 +32,7 @@ class ResumableController < ApplicationController
 	# GET /resumable_upload_ready
 	# check to see if an upload is ready
 	def resumable_upload_ready
+		@resumableIdentifier = params[:resumableIdentifier]
 		@resumableFilename = params[:filename]
 		@resumableFileSize = params[:size]
 
