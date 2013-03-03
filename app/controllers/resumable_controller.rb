@@ -32,15 +32,15 @@ class ResumableController < ApplicationController
 	# GET /resumable_upload_ready
 	# check to see if an upload is ready
 	def resumable_upload_ready
-		target_filename = params[:filename]
-		target_size = params[:size]
+		@resumableFilename = params[:filename]
+		@resumableFileSize = params[:size]
 
-		unless target_filename && target_size
-			render :json => {:ok => false, :msg => "Invalid Arguments.\nfilename = #{target_filename}\ntarget_size=#{target_size}"}
+		unless @resumableFilename && @resumableFileSize
+			render :json => {:ok => false, :msg => "Invalid Arguments.\nfilename = #{@resumableFilename}\ntarget_size=#{@resumableFileSize}"}
 			return
 		end
 
-		target_filename = Shellwords.escape(target_filename)
+		@resumableFilename = Shellwords.escape(@resumableFilename)
 		target_filename = "#{FOLDER}/#{target_filename}"
 
 		target_size = target_size.to_i
@@ -247,12 +247,16 @@ class ResumableController < ApplicationController
 
 	def combine_chunks!
 		files = (1..@numberOfChunks).map {|cid| getChunkFilename(@resumableIdentifier, cid)}
-		output_filename = "#{FOLDER}/#{Shellwords.escape(@resumableFilename)}"
+		output_filename = getCombinedFilename()
 		resumable_globstring = getChunkGlobString(@resumableIdentifier)
 		cmd = "cat #{resumable_globstring} > #{output_filename}"
 		logger.info("***#{cmd}")
 		`#{cmd}`
 		session[:resumable_filename] = output_filename
+	end
+
+	def getCombinedFilename
+		"#{FOLDER}/resumable-#{@resumableIdentifier}-#{Shellwords.escape(@resumableFilename)}"
 	end
 
 	def validateRequest()
