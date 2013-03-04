@@ -117,12 +117,17 @@ class ResumableController < ApplicationController
 		logger.info "URL = #{url}"
 		logger.info "formdata = #{formdata}"
 
+
+
 		ResumableIncompleteUpload.where(:identifier => identifier).delete_all if identifier && !identifier.blank?
 
 		ResumableIncompleteUpload.create(:user_id => current_user().id, :filename => filename,
 										 :identifier => identifier, :formdata => formdata, :url => url);
 
-
+		# Only keep 5 Save-States
+		ResumableIncompleteUpload.where(:user_id => current_user().id).order("created_at DESC").each_with_index do |e, i| 
+			e.destroy() if i >= 5 
+		end
 		
 		render :json => {
 			:filename => filename, 
