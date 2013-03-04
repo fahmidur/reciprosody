@@ -4,6 +4,7 @@ var inputIds = [];
 
 var _fcheck_interval;
 var _original_formdata = "";
+var _save_state = true;
 
 $(function() {
 	dw();
@@ -81,7 +82,9 @@ $(function() {
 
 		if(data.ok) {
 			console.log("success data.ok");
+			_save_state = false;
 			window.location.href = "/corpora/"+ data.id;
+			return;
 		} else {
 			$('#please-wait-warning').modal('hide');
 			$('#submit_btn').show();
@@ -90,6 +93,7 @@ $(function() {
 			$('#errors').html(data.errors.join("<br>"));
 			$('html, body').animate({ scrollTop: 0 }, 'fast');
 		}
+		_save_state = true;
 
 	});
 
@@ -99,8 +103,11 @@ $(function() {
 		var completed_not_sent = (!_resumable_upload_ready && _resumable_upload_used);
 
 		if($("#new_corpus").serialize() !== _original_formdata || progress || completed_not_sent) {
-			resumableBeforeUnload('new_corpus');
-			return "Your form will be here for you when you get back.";
+			console.log("SAVE_STATE = " + _save_state);
+			if(_save_state === true) {
+				resumableBeforeUnload('new_corpus');
+				return "Your form will be here for you when you get back.";
+			}
 		}
 	}
 
