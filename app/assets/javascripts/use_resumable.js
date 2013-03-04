@@ -170,11 +170,13 @@ function resumableBeforeUnload(formID) {
     var m = url.match(/^(.+)\?/);
     if(m) {url = m[1];}
 
+    var filename = file !== undefined ? file.relativePath : "";
+
     $.getJSON('/resumable_upload_savestate', {
       identifier: file !== undefined ? file.uniqueIdentifier : "", 
-      filename: file !== undefined ? file.fileName : "",
+      filename: filename,
       url: url,
-      formdata: encodeURIComponent(form.serialize()),
+      formdata: encodeURIComponent(form.serialize()+"&filename="+filename),
       'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content')
     }, function(data) {
       console.log(data);
@@ -188,6 +190,24 @@ function loadFormData() {
   var m;
   if((m = url.match(/formdata\=(.+)$/))) {
     var formdata = uri_to_obj(decodeURIComponent(m[1]));
+    if(formdata['filename'] !== "") {
+      $('body').prepend('<div class="modal fade" id="upload-filename">'+
+          '<div class="modal-header">' +
+            '<a class="close" data-dismiss="modal">×</a>' +
+            '<h3>Upload Reminder</h3>' +
+          '</div>' +
+          '<div class="modal-body">' +
+            '<p>You were trying to upload a file named </p>' +
+            '<span class="label label-warning">'+(formdata['filename'])+'</span>' +
+          '</div>'+
+          '<div class="modal-footer">'+
+            '<a href="#" data-dismiss="modal" class="btn">Ok</a>'+
+          '</div>'+
+        '</div>'
+      );
+
+      $('#upload-filename').modal('show');  
+    }
     console.log(formdata);
     var obj;
     for(name in formdata) {
