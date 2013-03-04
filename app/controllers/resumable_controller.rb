@@ -15,6 +15,13 @@ class ResumableController < ApplicationController
 
 	def resumable_upload_deletestate
 		id = params[:id]
+
+		if id == "all"
+			ResumableIncompleteUpload.where(:user_id => current_user.id).destroy_all
+			redirect_to '/resumable_list'
+			return;
+		end
+
 		state = ResumableIncompleteUpload.find_by_id(id)
 
 		unless state

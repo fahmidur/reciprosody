@@ -1,5 +1,10 @@
 <h2>Resumable List</h2>
 
+<div class='row-fluid'>
+	<a href='/resumable_upload_deletestate?id=all' class='btn btn-danger'>Delete All Resumable States</a>
+</div>
+<br/>
+
 <% @resumables.each do |r| %>
 <div class='corpi_item'>
 	<h5><!--<%= r.updated_at %> --> <span class='pull-right'><%= time_ago_in_words(r.updated_at) %> ago</span></h5>
