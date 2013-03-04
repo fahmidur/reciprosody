@@ -8,9 +8,9 @@ class ResumableIncompleteUpload < ActiveRecord::Base
 
 	def cleanup
 		if identifier && identifier.present?
-			FileUtils.rm_rf Dir.glob("#{FOLDER}/#{identifier}.*")
-			filename.gsub!(/^[\.,\\,\/]*/, "")
-			FileUtils.rm_f "#{FOLDER}/#{filename}" if identifier && identifier.present?
+			FileUtils.rm_rf Dir.glob("#{FOLDER}/resumable-#{identifier}*")
 		end
-	end 
+	end
+
+
 end
