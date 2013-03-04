@@ -5,51 +5,7 @@
 
 <!--<%= setup_upload %>-->
 
-<div class="modal fade" id="upload-progress-warning">
-	<div class="modal-header">
-		<a class="close" data-dismiss="modal">×</a>
-		<h3>Please Wait. Your upload is in progress.</h3>
-		
-	</div>
-	<div class="modal-body">
-		<p>Your upload is in progress.</p>
-	</div>
-	<div class="modal-footer">
-		<a href="#" data-dismiss="modal" class="btn">Ok</a>
-	</div>
-</div>
-
-<div class="modal fade" id="upload-ready">
-	<div class="modal-header">
-		<a class="close" data-dismiss="modal">×</a>
-		<h3>Upload Ready</h3>
-		
-	</div>
-	<div class="modal-body">
-		<p>Your upload is ready. You may now review your form and click Submit.</p>
-	</div>
-	<div class="modal-footer">
-		<a href="#" data-dismiss="modal" class="btn">Ok</a>
-	</div>
-</div>
-
-
-<div class="modal fade" id="please-wait-warning">
-	<div class="modal-header">
-		<a class="close" data-dismiss="modal">×</a>
-		<h3>Please Wait. The server is processing your file.</h3>
-	</div>
-	<div class="modal-body">
-		<p>This might take some time. The submit button will become available when your file is ready.</p>
-		<center>
-			<img src='/assets/loading1.gif'/>
-		</center>
-	</div>
-	<div class="modal-footer">
-		<!--<a href="#" data-dismiss="modal" class="btn">Ok</a>-->
-	</div>
-</div>
-
+<%= render :partial => 'form_modals' %>
 
 <%= form_for(@corpus, :multipart => true, :remote => true, :html => {'data-type' => 'json'}) do |f| %>
 
