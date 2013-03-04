@@ -137,3 +137,8 @@ function isMobile() {
 	return false;
 }
 
+function submitCorpusForm() {
+	console.log("Submitting Form");
+	$('#submit_btn').click();
+}
+
