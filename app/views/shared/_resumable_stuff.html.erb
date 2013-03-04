@@ -9,14 +9,26 @@ Your browser, unfortunately, is not supported by Resumable.js. The library requi
 <div class="resumable-progress">
   <table>
     <tr>
-      <td width="100%"><div class="progress-container"><div class="progress-bar"></div></div></td>
+      <td width="100%">
+        <div class="progress-container"><div class="progress-bar"></div></div>
+      </td>
+
       <td class="progress-text" nowrap="nowrap"></td>
+
       <td class="progress-pause" nowrap="nowrap">
-        <a href="#" onclick="r.upload(); resumeCallback(); return(false);" class="progress-resume-link"><img src="/assets/resume.png" title="Resume upload" /></a>
-        <a href="#" onclick="r.pause(); return(false);" class="progress-pause-link"><img src="/assets/pause.png" title="Pause upload" /></a>
+        <a href="#" onclick="r.upload(); resumeCallback(); return(false);" class="progress-resume-link btn btn-small btn-info">
+          <!--<img src="/assets/resume.png" title="Resume upload" />-->
+          Upload
+        </a>
+
+        <a href="#" onclick="r.pause(); return(false);" class="progress-pause-link btn btn-small btn-info">
+          <!--<img src="/assets/pause.png" title="Pause upload" />-->
+          Pause
+        </a>
       </td>
     </tr>
   </table>
 </div>
 
-<ul class="resumable-list"></ul>
+<div class="resumable-list">
+</div>

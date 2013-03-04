@@ -48,7 +48,7 @@ r.on('fileAdded', function(file){
   $('.resumable-progress .progress-pause-link').hide();
 
   // Add the file to the list
-  $('.resumable-list').append('<li class="resumable-file-'+file.uniqueIdentifier+'"><span class="resumable-file-name btn btn-mini" title="remove" data-iden="'+file.uniqueIdentifier+'"></span> <span class="resumable-file-progress"></span>');
+  $('.resumable-list').append('<div title="remove" class="resumable-file-'+file.uniqueIdentifier+' corpi_item_small resumable-remove" data-iden="'+file.uniqueIdentifier+'"><span class="remove-warning"></span><span class="resumable-file-name label label-info"></span> <span class="resumable-file-progress"></div>');
 
   $('.resumable-file-'+file.uniqueIdentifier+' .resumable-file-name').html(file.fileName);
 
@@ -98,7 +98,7 @@ r.on('fileProgress', function(file){
   $('.progress-bar').css({width:Math.floor(r.progress()*100) + '%'});
 });
 
-$('.resumable-file-name').live('click', function() {
+$('.resumable-remove').live('click', function() {
   var uid = $(this).attr('data-iden');
   console.log(uid);
   var file = r.getFromUniqueIdentifier(uid);
