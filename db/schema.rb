@@ -149,9 +149,9 @@ ActiveRecord::Schema.define(:version => 20130307174705) do
 
   create_table "tools", :force => true do |t|
     t.string   "name"
-    t.string   "author"
     t.string   "programming_language"
     t.string   "license"
+    t.text     "authors"
     t.text     "description"
     t.text     "keywords"
     t.string   "url"

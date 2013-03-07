@@ -1,0 +1,84 @@
+<%= content_for :javascript_includes do %>
+	<%= javascript_include_tag 'resumable.js' %>
+<% end %>
+
+<%= form_for(@tool) do |f|%>
+	<div class='row-fluid'>
+		<div class='field span12'>
+			<%= f.label :name, "Title" %>
+			<input id="tool_name" name="tool[name]" size="30" type="text" class='span12' required>
+		</div>
+	</div>
+
+	<div class='row-fluid'>
+		<div class='field span4'>
+			<%= f.label :url, "URL" %>
+			<input id="tool_url" name="tool[url]" size="30" type="text", class='span12'>
+		</div>
+
+		<div class='field span4'>
+			<%= f.label :license, "License" %>
+			<input id='tool_license' name='tool[license]' type='text' class='span12'>
+		</div>
+
+
+		<div class='field span4'>
+			<%= f.label :programming_language, "Programming Language" %>
+			<input id="tool_programming_language" name="tool[programming_language]" size="30" type="text", class='span12'>
+		</div>
+
+	</div>
+
+	<div class='row-fluid'>
+		<div class="field span4">
+			<label for="tool_keywords">Keywords</label>
+			<div class="input-prepend">
+				<span class="add-on"><i class="icon-tags"></i></span>
+				<input class="memberInput span11 ui-autocomplete-input" data-autocomplete="/publications/autocomplete_publication_keyword_name" id="keyword_in" name="tool[keyword]" size="30" type="text" value="" autocomplete="off"><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+			</div>
+			<br>
+			<div class="span12" id="keywords_holder">
+			</div>
+		</div>
+
+		<div class='field span4'>
+			<%= render :partial => 'shared/resumable_stuff' %>
+		</div>
+
+		<div class="field span4">
+			<label for="corpus">Uses Corpus</label>
+
+			<div class="input-prepend">
+				<span class="add-on"><i class="icon-book"></i></span>
+				<input class="memberInput span11 ui-autocomplete-input" data-autocomplete="/corpora/autocomplete_corpus_name" id="uses_corpus_in" name="tool[corpus]" size="30" type="text" value="" autocomplete="off"><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+			</div>
+
+			<br>
+			<div id="corpora_holder">
+			</div>
+			<br>
+			
+		</div>
+
+		
+	</div>
+
+	<div class='row-fluid'>
+		<div class='field span4'>
+			<%= f.label :authors, "Authors" %>
+			<textarea id='tool_authors' name='tool[authors]' class='big_desc span12'></textarea>
+		</div>
+
+		<div class='field span4'>
+			<%= f.label :description, "Description" %>
+			<textarea id='tool_description' name='tool[description]' class='big_desc span12'></textarea>
+		</div>
+	</div>
+
+	
+
+
+
+<% end %>
+
+<%= javascript_include_tag 'use_resumable.js' %>

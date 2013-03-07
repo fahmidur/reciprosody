@@ -25,7 +25,6 @@ Reciprosody2::Application.routes.draw do
   
   end
 
-  match 'publications/new' => 'publications#new'
 
   resources :publications do
     member do
@@ -41,6 +40,10 @@ Reciprosody2::Application.routes.draw do
     end
 
     get :autocomplete_publication_keyword_name, :on => :collection
+  end
+
+  resources :tools do
+
   end
 	
 	

@@ -1,0 +1,10 @@
+<h1>Tools</h1>
+<br/>
+
+<% @tools.each do |t| %>
+	<%= render :partial => "tool_index_element", :local => {:tool => t} %>
+<% end %>
+
+<div class='row-fluid'>
+	<a class='btn span12' href='/tools/new'>New Tool</a>
+</div>
