@@ -1,6 +1,5 @@
 class PublicationsController < ApplicationController
-	include UsesUpload
-
+	
 	before_filter :user_filter, :except => :index
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
