@@ -42,15 +42,27 @@
 			<%= f.text_area :description, :class => 'big_desc span12' %>
 		</div>
 
+
+
 		<div class='field span4'>
-			<%= f.label :keywords %>
-			<div class='input-prepend'>
-				<span class="add-on"><i class="icon-tags"></i></span>
-				<%= f.autocomplete_field :keyword, '/publications/autocomplete_publication_keyword_name', :value => "", :class => 'memberInput span11', :id => 'keyword_in' %>
+
+			<label for='owners'>Primary Owner</label>
+
+			<div class="input-prepend">
+				<span class="add-on"><i class="icon-user"></i></span>
+				<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user().email_format, :class => 'memberInput span11', :id => 'primaryOwner' %> 
 			</div>
 			<br/>
-			<div class='span12' id='keywords_holder'>
-			</div>
+
+			<!--
+			<label>New External Members?</label>
+			<a href='/user/invite' class='btn span12' target="_blank">Invite a Friend</a>
+			-->
+
+			<%= render :partial => 'shared/resumable_stuff'%>
+			
+
+			
 		</div>
 
 		<div class='field span4'>
@@ -82,26 +94,17 @@
 		</div>
 
 		<div class='field span4'>
-
-			<label for='owners'>Primary Owner</label>
-
-			<div class="input-prepend">
-				<span class="add-on"><i class="icon-user"></i></span>
-				<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user().email_format, :class => 'memberInput span11', :id => 'primaryOwner' %> 
+			<%= f.label :keywords %>
+			<div class='input-prepend'>
+				<span class="add-on"><i class="icon-tags"></i></span>
+				<%= f.autocomplete_field :keyword, '/publications/autocomplete_publication_keyword_name', :value => "", :class => 'memberInput span11', :id => 'keyword_in' %>
 			</div>
 			<br/>
-
-			<!--
-			<label>New External Members?</label>
-			<a href='/user/invite' class='btn span12' target="_blank">Invite a Friend</a>
-			-->
-
-			<%= render :partial => 'shared/resumable_stuff'%>
-			
-
-			
+			<div class='span12' id='keywords_holder'>
+			</div>
 		</div>
 
+		
 	</div>
 
 	<br/>
