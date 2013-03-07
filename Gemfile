@@ -27,7 +27,7 @@ group :assets do
   gem 'therubyracer', :require => 'v8'
 end
 
-gem 'jquery-rails'
+gem 'jquery-rails', '2.1.4'
 
 #---Modified by Me -SFR----------------
 gem 'twitter-bootstrap-rails'
@@ -45,9 +45,9 @@ gem 'carrierwave'
 
 gem 'bibtex-ruby'
 gem 'citeproc-ruby'
+gem 'mail_view', :git => 'https://github.com/37signals/mail_view.git'
 
 group :development, :test do
-  gem 'mail_view', :git => 'https://github.com/37signals/mail_view.git'
   gem 'rspec-rails', ">= 2.0"
   gem "capybara"
   gem 'cucumber-rails', :require => false
