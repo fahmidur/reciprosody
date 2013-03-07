@@ -19,6 +19,7 @@ class PublicationsController < ApplicationController
 	def new
 		@publication = Publication.new
 		@corpus = Corpus.find_by_id(params[:corpus_id]) if params[:corpus_id]
+		session[:resumable_filename] = nil
 	end
 
 	def create
@@ -80,7 +81,10 @@ class PublicationsController < ApplicationController
 			PublicationKeyword.create(:name => kw) unless PublicationKeyword.find_by_name(kw)
 		end
 
-		@file = get_upload_file
+		#@file = get_upload_file
+		rfname = session[:resumable_filename]
+		@file = rfname ? File.new(rfname) : nil
+
 		return true unless @file
 
 		Dir.chdir Rails.root
@@ -89,7 +93,12 @@ class PublicationsController < ApplicationController
 		`mkdir -p #{path}`
 		`rm #{path}/*`
 		
-		path += "/#{File.basename(@file.path)}"
+		# TO-Do: Possible Race Condition occuring above
+		# Fix with a blocking call to mkdir and rm
+		extname = File.extname(@file.path)
+		name = @pub.name.underscore
+
+		path += "/#{name}#{extname}"
 		File.open(path, "wb") {|f| f.write(@file.read)}
 
 		@pub.local = path
@@ -101,6 +110,7 @@ class PublicationsController < ApplicationController
 	def edit
 		@pub = Publication.find_by_id(params[:id])
 		@corpora = @pub.corpora
+		session[:resumable_filename] = nil
 	end
 
 	def update

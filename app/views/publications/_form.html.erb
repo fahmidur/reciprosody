@@ -1,5 +1,5 @@
 <%= content_for :javascript_includes do%>
-	<%= javascript_include_tag 'dropload.js' %>
+	<%= javascript_include_tag 'resumable.js' %>
 	<%= javascript_include_tag 'publications_form.js' %>
 <% end %>
 
@@ -95,7 +95,8 @@
 			<label>New External Members?</label>
 			<a href='/user/invite' class='btn span12' target="_blank">Invite a Friend</a>
 			-->
-			<%= render :partial => 'shared/dropbox2', :locals => {:text => "Drop Document Anywhere On This Page"} %>
+
+			<%= render :partial => 'shared/resumable_stuff'%>
 			
 
 			
@@ -106,3 +107,6 @@
 	<br/>
 	<input type='submit' class='btn btn-small btn-primary span12' value="Create Publication"/>
 <% end %>
+
+
+<%=javascript_include_tag 'use_resumable.js' %>

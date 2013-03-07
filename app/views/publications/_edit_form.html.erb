@@ -1,5 +1,5 @@
 <%= content_for :javascript_includes do%>
-	<%= javascript_include_tag 'dropload.js' %>
+	<%= javascript_include_tag 'resumable.js' %>
 	<%= javascript_include_tag 'publications_form.js' %>
 
 <% end %>
@@ -67,22 +67,25 @@
 				<%= f.label :url, "URL" %>
 				<input id="publication_url" name="publication[url]" size="30" type="text" value="<%= @pub.url %>", class='span12'>
 				<br/><br/>
-				<%= render :partial => 'shared/dropbox2', :locals => {:text => "Drop Document Anywhere On This Page"} %>
+				<%= render :partial => 'shared/resumable_stuff'%>
 		</div>
 
 	</div>
  
 	<input type='submit' class='btn btn-small btn-primary span12' value="Edit Publication"/>
 
-	<script type='text/javascript'>
-		$(function() {
-			<% @pub.keywords_array.each do |kw|%>
-				add_to_keywords("<%=kw%>");
-			<% end %>
-
-			<% @corpora.each do |corp| %>
-				add_to_corpora("<%= corp.name %>", "<%= corp.id %>");
-			<% end %>
-		});
-	</script>
 <% end %>
+
+<%=javascript_include_tag 'use_resumable.js' %>
+
+<script type='text/javascript'>
+	$(function() {
+		<% @pub.keywords_array.each do |kw|%>
+			add_to_keywords("<%=kw%>");
+		<% end %>
+
+		<% @corpora.each do |corp| %>
+			add_to_corpora("<%= corp.name %>", "<%= corp.id %>");
+		<% end %>
+	});
+</script>
