@@ -1,6 +1,6 @@
 <%= content_for :javascript_includes do %>
 	<%= javascript_include_tag 'resumable.js' %>
-	<%= javascript_include_tag 'tool_form.js' %>
+	<%= javascript_include_tag 'tools_form.js' %>
 <% end %>
 
 <%= form_for(@tool) do |f|%>
@@ -75,10 +75,6 @@
 			<textarea id='tool_description' name='tool[description]' class='big_desc span12'></textarea>
 		</div>
 	</div>
-
-	
-
-
 
 <% end %>
 
