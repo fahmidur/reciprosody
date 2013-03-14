@@ -20,7 +20,7 @@
 		<div class='box span12'>
 			<h5 class='boxheader'>Keywords</h5>
 			<% @tool.keywords_array.each do |kw| %>
-				<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+				<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
 			<% end %>
 		</div>
 	</div>

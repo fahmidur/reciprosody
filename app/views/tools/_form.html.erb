@@ -3,11 +3,11 @@
 	<%= javascript_include_tag 'tools_form.js' %>
 <% end %>
 
-<%= form_for(@tool, :remote => true, :method => :post, :html => {'data-type' => 'json'}) do |f|%>
+<%= form_for(@tool, :remote => true, :html => {'data-type' => 'json', :id => 'new_tool'}) do |f|%>
 	<div class='row-fluid'>
 		<div class='field span12'>
 			<%= f.label :name, "Title" %>
-			<input id="tool_name" name="tool[name]" size="30" type="text" class='span12' required>
+			<%= f.text_field :name, :class => 'span12'%>
 		</div>
 	</div>
 
@@ -25,7 +25,7 @@
 
 		<div class='field span4'>
 			<%= f.label :programming_language, "Programming Language" %>
-			<input id="tool_programming_language" name="tool[programming_language]" size="30" type="text", class='span12'>
+			<%= f.text_field :programming_language, :class => 'span12' %>
 		</div>
 
 	</div>
@@ -67,12 +67,12 @@
 	<div class='row-fluid'>
 		<div class='field span4'>
 			<%= f.label :authors, "Authors" %>
-			<textarea id='tool_authors' name='tool[authors]' class='big_desc span12'></textarea>
+			<textarea id='tool_authors' name='tool[authors]' class='big_desc span12'><%= @tool.authors %></textarea>
 		</div>
 
 		<div class='field span4'>
 			<%= f.label :description, "Description" %>
-			<textarea id='tool_description' name='tool[description]' class='big_desc span12'></textarea>
+			<textarea id='tool_description' name='tool[description]' class='big_desc span12'><%= @tool.description %></textarea>
 		</div>
 
 		<div class='field span4'>
@@ -93,3 +93,19 @@
 <% end %>
 
 <%= javascript_include_tag 'use_resumable.js' %>
+
+<script type='text/javascript'>
+	$(function() {
+		<% if @tool %>
+			<% @tool.keywords_array.each do |kw|%>
+				add_to_keywords("<%=kw%>");
+			<% end %>
+		<% end %>
+
+		<% if @corpora %>
+			<% @corpora.each do |corp| %>
+				add_to_corpora("<%= corp.name %>", "<%= corp.id %>");
+			<% end %>
+		<% end %>
+	});
+</script>

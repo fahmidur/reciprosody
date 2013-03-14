@@ -16,7 +16,6 @@
 	<br/>
 	<a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a>
 	<% if user_signed_in? %>
-		
 		<% if tool.url && !tool.url.blank? %>
 			<a href='<%= tool.url %>' target='_blank' class='btn btn-mini'>URL</a>
 		<% end %>
@@ -25,15 +24,17 @@
 				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
 			<% end %>
 		<% end %>
-
-		<br/>
 	<% end %>
 
 	
 	<% if tool.description && !tool.description.blank? %>
 		<%=raw snippet(markdown(tool.description)) %>
 	<% end %>
-	<br/>
+
+	<% if tool.canEdit?(current_user) %>
+		<a href='<%= edit_tool_path(tool)%>' class='btn btn-mini'>Edit</a>
+		<a href="#delete-confirm-<%=tool.id%>" data-id="<%= tool.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
+	<% end %>
 
 
 </div>

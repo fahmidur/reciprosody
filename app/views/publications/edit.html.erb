@@ -2,4 +2,7 @@
 
 <%= render :partial => 'edit_form' %>
 
-</br>
+<%= content_for :javascript_includes do %>
+	<%= javascript_include_tag 'resumable.js' %>
+	<%= javascript_include_tag 'tools_form.js' %>
+<% end %>

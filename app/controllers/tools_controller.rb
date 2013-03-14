@@ -25,6 +25,55 @@ class ToolsController < ApplicationController
 		@tool = Tool.new
 	end
 
+	def edit
+		@tool = Tool.find_by_id(params[:id])
+		redirect_to '/perm' unless @tool
+	end
+
+	def update
+		@tool = Tool.find_by_id(params[:id])
+		redirect_to '/perm' unless @tool
+
+		owner_text = params[:tool].delete(:owner)
+		corpora_text = params[:tool].delete(:corpora)
+
+		if !owner_text || owner_text.blank?
+			@tool.errors[:owner] = " must be specified"
+		end
+
+		owner_email = ""
+		if owner_text =~ /\<(.+)\>/
+			owner_email = $1
+		end
+		@owner = User.find_by_email(owner_email);
+		if !@owner
+			@tool.errors[:owner] = " does not exist."  	
+		end
+
+		@corpora = corpora_from_text(corpora_text)
+
+		respond_to do |format|
+			if @tool.errors.none? && @tool.update_attributes(params[:tool]) && create_tool
+				ToolMembership.where(:user_id => current_user()).destroy_all
+
+				ToolMembership.create(
+					:tool_id	=> @tool.id, 
+					:user_id		=> current_user().id,
+					:role			=> 'owner')
+
+				format.html {redirect_to @tool}
+				format.json do
+					render :json => {:ok => true, :res => @tool.id}
+				end
+			else
+				format.json do 
+					render :json => {:ok => false, :res => "#{@tool.errors.full_messages}"}
+				end
+			end
+		end
+
+	end
+
 	# POST /tools
 	def create
 		owner_text = params[:tool].delete(:owner)
@@ -52,7 +101,7 @@ class ToolsController < ApplicationController
 
 				ToolMembership.create(
 					:tool_id	=> @tool.id, 
-					:user_id		=> @tool.id,
+					:user_id		=> current_user().id,
 					:role			=> 'owner')
 
 				format.html {redirect_to @tool}

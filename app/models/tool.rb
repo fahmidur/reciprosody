@@ -26,4 +26,8 @@ class Tool < ActiveRecord::Base
   	self.users.tool_members.all
   end
 
+  def keywords_array
+    self.keywords.to_s.split(/[^\w,\-]+/)
+  end
+
 end
