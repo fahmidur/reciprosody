@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130307174705) do
+ActiveRecord::Schema.define(:version => 20130314055407) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -146,6 +146,17 @@ ActiveRecord::Schema.define(:version => 20130307174705) do
   end
 
   add_index "super_keys", ["user_id"], :name => "index_super_keys_on_user_id"
+
+  create_table "tool_memberships", :force => true do |t|
+    t.integer  "tool_id"
+    t.integer  "publication_id"
+    t.string   "role"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "tool_memberships", ["publication_id"], :name => "index_tool_memberships_on_publication_id"
+  add_index "tool_memberships", ["tool_id"], :name => "index_tool_memberships_on_tool_id"
 
   create_table "tools", :force => true do |t|
     t.string   "name"

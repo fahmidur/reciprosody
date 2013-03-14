@@ -19,7 +19,6 @@ class Publication < ActiveRecord::Base
 	validates :name, :presence => true
 	#--------------------------------------
 
-
 	#---Permissions-----
 	# this should be called canBeEditedBy?
 	# refactor later

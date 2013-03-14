@@ -19,7 +19,7 @@
 
 		<div class='field span4'>
 			<%= f.label :license, "License" %>
-			<input id='tool_license' name='tool[license]' type='text' class='span12'>
+			<%= f.autocomplete_field :license, '/corpora/autocomplete_license_name', :class => 'span12' %>
 		</div>
 
 

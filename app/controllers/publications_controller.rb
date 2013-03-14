@@ -1,5 +1,4 @@
 class PublicationsController < ApplicationController
-	
 	before_filter :user_filter, :except => :index
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
@@ -24,11 +23,9 @@ class PublicationsController < ApplicationController
 	def create
 		owner_text = params[:publication].delete(:owner)
 		corpora_text = params[:publication].delete(:corpora)
-
-		pub_date = params[:publication].delete(:pubdate)
+		params[:publication][:pubdate] = DateTime.new(params[:publication][:pubdate].to_i)
 
 		@pub = Publication.new(params[:publication])
-
 		if !owner_text || owner_text.blank?
 			@pub.errors[:owner] = " must be specified"
 		end
@@ -116,6 +113,7 @@ class PublicationsController < ApplicationController
 		@pub = Publication.find_by_id(params[:id])
 		corpora_text = params[:publication].delete(:corpora)
 		@corpora = corpora_from_text(corpora_text)
+		params[:publication][:pubdate] = DateTime.new(params[:publication][:pubdate].to_i)
 
 		respond_to do |format|
 			if @pub && @pub.update_attributes(params[:publication]) && create_publication()
