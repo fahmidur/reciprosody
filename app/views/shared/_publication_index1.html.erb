@@ -8,7 +8,7 @@
 
 	<% if p.keywords && !p.keywords.blank? %>
 		<% p.keywords_array.each do |kw| %>
-			<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+			<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
 		<% end %>
 		<br/>
 	<% end %>
