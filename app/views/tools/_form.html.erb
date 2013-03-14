@@ -3,7 +3,7 @@
 	<%= javascript_include_tag 'tools_form.js' %>
 <% end %>
 
-<%= form_for(@tool, :remote => true) do |f|%>
+<%= form_for(@tool, :remote => true, :method => :post, :html => {'data-type' => 'json'}) do |f|%>
 	<div class='row-fluid'>
 		<div class='field span12'>
 			<%= f.label :name, "Title" %>

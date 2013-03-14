@@ -25,6 +25,9 @@ Reciprosody2::Application.routes.draw do
   
   end
 
+  resources :tools do
+    
+  end
 
   resources :publications do
     member do
@@ -42,9 +45,7 @@ Reciprosody2::Application.routes.draw do
     get :autocomplete_publication_keyword_name, :on => :collection
   end
 
-  resources :tools do
 
-  end
 	
 	
 	#----authenticaton-----------------------

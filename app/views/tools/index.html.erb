@@ -2,7 +2,7 @@
 <br/>
 
 <% @tools.each do |t| %>
-	<%= render :partial => "tool_index_element", :local => {:tool => t} %>
+	<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>
 <% end %>
 
 <div class='row-fluid'>

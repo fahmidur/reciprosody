@@ -1,0 +1,6 @@
+<br/>
+<a href='javascript:history.go(-1)' class='btn'>Back</a>
+<% if @tool.canEdit?(current_user) %> 
+	<a href='<%= edit_tool_path(@tool)%>' class='btn'>Edit</a> 
+	<%= link_to 'Delete', '/tools/'+@tool.id.to_s, :method => :delete, :class => 'btn btn-danger' %>
+<% end %>

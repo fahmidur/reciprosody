@@ -12,8 +12,11 @@ class User < ActiveRecord::Base
 
 	has_many :publications, :through => :publication_memberships
 
+	has_many :tools, :through => :tool_memberships
+
 	has_many :memberships #to corpora
 	has_many :publication_memberships
+	has_many :tool_memberships
 
 
 	
@@ -24,9 +27,13 @@ class User < ActiveRecord::Base
 	scope :members,		where(:memberships => {role: 'member'})
 
 
-	scope :publication_owners,			where(:publication_memberships => {role: 'owner'})
-	scope :publication_reviewers,		where(:publication_memberships => {role: 'reviewer'})
-	scope :publication_members,			where(:publication_memberships => {role: 'member'})
+	scope :publication_owners, where(:publication_memberships => {role: 'owner'})
+	scope :publication_reviewers, where(:publication_memberships => {role: 'reviewer'})
+	scope :publication_members, where(:publication_memberships => {role: 'member'})
+
+	scope :tool_owners, where(:tool_memberships => {:role => 'owner'})
+	scope :tool_reviewers, where(:tool_memberships => {:role => 'reviewer'})
+	scope :tool_members, where(:tool_memberships => {:role => 'member'})
 
 	def resumables
 		ResumableIncompleteUpload.where(:user_id => self.id).order("updated_at DESC")

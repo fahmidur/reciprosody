@@ -40,7 +40,7 @@ $(function() {
 		console.log(data);
 		if(data.ok) {
 			console.log("redirecting...");
-			//window.location.href = "/tool/" + data.res;
+			window.location.href = "/tools/" + data.res;
 		} else {
 			console.log("data not okay");
 		}

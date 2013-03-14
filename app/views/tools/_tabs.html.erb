@@ -1,0 +1,24 @@
+<%= content_for :javascript_includes do%>
+	<%= javascript_include_tag 'tabs.js' %>
+<% end %>
+
+<h2><%= @tool.name %> 
+	<span class='badge'>
+		<%= @tool.updated_at %>
+	</span>
+</h2>
+
+<ul class="nav nav-tabs">
+	<li class='pull-right <%= "active" if tab=="details"%> '>
+		<a href="<%=tool_path(@tool)%>">Details</a>
+	</li>
+
+	
+	<% if @tool.canEdit?(current_user) %>
+	<li class='pull-right <%= "active" if tab=="members"%> '>
+		<a href="#">Manage Members</a>
+	</li>
+	<% end %>
+
+
+</ul>
