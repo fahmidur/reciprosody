@@ -13,7 +13,9 @@ class ToolsController < ApplicationController
 	# POST /tools
 	def create
 		owner_text = params[:tool].delete(:owner)
-		corpora_text = params[:tool.delete(:corpora)
+		corpora_text = params[:tool].delete(:corpora)
+
+		@tool = Tool.new(params[:tool])
 			
 	end
 
