@@ -2,7 +2,7 @@ var _keywords = {};
 var _corpora = {};
 
 $(function() {
-	console.log("Tool Form 1");
+	console.log("Tool Form 2");
 
 	$('#new_tool').on('ajax:beforeSend', function(e, xhr, settings) {
 		console.log("ORIGINAL = " + settings.data);
@@ -33,7 +33,6 @@ $(function() {
 		settings.data = obj_to_uri(obj);
 
 		console.log(settings.data);
-
 	});
 
 	$('#new_tool').on('ajax:success', function(e, data) {
@@ -41,7 +40,7 @@ $(function() {
 		console.log(data);
 		if(data.ok) {
 			console.log("redirecting...");
-			window.location.href = "/tool/" + data.res;
+			//window.location.href = "/tool/" + data.res;
 		} else {
 			console.log("data not okay");
 		}

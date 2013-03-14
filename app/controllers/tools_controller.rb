@@ -12,9 +12,21 @@ class ToolsController < ApplicationController
 
 	# POST /tools
 	def create
-		
+
 	end
 
+	private
+
+	def corpora_from_text(corpora_text)
+		corpora = []
+		if corpora_text && !corpora_text.blank?
+			corpora_text.split("\n").each do |cid|
+				corp = Corpus.find_by_id(cid)
+				corpora << corp if corp
+			end
+		end
+		return corpora
+	end
 	#--------FILTERS--------------------------------------------------------
   	# 
   	#-----------------------------------------------------------------------
