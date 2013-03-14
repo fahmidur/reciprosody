@@ -10,6 +10,11 @@ class ToolsController < ApplicationController
 		@tool = Tool.new
 	end
 
+	# POST /tools
+	def create
+		
+	end
+
 	#--------FILTERS--------------------------------------------------------
   	# 
   	#-----------------------------------------------------------------------

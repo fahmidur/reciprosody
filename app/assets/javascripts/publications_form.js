@@ -107,6 +107,7 @@ function dw() {
 	//$('#dropbox').width($('textarea').width()-16);
 }
 function add_to_keywords(kw) {
+	kw = kw.toLowerCase();
 	if(!_keywords[kw]) {
 		$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"'>"+kw+"</span> &nbsp;");
 		_keywords[kw] = kw;

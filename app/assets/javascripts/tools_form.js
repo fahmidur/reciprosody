@@ -14,8 +14,8 @@ $(function() {
 		console.log(obj);
 		console.log("changing settings.data");
 
-		delete obj['publication[keyword]'];
-		delete obj['publication[corpus]'];
+		delete obj['tool[keyword]'];
+		delete obj['tool[corpus]'];
 
 		for(kw in _keywords) {
 			keywords += kw + "\n";
@@ -27,8 +27,8 @@ $(function() {
 		console.log(keywords);
 		console.log(corpora);
 
-		obj['publication[keywords]'] = keywords;
-		obj['publication[corpora]'] = corpora;
+		obj['tool[keywords]'] = keywords;
+		obj['tool[corpora]'] = corpora;
 		
 		settings.data = obj_to_uri(obj);
 
@@ -41,7 +41,7 @@ $(function() {
 		console.log(data);
 		if(data.ok) {
 			console.log("redirecting...");
-			window.location.href = "/publications/" + data.res;
+			window.location.href = "/tool/" + data.res;
 		} else {
 			console.log("data not okay");
 		}
@@ -104,6 +104,7 @@ $(function() {
 });
 
 function add_to_keywords(kw) {
+	kw = kw.toLowerCase();
 	if(!_keywords[kw]) {
 		$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"'>"+kw+"</span> &nbsp;");
 		_keywords[kw] = kw;
