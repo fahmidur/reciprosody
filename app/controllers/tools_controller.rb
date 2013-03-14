@@ -116,9 +116,41 @@ class ToolsController < ApplicationController
 		end
 	end
 
+	def download
+		@tool = Tool.find_by_id(params[:id])
+		unless @tool
+			redirect_to '/perm'
+			return
+		end
+		local = @tool.local
+		unless local
+			redirect_to '/perm'
+		end
+		send_file local
+	end
+
 	private
 
 	def create_tool
+		rfname = session[:resumable_filename]
+		@file = rfname ? File.new(rfname) : nil
+		return true unless @file
+
+		Dir.chdir Rails.root
+		path = "tools/#{@tool.id}"
+
+		FileUtils.mkdir_p path
+		FileUtils.rm_f "#{path}/*"
+
+		extname = File.extname(@file.path)
+		name = @tool.name.underscore
+
+		path += "/#{name}#{extname}"
+		File.open(path, "wb") {|f| f.write(@file.read)}
+
+		@tool.local = path
+		@tool.save
+
 		return true
 	end
 

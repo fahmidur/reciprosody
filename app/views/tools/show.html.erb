@@ -1,5 +1,6 @@
 <%= content_for :javascript_includes do %>
 	<%= javascript_include_tag 'tool_show.js' %>
+	<%= javascript_include_tag 'corpora_show.js' %>
 <% end %>
 
 <%= render :partial => 'tabs', :locals => {:tab => 'details'} %>
@@ -53,7 +54,7 @@
 		<h5 class='boxheader'>Our Copy</h5>
 		<% if @tool.local %>
 			<center class='row-fluid'>
-			<%= form_tag("/publications/#{@pub.id}/download", :method => :get) do%>
+			<%= form_tag("/tools/#{@tool.id}/download", :method => :get) do%>
 					<input type='submit' class='btn btn-primary cdownload span6' value="Download">
 			<% end %>
 			</center>

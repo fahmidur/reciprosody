@@ -26,7 +26,9 @@ Reciprosody2::Application.routes.draw do
   end
 
   resources :tools do
-    
+    member do
+      get :download
+    end
   end
 
   resources :publications do

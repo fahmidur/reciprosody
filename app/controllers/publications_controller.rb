@@ -62,6 +62,7 @@ class PublicationsController < ApplicationController
 		end
 	end
 
+
 	def create_publication
 		if @corpora
 			PublicationCorpusRelationship.where(:publication_id => @pub.id).destroy_all
