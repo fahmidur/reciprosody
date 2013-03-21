@@ -44,18 +44,22 @@
 
 		<span class='span3'>
 		<img src='/assets/andrew1.jpg' width='100' height='100' style='border-radius:3px;opacity:0.7;' data-div='andrew' title="Andrew Rosenberg" class='person'><br/>
+		<span class='badge'>Andrew Rosenberg</span>
 		</span>
 
 		<span class='span3'>
 		<img src='/assets/julia1.jpg' width='100' height='100' style='border-radius:3px;opacity:0.7;' data-div='julia' title="Julia Hirschberg" class='person'><br/>
+		<span class='badge'>Julia Hirschberg</span>
 		</span>
 
 		<span class='span3'>
 		<img src='/assets/stef1.jpg' width='100' height='100' style='border-radius:3px;opacity:0.7;' data-div='stef' title="Stefanie Shattuck-Hufnagel" class='person'><br/>
+		<span class='badge'>Stefanie Shattuck-Hufnagel</span>
 		</span>
 
 		<span class='span3'>
 		<img src='/assets/syed1.jpg' width='100' height='100' style='border-radius:3px;opacity:0.7;' data-div='syed' title="Syed Reza" class='person'><br/>
+		<span class='badge'>Syed Reza</span>
 		</span>
 
 	</div>
@@ -124,7 +128,9 @@
 		$('.pinfo').hide();
 		$('.person').hover(function() {
 			$('.person').css('opacity', 0.7);
+
 			$(this).animate({'opacity': 1.0}, 300);
+
 			target = $(this).attr('data-div');
 			console.log(target);
 			$('.pinfo').slideUp();
