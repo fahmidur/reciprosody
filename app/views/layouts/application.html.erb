@@ -31,14 +31,8 @@
 					<li><a href='/corpora'>Corpora</a></li>
 					<li><a href='/publications'>Publications</a></li>
 					<li><a href='/tools'>Tools</a></li>
-
-					<!--
-					<% if user_signed_in? %>
-						<li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
-					<%else%>
-						<li><a href='/users/sign_in'>Sign in</a></li>
-					<%end%>
-					-->
+					
+					
 
 					<% if user_signed_in? && (current_user.resumables.size > 0) %>
 						<li class='dropdown'><a href='/resumable_list' class='invert'>Resumables 
@@ -63,6 +57,7 @@
 							</ul>
 						</li>
 					<%else%>
+						<li><a href='/users/sign_in'>Sign in</a></li>
 					<%end%>
 				</ul>
 				

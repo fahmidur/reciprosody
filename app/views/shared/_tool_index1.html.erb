@@ -14,8 +14,8 @@
 	<% end %>
 	
 	<br/>
-	<a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a>
 	<% if user_signed_in? %>
+		<a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a>
 		<% if tool.url && !tool.url.blank? %>
 			<a href='<%= tool.url %>' target='_blank' class='btn btn-mini'>URL</a>
 		<% end %>

@@ -1,6 +1,7 @@
 class ToolsController < ApplicationController
 	before_filter :user_filter, :except => [:index]
-
+	before_filter :owner_filter, 
+		:only => [:edit, :update, :destroy]
 
 	def index
 		@tools = Tool.all
@@ -185,4 +186,16 @@ class ToolsController < ApplicationController
 	def user_filter
 		redirect_to '/perm' unless user_signed_in?
 	end
+
+	# Allows only owners
+  	# Is applied in combination with user_filter
+	def owner_filter
+		@tool = Tool.find_by_id(params[:id])
+
+		#Dont filter super_key holders
+		return if current_user().super_key != nil
+
+		redirect_to '/perm' unless @tool && @tool.owners.include?(current_user())
+	end
+
 end
