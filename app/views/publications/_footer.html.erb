@@ -1,3 +1,5 @@
 <br/>
-<% if @pub.canEdit?(current_user) %> <a href='<%= edit_publication_path(@pub)%>' class='btn'>Edit</a> <% end %>
 <a href='javascript:history.go(-1)' class='btn'>Back</a>
+<% if @pub.canEdit?(current_user) %> 
+	<a href='<%= edit_publication_path(@pub)%>' class='btn'>Edit</a> 
+<% end %>

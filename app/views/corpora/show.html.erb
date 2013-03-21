@@ -1,6 +1,5 @@
 <%= content_for :javascript_includes do%>
-	<!--<%= javascript_include_tag 'dropload.js' %>-->
-	<%= javascript_include_tag 'corpora_show.js' %>
+	<%= javascript_include_tag 'show_fix.js' %>
 <% end %>
 
 <!--<%= setup_upload %>-->
@@ -93,7 +92,7 @@
 						<%= select_tag(:name, options_for_select(@archives), :class=>'span6 vSelect') %>
 						<input type='submit' class='btn btn-primary cdownload span6' value="Download">
 						<span class='corpus_show_name'>Last Modified:</span> 
-						<span class='corpus_show_value'><%= time_ago_in_words(@last_modified) %> ago</span>
+						<span class='corpus_show_value badge'><%= time_ago_in_words(@last_modified) %> ago</span>
 					</div>
 				<% end %>
 			</div>

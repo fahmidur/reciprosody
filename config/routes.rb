@@ -16,6 +16,7 @@ Reciprosody2::Application.routes.draw do
       get :refresh_comments
       
       get :publications
+      get :tools
   	end
 
   	get :autocomplete_language_name,	:on => :collection
@@ -25,7 +26,16 @@ Reciprosody2::Application.routes.draw do
   
   end
 
-  match 'publications/new' => 'publications#new'
+  resources :tools do
+    member do
+      get :download
+      get :manage_members
+      get :add_member
+      get :update_member
+      delete :remove_member
+      
+    end
+  end
 
   resources :publications do
     member do
@@ -42,11 +52,14 @@ Reciprosody2::Application.routes.draw do
 
     get :autocomplete_publication_keyword_name, :on => :collection
   end
+
+
 	
 	
 	#----authenticaton-----------------------
   devise_for :users, :controllers => {:registrations => "registrations"}
   
+
 	match 'users'	=> 'users#index'
 	
 	#----maps to users controller-------------

@@ -3,3 +3,9 @@
 <%= render :partial => 'form' %>
 
 </br>
+
+<script type='text/javascript'>
+	<% if @corpus %>
+		add_to_corpora('<%= @corpus.name %>', '<%= @corpus.id %>');
+	<% end %>
+</script>

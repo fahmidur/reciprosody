@@ -1,9 +1,9 @@
 <%= content_for :javascript_includes do%>
-	<%= javascript_include_tag 'tabs.js' %>
 <% end %>
 
+<h2 class'corpus_name'><%= @corpus.name %></h2>
+
 <ul class="nav nav-tabs row-fluid">
-	<li class='corpus_name'><%= @corpus.name %></li>
 	<li class='pull-right <%= "active" if tab=="details"%> '>
 		<a href="<%=corpus_path(@corpus)%>">Details</a>
 	</li>
@@ -14,6 +14,10 @@
 
 	<li class='pull-right <%= "active" if tab=="publications" %>'>
 		<a href="<%= publications_corpus_path(@corpus)%>">Publications</a>
+	</li>
+
+	<li class='pull-right <%= "active" if tab=="tools" %>'>
+		<a href="<%= tools_corpus_path(@corpus)%>">Tools</a>
 	</li>
 
 	<% if @corpus.canEdit?(current_user())%>

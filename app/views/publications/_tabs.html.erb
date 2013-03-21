@@ -1,10 +1,15 @@
 <%= content_for :javascript_includes do%>
-	<%= javascript_include_tag 'tabs.js' %>
 <% end %>
 
-<ul class="nav nav-tabs">
-	<li class='corpus_name'><%= @pub.name %></li>
+<h2><%= @pub.name %> 
+	<% if @pub.pubdate && @pub.pubdate.year != 0 %>
+		<span class='badge'>
+			<%= @pub.pubdate.year %>
+		</span>
+	<% end %>
+</h2>
 
+<ul class="nav nav-tabs">
 	<li class='pull-right <%= "active" if tab=="details"%> '>
 		<a href="<%=publication_path(@pub)%>">Details</a>
 	</li>
@@ -16,12 +21,7 @@
 	</li>
 	<% end %>
 
-	<!--
-	<% if @pub.owners.include?(current_user()) %>
-		<li class='pull-right <%= "active" if tab=="corpora"%> '>
-			<a href="<%=manage_corpora_publication_path(@pub)%>">Manage Corpora</a>
-		</li>
-	<% end %>
-	-->
+	
+
 
 </ul>

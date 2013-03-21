@@ -31,7 +31,7 @@ $(function() {
 
 		obj['publication[keywords]'] = keywords;
 		obj['publication[corpora]'] = corpora;
-
+		
 		settings.data = obj_to_uri(obj);
 
 		console.log(settings.data);
@@ -107,6 +107,7 @@ function dw() {
 	//$('#dropbox').width($('textarea').width()-16);
 }
 function add_to_keywords(kw) {
+	kw = kw.toLowerCase();
 	if(!_keywords[kw]) {
 		$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"'>"+kw+"</span> &nbsp;");
 		_keywords[kw] = kw;

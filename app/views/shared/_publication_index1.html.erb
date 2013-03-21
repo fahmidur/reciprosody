@@ -1,14 +1,20 @@
 <div class='corpi_item'>
 
-	<h4><%= p.name %></h4>
+	<h4><%= p.name %>
+		<% if p.pubdate && p.pubdate.year != 0%>
+			<span class='badge'><%= p.pubdate.year %> </span>
+		<% end %>
+	</h4>
 	<% if p.authors && !p.authors.blank?%>
 		<span class='corpi_l'><%= p.authors.split("\n").join(", " )%></span>
 		<br/> 
 	<% end %>
 
+
+
 	<% if p.keywords && !p.keywords.blank? %>
 		<% p.keywords_array.each do |kw| %>
-			<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+			<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
 		<% end %>
 		<br/>
 	<% end %>
@@ -25,9 +31,27 @@
 				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
 			<% end %>
 		<% end %>
+
 		<% if p.canEdit?(current_user) %>
+			<a href='<%= manage_members_publication_path(p) %>' class='btn btn-mini'>Manage Members</a>
 			<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'>Edit</a>
-			<a href="#delete-confirm-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
+			<a href="#delete-confirm-pub-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %></a>
+
+			<div class="modal fade" id="delete-confirm-pub-<%= p.id %>" style="display:none">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Are you sure?</h3>
+				</div>
+				<div class="modal-body">
+					<p>Just checking.</p>
+				</div>
+				<div class="modal-footer">
+					<%= link_to 'Destroy', '/publications/'+ p.id.to_s, :method => :delete, 
+						:class => 'btn' %>
+					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+				</div>
+			</div>
+
 		<% end %>
 		<br/>
 	<% end %>
@@ -39,7 +63,7 @@
 	<br/>
 </div>
 
-<div class="modal fade" id="delete-confirm-<%= p.id %>" style="display:none">
+<div class="modal fade" id="delete-confirm-pub-<%= p.id %>" style="display:none">
 	<div class="modal-header">
 		<a class="close" data-dismiss="modal">×</a>
 		<h3>Are you sure?</h3>

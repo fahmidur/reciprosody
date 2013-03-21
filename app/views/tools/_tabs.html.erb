@@ -1,0 +1,23 @@
+<%= content_for :javascript_includes do%>
+<% end %>
+
+<h2><%= @tool.name %> 
+	<span class='badge'>
+		<%= @tool.to_timestring %>
+	</span>
+</h2>
+
+<ul class="nav nav-tabs">
+	<li class='pull-right <%= "active" if tab=="details"%> '>
+		<a href="<%=tool_path(@tool)%>">Details</a>
+	</li>
+
+	
+	<% if @tool.canEdit?(current_user) %>
+	<li class='pull-right <%= "active" if tab=="members"%> '>
+		<a href="<%= manage_members_tool_path(@tool)%>">Manage Members</a>
+	</li>
+	<% end %>
+
+
+</ul>

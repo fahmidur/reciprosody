@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130301071810) do
+ActiveRecord::Schema.define(:version => 20130315002537) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -146,6 +146,41 @@ ActiveRecord::Schema.define(:version => 20130301071810) do
   end
 
   add_index "super_keys", ["user_id"], :name => "index_super_keys_on_user_id"
+
+  create_table "tool_corpora_relationship", :force => true do |t|
+    t.integer  "tool_id"
+    t.integer  "corpus_id"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "tool_corpora_relationship", ["corpus_id"], :name => "index_tool_corpora_relationship_on_corpus_id"
+  add_index "tool_corpora_relationship", ["tool_id"], :name => "index_tool_corpora_relationship_on_tool_id"
+
+  create_table "tool_memberships", :force => true do |t|
+    t.integer  "tool_id"
+    t.integer  "user_id"
+    t.string   "role"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "tool_memberships", ["tool_id"], :name => "index_tool_memberships_on_tool_id"
+  add_index "tool_memberships", ["user_id"], :name => "index_tool_memberships_on_user_id"
+
+  create_table "tools", :force => true do |t|
+    t.string   "name"
+    t.string   "programming_language"
+    t.string   "license"
+    t.text     "authors"
+    t.text     "description"
+    t.text     "keywords"
+    t.string   "url"
+    t.string   "local"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false

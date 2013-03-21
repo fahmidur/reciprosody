@@ -1,6 +1,4 @@
 class PublicationsController < ApplicationController
-	include UsesUpload
-
 	before_filter :user_filter, :except => :index
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
@@ -19,16 +17,15 @@ class PublicationsController < ApplicationController
 	def new
 		@publication = Publication.new
 		@corpus = Corpus.find_by_id(params[:corpus_id]) if params[:corpus_id]
+		session[:resumable_filename] = nil
 	end
 
 	def create
 		owner_text = params[:publication].delete(:owner)
 		corpora_text = params[:publication].delete(:corpora)
-
-		pub_date = params[:publication].delete(:pubdate)
+		params[:publication][:pubdate] = DateTime.new(params[:publication][:pubdate].to_i)
 
 		@pub = Publication.new(params[:publication])
-
 		if !owner_text || owner_text.blank?
 			@pub.errors[:owner] = " must be specified"
 		end
@@ -64,49 +61,12 @@ class PublicationsController < ApplicationController
 			end
 		end
 	end
-
-	def create_publication
-		if @corpora
-			PublicationCorpusRelationship.where(:publication_id => @pub.id).destroy_all
-			@corpora.each do |corp|
-				PublicationCorpusRelationship.create(
-					:publication_id => @pub.id,
-					:corpus_id		=> corp.id,
-					:name 			=> "uses");
-			end
-		end
-		
-		@pub.keywords_array.each do |kw|
-			PublicationKeyword.create(:name => kw) unless PublicationKeyword.find_by_name(kw)
-		end
-
-		@file = get_upload_file
-		return true unless @file
-
-		Dir.chdir Rails.root
-		path = "publications/#{@pub.id}"
-
-		`mkdir -p #{path}`
-		`rm #{path}/*`
-		
-		path += "/#{File.basename(@file.path)}"
-		File.open(path, "wb") {|f| f.write(@file.read)}
-
-		@pub.local = path
-		@pub.save
-
-		return true
-	end
-
-	def edit
-		@pub = Publication.find_by_id(params[:id])
-		@corpora = @pub.corpora
-	end
-
+	
 	def update
 		@pub = Publication.find_by_id(params[:id])
 		corpora_text = params[:publication].delete(:corpora)
 		@corpora = corpora_from_text(corpora_text)
+		params[:publication][:pubdate] = DateTime.new(params[:publication][:pubdate].to_i)
 
 		respond_to do |format|
 			if @pub && @pub.update_attributes(params[:publication]) && create_publication()
@@ -123,6 +83,55 @@ class PublicationsController < ApplicationController
 			end
 		end
 	end
+
+	def create_publication
+		if @corpora
+			PublicationCorpusRelationship.where(:publication_id => @pub.id).destroy_all
+			@corpora.each do |corp|
+				PublicationCorpusRelationship.create(
+					:publication_id => @pub.id,
+					:corpus_id		=> corp.id,
+					:name 			=> "uses");
+			end
+		end
+		
+		@pub.keywords_array.each do |kw|
+			PublicationKeyword.create(:name => kw) unless PublicationKeyword.find_by_name(kw)
+		end
+
+		#@file = get_upload_file
+		rfname = session[:resumable_filename]
+		@file = rfname ? File.new(rfname) : nil
+
+		return true unless @file
+
+		Dir.chdir Rails.root
+		path = "publications/#{@pub.id}"
+
+		`mkdir -p #{path}`
+		`rm #{path}/*`
+		
+		# TO-Do: Possible Race Condition occuring above
+		# Fix with a blocking call to mkdir and rm
+		extname = File.extname(@file.path)
+		name = @pub.name.underscore
+
+		path += "/#{name}#{extname}"
+		File.open(path, "wb") {|f| f.write(@file.read)}
+
+		@pub.local = path
+		@pub.save
+
+		return true
+	end
+
+	def edit
+		@pub = Publication.find_by_id(params[:id])
+		@corpora = @pub.corpora
+		session[:resumable_filename] = nil
+	end
+
+	
 
 	def manage_corpora
 		@pub = Publication.find_by_id(params[:id])

@@ -1,0 +1,16 @@
+<h1>Edit Tool</h1>
+<%= render :partial =>'form' %>
+<br/>
+<%= render :partial => 'footer' %>
+
+<script type='text/javascript'>
+	$(function() {
+		<% @tool.keywords_array.each do |kw|%>
+			add_to_keywords("<%=kw%>");
+		<% end %>
+
+		<% @tool.corpora.each do |corp| %>
+			add_to_corpora("<%= corp.name %>", "<%= corp.id %>");
+		<% end %>
+	});
+</script>

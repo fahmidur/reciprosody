@@ -1,7 +1,7 @@
 $(function() {
 	fixTabs();
 	$(window).bind('resize', fixTabs);
-	tabsCrowded();
+	//tabsCrowded();
 });
 
 function fixTabs() {

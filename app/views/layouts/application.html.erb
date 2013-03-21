@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Reciprosody2</title>
+  <title>Reciprosody</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application.js" %>
   
@@ -28,14 +30,9 @@
 
 					<li><a href='/corpora'>Corpora</a></li>
 					<li><a href='/publications'>Publications</a></li>
-
-					<!--
-					<% if user_signed_in? %>
-						<li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
-					<%else%>
-						<li><a href='/users/sign_in'>Sign in</a></li>
-					<%end%>
-					-->
+					<li><a href='/tools'>Tools</a></li>
+					
+					
 
 					<% if user_signed_in? && (current_user.resumables.size > 0) %>
 						<li class='dropdown'><a href='/resumable_list' class='invert'>Resumables 
@@ -60,6 +57,7 @@
 							</ul>
 						</li>
 					<%else%>
+						<li><a href='/users/sign_in'>Sign in</a></li>
 					<%end%>
 				</ul>
 				
@@ -84,10 +82,10 @@
 
 	<div class='row-fluid' id>
 		<div class='span4 pull-right'>
-			<a href='/#' class='pull-right padleft'>
+			<span class='pull-right padleft'>
 			<%= render :partial => 'shared/browser_icon', :locals => {:browser => 'firefox'} %>
 			<%= render :partial => 'shared/browser_icon', :locals => {:browser => 'chrome'} %>
-			</a>
+			</span>
 		</div>
 	</div>
 </div>

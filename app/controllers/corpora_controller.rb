@@ -82,6 +82,12 @@ class CorporaController < ApplicationController
 
 	end
 
+	# GET /corpora/1/tools
+	# See all Tools using this Corpus
+	def tools
+		@corpus = Corpus.find_by_id(params[:id])
+	end
+
 	# GET /corpora/1/manage_members
 	#
 	# FILTERED_BY: owner_filter

@@ -30,3 +30,6 @@ resumable_uploads/**
 
 publications/*
 publications/**
+
+tools/*
+tools/**

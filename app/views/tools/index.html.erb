@@ -1,0 +1,21 @@
+<%= content_for :javascript_includes do %>
+	<%= javascript_include_tag 'corpus_index.js' %>
+<% end %>
+
+<h1>Tools</h1>
+<% unless user_signed_in? %>
+	<div class='alert alert-info'>
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		<h5>Please Sign-in or Register to download, view, edit, and upload Publications.</h5>
+	</div>
+<% end %>
+
+<% @tools.each do |t| %>
+	<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>
+<% end %>
+
+<% if  user_signed_in? %>
+	<div class='row-fluid'>
+		<a class='btn span12' href='/tools/new'>New Tool</a>
+	</div>
+<% end %>

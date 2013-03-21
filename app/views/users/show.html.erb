@@ -27,99 +27,34 @@
 
 			<li class='l-nav'><a href='/corpora' class=''>View Corpora</a></li>
 			<li class='l-nav'><a href='/publications' class=''>View Publications</a></li>
+			<li class='l-nav'><a href='/tools' class=''>View Tools</a></li>
 
 			<li><a href='/corpora/new' class='lnav_hl'>New Corpus</a></li>
 			<li><a href='/publications/new' class='lnav_hl'>New Publication</a></li>
 		</ul>
 	</div>
-	
-	<div class='span5'>
-		<h5>Publications</h5>
 
-		<% current_user().publication_owner_of.each do |pub| %>
-			<div class='corpi_item' id='pubi-<%= pub.id %>'>
-				<h4><%= pub.name %></h4>
-				
-				<br/>
-				
-				<% if user_signed_in? %>
-					<%= link_to 'Show', pub, :class => 'btn btn-mini' %>
-					<%= link_to 'Edit', edit_publication_path(pub), :class => 'btn btn-mini' %>
-
-					<% if pub.owners.include?(current_user()) %>
-						<a href="#delete-confirm-pub-<%= pub.id%>" data-id="<%= pub.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
-							<%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>
-						</a>
-					<% end %>
-				
-				 <% end %>
-			</div>
-		
-			<div class="modal fade" id="delete-confirm-pub-<%= pub.id %>">
-				<div class="modal-header">
-					<a class="close" data-dismiss="modal">×</a>
-					<h3>Are you sure?</h3>
-				</div>
-				<div class="modal-body">
-					<p>Just checking.</p>
-				</div>
-				<div class="modal-footer">
-					<%= link_to 'Destroy', 'publications/'+pub.id.to_s, 
-						:method => :delete,
-						:remote => true, 
-						:class => 'btn', 
-						:id => 'delete_pub',
-						'data-id' => pub.id.to_s %>
-					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-				</div>
-			</div>
-		<% end %>
-
-
-	</div>
-	
 	<div class='span5'>
 		<h5>My Corpora</h5>
 		<% current_user().owner_of.each do |corpus| %>
-			<div class='corpi_item' id='corpi-<%= corpus.id %>'>
-				<h4><%= corpus.name %></h4>
-				
-				<span class='corpi_l'><%= corpus.language %></span>
-				<span class='corpi_l pull-right'>Duration: <%= corpus.human_duration %> </span>
-				<br/>
-				
-				<% if user_signed_in? %>
-					<%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
-					<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
-					
-					<% if corpus.owners.include?(current_user())%>
-						<a href="#delete-confirm-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
-							<%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>
-						</a>
-					<% end %>
-				
-				 <% end %>
-			</div>
-		
-			<div class="modal fade" id="delete-confirm-<%= corpus.id %>">
-				<div class="modal-header">
-					<a class="close" data-dismiss="modal">×</a>
-					<h3>Are you sure?</h3>
-				</div>
-				<div class="modal-body">
-					<p>Just checking.</p>
-				</div>
-				<div class="modal-footer">
-					<%= link_to 'Destroy', 'corpora/'+corpus.id.to_s, 
-						:method => :delete,
-						:remote => true, 
-						:class => 'btn', 
-						:id => 'delete_corpus',
-						'data-id' => corpus.id.to_s %>
-					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-				</div>
-			</div>
+			<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => corpus} %>
 		<% end %>
+
+	</div>
+
+	<div class='span5'>
+		<h5>My Publications</h5>
+
+		<% current_user().publication_owner_of.each do |pub| %>
+			<%= render :partial => 'shared/publication_index1.html.erb', 
+			:locals => {:p => pub} %>
+		<% end %>
+
+		<h5>My Tools</h5>
+		<% current_user().tool_owner_of.each do |tool| %>
+			<%= render :partial => 'shared/tool_index1', :locals => {:tool => tool} %>
+		<% end %>
+
 	</div>
 	
 </div>

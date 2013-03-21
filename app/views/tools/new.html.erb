@@ -1,0 +1,11 @@
+<h1>New Tool</h1>
+<br/>
+<%= render :partial => 'form' %>
+
+<a href='/tools' class='btn'>Cancel</a>
+
+<script type='text/javascript'>
+	<% if @corpus %>
+		add_to_corpora('<%= @corpus.name %>', '<%= @corpus.id %>');
+	<% end %>
+</script>
