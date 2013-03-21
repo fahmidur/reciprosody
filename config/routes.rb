@@ -16,6 +16,7 @@ Reciprosody2::Application.routes.draw do
       get :refresh_comments
       
       get :publications
+      get :tools
   	end
 
   	get :autocomplete_language_name,	:on => :collection

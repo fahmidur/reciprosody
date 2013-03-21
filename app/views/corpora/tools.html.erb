@@ -1,0 +1,31 @@
+<% content_for :javascript_includes do %>
+	<%= javascript_include_tag "corpus_index.js" %>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+<%= render :partial => 'tabs', :locals => {:tab => 'tools'} %>
+
+<br/>
+<div class='row-fluid'>
+	<a href='/tools/new?corpus_id=<%= @corpus.id %>' class='btn btn-primary span12'>
+		New Tool
+	</a>
+</div>
+
+<br/></br>
+
+<% if @corpus.tools %>
+	<% @corpus.tools.each do |p| %>
+		<%= render :partial => 'shared/tool_index1.html.erb', 
+			:locals => {:tool => p} %>
+	<% end %>
+<% end %>
+
+<br/><br/>
+
+<%= render :partial => 'footer' %>
+
+
+
+    

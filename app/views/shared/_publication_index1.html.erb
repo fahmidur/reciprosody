@@ -33,8 +33,8 @@
 		<% end %>
 
 		<% if p.canEdit?(current_user) %>
-			<a href='<%= manage_members_publication_path(p) %>' class='btn btn-mini'>Manage Members</a>
-			<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'>Edit</a>
+			<a href='<%= manage_members_publication_path(p) %>' class='btn btn-mini btn-info'>Manage Members</a>
+			<a href='<%= edit_publication_path(p)%>' class='btn btn-mini btn-info'>Edit</a>
 			<a href="#delete-confirm-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
 		<% end %>
 		<br/>

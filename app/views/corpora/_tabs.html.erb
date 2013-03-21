@@ -16,6 +16,10 @@
 		<a href="<%= publications_corpus_path(@corpus)%>">Publications</a>
 	</li>
 
+	<li class='pull-right <%= "active" if tab=="tools" %>'>
+		<a href="<%= tools_corpus_path(@corpus)%>">Tools</a>
+	</li>
+
 	<% if @corpus.canEdit?(current_user())%>
 		<li class='pull-right <%= "active" if tab=="members"%> '>
 			<a href="<%=manage_members_corpus_path(@corpus)%>">Manage Members</a>

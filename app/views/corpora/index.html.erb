@@ -11,29 +11,7 @@
 <% end %>
 		 
 <% @corpora.each do |corpus| %>
-	<div class='corpi_item'>	
-	    <h4><%= corpus.name %></h4>
-	    
-	    <span class='corpi_l'><%= corpus.language %></span>
-	    <span class='corpi_l pull-right'>Duration: <%= corpus.human_duration %> </span>
-	    <br/>
-	    <p><%=raw snippet(markdown(corpus.description)) %></p>
-    
-    
-    	<% if user_signed_in? %>
-    		<%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
-    		<%= link_to 'Comments', comments_corpus_path(corpus), :class => 'btn btn-mini' %>
-    		<%= link_to 'Publications', publications_corpus_path(corpus), :class => 'btn btn-mini' %>
-		  	<% if corpus.canEdit?(current_user())%>
-		    	<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
-		    	<%= link_to 'Manage Members', manage_members_corpus_path(corpus), :class => 'btn btn-mini' %>
-
-		  		<a href="#delete-confirm-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
-		  	<% end %>
-		  
-		 <% end %>
-  	</div>
-  
+	<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => corpus} %>
   	<div class="modal fade" id="delete-confirm-<%= corpus.id %>" style="display:none">
 		<div class="modal-header">
 			<a class="close" data-dismiss="modal">×</a>
