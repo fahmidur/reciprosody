@@ -12,19 +12,6 @@
 		 
 <% @corpora.each do |corpus| %>
 	<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => corpus} %>
-  	<div class="modal fade" id="delete-confirm-<%= corpus.id %>" style="display:none">
-		<div class="modal-header">
-			<a class="close" data-dismiss="modal">×</a>
-			<h3>Are you sure?</h3>
-		</div>
-		<div class="modal-body">
-			<p>Just checking.</p>
-		</div>
-		<div class="modal-footer">
-			<%= link_to 'Destroy', '/corpora/'+corpus.id.to_s, :method => :delete, :class => 'btn' %>
-			<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-		</div>
-	</div>
   
 <% end %>
 

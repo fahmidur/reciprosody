@@ -32,24 +32,27 @@
 	<% end %>
 
 	<% if tool.canEdit?(current_user) %>
-		<a href='<%= edit_tool_path(tool)%>' class='btn btn-mini btn-info'>Edit</a>
-		<a href="#delete-confirm-<%=tool.id%>" data-id="<%= tool.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
+		<a href='<%= edit_tool_path(tool)%>' class='btn btn-mini'>Edit</a>
+		<a href='<%= manage_members_tool_path(tool)%>' class='btn btn-mini'>Manage Members</a>
+
+		<a href="#delete-confirm-tool-<%=tool.id%>" data-id="<%= tool.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %></a>
+
+		<div class="modal fade" id="delete-confirm-tool-<%= tool.id %>" style="display:none">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3>Are you sure?</h3>
+			</div>
+			<div class="modal-body">
+				<p>Just checking.</p>
+			</div>
+			<div class="modal-footer">
+				<%= link_to 'Destroy', '/tools/'+ tool.id.to_s, :method => :delete, 
+					:class => 'btn' %>
+				<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+			</div>
+		</div>
 	<% end %>
 
 
 </div>
 
-<div class="modal fade" id="delete-confirm-<%= tool.id %>" style="display:none">
-	<div class="modal-header">
-		<a class="close" data-dismiss="modal">×</a>
-		<h3>Are you sure?</h3>
-	</div>
-	<div class="modal-body">
-		<p>Just checking.</p>
-	</div>
-	<div class="modal-footer">
-		<%= link_to 'Destroy', '/tools/'+ tool.id.to_s, :method => :delete, 
-			:class => 'btn' %>
-		<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-	</div>
-</div>

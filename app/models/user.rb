@@ -44,14 +44,16 @@ class User < ActiveRecord::Base
 		User.joins(:super_key)
 	end
 
+	#--Memberships to Tools--
+	def tool_owner_of
+		self.tools.tool_owner_of
+	end
 
 	#--Memberships to Publications--
 	def publication_owner_of
 		self.publications.publication_owner_of
 	end
-
 	#--Memberships to Corpora--
-
 	def owner_of
 		self.corpora.owner_of.all
 	end

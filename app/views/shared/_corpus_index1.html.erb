@@ -14,8 +14,26 @@
 		<%= link_to 'Tools', tools_corpus_path(corpus), :class => 'btn btn-mini' %>
 
 	  	<% if corpus.canEdit?(current_user())%>
-	    	<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini btn-info' %>
-	    	<%= link_to 'Manage Members', manage_members_corpus_path(corpus), :class => 'btn btn-mini btn-info' %>
+	    	<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
+	    	<%= link_to 'Manage Members', manage_members_corpus_path(corpus), :class => 'btn btn-mini' %>
+
+	    	<a href="#delete-confirm-corp-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
+				<%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>
+			</a>
+
+			<div class="modal fade" id="delete-confirm-corp-<%= corpus.id %>" style="display:none">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Are you sure?</h3>
+				</div>
+				<div class="modal-body">
+					<p>Just checking.</p>
+				</div>
+				<div class="modal-footer">
+					<%= link_to 'Destroy', '/corpora/'+corpus.id.to_s, :method => :delete, :class => 'btn' %>
+					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+				</div>
+			</div>
 	  	<% end %>
 	  
 	 <% end %>
