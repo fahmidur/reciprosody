@@ -17,6 +17,7 @@ class Publication < ActiveRecord::Base
 
 	#---Validations------------------------
 	validates :name, :presence => true
+	validates :url, :url => true, :allow_blank => true
 	#--------------------------------------
 
 	#---Permissions-----

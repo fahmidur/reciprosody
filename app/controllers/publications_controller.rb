@@ -56,7 +56,7 @@ class PublicationsController < ApplicationController
 				end
 			else
 				format.json do 
-					render :json => {:ok => false, :res => "#{@pub.errors.full_messages}"}
+					render :json => {:ok => false, :errors => @pub.errors.to_a}
 				end
 			end
 		end
@@ -78,7 +78,7 @@ class PublicationsController < ApplicationController
 			else
 				format.html { render :action => 'edit'}
 				format.json do
-					render :json => {:ok => true, :res => @pub.errors.full_messages}
+					render :json => {:ok => false, :errors => @pub.errors.to_a}
 				end
 			end
 		end

@@ -3,13 +3,20 @@
 	<%= javascript_include_tag 'publications_form.js' %>
 <% end %>
 
-<!--<%= setup_upload %>-->
-
-<div class='row-fluid'>
-	<div id='dropbar_holder' class='span12'></div>
-</div>
-
 <%= form_for(@publication, :remote => true, :method => :post, :html => {'data-type' => 'json'}) do |f|%>
+
+	<div class='row-fluid'>
+
+		<div id="error_box" class='alert alert-error span12'>
+			
+			<div id='errors'>
+				
+			</div>
+			
+		</div>
+		
+	</div>
+
 	<div class='row-fluid'>
 		<div class='field span12'>
 			<%= f.label :name, "Title" %>

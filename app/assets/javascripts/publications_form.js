@@ -45,6 +45,12 @@ $(function() {
 			window.location.href = "/publications/" + data.res;
 		} else {
 			console.log("data not okay");
+
+			$('#error_box').show();
+			$('#errors').html(data.errors.join("<br/"));
+			$('html, body').animate({scrollTop: 0}, 'fast');
+
+			console.log(data);
 		}
 	});
 

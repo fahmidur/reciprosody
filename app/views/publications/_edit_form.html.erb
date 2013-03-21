@@ -6,11 +6,19 @@
 
 <!--<%= setup_upload %>-->
 
-<div class='row-fluid'>
-	<div id='dropbar_holder' class='span12'></div>
-</div>
-
 <%= form_for(@pub, :remote => true, :method => :put, :html => {'data-type' => 'json', :id => 'new_publication'}) do |f|%>
+	<div class='row-fluid'>
+
+		<div id="error_box" class='alert alert-error span12'>
+			
+			<div id='errors'>
+				
+			</div>
+			
+		</div>
+		
+	</div>
+	
 	<div class='row-fluid'>
 		<div class='field span12'>
 			<%= f.label :name, "Title" %>

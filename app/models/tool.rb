@@ -12,7 +12,10 @@ class Tool < ActiveRecord::Base
 
   scope :tool_owner_of, where(tool_memberships: {role: 'owner'})
 
+  #---Validations------------------------
+  validates :name, :presence => true
   validates :url, :url => true, :allow_blank => true
+  #--------------------------------------
 
   def to_timestring
     self.updated_at.strftime("%m-%d-%Y")
