@@ -53,6 +53,7 @@ Reciprosody2::Application.routes.draw do
 	#----authenticaton-----------------------
   devise_for :users, :controllers => {:registrations => "registrations"}
   
+
 	match 'users'	=> 'users#index'
 	
 	#----maps to users controller-------------

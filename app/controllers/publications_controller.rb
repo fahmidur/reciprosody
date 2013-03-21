@@ -61,7 +61,28 @@ class PublicationsController < ApplicationController
 			end
 		end
 	end
+	
+	def update
+		@pub = Publication.find_by_id(params[:id])
+		corpora_text = params[:publication].delete(:corpora)
+		@corpora = corpora_from_text(corpora_text)
+		params[:publication][:pubdate] = DateTime.new(params[:publication][:pubdate].to_i)
 
+		respond_to do |format|
+			if @pub && @pub.update_attributes(params[:publication]) && create_publication()
+
+				format.html { redirect_to @pub}
+				format.json do
+					render :json => {:ok => true, :res => @pub.id}
+				end
+			else
+				format.html { render :action => 'edit'}
+				format.json do
+					render :json => {:ok => true, :res => @pub.errors.full_messages}
+				end
+			end
+		end
+	end
 
 	def create_publication
 		if @corpora
@@ -110,27 +131,7 @@ class PublicationsController < ApplicationController
 		session[:resumable_filename] = nil
 	end
 
-	def update
-		@pub = Publication.find_by_id(params[:id])
-		corpora_text = params[:publication].delete(:corpora)
-		@corpora = corpora_from_text(corpora_text)
-		params[:publication][:pubdate] = DateTime.new(params[:publication][:pubdate].to_i)
-
-		respond_to do |format|
-			if @pub && @pub.update_attributes(params[:publication]) && create_publication()
-
-				format.html { redirect_to @pub}
-				format.json do
-					render :json => {:ok => true, :res => @pub.id}
-				end
-			else
-				format.html { render :action => 'edit'}
-				format.json do
-					render :json => {:ok => true, :res => @pub.errors.full_messages}
-				end
-			end
-		end
-	end
+	
 
 	def manage_corpora
 		@pub = Publication.find_by_id(params[:id])

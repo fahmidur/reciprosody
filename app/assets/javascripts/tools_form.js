@@ -2,7 +2,12 @@ var _keywords = {};
 var _corpora = {};
 
 $(function() {
-	console.log("Tool Form 2");
+	console.log("Tool Form 6");
+	$('#error_box').hide();
+	$('#error_box').click(function() {
+		$(this).hide();
+	});
+
 
 	$('#new_tool').on('ajax:beforeSend', function(e, xhr, settings) {
 		console.log("ORIGINAL = " + settings.data);
@@ -43,9 +48,13 @@ $(function() {
 			window.location.href = "/tools/" + data.res;
 		} else {
 			console.log("data not okay");
+
+			$('#error_box').show();
+			$('#errors').html(data.errors.join("<br/"));
+			$('html, body').animate({scrollTop: 0}, 'fast');
+			console.log(data);
 		}
 	});
-
 
 	$('#keyword_in').keydown(function(e) {
 		if(e.keyCode == 13) {
@@ -70,6 +79,7 @@ $(function() {
 			$('#kw--'+kw).remove();
 		}
 	});
+	
 	$('.corp').live('click', function(e) {
 		e.stopPropagation(); e.preventDefault();
 		var cid = $(this).attr('id').split("--")[1];

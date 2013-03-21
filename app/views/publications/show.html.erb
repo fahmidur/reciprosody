@@ -1,5 +1,5 @@
 <%= content_for :javascript_includes do %>
-	<%= javascript_include_tag 'publication_show.js' %>
+	<%= javascript_include_tag 'show_fix.js' %>
 <% end %>
 
 <%= render :partial => 'tabs', :locals => {:tab => 'details'} %>
@@ -94,7 +94,8 @@
 		</div>
 	</div>
 <% end %>
-<% if @pub.corpora %>
+
+<% if @pub.corpora && @pub.corpora.size > 0%>
 	<div class='row-fluid'>
 		<div class='box span12'>
 			<h5 class='boxheader'>Uses <%= pluralize(@pub.corpora.length, "Corpus",
@@ -105,4 +106,5 @@
 		</div>
 	</div>
 <% end %>
+
 <%= render :partial => 'footer' %>

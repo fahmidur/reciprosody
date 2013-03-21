@@ -1,9 +1,8 @@
 <%= content_for :javascript_includes do%>
-	<%= javascript_include_tag 'tabs.js' %>
 <% end %>
 
 <h2><%= @pub.name %> 
-	<% if @pub.pubdate %>
+	<% if @pub.pubdate && @pub.pubdate.year != 0 %>
 		<span class='badge'>
 			<%= @pub.pubdate.year %>
 		</span>

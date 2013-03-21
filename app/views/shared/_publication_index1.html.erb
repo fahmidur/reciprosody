@@ -1,7 +1,7 @@
 <div class='corpi_item'>
 
 	<h4><%= p.name %>
-		<% if p.pubdate %>
+		<% if p.pubdate && p.pubdate.year != 0%>
 			<span class='badge'><%= p.pubdate.year %> </span>
 		<% end %>
 	</h4>
@@ -31,7 +31,9 @@
 				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
 			<% end %>
 		<% end %>
+
 		<% if p.canEdit?(current_user) %>
+			<a href='<%= manage_members_publication_path(p) %>' class='btn btn-mini'>Manage Members</a>
 			<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'>Edit</a>
 			<a href="#delete-confirm-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>&nbsp; Delete</a>
 		<% end %>

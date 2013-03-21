@@ -23,11 +23,14 @@ class ToolsController < ApplicationController
 
 	def new
 		@tool = Tool.new
+		@corpus = Corpus.find_by_id(params[:corpus_id]) if params[:corpus_id]
+		session[:resumable_filename] = nil
 	end
 
 	def edit
 		@tool = Tool.find_by_id(params[:id])
 		redirect_to '/perm' unless @tool
+		session[:resumable_filename] = nil
 	end
 
 	def update
@@ -67,7 +70,7 @@ class ToolsController < ApplicationController
 				end
 			else
 				format.json do 
-					render :json => {:ok => false, :res => "#{@tool.errors.full_messages}"}
+					render :json => {:ok => false, :errors => @tool.errors.to_a }
 				end
 			end
 		end
@@ -110,7 +113,7 @@ class ToolsController < ApplicationController
 				end
 			else
 				format.json do 
-					render :json => {:ok => false, :res => "#{@tool.errors.full_messages}"}
+					render :json => {:ok => false, :errors => @tool.errors.to_a}
 				end
 			end
 		end
@@ -132,6 +135,16 @@ class ToolsController < ApplicationController
 	private
 
 	def create_tool
+		if @corpora
+			ToolCorpusRelationship.where(:tool_id => @tool.id).destroy_all
+
+			@corpora.each do |corp|
+				ToolCorpusRelationship.create(
+					:tool_id => @tool.id,
+					:corpus_id		=> corp.id,
+					:name 			=> "for");
+			end
+		end
 		rfname = session[:resumable_filename]
 		@file = rfname ? File.new(rfname) : nil
 		return true unless @file

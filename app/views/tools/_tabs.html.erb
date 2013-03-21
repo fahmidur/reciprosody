@@ -1,10 +1,9 @@
 <%= content_for :javascript_includes do%>
-	<%= javascript_include_tag 'tabs.js' %>
 <% end %>
 
 <h2><%= @tool.name %> 
 	<span class='badge'>
-		<%= @tool.updated_at %>
+		<%= @tool.to_timestring %>
 	</span>
 </h2>
 

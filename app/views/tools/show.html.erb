@@ -1,6 +1,5 @@
 <%= content_for :javascript_includes do %>
-	<%= javascript_include_tag 'tool_show.js' %>
-	<%= javascript_include_tag 'corpora_show.js' %>
+	<%= javascript_include_tag 'show_fix.js' %>
 <% end %>
 
 <%= render :partial => 'tabs', :locals => {:tab => 'details'} %>
@@ -86,5 +85,19 @@
 		<% end %>
 	</div>
 </div>
+
+<% if @tool.corpora && @tool.corpora.size > 0%>
+	<div class='row-fluid'>
+		<div class='box span12'>
+			<h5 class='boxheader'>Uses <%= pluralize(@tool.corpora.length, "Corpus",
+			"Corpora") %></h5>
+			<% @tool.corpora.each do |c|%>
+				<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => c} %>
+			<% end %>
+		</div>
+	</div>
+<% end %>
+
+
 
 <%= render :partial => 'footer' %>
