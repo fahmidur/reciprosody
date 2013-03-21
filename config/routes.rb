@@ -29,6 +29,11 @@ Reciprosody2::Application.routes.draw do
   resources :tools do
     member do
       get :download
+      get :manage_members
+      get :add_member
+      get :update_member
+      delete :remove_member
+      
     end
   end
 

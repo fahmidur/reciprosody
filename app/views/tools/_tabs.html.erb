@@ -15,7 +15,7 @@
 	
 	<% if @tool.canEdit?(current_user) %>
 	<li class='pull-right <%= "active" if tab=="members"%> '>
-		<a href="#">Manage Members</a>
+		<a href="<%= manage_members_tool_path(@tool)%>">Manage Members</a>
 	</li>
 	<% end %>
 
