@@ -7,7 +7,8 @@
 <div class='center hero-unit grad1'>
 	<h1><%= current_user.name%></h1>
 	<small><%= current_user.email %></small>
-</div>-->
+</div>
+-->
 
 <div class='row-fluid'>
 	<div class="span2">
@@ -35,25 +36,52 @@
 	</div>
 
 	<div class='span5'>
-		<h5>My Corpora</h5>
-		<% current_user().owner_of.each do |corpus| %>
-			<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => corpus} %>
-		<% end %>
 
 	</div>
 
 	<div class='span5'>
-		<h5>My Publications</h5>
-
-		<% current_user().publication_owner_of.each do |pub| %>
-			<%= render :partial => 'shared/publication_index1.html.erb', 
-			:locals => {:p => pub} %>
+		<% if current_user().owner_of.size > 0 %>
+			<div class='row-fluid'>
+				<div class='span2'>
+					<span class='badge badge-info'><%= current_user().owner_of.size%></span>
+				</div>
+				<div class='span10'><strong>My Corpora</strong></div>
+			</div>
+			<% current_user().owner_of.each do |corpus| %>
+				<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => corpus} %>
+			<% end %>
 		<% end %>
 
-		<h5>My Tools</h5>
-		<% current_user().tool_owner_of.each do |tool| %>
-			<%= render :partial => 'shared/tool_index1', :locals => {:tool => tool} %>
+		<% if current_user().publication_owner_of.size > 0 %>
+			<div class='row-fluid'>
+				<div class='span2'>
+					<span class='badge badge-info'><%= current_user().publication_owner_of.size%></span>
+				</div>
+				<div class='span10'><strong>My Publications</strong></div>
+			</div>
+			<% current_user().publication_owner_of.each do |pub| %>
+				<%= render :partial => 'shared/publication_index_small.html.erb', 
+				:locals => {:p => pub} %>
+			<% end %>
 		<% end %>
+
+		
+
+
+		<% if current_user().tool_owner_of.size > 0 %>
+			<div class='row-fluid'>
+				<div class='span2'>
+					<span class='badge badge-info'><%= current_user().tool_owner_of.size%></span>
+				</div>
+				<div class='span10'><strong>My Tools</strong></div>
+			</div>
+			<% current_user().tool_owner_of.each do |tool| %>
+				<%= render :partial => 'shared/tool_index_small', :locals => {:tool => tool} %>
+			<% end %>
+		<% end %>
+
+
+		
 
 	</div>
 	

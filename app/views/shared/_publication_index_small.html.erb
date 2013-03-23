@@ -1,0 +1,10 @@
+<div class='corpi_item_small' onclick="window.location=('<%= publication_path(p)%>')">
+	<%= p.name %>
+	<% if p.pubdate && p.pubdate.year != 0%>
+		<span class='badge pull-right'><%= p.pubdate.year %> </span>
+	<% end %>
+	
+	<% if p.authors && !p.authors.blank?%>
+		<span class='corpi_l'><%= p.authors.split("\n").join(", " )%></span>
+	<% end %>
+</div>

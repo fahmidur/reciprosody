@@ -1,0 +1,18 @@
+<div class='corpi_item_small' onclick="window.location = '<%= tool_path(tool)%>'">
+
+	<%= tool.name %>
+
+	<% if user_signed_in? %>
+		<% if tool.url && !tool.url.blank? %>
+			<a href='<%= tool.url %>' target='_blank' class='btn btn-mini pull-right'>URL</a>
+		<% end %>
+		<% if tool.local && !tool.local.blank? %>
+			<%= form_tag("/tools/#{tool.id}/download", :method => :get, :class => 'f-inline-block') do%>
+				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
+			<% end %>
+		<% end %>
+	<% end %>
+
+
+</div>
+
