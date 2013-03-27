@@ -21,6 +21,14 @@ class Tool < ActiveRecord::Base
     self.updated_at.strftime("%m-%d-%Y")
   end
 
+  def to_short_description_string
+    if(url =~ /\/([^\/]+)\/?$/)
+      return $1
+    else
+      return url
+    end
+  end
+
   def canEdit?(user)
   	return false unless user
   	return true if user.super_key != nil

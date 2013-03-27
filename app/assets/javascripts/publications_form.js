@@ -6,6 +6,11 @@ $(function() {
 	dw();
 	$(window).resize(dw);
 
+	$('#error_box').hide();
+	$('#error_box').click(function() {
+		$(this).hide();
+	});
+
 	$('#new_publication').on('ajax:beforeSend', function(e, xhr, settings) {
 		console.log("ORIGINAL = " + settings.data);
 
