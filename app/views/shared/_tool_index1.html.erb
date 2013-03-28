@@ -26,11 +26,6 @@
 		<% end %>
 	<% end %>
 
-	
-	<% if tool.description && !tool.description.blank? %>
-		<%=raw snippet(markdown(tool.description)) %>
-	<% end %>
-
 	<% if tool.canEdit?(current_user) %>
 		<a href='<%= edit_tool_path(tool)%>' class='btn btn-mini'>Edit</a>
 		<a href='<%= manage_members_tool_path(tool)%>' class='btn btn-mini'>Manage Members</a>
@@ -51,6 +46,10 @@
 				<a href="#" data-dismiss="modal" class="btn">Cancel</a>
 			</div>
 		</div>
+	<% end %>
+	<% if tool.description && !tool.description.blank? %>
+		<br/><br/>
+		<%=raw snippet(markdown(tool.description)) %>
 	<% end %>
 
 
