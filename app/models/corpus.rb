@@ -177,9 +177,9 @@ class Corpus < ActiveRecord::Base
 	end
 	#--Sets duration from virtual attributes--
 	def set_duration
-		@hours    = 0 if @hours.nil?
-		@minutes  = 0 if @minutes.nil?
-		@seconds  = 0 if @seconds.nil?
+		@hours    = 0 if @hours.nil? || @hours < 0
+		@minutes  = 0 if @minutes.nil? || @minutes < 0
+		@seconds  = 0 if @seconds.nil? || @seconds < 0
 		self.duration = @hours.to_i()*3600 + @minutes.to_i()*60 + @seconds.to_i()
 	end
 
