@@ -4,19 +4,24 @@ Given /^I am logged in$/ do
 	visit path_to('the logout page')
 	visit path_to('the login page')
 
-	new_user = User.new(
-		:name => "Syed Reza", 
-		:email => "s.f.reza@gmail.com",
-		:password => "testing", 
-		:password_confirmation => "testing"
-	);
+	user = User.find_by_email("s.f.reza@gmail.com")
+	password = 'testing'
 
-	new_user.confirm!
-	new_user.skip_confirmation!
-	new_user.save
+	unless user
+		user = User.new(
+			:name => "Syed Reza", 
+			:email => "s.f.reza@gmail.com",
+			:password => password,
+			:password_confirmation => "testing"
+		);
 
-	fill_in("Email", :with => 's.f.reza@gmail.com')
-	fill_in("Password", :with => 'testing')
+		user.confirm!
+		user.skip_confirmation!
+		user.save
+	end
+
+	fill_in("Email", :with => user.email)
+	fill_in("Password", :with => password)
 	click_button("Sign in")
 	page.should have_css('#hf-userID')
 	find('#hf-userID').value.should_not == "NA"
