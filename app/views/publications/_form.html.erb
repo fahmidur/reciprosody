@@ -81,7 +81,6 @@
 
 		<div class="field span4">
 			<label for="corpus">Uses Corpus</label>
-
 			<div class='input-prepend'>
 				<span class="add-on"><i class="icon-book"></i></span>
 				<%= f.autocomplete_field :corpus, '/corpora/autocomplete_corpus_name', :value => ((@corpus) ? @corpus.ac_small_format : ""), :class => 'memberInput span11', :id => 'uses_corpus_in' %>
