@@ -33,3 +33,5 @@ publications/**
 
 tools/*
 tools/**
+
+coverage
