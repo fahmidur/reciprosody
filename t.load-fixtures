@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+rake db:fixtures:load RAILS_ENV=test

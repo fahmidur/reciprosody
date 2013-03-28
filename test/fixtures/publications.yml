@@ -1,15 +1,31 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
-one:
-  name: Publication One
-  keywords: awesome amazing
-  description: Description for Publication One
-  url: http://www.reddit.com
+publication_one:
+  name: Automatic Detection and Classiﬁcation of Prosodic Events
+  id: 1
+  keywords: prosody classification
+  description: |
+    <p>Prosody, or intonation, is a critically important component of spoken communication. The relationship between the words that are being spoken and their prosody is commonly understood to be the difference between “the what” and “the how”. Where the words that comprise an utterance describe the lexical content of speech, prosody describes many aspects of the manner in which these words are spoken.</p>
+    <p>This dichotomy is a useful simpliﬁcation of the relationship between the lexical content of speech and prosody. It allows researchers to examine prosodic variation without reference to the words that are being spoken. However, this division carries an implication that the meaning or desired interpretation of an utterance can be obtained from the lexical content of an utterance, “the what”, while prosody, “the how”, modiﬁes this meaning, as an ancillary process. This division belies the interaction between the information streams present in the speech signal. For example, the meaning of the declarative statement “John loves Mary.” substantially differs from the interrogative “John loves Mary?” The interrogative interpretation is typically signaled by a rising pitch at at the end of the utterance, not present in a typical production of the declarative utterance. Prosody is also used to disambiguate multiple syntactic interpretations of an utterance. For instance, “Bill doesn’t drink because he’s unhappy” may mean that Bill drinks, but for a reason other than unhappiness, or it may mean that Bill doesn’t drink, and the reason for his abstinence is his unhappiness. The lexical content of this utterance does not provide enough information to disambiguate these possibilities. However, the second interpretation – that due to Bill’s unhappiness, he doesn’t drink – is typically produced with a phrase boundary after “drink”, as in “Bill doesn’t drink — because he’s unhappy”. Prosodic variation provides a mechanism for syntactic disambiguation that is not present in the lexical content of an utterance. These examples represent instances where prosody is used to modify or disambiguate the intended interpretation of an utterance. There are, of course, instances where prosody is used to transmit additional information to a listener. In Standard American English (SAE), indications of speaker state are frequently conveyed through prosodic variation [123]. Emotional states, such as anger, frustration and happiness are displayed in a speaker’s speech through prosodic variation [102]. Prosody also carries indicators of speaker states of incredulity, uncertainty [224, 92] and sarcasm [209]. Prosody plays a critical role in the participation in and interpretation of dialog. In addition to directly impacting the meaning of some utterances, like ‘okay’ [66], prosody is used to structure spoken material [1, 71], affecting the intended context of interpretation. Smooth turn taking behavior is made possible in part due to prosodic variation [65]. These examples represent only a subset of the communicative uses of prosodic variation. Prosody is critically important to the transmission of information via speech and its interaction with the spoken lexical material continue to be discovered.</p>
+  url: http://www1.cs.columbia.edu/~amaxwell/amaxwell-thesis-final.pdf
   local: 
 
-two:
-  name: Publication Two
-  keywords: Great Fantastic
-  description: Description for Publication Two
-  url: http://www.google.com
+publication_two:
+  name: Using Mutual Information to Identify Regions of Analysis for Prosodic Analysis
+  id: 2
+  keywords: prosody mutual-information
+  description: |
+    <p>This paper presents a novel technique for empirically identifying regions of analysis for time/value information. The technique relies on analysis of mutual information between the contour, and some variable of interest. We present the use of this technique in the analysis of prosody in American English speech, where we identify valuable regions of analysis for the classiﬁcation of phrase ending intonation. We also use the technique to investigate the most informative region of analysis for pitch accent detection. </p>
+    <p> Identiﬁcation of a region of analysis is a necessary ﬁrst step in the automatic analysis of prosody. It is common to extract acoustic information from a region of speech that is aligned with some lexical boundary, either a word or syllable. There are compelling arguments to generate predictions that are aligned with both the syllable and word level. When predicting prominence, words are accented to convey information such as contrast, focus, topicality or information status. The communicative implications of prominence inﬂuence the interpretation of the word or phrase. However, the acoustic excursions associated with accenting are typically aligned with the lexically stressed syllable of the accented word. This disparity between the domains of acoustic properties and communicative impact has led to different approaches to pitch accent detection, and to the use of different regions of analysis.</p>
+  url: http://speech.cs.qc.cuny.edu/pubs/rosenberg2011mutual.pdf
   local: 
+
+publication_three:
+  name: Detecting Deception in Speech
+  id: 3
+  keywords: deception prosody
+  description: |
+    <p> This dissertation describes work on the detection of deception in speech using the techniques of spoken language processing. The accurate detection of deception in human interactions has long been of interest across a broad array of contexts and has been studied in a number of ﬁelds including psychology communication and law enforcement. The detection of deception is well-known to be a challenging problem: people are notoriously bad lie detectors, and no veriﬁed approach yet exists that can reliably and consistently catch liars.</p>
+    <p> To date, the speech signal itself has been largely neglected by researchers as a source of cues to deception. Prior to the work presented here, no comprehensive attempt has been made by speech scientists to apply state-of-the-art speech processing techniques to the study of deception. This work uses a set of features new to the deception domain in classiﬁcation experiments, statistical analyses, and speaker- and group-dependent modeling approaches, all designed to identify and employ potential cues to deception in speech. </p>
+  url: http://www.cs.columbia.edu/~frank/enos_thesis.pdf
+  local: 
+
+

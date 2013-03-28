@@ -1,0 +1,19 @@
+tool_one:
+  name: AuToBI
+  id: 1
+  keywords: prosody labeling
+  description: |
+    <p>AuToBI is a tool for the automatic analysis of Standard American English prosody. It is based largely on work described my dissertation -- Automatic Detection and Classification of Prosodic Events.</p>
+    <p>AuToBI is a java toolkit that hypothesizes pitch accents and phrase boundaries. The toolkit includes an acoustic feature extraction frontend, and a classification backend that is heavily supported by the weka machine learning toolkit</p>
+  url: https://github.com/AndrewRosenberg/AuToBI
+  local: 
+
+tool_two:
+  name: ProtTK
+  id: 2
+  keywords: prosody arff-generation
+  description: |
+    <p>ProTK is a toolkit developed to help create machine learning models of recorded speech. It has three primary components: a data ingest module, a feature extraction module, and an ARFF generation module. These three modules use an SQLite database to store and retrieve information in a structured intermediate format.</p>
+    <p>The workflow for ProTK's core functionality is simple: ingest analysis units from HTK recs or Praat TextGrids, extract features for each unit ingested, and output an ARFF file of the features extracted.</p>
+  url: https://github.com/oko/protk
+  local: 

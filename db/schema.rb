@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130315002537) do
+ActiveRecord::Schema.define(:version => 20130323192758) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -168,6 +168,17 @@ ActiveRecord::Schema.define(:version => 20130315002537) do
 
   add_index "tool_memberships", ["tool_id"], :name => "index_tool_memberships_on_tool_id"
   add_index "tool_memberships", ["user_id"], :name => "index_tool_memberships_on_user_id"
+
+  create_table "tool_publication_relationships", :force => true do |t|
+    t.integer  "tool_id"
+    t.integer  "publication_id"
+    t.string   "name"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "tool_publication_relationships", ["publication_id"], :name => "index_tool_publication_relationships_on_publication_id"
+  add_index "tool_publication_relationships", ["tool_id"], :name => "index_tool_publication_relationships_on_tool_id"
 
   create_table "tools", :force => true do |t|
     t.string   "name"

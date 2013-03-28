@@ -1,2 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
+pub_corp_one_one:
+  publication_id: 1
+  corpus_id: 1 
+  name: uses
+
+pub_corp_one_two:
+  publication_id: 1
+  corpus_id: 2
+  name: uses
+
+pub_corp_one_three:
+  publication_id: 1
+  corpus_id: 3
+  name: uses
