@@ -1,15 +1,15 @@
 publication_one_membership_owner:
-  user_id: <%= User.find_by_name("Syed Reza").id %>
+  user_id: 1
   publication_id: 1
   role: owner
 
 publication_two_membership_owner:
-  user_id: <%= User.find_by_name("Syed Reza").id %>
+  user_id: 1
   publication_id: 2
   role: owner
 
 publication_three_membership_owner:
-  user_id: <%= User.find_by_name("One Doe").id %>
+  user_id: 2
   publication_id: 3
   role: owner
 

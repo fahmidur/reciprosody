@@ -45,7 +45,7 @@ gem 'carrierwave'
 
 gem 'bibtex-ruby'
 gem 'citeproc-ruby'
-gem 'mail_view', :git => 'https://github.com/37signals/mail_view.git'
+gem 'mail_view', '~> 1.0.3'
 
 group :development, :test do
   gem 'rspec-rails', ">= 2.0"

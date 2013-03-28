@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+echo "Testing Corpus Model"
+ruby -Itest test/unit/corpus_test.rb
+echo ""
+
+echo "Testing Publication Model"
+ruby -Itest test/unit/publication_test.rb
+echo ""
+
+echo "Testing Tool Model"
+ruby -Itest test/unit/tool_test.rb
+echo ""
+
+echo "Testing Language Model"
+ruby -Itest test/unit/language_test.rb
+echo ""

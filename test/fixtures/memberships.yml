@@ -2,18 +2,18 @@
 
 # I own Corpus One
 corpus_one_membership_owner:
-  user_id: <%= User.find_by_name("Syed Reza").id %>
+  user_id: 1
   corpus_id: 1
   role: owner
 
 # I own Corpus Two
 corpus_two_membership_owner:
-  user_id: <%= User.find_by_name("Syed Reza").id %>
+  user_id: 1
   corpus_id: 2
   role: owner
 
 # One Doe owns Corpus Three
 corpus_three_membership_owner:
-  user_id: <%= User.find_by_name("One Doe").id %>
+  user_id: 2
   corpus_id: 3
   role: owner
