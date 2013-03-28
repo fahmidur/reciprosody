@@ -160,7 +160,7 @@ class ToolsController < ApplicationController
 
 		respond_to do |format|
 			if @tool.errors.none? && @tool.update_attributes(params[:tool]) && create_tool
-				ToolMembership.where(:user_id => current_user()).destroy_all
+				ToolMembership.where(:user_id => current_user(), :tool_id => @tool.id).destroy_all
 
 				ToolMembership.create(
 					:tool_id	=> @tool.id, 

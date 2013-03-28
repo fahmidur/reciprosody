@@ -86,7 +86,7 @@ class PublicationsController < ApplicationController
 
 	def create_publication
 		if @corpora
-			PublicationCorpusRelationship.where(:publication_id => @pub.id).destroy_all
+			PublicationCorpusRelationship.where(:user_id => current_user(), :publication_id => @pub.id).destroy_all
 			@corpora.each do |corp|
 				PublicationCorpusRelationship.create(
 					:publication_id => @pub.id,
