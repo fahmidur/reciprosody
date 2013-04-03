@@ -1,4 +1,4 @@
-tool_one:
+one:
   name: AuToBI
   id: 1
   keywords: prosody labeling
@@ -8,7 +8,7 @@ tool_one:
   url: https://github.com/AndrewRosenberg/AuToBI
   local: 
 
-tool_two:
+two:
   name: ProtTK
   id: 2
   keywords: prosody arff-generation

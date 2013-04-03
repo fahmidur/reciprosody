@@ -1,10 +1,10 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-question_one:
+one:
   question: How do I add a new Corpus?
 
-question_two:
+two:
   question: How do I add a new Publication?
 
-question_three:
+three:
   question: How do I add a new Tool?

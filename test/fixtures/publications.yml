@@ -1,4 +1,4 @@
-publication_one:
+one:
   name: Automatic Detection and Classiﬁcation of Prosodic Events
   id: 1
   keywords: prosody classification
@@ -8,7 +8,7 @@ publication_one:
   url: http://www1.cs.columbia.edu/~amaxwell/amaxwell-thesis-final.pdf
   local: 
 
-publication_two:
+two:
   name: Using Mutual Information to Identify Regions of Analysis for Prosodic Analysis
   id: 2
   keywords: prosody mutual-information
@@ -18,7 +18,7 @@ publication_two:
   url: http://speech.cs.qc.cuny.edu/pubs/rosenberg2011mutual.pdf
   local: 
 
-publication_three:
+three:
   name: Detecting Deception in Speech
   id: 3
   keywords: deception prosody

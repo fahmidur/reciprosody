@@ -223,6 +223,7 @@ DEPENDENCIES
   libv8
   mail_view (~> 1.0.3)
   mysql
+  mysql2
   nifty-generators
   nokogiri
   rails (>= 3.2.8)

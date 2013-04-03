@@ -6,7 +6,6 @@ gem 'rails', '>= 3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
-gem 'mysql'
 
 
 # Gems used only for assets and not required
@@ -36,8 +35,6 @@ gem "recaptcha", :require => "recaptcha/rails"
 gem 'nifty-generators'
 gem "rails3-jquery-autocomplete"
 gem "activerecord-import" #for bulk importing data
-gem "activerecord-mysql-adapter"
-gem "activerecord-mysql2-adapter"
 gem "redcarpet", "1.17.2"
 gem "nokogiri"
 gem 'acts_as_commentable_with_threading'
@@ -48,7 +45,15 @@ gem 'citeproc-ruby'
 gem 'mail_view', '~> 1.0.3'
 gem 'simplecov', :require => false, :group => :test
 
+group :production do
+  gem "mysql2"
+end
+
 group :development, :test do
+  gem "mysql"
+  gem "activerecord-mysql-adapter"
+  gem "activerecord-mysql2-adapter"
+
   gem 'rspec-rails', ">= 2.0"
   gem "capybara"
   gem 'cucumber-rails', :require => false

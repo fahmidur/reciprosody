@@ -1,6 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-corpus_one:
+one:
   name: Boston Radio News Corpus
   id: 1
   language: English
@@ -10,7 +10,7 @@ corpus_one:
     <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc ultricies magna ut magna varius tempus. Maecenas non consectetur nisl. Nullam interdum tortor ut metus convallis molestie. Proin tortor sem, vehicula eu blandit quis, hendrerit vitae tortor. Morbi id erat nec massa suscipit placerat. Nunc accumsan enim eget arcu consequat vitae accumsan sem dictum. Nunc venenatis nisl at elit volutpat ut iaculis quam lacinia. Vivamus faucibus, leo sed gravida accumsan, libero nibh gravida nibh, ac dictum felis velit in velit. Quisque diam arcu, lacinia eu tincidunt sed, pulvinar id purus. Duis facilisis rutrum euismod. Quisque nec tristique odio. Aenean tincidunt tincidunt metus vel pretium. Mauris aliquet tortor nec neque pharetra id aliquet ligula accumsan.</p>
     <p>Maecenas ipsum sapien, varius ut auctor quis, volutpat ut libero. Aliquam congue adipiscing eros eget porta. Suspendisse imperdiet, sem non egestas feugiat, nulla elit rhoncus lorem, vitae hendrerit dolor orci et metus. Pellentesque quis adipiscing purus. Duis ligula lorem, sodales ac bibendum at, blandit eu quam. Maecenas tempor accumsan enim, ac tristique ligula varius sed. Fusce vitae felis mi, eu iaculis erat.</p>
 
-corpus_two:
+two:
   name: Boston Directions Corpus
   id: 2
   language: English
@@ -20,7 +20,7 @@ corpus_two:
     <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc ultricies magna ut magna varius tempus. Maecenas non consectetur nisl. Nullam interdum tortor ut metus convallis molestie. Proin tortor sem, vehicula eu blandit quis, hendrerit vitae tortor. Morbi id erat nec massa suscipit placerat. Nunc accumsan enim eget arcu consequat vitae accumsan sem dictum. Nunc venenatis nisl at elit volutpat ut iaculis quam lacinia. Vivamus faucibus, leo sed gravida accumsan, libero nibh gravida nibh, ac dictum felis velit in velit. Quisque diam arcu, lacinia eu tincidunt sed, pulvinar id purus. Duis facilisis rutrum euismod. Quisque nec tristique odio. Aenean tincidunt tincidunt metus vel pretium. Mauris aliquet tortor nec neque pharetra id aliquet ligula accumsan.</p>
     <p>Maecenas ipsum sapien, varius ut auctor quis, volutpat ut libero. Aliquam congue adipiscing eros eget porta. Suspendisse imperdiet, sem non egestas feugiat, nulla elit rhoncus lorem, vitae hendrerit dolor orci et metus. Pellentesque quis adipiscing purus. Duis ligula lorem, sodales ac bibendum at, blandit eu quam. Maecenas tempor accumsan enim, ac tristique ligula varius sed. Fusce vitae felis mi, eu iaculis erat.</p>
 
-corpus_three:
+three:
   name: TDT-4 Corpus
   id: 3
   language: English
