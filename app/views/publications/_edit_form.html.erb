@@ -35,7 +35,7 @@
 
 		<div class='field span4'>
 				<%= f.label :url, "URL" %>
-				<input id="publication_url" name="publication[url]" size="30" type="text" value="<%= @pub.url %>", class='span12'>
+				<input id="publication_url" name="publication[url]" size="30" type="text" value="<%= @pub.url %>", class='span12', placeholder='https://github.com/joyent/node'>
 				<br/><br/>
 				<%= render :partial => 'shared/resumable_stuff'%>
 		</div>
