@@ -1,5 +1,5 @@
 class PublicationsController < ApplicationController
-	before_filter :user_filter, :except => :index
+	before_filter :user_filter, :except => [:index, :show]
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :add_member, :update_member,:remove_member]

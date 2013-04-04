@@ -55,6 +55,8 @@ group :development, :test do
   gem "activerecord-mysql2-adapter"
 
   gem 'rspec-rails', ">= 2.0"
+  gem "factory_girl_rails", "~> 4.0"
+  
   gem "capybara"
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'

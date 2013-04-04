@@ -14,10 +14,11 @@ class Corpus < ActiveRecord::Base
 
 	has_many :comments, :as => :commentable, :order => 'updated_at DESC'
 
-	before_destroy :remove_dirs
-
+	
 	before_validation :set_duration
-
+	before_create :assign_unique_token
+	after_create :create_dirs
+	before_destroy :remove_dirs
 
 	#-----Validations--------------------------------------
 	validates :name, :presence => true
@@ -139,7 +140,6 @@ class Corpus < ActiveRecord::Base
 		sub_dir.each do |d|
 			Dir.mkdir d unless Dir.exists? d
 		end
-		
 	end
 
 	#--Returns human-readable duration
@@ -152,6 +152,9 @@ class Corpus < ActiveRecord::Base
 		hours   = if @hours.nil?    then 0 else @hours.to_i end
 		minutes = if @minutes.nil?  then 0 else @minutes.to_i end
 		seconds = if @seconds.nil?  then 0 else @seconds.to_i end
+
+		hours, minutes, seconds = Corpus.normalize_time(hours, minutes, seconds)
+
 
 		if hours < 0 || hours > 23 then
 			errors.add(:hours, "Must be between 0 and 23")
@@ -168,6 +171,18 @@ class Corpus < ActiveRecord::Base
 		return true
 	end
 
+	def self.normalize_time(hours, minutes, seconds) 
+		base = hours * 3600 + minutes * 60 + seconds
+		minutes = base / 60;
+		base -= minutes * 60;
+
+		hours = minutes / 60;
+		minutes -= hours * 60;
+
+		seconds = base
+		return hours, minutes, seconds
+	end
+
 	#Sets hours, minutes, seconds
 	def set_times
 		seconds = self.duration
@@ -177,11 +192,24 @@ class Corpus < ActiveRecord::Base
 	end
 	#--Sets duration from virtual attributes--
 	def set_duration
-		@hours    = 0 if @hours.nil? || @hours < 0
-		@minutes  = 0 if @minutes.nil? || @minutes < 0
-		@seconds  = 0 if @seconds.nil? || @seconds < 0
+		@hours    = 0 if @hours.nil? || @hours.to_i < 0
+		@minutes  = 0 if @minutes.nil? || @minutes.to_i < 0
+		@seconds  = 0 if @seconds.nil? || @seconds.to_i < 0
 		self.duration = @hours.to_i()*3600 + @minutes.to_i()*60 + @seconds.to_i()
 	end
 
+	def assign_unique_token
+		self.utoken = gen_unique_token() unless self.utoken
+	end
+
+	private
+
+	def gen_unique_token
+		utoken = ""
+		begin
+			utoken = SecureRandom.uuid
+		end while Corpus.where(:utoken => utoken).exists?
+		return utoken
+	end
 
 end
