@@ -31,6 +31,10 @@ class Publication < ActiveRecord::Base
 	end
 	#-------------------
 
+	def ac_small_format
+		"#{self.name}<#{self.id}>"
+	end
+
 	def owners
 		self.users.publication_owners.all
 	end

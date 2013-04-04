@@ -12,5 +12,9 @@
 		<% @tool.corpora.each do |corp| %>
 			add_to_corpora("<%= corp.name %>", "<%= corp.id %>");
 		<% end %>
+
+		<% @tool.publications.each do |pub| %>
+			add_to_publications("<%= pub.name %>", "<%= pub.id %>");
+		<% end %>
 	});
 </script>

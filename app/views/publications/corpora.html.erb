@@ -1,0 +1,19 @@
+<% content_for :javascript_includes do %>
+	<%= javascript_include_tag "corpus_index.js" %>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+
+<%= render :partial => 'tabs', :locals => {:tab => 'corpora'} %>
+<br/>
+
+<% if @pub.corpora && @pub.corpora.size > 0%>
+		<h5 class='boxheader'>Uses <%= pluralize(@pub.corpora.length, "Corpus",
+		"Corpora") %></h5>
+		<% @pub.corpora.each do |c|%>
+			<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => c} %>
+		<% end %>
+<% end %>
+
+<%= render :partial => 'footer' %>

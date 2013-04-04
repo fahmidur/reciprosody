@@ -1,5 +1,6 @@
 var _keywords = {};
 var _corpora = {};
+var _publications = {};
 
 $(function() {
 	console.log("Tool Form 6");
@@ -15,25 +16,31 @@ $(function() {
 		var obj = uri_to_obj(settings.data);
 		var keywords = "";
 		var corpora = "";
+		var publications = "";
 
 		console.log(obj);
 		console.log("changing settings.data");
 
 		delete obj['tool[keyword]'];
 		delete obj['tool[corpus]'];
+		delete obj['tool[publication]'];
 
 		for(kw in _keywords) {
 			keywords += kw + "\n";
 		}
-		
 		for(corp in _corpora) {
 			corpora += corp + "\n";
 		}
+		for(pub in _publications) {
+			publications += pub + "\n";
+		}
 		console.log(keywords);
 		console.log(corpora);
+		console.log(publications);
 
 		obj['tool[keywords]'] = keywords;
 		obj['tool[corpora]'] = corpora;
+		obj['tool[publications]'] = publications;
 		
 		settings.data = obj_to_uri(obj);
 
@@ -111,6 +118,38 @@ $(function() {
 			add_to_corpora(cname, cid);
 		}
 	});
+
+	$('#pub_in').keydown(function(e) {
+		if(e.keyCode == 13) {
+			e.stopPropagation(); e.preventDefault();
+		}
+	});
+	$('#pub_in').keyup(function(e) {
+		if(e.keyCode == 13) {
+			e.stopPropagation(); e.preventDefault();
+			var v = $(this).val();
+			$(this).val("");
+			console.log(v);
+			var regex = /(.+)\<(\d+)\>/;
+			var matches = regex.exec(v);
+			if(!matches)
+				return;
+			var name = matches[1];
+			var id = matches[2];
+
+			add_to_publications(name, id);
+		}
+	});
+
+	$('.pub').live('click', function(e) {
+		e.stopPropagation(); e.preventDefault();
+		var id = $(this).attr('id').split("--")[1];
+		if(_publications[id]) {
+			delete _publications[id];
+			$('#pub--'+id).remove();
+		}
+	});
+
 });
 
 function add_to_keywords(kw) {
@@ -124,5 +163,11 @@ function add_to_corpora(cname, cid) {
 	if(!_corpora[cid]) {
 		$('#corpora_holder').prepend("<div class='corpi_item_small corp' id='corp--"+cid+"'>"+cname+"</div>");
 		_corpora[cid] = cname;
+	}
+}
+function add_to_publications(name, id) {
+	if(!_publications[id]) {
+		$('#publications_holder').prepend("<div class='corpi_item_small pub' id='pub--"+id+"'>"+name+"</div>");
+		_publications[id] = name;
 	}
 }

@@ -6,6 +6,7 @@ class PublicationsController < ApplicationController
 
 
 	autocomplete :publication_keyword, :name, :full => true
+	autocomplete :publication, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id]
 
 	def index
 		#renders view/publications/index.html.erb
@@ -130,19 +131,6 @@ class PublicationsController < ApplicationController
 		@pub = Publication.find_by_id(params[:id])
 		@corpora = @pub.corpora
 		session[:resumable_filename] = nil
-	end
-
-	
-
-	def manage_corpora
-		@pub = Publication.find_by_id(params[:id])
-		@publication_corpus_relationships = @pub.publication_corpus_relationships.includes(:corpus)
-
-
-		respond_to do |format|
-		  format.html
-		  #format.json { render json: [@memberships] }
-		end
 	end
 
 	def manage_members
@@ -281,6 +269,14 @@ class PublicationsController < ApplicationController
 
 	# GET /publications/1
 	def show
+		@pub = Publication.find_by_id(params[:id])
+		unless @pub
+			redirect_to '/perm'
+			return
+		end
+	end
+
+	def corpora
 		@pub = Publication.find_by_id(params[:id])
 		unless @pub
 			redirect_to '/perm'

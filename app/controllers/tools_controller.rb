@@ -7,6 +7,11 @@ class ToolsController < ApplicationController
 		@tools = Tool.all
 	end
 
+	def corpora
+		@tool = Tool.find_by_id(params[:id])
+		redirect_to '/perm' unless @tool
+	end
+
 	def manage_members
 		@tool = Tool.find_by_id(params[:id])
 		@memberships = @tool.tool_memberships.includes(:user)
@@ -142,6 +147,7 @@ class ToolsController < ApplicationController
 
 		owner_text = params[:tool].delete(:owner)
 		corpora_text = params[:tool].delete(:corpora)
+		publications_text = params[:tool].delete(:publications)
 
 		if !owner_text || owner_text.blank?
 			@tool.errors[:owner] = " must be specified"
@@ -157,6 +163,7 @@ class ToolsController < ApplicationController
 		end
 
 		@corpora = corpora_from_text(corpora_text)
+		@publications = publications_from_text(publications_text)
 
 		respond_to do |format|
 			if @tool.errors.none? && @tool.update_attributes(params[:tool]) && create_tool
@@ -184,6 +191,7 @@ class ToolsController < ApplicationController
 	def create
 		owner_text = params[:tool].delete(:owner)
 		corpora_text = params[:tool].delete(:corpora)
+		publications_text = params[:tool].delete(:publications)
 
 		@tool = Tool.new(params[:tool])
 
@@ -240,12 +248,21 @@ class ToolsController < ApplicationController
 	def create_tool
 		if @corpora
 			ToolCorpusRelationship.where(:tool_id => @tool.id).destroy_all
-
 			@corpora.each do |corp|
 				ToolCorpusRelationship.create(
 					:tool_id => @tool.id,
 					:corpus_id		=> corp.id,
 					:name 			=> "for");
+			end
+		end
+		if @publications
+			ToolPublicationRelationship.where(:tool_id => @tool.id).destroy_all
+			@publications.each do |pub|
+				ToolPublicationRelationship.create(
+					:tool_id => @tool.id,
+					:publication_id => pub.id,
+					:name => 'associated'
+				);
 			end
 		end
 		rfname = session[:resumable_filename]
@@ -280,6 +297,17 @@ class ToolsController < ApplicationController
 			end
 		end
 		return corpora
+	end
+
+	def publications_from_text(text)
+		publications = []
+		if text && !text.blank?
+			text.split("\n").each do |id|
+				pub = Publication.find_by_id(id)
+				publications << pub if pub
+			end
+		end
+		return publications
 	end
 	#--------FILTERS--------------------------------------------------------
   	# 

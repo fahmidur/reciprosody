@@ -89,13 +89,21 @@
 		</div>
 
 		<div class='field span4'>
-			<label for='owners'>Primary Owner</label>
+			<label for='publications'>Associated Publications</label>
+			<div class="input-prepend">
+				<span class="add-on"><i class="icon-file"></i></span>
+				<%= f.autocomplete_field :publication, '/publications/autocomplete_publication_name', :value => "", :class => 'memberInput span11', :id => 'pub_in' %> 
+			</div>
+			<div class="span12" id="publications_holder">
+			</div>
 
+			<br/>
+			<label for='owners'>Primary Owner</label>
 			<div class="input-prepend">
 				<span class="add-on"><i class="icon-user"></i></span>
 				<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user().email_format, :class => 'memberInput span11', :id => 'primaryOwner' %> 
 			</div>
-			<br/>
+
 		</div>
 	</div>
 

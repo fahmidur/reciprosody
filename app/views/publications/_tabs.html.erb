@@ -19,6 +19,9 @@
 	<li class='pull-right <%= "active" if tab=="members"%> '>
 		<a href="<%=manage_members_publication_path(@pub)%>">Manage Members</a>
 	</li>
+	<li class='pull-right <%= "active" if tab=="corpora"%> '>
+		<a href="<%=corpora_publication_path(@pub)%>">Corpora</a>
+	</li>
 	<% end %>
 
 	

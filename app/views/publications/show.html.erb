@@ -95,16 +95,18 @@
 	</div>
 <% end %>
 
-<% if @pub.corpora && @pub.corpora.size > 0%>
-	<div class='row-fluid'>
-		<div class='box span12'>
-			<h5 class='boxheader'>Uses <%= pluralize(@pub.corpora.length, "Corpus",
-			"Corpora") %></h5>
-			<% @pub.corpora.each do |c|%>
-				<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => c} %>
-			<% end %>
-		</div>
+
+<div class='row-fluid'>
+	<% if @pub.corpora && @pub.corpora.size > 0%>
+	<div class='box span4'>
+		<h5 class='boxheader'>Uses <%= pluralize(@pub.corpora.length, "Corpus",
+		"Corpora") %></h5>
+		<% @pub.corpora.each do |c|%>
+			<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
+		<% end %>
 	</div>
-<% end %>
+	<% end %>	
+</div>
+
 
 <%= render :partial => 'footer' %>

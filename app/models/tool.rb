@@ -10,6 +10,9 @@ class Tool < ActiveRecord::Base
   has_many :corpora, :through => :tool_corpus_relationships
   has_many :tool_corpus_relationships, :dependent => :delete_all
 
+  has_many :publications, :through => :tool_publication_relationships
+  has_many :tool_publication_relationships, :dependent => :delete_all
+
   scope :tool_owner_of, where(tool_memberships: {role: 'owner'})
 
   #---Validations------------------------
