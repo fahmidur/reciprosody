@@ -6,6 +6,7 @@ var r = new Resumable({
           throttleProgressCallbacks:1,
           generateUniqueIdentifier: function(file) {
             var relativePath = file.webkitRelativePath||file.fileName||file.name;
+            relativePath.replace(/\s+/g, '_');
             var size = file.size;
             return($('#hf-userID').val() + "-" + size + '-' + relativePath.replace(/[^0-9a-zA-Z_-]/img, ''));
           },

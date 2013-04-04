@@ -1,5 +1,5 @@
 class PublicationsController < ApplicationController
-	before_filter :user_filter, :except => [:index, :show]
+	before_filter :user_filter, :except => [:index, :show, :download]
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :add_member, :update_member,:remove_member]
@@ -114,7 +114,8 @@ class PublicationsController < ApplicationController
 		# TO-Do: Possible Race Condition occuring above
 		# Fix with a blocking call to mkdir and rm
 		extname = File.extname(@file.path)
-		name = @pub.name.underscore
+		#name = @pub.name.underscore
+		name = session[:resumable_original_filename]
 
 		path += "/#{name}#{extname}"
 		File.open(path, "wb") {|f| f.write(@file.read)}

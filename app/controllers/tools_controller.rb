@@ -1,5 +1,5 @@
 class ToolsController < ApplicationController
-	before_filter :user_filter, :except => [:index]
+	before_filter :user_filter, :except => [:index, :show, :download]
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy]
 

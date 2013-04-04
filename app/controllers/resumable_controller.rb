@@ -263,10 +263,16 @@ class ResumableController < ApplicationController
 		logger.info("***#{cmd}")
 		`#{cmd}`
 		session[:resumable_filename] = output_filename
+		session[:resumable_original_filename] = @resumableFilename
+	end
+
+	def cleanFilename(name)
+		name.gsub!(/\s+/, '_')
+		name.gsub!(/[\&,\>,\<]/, '')
 	end
 
 	def getCombinedFilename
-		"#{FOLDER}/resumable-#{@resumableIdentifier}-#{Shellwords.escape(@resumableFilename)}"
+		"#{FOLDER}/resumable-#{@resumableIdentifier}-#{cleanFilename(@resumableFilename)}"
 	end
 
 	# get the globstring
