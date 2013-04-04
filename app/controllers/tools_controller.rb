@@ -259,7 +259,8 @@ class ToolsController < ApplicationController
 		FileUtils.rm_f "#{path}/*"
 
 		extname = File.extname(@file.path)
-		name = @tool.name.underscore
+		#name = @tool.name.underscore
+		name = session[:resumable_original_filename]
 
 		path += "/#{name}#{extname}"
 		File.open(path, "wb") {|f| f.write(@file.read)}
