@@ -7,6 +7,9 @@ class Publication < ActiveRecord::Base
 	has_many :users, :through => :publication_memberships
 	has_many :publication_memberships
 
+	has_many :tools, :through => :tool_publication_relationships
+	has_many :tool_publication_relationships, :dependent => :delete_all
+
 	accepts_nested_attributes_for :publication_memberships, :users
 
 	scope :publication_owner_of,	where(publication_memberships: {role: 'owner'})

@@ -105,7 +105,22 @@
 			<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
 		<% end %>
 	</div>
-	<% end %>	
+	<% end %>
+
+	<div class='box span4'>
+	</div>
+
+	<% if @pub.tools && @pub.tools.size > 0 %>
+	<div class='box span4'>
+		<h5 class='boxheader'><%= pluralize(@pub.tools.length, "Tool",
+		"Tools") %></h5>
+		<%@pub.tools.each do |t|%>
+			<%= render :partial => 'shared/tool_index_small', :locals => {:tool => t} %>
+		<% end %>
+	</div>
+	<% end %>
+
+
 </div>
 
 
