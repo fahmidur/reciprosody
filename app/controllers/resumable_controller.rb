@@ -269,6 +269,7 @@ class ResumableController < ApplicationController
 	def cleanFilename(name)
 		name.gsub!(/\s+/, '_')
 		name.gsub!(/[\&,\>,\<]/, '')
+		
 	end
 
 	def getCombinedFilename
