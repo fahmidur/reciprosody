@@ -1,0 +1,12 @@
+<% content_for :javascript_includes do %>
+	<%= javascript_include_tag "corpus_index.js" %>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+<%= render :partial => 'tabs', :locals => {:tab => 'tools'} %>
+<br/>
+
+<% @pub.tools.each do |t| %>
+	<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>
+<% end %>

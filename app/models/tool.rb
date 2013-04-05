@@ -55,4 +55,8 @@ class Tool < ActiveRecord::Base
     self.keywords.to_s.split(/[^\w,\-]+/)
   end
 
+  def ac_small_format
+    "#{self.name}<#{self.id}>"
+  end
+
 end

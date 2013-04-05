@@ -1,5 +1,6 @@
 var _keywords = {};
 var _corpora = {};
+var _tools = {};
 
 $(function() {
 	console.log("publications form 8");
@@ -17,25 +18,33 @@ $(function() {
 		var obj = uri_to_obj(settings.data);
 		var keywords = "";
 		var corpora = "";
+		var tools = "";
+
 
 		console.log(obj);
 		console.log("changing settings.data");
 
 		delete obj['publication[keyword]'];
 		delete obj['publication[corpus]'];
+		delete obj['publication[tool]'];
+
 
 		for(kw in _keywords) {
 			keywords += kw + "\n";
 		}
-		
 		for(corp in _corpora) {
 			corpora += corp + "\n";
 		}
+		for(tool in _tools) {
+			tools += tool + "\n";
+		}
 		console.log(keywords);
 		console.log(corpora);
+		console.log(tools);
 
 		obj['publication[keywords]'] = keywords;
 		obj['publication[corpora]'] = corpora;
+		obj['publication[tools]'] = tools;
 		
 		settings.data = obj_to_uri(obj);
 
@@ -112,6 +121,38 @@ $(function() {
 			add_to_corpora(cname, cid);
 		}
 	});
+
+	$('#tool_in').keydown(function(e) {
+		if(e.keyCode == 13) {
+			e.stopPropagation(); e.preventDefault();
+		}
+	});
+	$('#tool_in').keyup(function(e) {
+		if(e.keyCode == 13) {
+			e.stopPropagation(); e.preventDefault();
+			var v = $(this).val();
+			$(this).val("");
+			console.log(v);
+			var regex = /(.+)\<(\d+)\>/;
+			var matches = regex.exec(v);
+			if(!matches)
+				return;
+			var name = matches[1];
+			var id = matches[2];
+
+			add_to_tools(name, id);
+		}
+	});
+
+	$('.tool').live('click', function(e) {
+		e.stopPropagation(); e.preventDefault();
+		var id = $(this).attr('id').split("--")[1];
+		if(_tools[id]) {
+			delete _tools[id];
+			$('#tool--'+id).remove();
+		}
+	});
+
 });
 function dw() {
 	$('#help_sticker').width($('#primaryOwner').width()-10);
@@ -128,5 +169,11 @@ function add_to_corpora(cname, cid) {
 	if(!_corpora[cid]) {
 		$('#corpora_holder').prepend("<div class='corpi_item_small corp' id='corp--"+cid+"'>"+cname+"</div>");
 		_corpora[cid] = cname;
+	}
+}
+function add_to_tools(name, id) {
+	if(!_tools[id]) {
+		$('#tools_holder').prepend("<div class='corpi_item_small tool' id='tool--"+id+"'>"+name+"</div>");
+		_tools[id] = name;
 	}
 }

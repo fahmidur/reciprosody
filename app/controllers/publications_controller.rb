@@ -16,7 +16,7 @@ class PublicationsController < ApplicationController
 	# GET /publications/new
 	# params[:corpus_id]
 	def new
-		@publication = Publication.new
+		@pub = Publication.new
 		@corpus = Corpus.find_by_id(params[:corpus_id]) if params[:corpus_id]
 		session[:resumable_filename] = nil
 	end
@@ -24,6 +24,9 @@ class PublicationsController < ApplicationController
 	def create
 		owner_text = params[:publication].delete(:owner)
 		corpora_text = params[:publication].delete(:corpora)
+		tools_text = params[:publication].delete(:tools)
+
+
 		params[:publication][:pubdate] = DateTime.new(params[:publication][:pubdate].to_i)
 
 		@pub = Publication.new(params[:publication])
@@ -41,6 +44,7 @@ class PublicationsController < ApplicationController
 		end
 
 		@corpora = corpora_from_text(corpora_text)
+		@tools = tools_from_text(tools_text)
 
 		respond_to do |format|
 			if @pub.errors.none? && @pub.save && create_publication
@@ -65,8 +69,13 @@ class PublicationsController < ApplicationController
 	
 	def update
 		@pub = Publication.find_by_id(params[:id])
+
 		corpora_text = params[:publication].delete(:corpora)
+		tools_text = params[:publication].delete(:tools)
+
 		@corpora = corpora_from_text(corpora_text)
+		@tools = tools_from_text(tools_text)
+
 		params[:publication][:pubdate] = DateTime.new(params[:publication][:pubdate].to_i)
 
 		respond_to do |format|
@@ -86,6 +95,15 @@ class PublicationsController < ApplicationController
 	end
 
 	def create_publication
+		if @tools
+			ToolPublicationRelationship.where(:publication_id => @pub.id).destroy_all
+			@tools.each do |tool|
+				ToolPublicationRelationship.create(
+					:publication_id => @pub.id,
+					:tool_id => tool.id
+				);
+			end
+		end
 		if @corpora
 			PublicationCorpusRelationship.where(:publication_id => @pub.id).destroy_all
 			@corpora.each do |corp|
@@ -284,6 +302,14 @@ class PublicationsController < ApplicationController
 		end
 	end
 
+	def tools
+		@pub = Publication.find_by_id(params[:id])
+		unless @pub
+			redirect_to '/perm'
+			return
+		end
+	end
+
 	private
 
 	def corpora_from_text(corpora_text)
@@ -295,6 +321,17 @@ class PublicationsController < ApplicationController
 			end
 		end
 		return corpora
+	end
+
+	def tools_from_text(text)
+		tools = []
+		if text && !text.blank?
+			text.split("\n").each do |id|
+				tool = Tool.find_by_id(id)
+				tools << tool if tool
+			end
+		end
+		return tools
 	end
 
 	#--------FILTERS--------------------------------------------------------

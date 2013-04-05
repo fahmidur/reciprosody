@@ -3,6 +3,8 @@ class ToolsController < ApplicationController
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy]
 
+	autocomplete :tool, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id]
+
 	def index
 		@tools = Tool.all
 	end
