@@ -161,7 +161,7 @@ class ToolsController < ApplicationController
 		end
 		@owner = User.find_by_email(owner_email);
 		if !@owner
-			@tool.errors[:owner] = " does not exist."  	
+			@tool.errors[:owner] = " does not exist."
 		end
 
 		@corpora = corpora_from_text(corpora_text)
@@ -169,8 +169,9 @@ class ToolsController < ApplicationController
 
 		respond_to do |format|
 			if @tool.errors.none? && @tool.update_attributes(params[:tool]) && create_tool
-				ToolMembership.where(:user_id => current_user(), :tool_id => @tool.id).destroy_all
+				ToolMembership.where(:user_id => current_user().id, :tool_id => @tool.id).destroy_all
 
+				# You cannot actually set someone other than yourself as the owner
 				ToolMembership.create(
 					:tool_id	=> @tool.id, 
 					:user_id		=> current_user().id,

@@ -70,8 +70,21 @@ class PublicationsController < ApplicationController
 	def update
 		@pub = Publication.find_by_id(params[:id])
 
+		owner_text = params[:publication].delete(:owner)
 		corpora_text = params[:publication].delete(:corpora)
 		tools_text = params[:publication].delete(:tools)
+
+		if !owner_text || owner_text.blank?
+			@pub.errors[:owner] = " must be specified"
+		end
+		owner_email = ""
+		if owner_text =~ /\<(.+)\>/
+			owner_email = $1
+		end
+		@owner = User.find_by_email(owner_email);
+		if !@owner
+			@pub.errors[:owner] = " does not exist."
+		end
 
 		@corpora = corpora_from_text(corpora_text)
 		@tools = tools_from_text(tools_text)
@@ -80,6 +93,13 @@ class PublicationsController < ApplicationController
 
 		respond_to do |format|
 			if @pub && @pub.update_attributes(params[:publication]) && create_publication()
+				PublicationMembership.where(:user_id => current_user().id, :publication_id => @pub.id).destroy_all
+				
+				# You cannot actually set someone other than yourself as the owner
+				PublicationMembership.create(
+					:publication_id	=> @pub.id,
+					:user_id		=> current_user().id,
+					:role			=> 'owner')
 
 				format.html { redirect_to @pub}
 				format.json do
