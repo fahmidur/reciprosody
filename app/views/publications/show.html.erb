@@ -3,28 +3,25 @@
 <% end %>
 
 <%= render :partial => 'tabs', :locals => {:tab => 'details'} %>
-<br/>
 
 <% unless @pub.description.blank? %>
 	<div class='row-fluid'>
 		<div class='box span12'>
 			<h5 class='boxheader'>Description</h5>
-				
-			<%=raw markdown(@pub.description) %>
-		</div>
-	</div>
-<% end %>
 
-<% if @pub.keywords && !@pub.keywords.blank? %>
-	<div class='row-fluid'>
-		<div class='box span12'>
-			<h5 class='boxheader'>Keywords</h5>
-			<% @pub.keywords_array.each do |kw| %>
-				<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+			<%=raw markdown(@pub.description) %>
+
+			<% if @pub.keywords && !@pub.keywords.blank? %>
+				<br/>
+				<% @pub.keywords_array.each do |kw| %>
+					<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+				<% end %>
 			<% end %>
 		</div>
 	</div>
 <% end %>
+
+
 
 <div class='row-fluid'>
 	<div class='box span4 r1-box'>
@@ -61,7 +58,36 @@
 	</div>
 </div>
 
+<div class='row-fluid'>
+	<% if @pub.corpora && @pub.corpora.size > 0%>
+	<div class='box span4 r3-box'>
+		<h5 class='boxheader'>Uses <%= pluralize(@pub.corpora.length, "Corpus",
+		"Corpora") %></h5>
+		<% @pub.corpora.each do |c|%>
+			<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
+		<% end %>
+		<a href='<%= corpora_publication_path %>' class='pull-right'>See All</a><br/>
+	</div>
+	<% end %>
 
+	<% if @pub.tools && @pub.tools.size > 0 %>
+	<div class='box span4 r3-box'>
+		<h5 class='boxheader'><%= pluralize(@pub.tools.length, "Tool","Tools") %></h5>
+		<%@pub.tools.each do |t|%>
+			<%= render :partial => 'shared/tool_index_small', :locals => {:tool => t} %>
+		<% end %>
+		<a href='<%= tools_publication_path %>' class='pull-right'>See All</a><br/>
+	</div>
+	<% end %>
+
+	<% if @pub.citation && !@pub.citation.blank? %>
+	<div class='box span4 r3-box'>
+		<h5 class='boxheader'>BibTex Citation</h5>
+		<%=raw markdown(@pub.citation) %>
+	</div>
+	<% end %>
+
+</div>
 
 <div class='row-fluid'>
 	<div class='box span4 r2-box'>
@@ -84,42 +110,6 @@
 			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
 		<% end %>
 	</div>
-</div>
-
-<% if @pub.citation && !@pub.citation.blank? %>
-	<div class='row-fluid'>
-		<div class='box span12'>
-			<h5 class='boxheader'>BibTex Citation</h5>
-			<%=raw markdown(@pub.citation) %>
-		</div>
-	</div>
-<% end %>
-
-
-<div class='row-fluid'>
-	<% if @pub.corpora && @pub.corpora.size > 0%>
-	<div class='box span4'>
-		<h5 class='boxheader'>Uses <%= pluralize(@pub.corpora.length, "Corpus",
-		"Corpora") %></h5>
-		<% @pub.corpora.each do |c|%>
-			<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
-		<% end %>
-		<a href='<%= corpora_publication_path %>' class='pull-right'>See All</a><br/>
-	</div>
-	<% end %>
-
-	<% if @pub.tools && @pub.tools.size > 0 %>
-	<div class='box span4'>
-		<h5 class='boxheader'><%= pluralize(@pub.tools.length, "Tool",
-		"Tools") %></h5>
-		<%@pub.tools.each do |t|%>
-			<%= render :partial => 'shared/tool_index_small', :locals => {:tool => t} %>
-		<% end %>
-		<a href='<%= tools_publication_path %>' class='pull-right'>See All</a><br/>
-	</div>
-	<% end %>
-
-
 </div>
 
 

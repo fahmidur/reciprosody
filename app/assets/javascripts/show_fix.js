@@ -12,9 +12,11 @@ function fixBoxHeight() {
 	if($(window).width() - $('.r1-box:first').width() < 100) {
 		unsetMaxHeight($('.r1-box'));
 		unsetMaxHeight($('.r2-box'));
+		unsetMaxHeight($('.r3-box'));
 	} else {
 		setMaxHeight($('.r1-box'));
 		setMaxHeight($('.r2-box'));
+		setMaxHeight($('.r3-box'));
 	}
 }
 
