@@ -6,7 +6,7 @@
 
 <!--<%= setup_upload %>-->
 
-<%= form_for(@pub, :remote => true, :method => :put, :html => {'data-type' => 'json', :id => 'new_publication'}) do |f|%>
+<%= form_for(@pub, :remote => true, :html => {'data-type' => 'json', :id => 'new_publication'}) do |f|%>
 	<div class='row-fluid'>
 
 		<div id="error_box" class='alert alert-error span12'>
@@ -75,15 +75,23 @@
 		</div>
 		
 		<div class='field span4'>
-			<div class='field span12'>
-				<%= f.label :pubdate, "Publication Year" %>
-				<input id="publication_pubdate" name="publication[pubdate]" size="30" type="text", class='span12' placeholder='2006' value='<%= @pub.pubdate.year if @pub.pubdate %>'>
+			
+			<%= f.label :pubdate, "Publication Year" %>
+			<input id="publication_pubdate" name="publication[pubdate]" size="30" type="text", class='span12' placeholder='2006' value='<%= @pub.pubdate.year if @pub.pubdate %>'>
+
+			<label for='owners'>Primary Owner</label>
+			<div class="input-prepend">
+				<span class="add-on"><i class="icon-user"></i></span>
+				<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user.email_format, :class => 'memberInput span12', :id => 'primaryOwner' %> 
 			</div>
+			
+			
+
 
 			<%= f.label :keywords %>
 			<div class='input-prepend'>
 				<span class="add-on"><i class="icon-tags"></i></span>
-				<%= f.autocomplete_field :keyword, '/publications/autocomplete_publication_keyword_name', :value => "", :class => 'memberInput span11', :id => 'keyword_in' %>
+				<%= f.autocomplete_field :keyword, '/publications/autocomplete_publication_keyword_name', :value => "", :class => 'memberInput span12', :id => 'keyword_in' %>
 			</div>
 			<br/>
 			<div class='span12' id='keywords_holder'>
