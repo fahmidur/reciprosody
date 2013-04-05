@@ -5,8 +5,9 @@
 <p id="notice"><%= notice %></p>
 
 <%= render :partial => 'tabs', :locals => {:tab => 'tools'} %>
-<br/>
-
-<% @pub.tools.each do |t| %>
-	<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>
+<% if @pub.tools && @pub.tools.size > 0 %>
+	<h5 class='boxheader'><%= pluralize(@pub.tools.length, "Tool", "Tools") %></h5>
+	<% @pub.tools.each do |t| %>
+		<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>
+	<% end %>
 <% end %>

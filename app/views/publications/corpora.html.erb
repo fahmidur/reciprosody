@@ -6,8 +6,6 @@
 
 
 <%= render :partial => 'tabs', :locals => {:tab => 'corpora'} %>
-<br/>
-
 <% if @pub.corpora && @pub.corpora.size > 0%>
 		<h5 class='boxheader'>Uses <%= pluralize(@pub.corpora.length, "Corpus",
 		"Corpora") %></h5>
