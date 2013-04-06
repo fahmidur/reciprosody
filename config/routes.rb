@@ -31,6 +31,7 @@ Reciprosody2::Application.routes.draw do
       get :download
 
       get :corpora
+      get :publications
 
       get :manage_members
       get :add_member

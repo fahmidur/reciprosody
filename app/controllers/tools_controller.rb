@@ -14,6 +14,11 @@ class ToolsController < ApplicationController
 		redirect_to '/perm' unless @tool
 	end
 
+	def publications
+		@tool = Tool.find_by_id(params[:id])
+		redirect_to '/perm' unless @tool
+	end
+
 	def manage_members
 		@tool = Tool.find_by_id(params[:id])
 		@memberships = @tool.tool_memberships.includes(:user)

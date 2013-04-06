@@ -1,0 +1,19 @@
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag "corpus_index.js" %>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+
+<%= render :partial => 'tabs', :locals => {:tab => 'publications'} %>
+
+<% if @tool.publications && @tool.publications.size > 0 %>
+
+	<h3 class=''><%= pluralize(@tool.publications.length, "Publication", "Publications") %></h3>
+
+	<%@tool.publications.each do |p|%>
+		<%= render :partial => 'shared/publication_index1', :locals => {:p => p} %>
+	<% end %>
+
+
+<% end %>

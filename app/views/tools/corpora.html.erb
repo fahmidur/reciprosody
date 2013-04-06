@@ -8,8 +8,7 @@
 <%= render :partial => 'tabs', :locals => {:tab => 'corpora'} %>
 
 <% if @tool.corpora && @tool.corpora.size > 0%>
-	<h5 class='boxheader'>For <%= pluralize(@tool.corpora.length, "Corpus",
-	"Corpora") %></h5>
+	<h3 class=''>For <%= pluralize(@tool.corpora.length, "Corpus", "Corpora") %></h3>
 	<% @tool.corpora.each do |c|%>
 		<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => c} %>
 	<% end %>
