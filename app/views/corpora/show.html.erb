@@ -99,7 +99,7 @@
 		</div>
 		
 		<div class='row-fluid'>
-			<% if current_user().super_key %>
+			<% if current_user && current_user().super_key %>
 				<div class='box span12'>
 					<h5 class='boxheader'>Root Only Info</h5>
 					<span class='corpus_show_name'>UUID:</span>

@@ -1,7 +1,7 @@
 class CorporaController < ApplicationController	
 	require 'fileutils'
 	
-	before_filter :user_filter, :except => :index
+	before_filter :user_filter, :except => [:index, :show, :tools, :publications, :comments]
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :view_history,

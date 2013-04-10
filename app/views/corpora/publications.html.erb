@@ -7,14 +7,14 @@
 <%= render :partial => 'tabs', :locals => {:tab => 'publications'} %>
 
 <br/>
-
-<div class='row-fluid'>
-	<a href='/publications/new?corpus_id=<%= @corpus.id %>' class='btn btn-primary span12'>
-		New Publication
-	</a>
-</div>
-
-<br/></br>
+<% if current_user() %>
+	<div class='row-fluid'>
+		<a href='/publications/new?corpus_id=<%= @corpus.id %>' class='btn btn-primary span12'>
+			New Publication
+		</a>
+	</div>
+	<br/></br>
+<% end %>
 
 <% if @corpus.publications %>
 	<% @corpus.publications.each do |p| %>
