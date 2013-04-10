@@ -2,8 +2,9 @@ var numComments = 0;
 $(function() {
 	console.log("Comments Page");
 	numComments = $('.comment').length;
+	updateInputSize($('#input'));
 
-	$('#input').live('keydown', function(e) {
+	$('#input').live('keyup', function(e) {
 		if(e.keyCode == 13 || e.keyCode == 8 || e.keyCode == 46) {
 			updateInputSize($(this));
 		}
@@ -13,6 +14,7 @@ $(function() {
 		console.log("NewComment.Success");
 		console.log(data)
 		if(data && data.ok) {
+			$('#input').val("");
 			addComment(data.resp);		
 		}
 		else {
@@ -39,7 +41,7 @@ function addComment(resp) {
 	numComments++;
 }
 function updateInputSize(container) {
-	var rows = container.val().split("\n").length + 3;
+	var rows = container.val().split("\n").length+1;
 	console.log("rows = " + rows);
 	container.attr('rows', rows);
 }

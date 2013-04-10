@@ -6,8 +6,6 @@
 
 <%= render :partial => 'tabs', :locals => {:tab => 'comments'} %>
 
-<br/>
-
 <input type='hidden' id='cid' data-cid='<%= @corpus.id %>'/>
 
 <% if current_user() && current_user().corpora.to_a.include?(@corpus) #association filter %>
