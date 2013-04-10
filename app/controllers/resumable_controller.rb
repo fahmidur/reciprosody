@@ -267,11 +267,11 @@ class ResumableController < ApplicationController
 	end
 
 	def cleanFilename(name)
-		name.gsub!(/\s+/, '_')
-		name.gsub!(/[\&,\>,\<]/, '')
+		name.gsub(/[\&,\>,\<\s]/, '')
 	end
 
 	def getCombinedFilename
+		logger.info("ORIGINAL_FILENAME = #{@resumableFilename}")
 		"#{FOLDER}/resumable-#{@resumableIdentifier}-#{cleanFilename(@resumableFilename)}"
 	end
 

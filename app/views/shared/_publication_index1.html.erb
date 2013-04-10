@@ -7,7 +7,6 @@
 	</h4>
 	<% if p.authors && !p.authors.blank?%>
 		<span class='corpi_l'><%= p.authors.split("\n").join(", " )%></span>
-		<br/> 
 	<% end %>
 
 
@@ -16,10 +15,10 @@
 		<% p.keywords_array.each do |kw| %>
 			<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
 		<% end %>
-		<br/>
+		<br/><br/>
 	<% end %>
 
-	<br/>
+	
 	<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
 	<% if p.url && !p.url.blank? %>
 		<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
@@ -52,10 +51,8 @@
 
 		<% end %>
 	<% end %>
-	<br/><br/>
-
-	
 	<% if p.description && !p.description.blank? %>
+		<br/>
 		<%=raw snippet(markdown(p.description)) %>
 	<% end %>
 	<br/>

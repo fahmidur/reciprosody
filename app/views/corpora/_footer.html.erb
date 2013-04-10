@@ -1,7 +1,7 @@
-<%= link_to 'Edit', edit_corpus_path(@corpus), :class => 'btn' %> &nbsp;
 <%= link_to 'Back', 'javascript:history.go(-1)', :class => 'btn' %> &nbsp;
 <%= link_to 'All Corpora', corpora_path, :class => 'btn' %> &nbsp;
 <% if @corpus.canEdit?(current_user()) %>
+	<%= link_to 'Edit', edit_corpus_path(@corpus), :class => 'btn' %> &nbsp;
 	<a href="#delete-confirm-corp-<%=@corpus.id%>" data-id="<%= @corpus.id %>" class="delete-confirm btn btn-danger pull-right" data-toggle="modal">
 		Delete
 	</a>

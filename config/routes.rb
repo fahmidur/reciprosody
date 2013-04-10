@@ -23,7 +23,6 @@ Reciprosody2::Application.routes.draw do
   	get :autocomplete_license_name,		:on => :collection
   	get :autocomplete_user_name,	    :on => :collection
     get :autocomplete_corpus_name,    :on => :collection
-  
   end
 
   resources :tools do

@@ -60,6 +60,7 @@ class Corpus < ActiveRecord::Base
 	#------------------------------------------------------
 	# Non-Static Helpers
 	def home_path
+		assign_unique_token unless self.utoken
 		Corpus.corpora_folder  + "/" + self.utoken
 	end
 	
@@ -123,7 +124,8 @@ class Corpus < ActiveRecord::Base
 
 	#--Removes associated directories
 	def remove_dirs
-		FileUtils.rm_rf("#{Corpus.corpora_folder}/#{self.utoken}");
+		return unless self.utoken
+		FileUtils.rm_rf(self.home_path) if Dir.exists? self.home_path;
 	end
 	
 	def create_dirs

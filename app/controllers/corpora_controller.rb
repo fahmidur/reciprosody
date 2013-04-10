@@ -538,8 +538,10 @@ class CorporaController < ApplicationController
 		
 		return true unless @file 
 		#-------------We're done if there's no file-----------------------
-		
+		logger.info("FILE_PATH = #{@file.path}")
 		archive_ext = get_archive_ext(@file.path);
+		logger.info("FILE_EXT = #{archive_ext}")
+
 		unless archive_ext
 			@corpus.errors[:file_type] = "must be zip"
 			return false

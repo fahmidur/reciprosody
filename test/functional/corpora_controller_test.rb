@@ -3,10 +3,18 @@ require 'test_helper'
 class CorporaControllerTest < ActionController::TestCase
   setup do
     @user = users(:syed)
+
     @corpus = corpora(:one)
-    @corpus.create_dirs
+    @corpus.send(:assign_unique_token)
+    @corpus.send(:create_dirs)
+
+    puts "\tCORPUS: #{@corpus.utoken}"
 
     sign_in @user
+  end
+
+  teardown do
+    @corpus.destroy
   end
 
   test "should get index" do
@@ -20,6 +28,7 @@ class CorporaControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  # Makes Identitical Corpus
   test "should create corpus" do
     assert_difference('Corpus.count') do
       post :create, corpus: { 
@@ -51,6 +60,7 @@ class CorporaControllerTest < ActionController::TestCase
   end
 
   test "should show corpus" do
+    puts "Looking for Corpus.utoken = #{@corpus.utoken}"
     get :show, id: @corpus
     assert_response :success
   end
@@ -90,5 +100,27 @@ class CorporaControllerTest < ActionController::TestCase
     end
     assert_redirected_to corpora_path
   end
+
+  test "should get member manager" do
+    get :manage_members, :id => @corpus
+    assert_response :success
+  end
+
+  test "should get comments" do
+    get :comments, :id => @corpus
+    assert_response :success
+  end
+
+  test "should get history" do
+    puts "Looking for Corpus.utoken = #{@corpus.utoken}"
+    get :view_history, :id => @corpus
+    assert_response :success
+  end
+
+  test "should get tools" do
+    get :tools, :id => @corpus
+    assert_response :success
+  end
+
 
 end
