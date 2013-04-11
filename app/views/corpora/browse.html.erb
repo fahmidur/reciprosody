@@ -17,13 +17,13 @@
 					<div class='corpi_item_small' onclick="browse('<%= File.basename(file) %>')">
 						<i class='icon-folder-close'></i>
 						<%= File.basename(file) %>
-						<span class='badge pull-right'><%=File.size(file)%> bytes</span>
+						<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
 					</div>
 			<% else %>
 					<div class='corpi_item_small' onclick="download('<%= File.basename(file) %>')">
 						<i class='icon-file'></i>
 						<%= File.basename(file) %>
-						<span class='badge pull-right'><%=File.size(file)%> bytes</span>
+						<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
 					</div>
 			<% end %>
 		
@@ -31,12 +31,12 @@
 </div>
 <script type='text/javascript'>
 	function browse(basename) {
-		var url = "<%=browse_corpus_path(@corpus)%>?path=<%= @rpath %>"+basename;
+		var url = "<%=browse_corpus_path(@corpus)%>?path=<%= @rpath if @rpath != '/' %>/"+basename;
 		console.log(url);
 		window.location = url;
 	}
 	function download(basename) {
-		var url = "<%=single_download_corpus_path(@corpus)%>?path=<%= @rpath %>"+basename;
+		var url = "<%=single_download_corpus_path(@corpus)%>?path=<%= @rpath if @rpath != '/' %>/"+basename;
 		console.log(url);
 		window.location = url;
 	}
