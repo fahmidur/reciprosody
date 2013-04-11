@@ -1,0 +1,43 @@
+<% content_for :javascript_includes do %>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+<%= render :partial => 'tabs', :locals => {:tab => 'browse'} %>
+
+<h4 class=''>
+<% if @rpath != "/" %>
+	<a href='javascript:history.go(-1)'>..</a>
+<% end %>
+<%= @rpath %></h4>
+<div class='dir_browser'>
+	<% @files.each do |file| %>
+	
+			<% if File.directory?(file) %>
+					<div class='corpi_item_small' onclick="browse('<%= File.basename(file) %>')">
+						<i class='icon-folder-close'></i>
+						<%= File.basename(file) %>
+						<span class='badge pull-right'><%=File.size(file)%> bytes</span>
+					</div>
+			<% else %>
+					<div class='corpi_item_small' onclick="download('<%= File.basename(file) %>')">
+						<i class='icon-file'></i>
+						<%= File.basename(file) %>
+						<span class='badge pull-right'><%=File.size(file)%> bytes</span>
+					</div>
+			<% end %>
+		
+	<% end %>
+</div>
+<script type='text/javascript'>
+	function browse(basename) {
+		var url = "<%=browse_corpus_path(@corpus)%>?path=<%= @rpath %>"+basename;
+		console.log(url);
+		window.location = url;
+	}
+	function download(basename) {
+		var url = "<%=single_download_corpus_path(@corpus)%>?path=<%= @rpath %>"+basename;
+		console.log(url);
+		window.location = url;
+	}
+</script>

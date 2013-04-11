@@ -1,7 +1,7 @@
 class CorporaController < ApplicationController	
 	require 'fileutils'
 	
-	before_filter :user_filter, :except => [:index, :show, :tools, :publications, :comments]
+	before_filter :user_filter, :except => [:index, :show, :tools, :publications, :comments, :browse]
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :view_history,
@@ -214,18 +214,16 @@ class CorporaController < ApplicationController
 		end
 	end
 
-
 	# GET /corpora/1/manage_members
 	#
-	# FILTERED_BY: owner_filter
-	# ACTS_AS: get_members
 	# 
 	def view_history
 		@corpus = Corpus.find_by_id(params[:id])
 		Dir.chdir Rails.root
 		Dir.chdir @corpus.head_path
 		
-		@log_entries = `svn log`.split("-"*72);
+		#@log_entries = `svn log`.split("-"*72);
+		@log_entries = [];
 		@commits = Array.new
 		
 		@log_entries.each do |e|
@@ -413,6 +411,55 @@ class CorporaController < ApplicationController
 			send_file archive_path
 		end
 	end
+
+	def browse
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+		@rpath = params[:path] || "/"
+		@rpath.gsub!("..", "");
+
+		dir = "#{@corpus.head_path}#{@rpath}"
+		if dir =~ /^(.+)\/$/
+			dir = $1
+		end
+
+		unless Dir.exists?(dir) && File.directory?(dir)
+			redirect_to '/perm'
+			return
+		end
+
+		@files = Dir.glob("#{dir}/*")
+	end
+
+	def single_download
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+		@rpath = params[:path] || "/"
+		@rpath.gsub!("..", "");
+
+		file = "#{@corpus.head_path}#{@rpath}"
+		if file =~ /^(.+)\/$/
+			file = $1
+		end
+
+		unless File.exists?(file) && !File.directory?(file)
+			redirect_to '/perm'
+			return
+		end
+
+		if invalid_filename?(file) && !File.file?(file)
+			redirect_to '/perm'
+			return
+		end
+
+		send_file file
+	end
 	
 	# POST /corpora
 	def create
@@ -572,12 +619,17 @@ class CorporaController < ApplicationController
 				unzip(@archive, @corpus.tmp_path)
 			end
 		rescue => exception
-			@corpus.remove_dirs
 			@corpus.errors[:internal] = " issue extracting your archive #{exception}"
 			
 			#----------
+			File.delete @archive if File.exists?(@archive) && !File.directory?(@archive)
 			return false
 		end
+
+		# tmp Directory is ready for processing
+		clear_directory(@corpus.head_path)
+		`cp -r #{@corpus.tmp_path}/* #{@corpus.head_path}`
+
 		#------------------LOCKED------------------------------------------------------------
 		# /tmp Directory Locked. Must UNLOCK after this method is called
 		#------------------------------------------------------------------------------------

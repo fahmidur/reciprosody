@@ -60,7 +60,10 @@ class Corpus < ActiveRecord::Base
 	#------------------------------------------------------
 	# Non-Static Helpers
 	def home_path
-		assign_unique_token unless self.utoken
+		if self.utoken == nil
+			assign_unique_token
+			create_dirs
+		end
 		Corpus.corpora_folder  + "/" + self.utoken
 	end
 	
@@ -129,6 +132,7 @@ class Corpus < ActiveRecord::Base
 	end
 	
 	def create_dirs
+		Dir.chdir Rails.root
 		return if Dir.exists? self.home_path
 
 		Dir.mkdir self.home_path 

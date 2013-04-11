@@ -18,8 +18,7 @@
 
 <% if @corpus.tools %>
 	<% @corpus.tools.each do |p| %>
-		<%= render :partial => 'shared/tool_index1.html.erb', 
-			:locals => {:tool => p} %>
+		<%= render :partial => 'shared/tool_index1', :locals => {:tool => p} %>
 	<% end %>
 <% end %>
 

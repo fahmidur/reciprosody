@@ -8,6 +8,10 @@
 		<a href="<%=corpus_path(@corpus)%>">Details</a>
 	</li>
 
+	<li class='pull-right <%= "active" if tab=="browse"%> '>
+		<a href="<%=browse_corpus_path(@corpus)%>">Browse</a>
+	</li>
+
 	<li class='pull-right <%= "active" if tab=="comments" %>'>
 		<a href="<%= comments_corpus_path(@corpus)%>">Comments</a>
 	</li>

@@ -3,6 +3,8 @@ Reciprosody2::Application.routes.draw do
   	member do
   	  post :update
   		get :download
+      get :browse
+        get :single_download
   		get :view_history
 
       get :manage_members

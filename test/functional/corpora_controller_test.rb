@@ -5,15 +5,18 @@ class CorporaControllerTest < ActionController::TestCase
     @user = users(:syed)
 
     @corpus = corpora(:one)
-    @corpus.send(:assign_unique_token)
-    @corpus.send(:create_dirs)
+    # @corpus.send(:assign_unique_token)
+    # @corpus.send(:create_dirs)
+    @corpus.save
 
-    puts "\tCORPUS: #{@corpus.utoken}"
+    #puts "\tCORPUS: #{@corpus.utoken}"
 
     sign_in @user
   end
 
   teardown do
+    #puts "\tTearing Down..."
+    @corpus.remove_dirs
     @corpus.destroy
   end
 
@@ -59,8 +62,7 @@ class CorporaControllerTest < ActionController::TestCase
     assert_equal response['ok'], false
   end
 
-  test "should show corpus" do
-    puts "Looking for Corpus.utoken = #{@corpus.utoken}"
+  test "should show corpus" do    
     get :show, id: @corpus
     assert_response :success
   end
@@ -112,7 +114,6 @@ class CorporaControllerTest < ActionController::TestCase
   end
 
   test "should get history" do
-    puts "Looking for Corpus.utoken = #{@corpus.utoken}"
     get :view_history, :id => @corpus
     assert_response :success
   end
