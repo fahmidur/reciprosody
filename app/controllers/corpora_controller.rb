@@ -413,6 +413,8 @@ class CorporaController < ApplicationController
 	end
 
 	def browse
+		Dir.chdir Rails.root
+
 		@corpus = Corpus.find_by_id(params[:id])
 		unless @corpus
 			redirect_to '/perm'
@@ -426,10 +428,11 @@ class CorporaController < ApplicationController
 			dir = $1
 		end
 
-		unless Dir.exists?(dir) && File.directory?(dir)
-			redirect_to '/perm'
-			return
-		end
+		logger.info "*********** DIR = #{dir}"
+		# unless Dir.exists?(dir) && File.directory?(dir)
+		# 	redirect_to '/perm'
+		# 	return
+		# end
 
 		@files = Dir.glob("#{dir}/*")
 	end
@@ -455,6 +458,26 @@ class CorporaController < ApplicationController
 
 		if invalid_filename?(file) && !File.file?(file)
 			redirect_to '/perm'
+			return
+		end
+
+		ext = File.extname(file)
+
+		if [".md", ".txt"].include?(ext)
+			@content = ""
+			File.open(file, "r") do |f|
+				@content = f.read
+			end
+
+			@glob = "#{File.dirname(file)}/*"
+			@files = Dir.glob(@glob)
+			@rpath = File.dirname(@rpath)
+			@rpath = "/" if @rpath.blank?
+
+			@ext = ext
+			@file = file
+
+			render :browse
 			return
 		end
 

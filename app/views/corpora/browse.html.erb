@@ -9,7 +9,7 @@
 <% if @rpath != "/" %>
 	<a href='javascript:history.go(-1)'>..</a>
 <% end %>
-<%= @rpath %></h4>
+<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %></h4>
 <div class='dir_browser'>
 	<% @files.each do |file| %>
 	
@@ -29,6 +29,20 @@
 		
 	<% end %>
 </div>
+<% if @content %>
+<div class='content'>
+	<%if @ext == ".md"  %>
+		<div class='box'>
+			<%=raw markdown(@content)%>
+		</div>
+	<% else %>
+	<pre>
+		<%= @content %>
+	</pre>
+	<% end %>
+</div>
+<% end %>
+
 <script type='text/javascript'>
 	function browse(basename) {
 		var url = "<%=browse_corpus_path(@corpus)%>?path=<%= @rpath if @rpath != '/' %>/"+basename;
