@@ -7,7 +7,8 @@
 
 <h4 class=''>
 <% if @rpath != "/" %>
-	<a href='javascript:history.go(-1)'>..</a>
+	<!--<a href='javascript:history.go(-1)'>..</a>-->
+	<a href='<%= browse_corpus_path(@corpus) %>?path=<%= File.dirname(@rpath) %>'>..</a>
 <% end %>
 <%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %></h4>
 <div class='dir_browser'>
