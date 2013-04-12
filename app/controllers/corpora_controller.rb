@@ -434,9 +434,8 @@ class CorporaController < ApplicationController
 			return
 		end
 
-		
 		@files = Dir.glob("#{dir}/*")
-		
+
 		#---retroactive patch for old corpora---
 		if(@files.empty? && !Dir.glob(@corpus.archives_path).empty?)
 			retro_browse_patch();
