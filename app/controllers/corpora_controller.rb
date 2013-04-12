@@ -463,6 +463,11 @@ class CorporaController < ApplicationController
 
 		ext = File.extname(file)
 
+		if params[:noview]
+			send_file file
+			return
+		end
+
 		if [".md", ".txt"].include?(ext)
 			@content = ""
 			File.open(file, "r") do |f|

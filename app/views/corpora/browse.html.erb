@@ -29,17 +29,20 @@
 		
 	<% end %>
 </div>
+
 <% if @content %>
-<div class='content'>
+<div class='row-fluid content'>
+	<div class='box span12'>
+		<h5 class='boxheader'><%= File.basename(@file) %> <a class='badge badge-info' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true'><i class='icon-download'></i></a></h5>
+
 	<%if @ext == ".md"  %>
-		<div class='box'>
-			<%=raw markdown(@content)%>
-		</div>
+		<%=raw markdown(@content)%>
 	<% else %>
-	<pre>
-		<%= @content %>
-	</pre>
+		<pre>
+			<%= @content %>
+		</pre>
 	<% end %>
+	</div>
 </div>
 <% end %>
 
