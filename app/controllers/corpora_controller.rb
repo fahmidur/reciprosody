@@ -1,7 +1,7 @@
 class CorporaController < ApplicationController	
 	require 'fileutils'
 	
-	before_filter :user_filter, :except => [:index, :show, :tools, :publications, :comments, :browse]
+	before_filter :user_filter, :except => [:index, :show, :tools, :publications, :comments]
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :view_history,
@@ -429,12 +429,19 @@ class CorporaController < ApplicationController
 		end
 
 		logger.info "*********** DIR = #{dir}"
-		# unless Dir.exists?(dir) && File.directory?(dir)
-		# 	redirect_to '/perm'
-		# 	return
-		# end
+		unless Dir.exists?(dir) && File.directory?(dir)
+			redirect_to '/perm'
+			return
+		end
 
+		
 		@files = Dir.glob("#{dir}/*")
+		
+		#---retroactive patch for old corpora---
+		if(@files.empty? && !Dir.glob(@corpus.archives_path).empty?)
+			retro_browse_patch();
+			@files = Dir.glob("#{dir}/*")
+		end
 	end
 
 	def single_download
@@ -476,6 +483,7 @@ class CorporaController < ApplicationController
 
 			@glob = "#{File.dirname(file)}/*"
 			@files = Dir.glob(@glob)
+
 			@rpath = File.dirname(@rpath)
 			@rpath = "/" if @rpath.blank?
 
@@ -665,6 +673,22 @@ class CorporaController < ApplicationController
 		#----------------------------UNLOCKED--------------------------------------
 		return true
 		#--------------------------------------------------------------------------
+	end
+
+	def retro_browse_patch
+		Dir.chdir(Rails.root)
+		@archive_names = Dir.entries(@corpus.archives_path).select {|n| n != ".." && n != "." }
+
+		#--Sort from highest to lowest Version
+		@archive_names.sort! do |a, b|
+			logger.info("a=#{a} b=#{b}")
+			x = a.gsub(/\.#{get_archive_ext(a)}$/, '')[/\d+$/].to_i
+			y = b.gsub(/\.#{get_archive_ext(b)}$/, '')[/\d+$/].to_i
+			y <=> x
+		end
+		unless @archive_names.empty?
+			unzip("#{@corpus.archives_path}/#{@archive_names[0]}", "#{@corpus.head_path}")
+		end
 	end
 	
 	def unused_create_corpus(msg = "unspecified")

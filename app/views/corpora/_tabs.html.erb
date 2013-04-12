@@ -8,9 +8,7 @@
 		<a href="<%=corpus_path(@corpus)%>">Details</a>
 	</li>
 
-	<li class='pull-right <%= "active" if tab=="browse"%> '>
-		<a href="<%=browse_corpus_path(@corpus)%>">Browse</a>
-	</li>
+	
 
 	<li class='pull-right <%= "active" if tab=="comments" %>'>
 		<a href="<%= comments_corpus_path(@corpus)%>">Comments</a>
@@ -23,15 +21,20 @@
 	<li class='pull-right <%= "active" if tab=="tools" %>'>
 		<a href="<%= tools_corpus_path(@corpus)%>">Tools</a>
 	</li>
-
-	<% if @corpus.canEdit?(current_user())%>
-		<li class='pull-right <%= "active" if tab=="members"%> '>
-			<a href="<%=manage_members_corpus_path(@corpus)%>">Manage Members</a>
+	<% if current_user() %>
+		<li class='pull-right <%= "active" if tab=="browse"%> '>
+			<a href="<%=browse_corpus_path(@corpus)%>">Browse</a>
 		</li>
+		
+		<% if @corpus.canEdit?(current_user())%>
+			<li class='pull-right <%= "active" if tab=="members"%> '>
+				<a href="<%=manage_members_corpus_path(@corpus)%>">Manage Members</a>
+			</li>
 
-		<li class='pull-right <%= "active" if tab=="history"%> '>
-			<a href="<%=view_history_corpus_path(@corpus)%>">History</a>
-		</li>
+			<li class='pull-right <%= "active" if tab=="history"%> '>
+				<a href="<%=view_history_corpus_path(@corpus)%>">History</a>
+			</li>
 
+		<% end %>
 	<% end %>
 </ul>
