@@ -30,13 +30,18 @@
 	<% end %>
 </div>
 
-<% if @content %>
+<% if @file %>
 <div class='row-fluid content'>
 	<div class='box span12'>
 		<h5 class='boxheader'><%= File.basename(@file) %> <a class='badge badge-info' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true'><i class='icon-download'></i></a></h5>
 
 	<%if @ext == ".md"  %>
 		<%=raw markdown(@content)%>
+	<%elsif @ext == ".wav" %>
+		<audio style="width:100%" controls>
+			<source src='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true' type="audio/mpeg">
+			Your browser does not support the audio element.
+		</audio>
 	<% else %>
 		<pre>
 			<%= @content %>

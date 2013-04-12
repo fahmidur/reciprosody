@@ -424,11 +424,8 @@ class CorporaController < ApplicationController
 		@rpath.gsub!("..", "");
 
 		dir = "#{@corpus.head_path}#{@rpath}"
-		if dir =~ /^(.+)\/$/
-			dir = $1
-		end
+		dir.chop! if dir.length > 1 && dir[-1] == '/'
 
-		logger.info "*********** DIR = #{dir}"
 		unless Dir.exists?(dir) && File.directory?(dir)
 			redirect_to '/perm'
 			return
@@ -453,16 +450,9 @@ class CorporaController < ApplicationController
 		@rpath.gsub!("..", "");
 
 		file = "#{@corpus.head_path}#{@rpath}"
-		if file =~ /^(.+)\/$/
-			file = $1
-		end
+		file.chop! if file.length > 1 && file[-1] == '/'
 
-		unless File.exists?(file) && !File.directory?(file)
-			redirect_to '/perm'
-			return
-		end
-
-		if invalid_filename?(file) && !File.file?(file)
+		if invalid_filename?(file) || !File.exists?(file) || !File.file?(file)
 			redirect_to '/perm'
 			return
 		end
@@ -474,21 +464,23 @@ class CorporaController < ApplicationController
 			return
 		end
 
-		if [".md", ".txt"].include?(ext)
-			@content = ""
-			File.open(file, "r") do |f|
-				@content = f.read
+		@rpath = File.dirname(@rpath)
+		@rpath = "/" if @rpath.blank?
+
+		dir = "#{@corpus.head_path}#{@rpath}"
+
+		@files = Dir.glob("#{dir}/*")
+		@file = file
+		@ext = File.extname(@file)
+
+		if [".md", ".txt", ".wav"].include?(ext)
+			unless ext == ".wav"
+				@content = ""
+				File.open(file, "r") do |f|
+					@content = f.read
+				end
 			end
-
-			@glob = "#{File.dirname(file)}/*"
-			@files = Dir.glob(@glob)
-
-			@rpath = File.dirname(@rpath)
-			@rpath = "/" if @rpath.blank?
-
-			@ext = ext
-			@file = file
-
+			
 			render :browse
 			return
 		end
