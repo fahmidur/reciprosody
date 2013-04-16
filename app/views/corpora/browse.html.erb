@@ -1,4 +1,8 @@
 <% content_for :javascript_includes do %>
+	<%= javascript_include_tag 'wavesurfer.js'%>
+	<%= javascript_include_tag 'webaudio.js'%>
+	<%= javascript_include_tag 'drawer.js'%>
+	<%= javascript_include_tag 'audio.js'%>
 <% end %>
 
 <p id="notice"><%= notice %></p>
@@ -38,10 +42,39 @@
 	<%if @ext == ".md"  %>
 		<%=raw markdown(@content)%>
 	<%elsif @ext == ".wav" %>
-		<audio style="width:100%" autoplay="autoplay" controls>
-			<source src='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true' type="audio/mpeg">
-			Your browser does not support the audio element.
-		</audio>
+		<div class='waveform'>
+			<canvas style="height:200px;"></canvas>
+		</div>
+		<div class="controls">
+                <button class="btn" data-action="back">
+                    <i class="icon icon-step-backward"></i>
+                    Seek Backward
+                </button>
+
+                <button class="btn" data-action="play">
+                    <i class="icon icon-play"></i>
+                    Play
+                    /
+                    <i class="icon icon-pause"></i>
+                    Pause
+                </button>
+
+                <button class="btn" data-action="forth">
+                    <i class="icon icon-step-forward"></i>
+                    Seek Forward
+                </button>
+
+                <button class="btn btn-success" data-action="green-mark">
+                    <i class="icon icon-flag"></i>
+                    Set green mark
+                </button>
+
+                <button class="btn btn-danger" data-action="red-mark">
+                    <i class="icon icon-flag"></i>
+                    Set red mark
+                </button>
+            </div>
+
 	<% else %>
 		<pre>
 			<%= @content %>
@@ -62,4 +95,81 @@
 		console.log(url);
 		window.location = url;
 	}
+
+	var wavesurfer = (function () {
+	    'use strict';
+
+	    var wavesurfer = Object.create(WaveSurfer);
+
+	    wavesurfer.init({
+	        canvas        : document.querySelector('.waveform canvas'),
+	        fillParent    : true,
+	        markerColor   : 'rgba(0, 0, 0, 0.5)',
+	        frameMargin   : 0.1,
+	        maxSecPerPx   : parseFloat(location.hash.substring(1)),
+	        scrollParent  : true,
+	        loadPercent   : true,
+	        waveColor     : '#afafaf',
+	        progressColor : '#7d7d7d',
+	        loadingColor  : 'purple',
+	        cursorColor   : 'navy'
+	    });
+
+	    wavesurfer.load('<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true')
+
+	    wavesurfer.bindDragNDrop();
+
+	    var eventHandlers = {
+	        'play': function () {
+	            wavesurfer.playPause();
+	        },
+
+	        'green-mark': function () {
+	            wavesurfer.mark({
+	                id: 'up',
+	                color: 'rgba(0, 255, 0, 0.5)'
+	            });
+	        },
+
+	        'red-mark': function () {
+	            wavesurfer.mark({
+	                id: 'down',
+	                color: 'rgba(255, 0, 0, 0.5)'
+	            });
+	        },
+
+	        'back': function () {
+	            wavesurfer.skipBackward();
+	        },
+
+	        'forth': function () {
+	            wavesurfer.skipForward();
+	        }
+	    };
+
+	    document.addEventListener('keyup', function (e) {
+	        var map = {
+	            32: 'play',
+	            38: 'green-mark',
+	            40: 'red-mark',
+	            37: 'back',
+	            39: 'forth'
+	        };
+	        if (e.keyCode in map) {
+	            var handler = eventHandlers[map[e.keyCode]];
+	            e.preventDefault();
+	            handler && handler(e);
+	        }
+	    });
+
+	    document.addEventListener('click', function (e) {
+	        var action = e.target.dataset && e.target.dataset.action;
+	        if (action && action in eventHandlers) {
+	            eventHandlers[action](e);
+	        }
+	    });
+
+	    return wavesurfer;
+	}());
+
 </script>
