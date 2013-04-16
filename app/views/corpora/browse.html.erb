@@ -117,7 +117,7 @@
 
 	    wavesurfer.load('<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true')
 
-	    wavesurfer.bindDragNDrop();
+	    //wavesurfer.bindDragNDrop();
 
 	    var eventHandlers = {
 	        'play': function () {
@@ -170,6 +170,6 @@
 	    });
 
 	    return wavesurfer;
-	}());
+	}());	
 
 </script>
