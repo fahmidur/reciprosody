@@ -227,8 +227,9 @@ class CorporaController < ApplicationController
 		Dir.chdir Rails.root
 		Dir.chdir @corpus.head_path
 		
-		#@log_entries = `svn log`.split("-"*72);
-		@log_entries = [];
+
+		@log_entries = `svn log`.split("-"*72);
+
 		@commits = Array.new
 		
 		@log_entries.each do |e|
@@ -645,6 +646,21 @@ class CorporaController < ApplicationController
 		# Move the file to archive folder
 		FileUtils.mv(@file.path, @archive)
 		#FileUtils.cp(@file.path, @archive)
+
+		unless Dir.glob(@corpus.svn_path + "/*").empty?
+			logger.info "**************PULLING FROM SVN HEAD****************"
+			# pull from svn head
+			Dir.chdir @corpus.tmp_path
+
+			logger.info "svn co #{@corpus.svn_file_url} ."
+			`svn co #{@corpus.svn_file_url} .`
+
+			Dir.glob(@corpus.svn_path+"/*").each do |f|
+				puts "***#{f}"
+			end
+
+			Dir.chdir Rails.root
+		end
 		
 		begin		
 			if archive_ext == "zip"
@@ -659,8 +675,72 @@ class CorporaController < ApplicationController
 		end
 
 		# tmp Directory is ready for processing
+
 		clear_directory(@corpus.head_path)
-		`cp -r #{@corpus.tmp_path}/* #{@corpus.head_path}`
+
+		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
+
+		if Dir.glob(@corpus.svn_path + "/*").empty?
+			# Initial commit
+			Dir.chdir Rails.root
+
+			logger.info "svnadmin create #{@corpus.svn_path}"
+			`svnadmin create #{@corpus.svn_path}` #initialize svn storage
+
+			Dir.chdir @corpus.tmp_path
+			logger.info "svn import . #{@corpus.svn_file_url} -m #{Shellwords.escape(msg)}"
+			`svn import . #{@corpus.svn_file_url} -m #{Shellwords.escape(msg)}`
+
+			Dir.chdir Rails.root
+		else
+			Dir.chdir Rails.root
+			Dir.chdir @corpus.tmp_path
+			
+			# Check if tmp is a valid SVN Working Copy
+			unless Dir.exists? "./.svn"
+				@corpus.errors[:your_upload] = " is not a recent svn working copy"
+				#-----------
+				return false
+			end
+
+			#--In /tmp Directory--
+			
+			# Forcefully add all new files
+			logger.info("svn add . --force")
+			`svn add . --force`	
+
+			# If anything is still untracked '?' then add it
+			logger.info("svn st | grep ^\? | awk '{print $2}' | xargs -r svn add")
+			`svn st | grep ^\? | awk '{print $2}' | xargs -r svn add`
+
+			# If anything is missing '!' then mark for deletion
+			logger.info("svn st | grep ^\! | awk '{print $2}' | xargs -r svn delete --force")
+			`svn st | grep ^\! | awk '{print $2}' | xargs -r svn delete --force`
+			
+			# TO-Do:
+			# http://vcs.atspace.co.uk/2012/06/20/missing-pristines-in-svn-working-copy/
+			# until then enable overwrite
+			
+			logger.info("svn merge --dry-run -r BASE:HEAD .")
+			unless safe_shell_execute('svn merge --dry-run -r BASE:HEAD .')	
+				return false
+			end
+			
+			logger.info("svn commit -m #{Shellwords.escape(msg)}")
+			unless safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")
+				return false
+			end
+
+			Dir.chdir Rails.root
+		end
+
+		#`cp -r #{@corpus.tmp_path}/* #{@corpus.head_path}`
+		Dir.chdir @corpus.head_path
+
+		logger.info "svn co #{@corpus.svn_file_url} ."
+		`svn co #{@corpus.svn_file_url} .`
+
+		Dir.chdir Rails.root
 
 		#------------------LOCKED------------------------------------------------------------
 		# /tmp Directory Locked. Must UNLOCK after this method is called
@@ -693,7 +773,6 @@ class CorporaController < ApplicationController
 		
 		# create corpora directory if necessary
 		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
-		
 		
 		# Generate uToken		
 		@corpus.utoken = gen_unique_token() unless @corpus.utoken
@@ -741,7 +820,7 @@ class CorporaController < ApplicationController
 			return false
 		end
 		
-		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
+		msg = "User Name: #{current_user().name}\n<br/>\nUser Email: #{current_user().email}\n<br/>\n" + msg
 		initial_commit = false
 		
 		if Dir.glob("#{@corpus.svn_path}/*").empty?
@@ -762,7 +841,6 @@ class CorporaController < ApplicationController
 			# Check if tmp is a valid SVN Working Copy
 			unless Dir.exists? "./.svn"
 				@corpus.errors[:your_upload] = " is not a recent svn working copy"
-				
 				#-----------
 				return false
 			end
@@ -894,6 +972,8 @@ class CorporaController < ApplicationController
 
 		`unzip #{zip_path} -d #{xtract_dir}`
 		container = container(files)
+		logger.info "**CONTAINER = #{container}"
+
 		if container
 			`mv #{xtract_dir}/#{container} #{xtract_dir}/#{@corpus.utoken}` #Safety - in case container contains folder with same name as container
 			`mv #{xtract_dir}/#{@corpus.utoken}/** #{xtract_dir}`
