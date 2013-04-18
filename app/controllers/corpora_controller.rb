@@ -16,6 +16,7 @@ class CorporaController < ApplicationController
 	autocomplete :user, :name, :full => true, :display_value => :email_format, :extra_data => [:email]
 
 	autocomplete :corpus, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id, :duration]
+	autocomplete :tool_corpus_relationship, :name, :full => true
 	
 	# GET /corpora
 	# GET /corpora.json
@@ -86,6 +87,10 @@ class CorporaController < ApplicationController
 	# See all Tools using this Corpus
 	def tools
 		@corpus = Corpus.find_by_id(params[:id])
+		#if @corpus.canEdit?(current_user())
+
+		@toolCorpusRelationships = ToolCorpusRelationship.where(:corpus_id => @corpus.id).includes(:tool);
+		#end
 	end
 
 	# GET /corpora/1/manage_members
