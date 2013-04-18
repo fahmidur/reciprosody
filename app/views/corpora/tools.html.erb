@@ -23,7 +23,7 @@
 		<div class='span3'>
 			<label for='relationship-<%=rel.id%>' class='tag'>Relationship To Corpus</label>
 
-			<input id="relationship-<%= rel.id %>" class="ui-autocomplete-input span12" data-autocomplete="/corpora/autocomplete_tool_corpus_relationship_name" size="30" type="text" value="" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+			<input id="relationship-<%= rel.id %>" class="ui-autocomplete-input span12" data-autocomplete="/corpora/autocomplete_tool_corpus_relationship_name" size="30" type="text" value="<%= rel.name %>" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
 
 			<br/>
 			<button class='btn btn-mini btn-danger' data-id='<%= rel.id %>'>Remove Relationship</button>
