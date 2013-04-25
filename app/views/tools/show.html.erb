@@ -37,13 +37,17 @@
 	</div>
 
 	
-	<div class='box span4 r1-box'>
+	<div class='box span4 r1-box' style='word-wrap: break-word'>
 		<h5 class='boxheader'>External Link</h5>
 		<% if @tool.url && !@tool.url.blank? %>
 		<center>
-		<p class='label label-default' href='<%= @tool.url %>'><%= @tool.url %></p><br/>
-		<a href='<%= @tool.url %>' target='_blank' class='btn btn-primary'>Follow Link</a>
-		<br/><br/>
+
+		<!--<span class='label label-default' style='word-wrap: break-word'><%= @tool.url %></span><br/><br/>-->
+		<div style="font-weight:bold;color:#6d6d6d;font-size:x-small"><%= @tool.url %></div>
+		<br/>
+
+		<a href='<%= @tool.url %>' target='_blank' class='btn btn-small btn-primary'>Follow Link</a>
+		<br/>
 		</center>
 		<% end %>
 	</div>
@@ -89,7 +93,7 @@
 <div class='row-fluid'>
 	
 	<div class='box span4 r3-box'>
-		<h5 class='boxheader'>For <%= pluralize(@tool.corpora.length, "Corpus",
+		<h5 class='boxheader'><%= pluralize(@tool.corpora.length, "Corpus",
 		"Corpora") %></h5>
 		<% @tool.corpora.each do |c|%>
 			<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>

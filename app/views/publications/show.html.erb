@@ -37,11 +37,20 @@
 	<div class='box span4 r1-box'>
 		<h5 class='boxheader'>External Link</h5>
 		<% if @pub.url && !@pub.url.blank? %>
+
 		<center>
-		<p class='label label-default' href='<%= @pub.url %>'><%= @pub.url %></p><br/>
-		<a href='<%= @pub.url %>' target='_blank' class='btn btn-primary'>Follow Link</a>
-		<br/><br/>
+
+		<!--<p class='label label-default' href='<%= @pub.url %>'><%= @pub.url %></p><br/>-->
+
+		<div style="font-weight:bold;color:#6d6d6d;font-size:x-small"><%= @pub.url %></div>
+		<br/>
+		
+		<a href='<%= @pub.url %>' target='_blank' class='btn btn-small btn-primary'>Follow Link</a>
+
+		<br/>
+
 		</center>
+
 		<% end %>
 	</div>
 	
@@ -60,7 +69,7 @@
 
 <div class='row-fluid'>
 	<div class='box span4 r3-box'>
-		<h5 class='boxheader'>Uses <%= pluralize(@pub.corpora.length, "Corpus",
+		<h5 class='boxheader'><%= pluralize(@pub.corpora.length, "Corpus",
 		"Corpora") %></h5>
 		<% @pub.corpora.each do |c|%>
 			<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
