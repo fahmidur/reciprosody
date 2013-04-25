@@ -9,7 +9,7 @@
 <br/>
 <% if current_user() %>
 	<div class='row-fluid'>
-		<a href='/tools/new?corpus_id=<%= @corpus.id %>' class='btn btn-primary span12'>
+		<a href='/tools/new?corpus_id=<%= @corpus.id %>' class='btn span12'>
 			New Tool For This Corpus
 		</a>
 	</div>
@@ -19,7 +19,7 @@
 			<div class='row-fluid'>
 				<div class='span6'>
 					<div class="input-prepend span11">
-						<span class="add-on"><i class="icon-file"></i></span>
+						<span class="add-on"><i class="icon-wrench"></i></span>
 						<input class="span12 ui-autocomplete-input" data-autocomplete="/tools/autocomplete_tool_name" id="tool_in" name="name" size="30" type="text" value="" autocomplete="off" required>
 					</div>
 				</div>
@@ -45,10 +45,15 @@
 			<%= form_tag update_tool_rel_corpus_path(@corpus), :method => "get" do%>
 				<input id="relationship-<%= rel.id %>" class="ui-autocomplete-input span12" data-autocomplete="/corpora/autocomplete_tool_corpus_relationship_name" type="text" value="<%= rel.name %>" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true" name="relationship">
 				<input type="hidden" name="rid" value="<%= rel.id %>"/>
-				<input type="submit" value="Update Relationship" class="btn btn-small"/>
+
+				<div class="btn-group" data-toggle="buttons-radio">
+					<input type="submit" value="Update Relationship" class="btn"/>
+					<a href="#delete-rel-<%= rel.id %>" class='delete-confirm btn btn-danger' data-id='<%= rel.id %>' data-toggle="modal">Unlink</a>
+				</div>
+				
 			<% end %>
 
-			<a href="#delete-rel-<%= rel.id %>" class='delete-confirm btn btn-small btn-danger' data-id='<%= rel.id %>' data-toggle="modal">Remove Relationship</a>
+			
 
 			<div class="modal fade" id="delete-rel-<%= rel.id %>" style="display:none">
 				<div class="modal-header">

@@ -1,4 +1,5 @@
 <div class='corpi_item_small' onclick="window.location=('<%= publication_path(p)%>')">
+	<i class="icon-file"></i>
 	<%= p.name %>
 	<% if p.pubdate && p.pubdate.year != 0%>
 		<span class='badge pull-right'><%= p.pubdate.year %> </span>

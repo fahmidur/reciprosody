@@ -18,6 +18,9 @@ Reciprosody2::Application.routes.draw do
       get :refresh_comments
       
       get :publications
+        delete :delete_publication_rel
+        get    :add_publication_rel
+        get    :update_publication_rel
       get :tools
         delete :delete_tool_rel
         get    :add_tool_rel
@@ -29,6 +32,7 @@ Reciprosody2::Application.routes.draw do
   	get :autocomplete_user_name,	    :on => :collection
     get :autocomplete_corpus_name,    :on => :collection
     get :autocomplete_tool_corpus_relationship_name, :on => :collection
+    get :autocomplete_publication_corpus_relationship_name, :on => :collection
   end
 
   resources :tools do

@@ -18,6 +18,138 @@ class CorporaController < ApplicationController
 
 	autocomplete :corpus, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id, :duration]
 	autocomplete :tool_corpus_relationship, :name, :full => true
+	autocomplete :publication_corpus_relationship, :name, :full => true
+	
+	# GET /corpora
+	# GET /corpora.json
+	#
+	# FILTERED_BY: nothing
+	#
+	def index
+		@corpora = Corpus.all
+
+		respond_to do |format|
+			format.html # index.html.erb
+			format.json { render json: @corpora }
+		end
+	end
+
+	# GET /corpora/1
+	# GET /corpora/1.json
+	def show
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+
+		@archives = []
+		
+		Dir.chdir(Rails.root.to_s)
+		@archive_names = Dir.entries(@corpus.archives_path).select {|n| n != ".." && n != "." }
+
+		#--Sort from highest to lowest Version
+		@archive_names.sort! do |a, b|
+			logger.info("a=#{a} b=#{b}")
+			x = a.gsub(/\.#{get_archive_ext(a)}$/, '')[/\d+$/].to_i
+			y = b.gsub(/\.#{get_archive_ext(b)}$/, '')[/\d+$/].to_i
+			y <=> x
+		end
+		
+		archive_path = ""
+		time = nil
+		
+		view_helper = help
+		
+		@archive_names.each do |n|
+			archive_path = "#{@corpus.archives_path}/#{n}"
+			time = view_helper.time_ago_in_words(File.new(archive_path).mtime)
+			@archives.push ["V." + n[/\d+(?=\.(zip|tgz|tar\.gz|)$)/] + " [#{time} ago]", n]
+		end
+		
+		archive_path = "#{@corpus.archives_path}/#{@archive_names.first}"
+		@last_modified = File.new(archive_path).mtime
+		
+
+		respond_to do |format|
+	  		format.html # show.html.erb
+	  		format.json { render json: @corpus }
+	
+		end
+	end
+	
+	# GET /corpora/1/publications
+	# See all publications using this Corpus
+	def publications
+		@corpus = Corpus.find_by_id(params[:id])
+		@publicationCorpusRelationships = PublicationCorpusRelationship.where(:corpus_id => @corpus.id).includes(:publication)
+	end
+
+	# DELETE /corpora/:id/delete_publication_rel
+	# rid
+	def delete_publication_rel
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+		@publicationCorpusRelationship = PublicationCorpusRelationship.find_by_id(params[:rid])
+		unless @publicationCorpusRelationship
+			redirect_to '/perm'
+			return
+		end
+		@publicationCorpusRelationship.destroy
+		redirect_to "/corpora/#{@corpus.id}/publications"
+	end
+
+	def add_publication_rel
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+		name = params[:name]
+		name[/<(\d+)>/]
+
+		pub_id = $1.to_i
+		@pub = Publication.find_by_id(pub_id)
+
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		if @pub && PublicationCorpusRelationship.where(:corpus_id => @corpus.id, :publication_id => @pub.id).empty?
+			PublicationCorpusRelationship.create(:corpus_id => @corpus.id, :publication_id => @pub.id, :name => relationship)
+		end
+
+		redirect_to "/corpora/#{@corpus.id}/publications"
+	end
+
+	def update_publication_rel
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+		@publicationCorpusRelationship = PublicationCorpusRelationship.find_by_id(params[:rid])
+		unless @publicationCorpusRelationship
+			redirect_to '/perm'
+			return
+		end
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		@publicationCorpusRelationship.name = relationship
+		@publicationCorpusRelationship.save
+
+		redirect_to "/corpora/#{@corpus.id}/publications"
+	end
+
+	# GET /corpora/1/tools
+	# See all Tools using this Corpus
+	def tools
+		@corpus = Corpus.find_by_id(params[:id])
+		@toolCorpusRelationships = ToolCorpusRelationship.where(:corpus_id => @corpus.id).includes(:tool)
+	end
 
 	# DELETE /corpora/:id/delete_tool_rel
 	# rid
@@ -82,81 +214,6 @@ class CorporaController < ApplicationController
 		@toolCorpusRelationship.save
 
 		redirect_to "/corpora/#{@corpus.id}/tools"
-	end
-	
-	# GET /corpora
-	# GET /corpora.json
-	#
-	# FILTERED_BY: nothing
-	#
-	def index
-		@corpora = Corpus.all
-
-		respond_to do |format|
-			format.html # index.html.erb
-			format.json { render json: @corpora }
-		end
-	end
-
-	# GET /corpora/1
-	# GET /corpora/1.json
-	def show
-		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
-
-		@archives = []
-		
-		Dir.chdir(Rails.root.to_s)
-		@archive_names = Dir.entries(@corpus.archives_path).select {|n| n != ".." && n != "." }
-
-		#--Sort from highest to lowest Version
-		@archive_names.sort! do |a, b|
-			logger.info("a=#{a} b=#{b}")
-			x = a.gsub(/\.#{get_archive_ext(a)}$/, '')[/\d+$/].to_i
-			y = b.gsub(/\.#{get_archive_ext(b)}$/, '')[/\d+$/].to_i
-			y <=> x
-		end
-		
-		archive_path = ""
-		time = nil
-		
-		view_helper = help
-		
-		@archive_names.each do |n|
-			archive_path = "#{@corpus.archives_path}/#{n}"
-			time = view_helper.time_ago_in_words(File.new(archive_path).mtime)
-			@archives.push ["V." + n[/\d+(?=\.(zip|tgz|tar\.gz|)$)/] + " [#{time} ago]", n]
-		end
-		
-		archive_path = "#{@corpus.archives_path}/#{@archive_names.first}"
-		@last_modified = File.new(archive_path).mtime
-		
-
-		respond_to do |format|
-	  		format.html # show.html.erb
-	  		format.json { render json: @corpus }
-	
-		end
-	end
-	
-	# GET /corpora/1/publications
-	# See all publications using this Corpus
-	def publications
-		@corpus = Corpus.find_by_id(params[:id])
-
-	end
-
-	# GET /corpora/1/tools
-	# See all Tools using this Corpus
-	def tools
-		@corpus = Corpus.find_by_id(params[:id])
-		#if @corpus.canEdit?(current_user())
-
-		@toolCorpusRelationships = ToolCorpusRelationship.where(:corpus_id => @corpus.id).includes(:tool);
-		#end
 	end
 
 	# GET /corpora/1/manage_members
