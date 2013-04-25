@@ -20,6 +20,7 @@ class CorporaController < ApplicationController
 	autocomplete :tool_corpus_relationship, :name, :full => true
 
 	# DELETE /corpora/:id/delete_tool_rel
+	# rid
 	def delete_tool_rel
 		@corpus = Corpus.find_by_id(params[:id])
 		unless @corpus
@@ -36,6 +37,8 @@ class CorporaController < ApplicationController
 	end
 
 	# GET /corpora/:id/add_tool_rel
+	# name: AutoBI<38>
+	# relationship: for
 	def add_tool_rel
 		@corpus = Corpus.find_by_id(params[:id])
 		unless @corpus
@@ -48,6 +51,37 @@ class CorporaController < ApplicationController
 		tool_id = $1.to_i
 		@tool = Tool.find_by_id(tool_id)
 
+		relationship = params[:relationship]
+		relationship = "for" if !relationship || relationship.blank?
+
+		if @tool && ToolCorpusRelationship.where(:corpus_id => @corpus.id, :tool_id => @tool.id).empty?
+			ToolCorpusRelationship.create(:corpus_id => @corpus.id, :tool_id => @tool.id, :name => relationship)
+		end
+
+		redirect_to "/corpora/#{@corpus.id}/tools"
+	end
+
+	# GET /corpora/:id/update_tool_rel
+	# rid
+	# relationship: for
+	def update_tool_rel
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+		@toolCorpusRelationship = ToolCorpusRelationship.find_by_id(params[:rid])
+		unless @toolCorpusRelationship
+			redirect_to '/perm'
+			return
+		end
+		relationship = params[:relationship]
+		relationship = "for" if !relationship || relationship.blank?
+
+		@toolCorpusRelationship.name = relationship
+		@toolCorpusRelationship.save
+
+		redirect_to "/corpora/#{@corpus.id}/tools"
 	end
 	
 	# GET /corpora
