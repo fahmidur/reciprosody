@@ -3,6 +3,7 @@
 	<%= javascript_include_tag 'webaudio.js'%>
 	<%= javascript_include_tag 'drawer.js'%>
 	<%= javascript_include_tag 'audio.js'%>
+	<%= javascript_include_tag 'resumable.js' %>
 <% end %>
 
 <p id="notice"><%= notice %></p>
@@ -32,7 +33,29 @@
 			<% end %>
 		
 	<% end %>
+
+	<% if current_user() && @corpus.canEdit?(current_user()) %>
+	<div class='corpi_item_small' style="border-left:2px solid orange;" onclick="$('#single_file_uploader').toggle()">
+		<i class='icon-plus'></i> Single File Upload <br/>
+	</div>
+
+	<% end %>
 </div>
+
+<% if current_user() && @corpus.canEdit?(current_user()) %>
+<div id='single_file_uploader' class='box row-fluid' style="display:none">
+	<br/>
+	<%= form_tag single_upload_corpus_path(@corpus) do %>
+	<%= render :partial => 'shared/resumable_stuff' %>
+	<br/>
+	<textarea class='big_desc span12' style="resize:none" placeholder="Commit Message" name="msg"></textarea>
+	<input type="hidden" name="rpath" value="<%=@rpath%>"/>
+	<input type='submit' class='btn span12'/>
+	<% end %>
+	<br/>
+</div>
+<% end %>
+
 
 <% if @file %>
 <div class='row-fluid content'>
@@ -83,6 +106,8 @@
 	</div>
 </div>
 <% end %>
+
+<%= javascript_include_tag "use_resumable.js" %>
 
 <script type='text/javascript'>
 	function browse(basename) {

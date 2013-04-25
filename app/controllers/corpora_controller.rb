@@ -6,7 +6,9 @@ class CorporaController < ApplicationController
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :view_history,
 				  :add_member, :update_member,:remove_member,
-				  :delete_tool_rel, :add_tool_rel]
+				  :delete_tool_rel, :add_tool_rel, :update_tool,
+				  :delete_publication_rel, :add_publication_rel, :update_publication_rel,
+				  :single_upload]
 
 	before_filter :assoc_filter,
 		:only => [:add_comment, :remove_comment, :refresh_comments]
@@ -617,6 +619,51 @@ class CorporaController < ApplicationController
 		send_file file
 	end
 	
+	# POST /corpora/:id/single_file_upload
+	# resumable file upload in session[:resumable_filename]
+	# commit message in params[:msg]
+	# rpath
+	def single_upload
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+		msg = params[:msg]
+		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
+
+
+		Dir.chdir Rails.root
+
+		@rpath = params[:rpath] || "/"
+		@rpath.gsub!("..", "");
+		dir = "#{@corpus.head_path}#{@rpath}"
+		dir.chop! if dir.length > 1 && dir[-1] == '/'
+		unless Dir.exists?(dir) && File.directory?(dir)
+			redirect_to '/perm'
+			return
+		end
+		resumable_filename = session[:resumable_filename]
+		if resumable_filename
+			original_filename = session[:resumable_original_filename]
+			logger.info "***ORIGINAL_FILENAME = #{original_filename}"
+			logger.info "***RPATH = #{@rpath}"
+			logger.info "***CORPUS_URL = #{@corpus.svn_file_url}"
+
+			command = "svn import ./#{resumable_filename} #{@corpus.svn_file_url}#{@rpath if @rpath != '/'}/#{original_filename} -m '#{msg}'"
+			logger.info command
+			system(command)
+
+			Dir.chdir @corpus.head_path
+			`svn update`
+			Dir.chdir Rails.root
+		end
+
+
+
+		redirect_to "/corpora/#{@corpus.id}/browse?path=#{@rpath}"
+	end
+
 	# POST /corpora
 	def create
 		paramHash = params[:corpus]
