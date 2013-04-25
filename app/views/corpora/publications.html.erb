@@ -74,6 +74,10 @@
 
 		<div class='<%= (current_user() && @corpus.canEdit?(current_user())) ? "span9" : "span12" %>'>
 			<%= render :partial => 'shared/publication_index1', :locals => {:p => rel.publication} %>
+			<i class='icon-arrow-right'></i>
+			<span class='badge badge-warning'><%= rel.name %></span>
+			<i class='icon-arrow-right'></i>
+			<span class='label label-important'>This Corpus</span>
 		</div>
 
 		
