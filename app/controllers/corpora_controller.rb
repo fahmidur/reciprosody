@@ -5,7 +5,8 @@ class CorporaController < ApplicationController
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :view_history,
-				  :add_member, :update_member,:remove_member]
+				  :add_member, :update_member,:remove_member,
+				  :delete_tool_rel, :add_tool_rel]
 
 	before_filter :assoc_filter,
 		:only => [:add_comment, :remove_comment, :refresh_comments]
@@ -17,6 +18,37 @@ class CorporaController < ApplicationController
 
 	autocomplete :corpus, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id, :duration]
 	autocomplete :tool_corpus_relationship, :name, :full => true
+
+	# DELETE /corpora/:id/delete_tool_rel
+	def delete_tool_rel
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+		@toolCorpusRelationship = ToolCorpusRelationship.find_by_id(params[:rid])
+		unless @toolCorpusRelationship
+			redirect_to '/perm'
+			return
+		end
+		@toolCorpusRelationship.destroy
+		redirect_to "/corpora/#{@corpus.id}/tools"
+	end
+
+	# GET /corpora/:id/add_tool_rel
+	def add_tool_rel
+		@corpus = Corpus.find_by_id(params[:id])
+		unless @corpus
+			redirect_to '/perm'
+			return
+		end
+		name = params[:name]
+		name[/<(\d+)>/]
+
+		tool_id = $1.to_i
+		@tool = Tool.find_by_id(tool_id)
+
+	end
 	
 	# GET /corpora
 	# GET /corpora.json
@@ -227,8 +259,8 @@ class CorporaController < ApplicationController
 		Dir.chdir Rails.root
 		Dir.chdir @corpus.head_path
 		
-
-		@log_entries = `svn log`.split("-"*72);
+		@rawlog = `svn log`
+		@log_entries = @rawlog.split("-"*72);
 
 		@commits = Array.new
 		

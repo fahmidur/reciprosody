@@ -4,11 +4,18 @@
 <p id="notice"><%= notice %></p>
 
 <%= render :partial => 'tabs', :locals => {:tab => 'history'} %>
-
 <br/>
+
+<div class="btn-group" data-toggle="buttons-radio">
+  <button type="button" class="switch btn btn-primary">Enhanced</button>
+  <button type="button" class="switch btn">Raw</button>
+</div>
+<br/><br/>
+
+<div class='enhanced'>
 <% @commits.each do |c| %>
 	<div class="logEntry box">
-		<h6>Version <%= c[:version] %> <span class='pull-right'> <%= c[:dateString] %></span></h6>
+		<h6>Version <%= c[:version] %> <span class='pull-right'> <%= time_ago_in_words(c[:dateString]) %></span></h6>
 		<%=raw c[:msg] %>
 		<br/>
 		<span class="member_email pull-right" title="<%= c[:name] %>"><a href="/users/<%= c[:email] %>" class="btn btn-mini" target="_BLANK">
@@ -17,7 +24,27 @@
 		<br/>
 	</div>
 <% end %>
+</div>
+
+<div class='raw' style="display:none">
+	<pre><%=raw @rawlog %></pre>
+</div>
+
 <br/>
+
+<script type='text/javascript'>
+	$('.switch').click(function() {
+		$('.switch').removeClass('btn-primary');
+		$(this).addClass('btn-primary');
+		if($(this).html() == "Raw") {
+			$('.enhanced').hide();
+			$('.raw').show();
+		} else {
+			$('.raw').hide();
+			$('.enhanced').show();
+		}
+	});
+</script>
 
 <%= render :partial => 'footer' %>
 

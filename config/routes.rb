@@ -19,6 +19,8 @@ Reciprosody2::Application.routes.draw do
       
       get :publications
       get :tools
+        delete :delete_tool_rel
+        get    :add_tool_rel
   	end
 
   	get :autocomplete_language_name,	:on => :collection
