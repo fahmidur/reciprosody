@@ -146,6 +146,11 @@ class Corpus < ActiveRecord::Base
 		sub_dir.each do |d|
 			Dir.mkdir d unless Dir.exists? d
 		end
+
+		logger.info "svnadmin create #{self.svn_path}"
+		`svnadmin create #{self.svn_path}`
+
+		`svn co #{self.svn_file_url} #{self.head_path}`
 	end
 
 	#--Returns human-readable duration
