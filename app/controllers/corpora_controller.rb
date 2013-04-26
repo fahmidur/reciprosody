@@ -369,6 +369,7 @@ class CorporaController < ApplicationController
 			
 			if version != 0
 				msg = msg.split("<br/>")
+				
 				name = ""
 				if(msg.shift =~ /User Name: (.+)$/)
 					name = $1
@@ -662,9 +663,9 @@ class CorporaController < ApplicationController
 				msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
 				`svn delete #{repo_target} -m "#{msg}"`
 			end
-			
+
 			msg = params[:msg]
-			msg = "Added #{@rpath if @rpath != '/'}/#{original_filename}" if msg.blank?
+			msg += "\nAdded #{@rpath if @rpath != '/'}/#{original_filename}"
 			msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
 			command = "svn import ./#{resumable_filename} #{repo_target} -m '#{msg}'"
 			logger.info command
