@@ -365,8 +365,14 @@ class CorporaController < ApplicationController
 			end
 			e = e.gsub(/^\s*r(\d+) \| [^\|]+? \| /, "")
 			
-			(dateString, blank, msg) = e.split("\n");
-			
+			arr = e.split("\n")
+
+			logger.info("***ARR = #{arr}")
+			next if arr.length == 0
+
+			dateString = arr[0];
+			msg = arr[2..-1].join("<br/>")
+
 			if version != 0
 				msg = msg.split("<br/>")
 				
@@ -380,6 +386,7 @@ class CorporaController < ApplicationController
 					email = $1
 				end
 				
+				logger.info ("***MSG = #{msg}")
 				msg = msg.join("<br/>")
 				
 				@commits << {:version => version, :dateString => dateString, :msg => msg, :name => name, :email => email}
@@ -660,13 +667,15 @@ class CorporaController < ApplicationController
 			if files.include?(original_filename)
 				logger.info("****SVN OVERWRITE***")
 				msg = "Removed Target File: #{@rpath if @rpath != '/'}/#{original_filename}"
-				msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
+				msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
 				`svn delete #{repo_target} -m "#{msg}"`
 			end
 
 			msg = params[:msg]
+			msg = "" unless msg
+			
 			msg += "\nAdded #{@rpath if @rpath != '/'}/#{original_filename}"
-			msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
+			msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
 			command = "svn import ./#{resumable_filename} #{repo_target} -m '#{msg}'"
 			logger.info command
 
@@ -868,7 +877,7 @@ class CorporaController < ApplicationController
 
 		clear_directory(@corpus.head_path)
 
-		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
+		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
 
 		if Dir.glob(@corpus.svn_path + "/*").empty?
 			# Initial commit
