@@ -629,8 +629,7 @@ class CorporaController < ApplicationController
 			redirect_to '/perm'
 			return
 		end
-		msg = params[:msg]
-		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
+		
 
 
 		Dir.chdir Rails.root
@@ -650,9 +649,29 @@ class CorporaController < ApplicationController
 			logger.info "***RPATH = #{@rpath}"
 			logger.info "***CORPUS_URL = #{@corpus.svn_file_url}"
 
-			command = "svn import ./#{resumable_filename} #{@corpus.svn_file_url}#{@rpath if @rpath != '/'}/#{original_filename} -m '#{msg}'"
+			repo_target = "#{@corpus.svn_file_url}#{@rpath if @rpath != '/'}/#{original_filename}"
+
+			
+
+			files = `svn ls #{@corpus.svn_file_url}#{@rpath if @rpath != '/'}`.split("\n")
+			logger.info "***************FILES"
+
+			if files.include?(original_filename)
+				logger.info("****SVN OVERWRITE***")
+				msg = "Removed Target File: #{@rpath if @rpath != '/'}/#{original_filename}"
+				msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
+				`svn delete #{repo_target} -m "#{msg}"`
+			end
+			
+			msg = params[:msg]
+			msg = "Added #{@rpath if @rpath != '/'}/#{original_filename}" if msg.blank?
+			msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>" + msg
+			command = "svn import ./#{resumable_filename} #{repo_target} -m '#{msg}'"
 			logger.info command
+
 			system(command)
+
+			
 
 			Dir.chdir @corpus.head_path
 			`svn update`
