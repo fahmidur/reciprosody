@@ -2,6 +2,15 @@ class CorporaController < ApplicationController
 	require 'fileutils'
 	
 	before_filter :user_filter, :except => [:index, :show, :tools, :publications, :comments]
+	before_filter :existence_filter, :only => 
+		[:show, :publications,
+		 :delete_publication_rel, :add_publication_rel, :update_publication_rel,
+		 :delete_tool_rel, :add_tool_rel, :update_tool_rel,
+		 :manage_members, :add_member, :update_member, :remove_member,
+		 :comments, :add_comment, :remove_comment, :refresh_comments,
+		 :view_history, :edit, :download, :browse, :single_download, :single_upload,
+		 :update, :destroy]
+
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :view_history,
@@ -40,13 +49,8 @@ class CorporaController < ApplicationController
 	# GET /corpora/1.json
 	def show
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
-
 		@archives = []
-		
+
 		Dir.chdir(Rails.root.to_s)
 		@archive_names = Dir.entries(@corpus.archives_path).select {|n| n != ".." && n != "." }
 
@@ -91,10 +95,7 @@ class CorporaController < ApplicationController
 	# rid
 	def delete_publication_rel
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
+		
 		@publicationCorpusRelationship = PublicationCorpusRelationship.find_by_id(params[:rid])
 		unless @publicationCorpusRelationship
 			redirect_to '/perm'
@@ -106,10 +107,7 @@ class CorporaController < ApplicationController
 
 	def add_publication_rel
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
+		
 		name = params[:name]
 		name[/<(\d+)>/]
 
@@ -128,10 +126,7 @@ class CorporaController < ApplicationController
 
 	def update_publication_rel
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
+		
 		@publicationCorpusRelationship = PublicationCorpusRelationship.find_by_id(params[:rid])
 		unless @publicationCorpusRelationship
 			redirect_to '/perm'
@@ -157,10 +152,7 @@ class CorporaController < ApplicationController
 	# rid
 	def delete_tool_rel
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
+		
 		@toolCorpusRelationship = ToolCorpusRelationship.find_by_id(params[:rid])
 		unless @toolCorpusRelationship
 			redirect_to '/perm'
@@ -175,10 +167,7 @@ class CorporaController < ApplicationController
 	# relationship: for
 	def add_tool_rel
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
+		
 		name = params[:name]
 		name[/<(\d+)>/]
 
@@ -200,10 +189,7 @@ class CorporaController < ApplicationController
 	# relationship: for
 	def update_tool_rel
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
+		
 		@toolCorpusRelationship = ToolCorpusRelationship.find_by_id(params[:rid])
 		unless @toolCorpusRelationship
 			redirect_to '/perm'
@@ -270,7 +256,6 @@ class CorporaController < ApplicationController
 					render :json => {:ok => false}
 				end
 			end
-
 
 		end
 	end
@@ -344,11 +329,11 @@ class CorporaController < ApplicationController
 		end
 	end
 
-	# GET /corpora/1/manage_members
+	# GET /corpora/1/view_history
 	#
-	# 
 	def view_history
 		@corpus = Corpus.find_by_id(params[:id])
+
 		Dir.chdir Rails.root
 		Dir.chdir @corpus.head_path
 		
@@ -411,6 +396,7 @@ class CorporaController < ApplicationController
 	#
 	def add_member
 		@corpus = Corpus.find_by_id(params[:id])
+
 		errors = []
 		
 		memHash = params[:member]
@@ -538,10 +524,9 @@ class CorporaController < ApplicationController
 	# GET /corpora/1/download
 	def download
 		@corpus = Corpus.find(params[:id])
+
 		@filename = params[:name]
-
 		#To-Do: Error/Evil checking
-
 		archive_path = "#{@corpus.archives_path}/#{@filename}"
 
 		if invalid_filename?(@filename) && !File.file?(archive_path)
@@ -555,10 +540,7 @@ class CorporaController < ApplicationController
 		Dir.chdir Rails.root
 
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
+
 		@rpath = params[:path] || "/"
 		@rpath.gsub!("..", "");
 
@@ -581,10 +563,7 @@ class CorporaController < ApplicationController
 
 	def single_download
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
+		
 		@rpath = params[:path] || "/"
 		@rpath.gsub!("..", "");
 
@@ -633,12 +612,6 @@ class CorporaController < ApplicationController
 	# rpath
 	def single_upload
 		@corpus = Corpus.find_by_id(params[:id])
-		unless @corpus
-			redirect_to '/perm'
-			return
-		end
-		
-
 
 		Dir.chdir Rails.root
 
@@ -687,8 +660,6 @@ class CorporaController < ApplicationController
 			`svn update`
 			Dir.chdir Rails.root
 		end
-
-
 
 		redirect_to "/corpora/#{@corpus.id}/browse?path=#{@rpath}"
 	end
@@ -1238,6 +1209,12 @@ class CorporaController < ApplicationController
   	# Allows only users
 	def user_filter
 		redirect_to '/perm' unless user_signed_in?
+	end
+
+	# Blocks if Corpus does not exist
+	def existence_filter
+		@corpus = Corpus.find_by_id(params[:id])
+		redirect_to '/perm' unless @corpus
 	end
   
   	# Allows only owners
