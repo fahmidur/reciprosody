@@ -11,20 +11,19 @@
 			<h5 class='boxheader'>Description</h5>
 				
 			<%=raw markdown(@tool.description) %>
+
+			<% if @tool.keywords && !@tool.keywords.blank? %>
+			<br/>
+				<% @tool.keywords_array.each do |kw| %>
+					<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
+				<% end %>
+			<% end %>
+
 		</div>
 	</div>
 <% end %>
 
-<% if @tool.keywords && !@tool.keywords.blank? %>
-	<div class='row-fluid'>
-		<div class='box span12'>
-			<h5 class='boxheader'>Keywords</h5>
-			<% @tool.keywords_array.each do |kw| %>
-				<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
-			<% end %>
-		</div>
-	</div>
-<% end %>
+
 
 <div class='row-fluid'>
 	<div class='box span4 r1-box'>
