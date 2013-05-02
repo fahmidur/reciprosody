@@ -56,6 +56,10 @@ class Corpus < ActiveRecord::Base
 	def self.svn_subFolder
 		"svn"
 	end
+
+	def self.download_stage_subFolder
+		"download_stage"
+	end
 	
 	#------------------------------------------------------
 	# Non-Static Helpers
@@ -68,6 +72,14 @@ class Corpus < ActiveRecord::Base
 		logger.info infotext[/^Revision:\s*(\d+)/]
 		return $1.to_i if $1
 		return 0
+	end
+
+	def svn_last_changed_date(version = nil)
+		infotext = `svn info #{self.svn_file_url} #{"-r " if version} #{version if version}`
+		logger.info infotext
+		logger.info infotext[/^Last Changed Date:\s*([^\n]+)/]
+		return Time.parse($1) if $1
+		return ""
 	end
 
 	def svn_log(version = nil)
@@ -125,6 +137,42 @@ class Corpus < ActiveRecord::Base
 		return commits
 	end
 
+	def safe_name
+		sn = self.name.downcase.gsub(/\s+/, '_');
+		sn.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, '');
+		return sn;
+	end
+
+	def svn_prepare_version_for_download(version = self.svn_revisions)
+		Dir.chdir Rails.root
+		return if self.get_archive(version)
+		
+		Dir.mkdir(self.download_stage_path) unless Dir.exists?(self.download_stage_path)
+
+		uuid = SecureRandom.uuid
+		tmp_dir = self.download_stage_path + "/" + uuid
+
+		Dir.mkdir(tmp_dir)
+
+		`svn checkout -r #{version} #{self.svn_file_url} #{tmp_dir}`
+
+		Dir.chdir tmp_dir
+		`zip -r ../../#{Corpus.archives_subFolder}/#{self.safe_name}.#{version}.zip *`
+		Dir.chdir Rails.root
+
+		FileUtils.rm_rf(tmp_dir)
+	end
+
+	def get_archive(version)
+		archive = nil
+		Dir.glob(self.archives_path + "/*").each do |file|
+			if file =~ /#{version}\.\w+$/
+				archive = file
+			end
+		end
+		return archive
+	end
+
 	#-----PATH HELPERS-------------------------------------
 	def home_path
 		if self.utoken == nil
@@ -136,6 +184,10 @@ class Corpus < ActiveRecord::Base
 	
 	def archives_path
 		home_path + "/" + Corpus.archives_subFolder
+	end
+
+	def download_stage_path
+		home_path + "/" + Corpus.download_stage_subFolder
 	end
 	
 	def tmp_path
@@ -209,6 +261,7 @@ class Corpus < ActiveRecord::Base
 		sub_dir << self.tmp_path;
 		sub_dir << self.head_path;
 		sub_dir << self.svn_path;
+		sub_dir << self.download_stage_path;
 	
 		sub_dir.each do |d|
 			Dir.mkdir d unless Dir.exists? d

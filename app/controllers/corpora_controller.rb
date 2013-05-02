@@ -49,33 +49,49 @@ class CorporaController < ApplicationController
 	# GET /corpora/1.json
 	def show
 		@corpus = Corpus.find_by_id(params[:id])
+		view_helper = help
+		@last_modified = @corpus.svn_last_changed_date
+		@revisions = @corpus.svn_revisions
+
 		@archives = []
 
-		Dir.chdir(Rails.root.to_s)
+		archives_hash = Hash.new
+
+		@revisions.downto(1) do |r|
+			archives_hash[r] = ["V.#{r} [#{view_helper.time_ago_in_words(@corpus.svn_last_changed_date(r))}]", "+#{r}"]
+		end
+
+		Dir.chdir Rails.root
+
 		@archive_names = Dir.entries(@corpus.archives_path).select {|n| n != ".." && n != "." }
 
 		#--Sort from highest to lowest Version
-		@archive_names.sort! do |a, b|
-			logger.info("a=#{a} b=#{b}")
-			x = a.gsub(/\.#{get_archive_ext(a)}$/, '')[/\d+$/].to_i
-			y = b.gsub(/\.#{get_archive_ext(b)}$/, '')[/\d+$/].to_i
-			y <=> x
-		end
+		# @archive_names.sort! do |a, b|
+		# 	logger.info("a=#{a} b=#{b}")
+		# 	x = a.gsub(/\.#{get_archive_ext(a)}$/, '')[/\d+$/].to_i
+		# 	y = b.gsub(/\.#{get_archive_ext(b)}$/, '')[/\d+$/].to_i
+		# 	y <=> x
+		# end
 		
 		archive_path = ""
 		time = nil
 		
-		view_helper = help
-		
 		@archive_names.each do |n|
 			archive_path = "#{@corpus.archives_path}/#{n}"
 			time = view_helper.time_ago_in_words(File.new(archive_path).mtime)
-			@archives.push ["V." + n[/\d+(?=\.(zip|tgz|tar\.gz|)$)/] + " [#{time} ago]", n]
+			item = ["V." + n[/(\d+)(?=\.(zip|tgz|tar\.gz|)$)/] + " [#{time}]", n]
+			archives_hash[$1.to_i] = item
 		end
-		
-		archive_path = "#{@corpus.archives_path}/#{@archive_names.first}"
-		@last_modified = File.new(archive_path).mtime
-		
+
+		archives_hash.each do |k, v|
+			@archives << v;
+		end
+
+		@archives.sort! do |a, b|
+			x = a[0][/\d+/].to_i
+			y = b[0][/\d+/].to_i
+			y <=> x 
+		end
 
 		respond_to do |format|
 	  		format.html # show.html.erb
@@ -338,7 +354,7 @@ class CorporaController < ApplicationController
 		@revisions = @corpus.svn_revisions
 		@rawlog = @corpus.svn_log
 		@commits = @corpus.svn_commits_array
-		
+
 		respond_to do |format|	
 			format.html
 		end
@@ -488,9 +504,21 @@ class CorporaController < ApplicationController
 
 		@filename = params[:name]
 		#To-Do: Error/Evil checking
+
 		archive_path = "#{@corpus.archives_path}/#{@filename}"
 
-		if invalid_filename?(@filename) && !File.file?(archive_path)
+		if @filename =~ /^\+(\d+)/
+			version = $1.to_i
+			@corpus.svn_prepare_version_for_download(version)
+			archive_path = @corpus.get_archive(version)
+			if(archive_path)
+				send_file archive_path
+			else
+				flash[:notice] = "Your archive is being prepared. Please check back in a few minutes."
+				redirect_to @corpus
+			end
+
+		elsif invalid_filename?(@filename) || !File.file?(archive_path)
 			redirect_to '/perm'
 		else
 			send_file archive_path
@@ -768,9 +796,8 @@ class CorporaController < ApplicationController
 		# Archive should be deleted should this function return false
 		# at any point
 		#-------------------------------------------------------------------------
-		archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
-		archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, '');
-		version = file_count(@corpus.archives_path)
+		archive_name = @corpus.safe_name
+		version = @corpus.svn_revisions + 1
 		
 		@archive = @corpus.archives_path + "/#{archive_name}.#{version}.#{archive_ext}"
 
