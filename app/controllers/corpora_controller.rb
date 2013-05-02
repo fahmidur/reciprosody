@@ -333,50 +333,11 @@ class CorporaController < ApplicationController
 	#
 	def view_history
 		@corpus = Corpus.find_by_id(params[:id])
-
 		Dir.chdir Rails.root
-		Dir.chdir @corpus.head_path
-		
-		@rawlog = `svn log`
-		@log_entries = @rawlog.split("-"*72);
 
-		@commits = Array.new
-		
-		@log_entries.each do |e|
-			e = e.gsub(/\| \d+ line$/, "")
-			version = 0
-			if e =~ /^\s*r(\d+)/
-				version = $1
-			end
-			e = e.gsub(/^\s*r(\d+) \| [^\|]+? \| /, "")
-			
-			arr = e.split("\n")
-
-			logger.info("***ARR = #{arr}")
-			next if arr.length == 0
-
-			dateString = arr[0];
-			msg = arr[2..-1].join("<br/>")
-
-			if version != 0
-				msg = msg.split("<br/>")
-				
-				name = ""
-				if(msg.shift =~ /User Name: (.+)$/)
-					name = $1
-				end
-				
-				email = ""
-				if(msg.shift =~ /User Email: (.+)$/)
-					email = $1
-				end
-				
-				logger.info ("***MSG = #{msg}")
-				msg = msg.join("<br/>")
-				
-				@commits << {:version => version, :dateString => dateString, :msg => msg, :name => name, :email => email}
-			end
-		end
+		@revisions = @corpus.svn_revisions
+		@rawlog = @corpus.svn_log
+		@commits = @corpus.svn_commits_array
 		
 		respond_to do |format|	
 			format.html

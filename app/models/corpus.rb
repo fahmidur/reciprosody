@@ -59,6 +59,73 @@ class Corpus < ActiveRecord::Base
 	
 	#------------------------------------------------------
 	# Non-Static Helpers
+	#------------------------------------------------------
+
+	# returns the svn revision number
+	def svn_revisions
+		infotext = `svn info #{self.svn_file_url}`
+		logger.info infotext
+		logger.info infotext[/^Revision:\s*(\d+)/]
+		return $1.to_i if $1
+		return 0
+	end
+
+	def svn_log(version = nil)
+		return `svn log #{self.svn_file_url}` unless version
+		return `svn log #{self.svn_file_url} -r #{version}`.gsub("-"*72, "");
+	end
+
+	def svn_log_array()
+		revisions = self.svn_revisions
+		log_array = []
+		revisions.downto(1) do |r|
+			log_array << self.svn_log(r)
+		end
+		return log_array
+	end
+
+	def svn_commits_array()
+		log_array = self.svn_log_array()
+		commits = []
+		log_array.each do |e|
+			e = e.gsub(/\| \d+ line$/, "")
+			version = 0
+			if e =~ /^\s*r(\d+)/
+				version = $1
+			end
+			e = e.gsub(/^\s*r(\d+) \| [^\|]+? \| /, "")	
+
+			arr = e.split("\n")
+
+			logger.info("***ARR = #{arr}")
+			next if arr.length == 0
+
+			dateString = arr[0];
+			msg = arr[2..-1].join("<br/>")
+
+			if version != 0
+				msg = msg.split("<br/>")
+				
+				name = ""
+				if(msg.shift =~ /User Name: (.+)$/)
+					name = $1
+				end
+				
+				email = ""
+				if(msg.shift =~ /User Email: (.+)$/)
+					email = $1
+				end
+				
+				logger.info ("***MSG = #{msg}")
+				msg = msg.join("<br/>")
+				
+				commits << {:version => version, :dateString => dateString, :msg => msg, :name => name, :email => email}
+			end
+		end
+		return commits
+	end
+
+	#-----PATH HELPERS-------------------------------------
 	def home_path
 		if self.utoken == nil
 			assign_unique_token
