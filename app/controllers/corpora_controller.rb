@@ -8,7 +8,7 @@ class CorporaController < ApplicationController
 		 :delete_tool_rel, :add_tool_rel, :update_tool_rel,
 		 :manage_members, :add_member, :update_member, :remove_member,
 		 :comments, :add_comment, :remove_comment, :refresh_comments,
-		 :view_history, :edit, :download, :browse, :single_download, :single_upload,
+		 :view_history, :edit, :download, :browse, :single_download, :single_upload, :single_delete,
 		 :update, :destroy]
 
 	before_filter :owner_filter, 
@@ -17,7 +17,7 @@ class CorporaController < ApplicationController
 				  :add_member, :update_member,:remove_member,
 				  :delete_tool_rel, :add_tool_rel, :update_tool,
 				  :delete_publication_rel, :add_publication_rel, :update_publication_rel,
-				  :single_upload]
+				  :single_upload, :single_delete]
 
 	before_filter :assoc_filter,
 		:only => [:add_comment, :remove_comment, :refresh_comments]
@@ -564,8 +564,6 @@ class CorporaController < ApplicationController
 			return
 		end
 
-		ext = File.extname(file)
-
 		if params[:noview]
 			send_file file
 			return
@@ -579,9 +577,10 @@ class CorporaController < ApplicationController
 		@files = Dir.glob("#{dir}/*")
 		@file = file
 		@ext = File.extname(@file)
+		@ext = ".txt" if `file #{File.expand_path(@file)}` =~ /ASCII/
 
-		if [".md", ".txt", ".wav"].include?(ext)
-			unless ext == ".wav"
+		if [".md", ".txt", ".wav"].include?(@ext)
+			unless @ext == ".wav"
 				@content = ""
 				File.open(file, "r") do |f|
 					@content = f.read
@@ -594,6 +593,7 @@ class CorporaController < ApplicationController
 
 		send_file file
 	end
+
 	
 	# POST /corpora/:id/single_file_upload
 	# resumable file upload in session[:resumable_filename]
@@ -652,6 +652,49 @@ class CorporaController < ApplicationController
 
 		redirect_to "/corpora/#{@corpus.id}/browse?path=#{@rpath}"
 	end
+
+	# DELETE /corppora/:id/single_delete
+	# deletes target file in
+	# rpath
+	def single_delete
+		@corpus = Corpus.find_by_id(params[:id])
+
+		@rpath = params[:rpath] || "/"
+		@rpath.gsub("..", "")
+
+		file = "#{@corpus.head_path}#{@rpath}"
+		file.chop! if file.length > 1 && file[-1] == "/"
+
+		if invalid_filename?(file) || !File.exists?(file) || !File.file?(file)
+			logger.info "*************INVALID FILE*********** #{file}"
+			redirect_to '/perm'
+			return
+		end
+		directory = File.dirname(file).gsub(/^#{@corpus.head_path}/, "")
+		directory = "/" if directory.blank?
+		filename = File.basename(file)
+		fullpath = "#{directory}#{'/' if directory != '/'}#{filename}"
+
+		repo_target = "#{@corpus.svn_file_url}#{fullpath}"
+
+		msg = "\Deleted #{fullpath}"
+		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
+
+		
+
+		logger.info("*******************REPO TARGET = #{repo_target}")
+		logger.info("*******************MSG = #{msg}")
+
+		`svn delete #{repo_target} -m "#{msg}"`
+
+		Dir.chdir Rails.root
+		Dir.chdir @corpus.head_path
+		`svn update`
+		Dir.chdir Rails.root
+
+		redirect_to "/corpora/#{@corpus.id}/browse?path=#{directory}"
+	end
+
 
 	# POST /corpora
 	def create

@@ -6,6 +6,7 @@ Reciprosody2::Application.routes.draw do
       get :browse
         get :single_download
         post :single_upload
+        delete :single_delete
   		get :view_history
 
       get :manage_members
