@@ -118,7 +118,7 @@ class Corpus < ActiveRecord::Base
 				status_changes = [];
 				$2.split("\n").each do |line|
 					(status, file) = line.split(" "); 
-					status_changes << "<div class='svn_file_status'><span class='label label-invert'>#{status}</span>&nbsp;<span class=''>#{file}</span></div>"
+					status_changes << "<div class='svn_file_status'><span class='label label-inverse'>#{status}</span>&nbsp;<span class=''>#{file}</span></div>"
 				end
 
 				(status, file) = $2.split(" ");
