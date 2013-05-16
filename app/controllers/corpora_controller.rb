@@ -847,23 +847,8 @@ class CorporaController < ApplicationController
 
 		# Move the file to archive folder
 		FileUtils.mv(@file.path, @archive)
-		#FileUtils.cp(@file.path, @archive)
-
-		# unless Dir.glob(@corpus.svn_path + "/*").empty?
-		# 	logger.info "**************PULLING FROM SVN HEAD****************"
-		# 	# pull from svn head
-		# 	Dir.chdir @corpus.tmp_path
-
-		# 	logger.info "svn co #{@corpus.svn_file_url} ."
-		# 	`svn co #{@corpus.svn_file_url} .`
-
-		# 	Dir.glob(@corpus.svn_path+"/*").each do |f|
-		# 		puts "***#{f}"
-		# 	end
-
-		# 	Dir.chdir Rails.root
-		# end
 		
+
 		begin
 			if archive_ext == "zip"
 				unzip(@archive, @corpus.tmp_path)
@@ -927,6 +912,8 @@ class CorporaController < ApplicationController
 			unless safe_shell_execute('svn merge --dry-run -r BASE:HEAD .')	
 				return false
 			end
+
+			msg += "\n\n**PRE-COMMIT STATUS**\n" + `svn status`
 			
 			logger.info("svn commit -m #{Shellwords.escape(msg)}")
 			unless safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")

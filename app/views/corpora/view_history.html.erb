@@ -51,6 +51,15 @@
 			$('.enhanced').show();
 		}
 	});
+	//$('.svn_status').hide();
+	$('.svn_status_toggle').click(function() {
+		var st = $(this).next('.svn_status');
+		if(st.is(":visible")) {
+			st.slideUp();
+		} else {
+			st.slideDown();
+		}
+	});
 </script>
 
 <%= render :partial => 'footer' %>

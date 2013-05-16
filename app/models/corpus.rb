@@ -110,34 +110,48 @@ class Corpus < ActiveRecord::Base
 			if e =~ /^\s*r(\d+)/
 				version = $1
 			end
+			next if !version || version == 0
+
 			e = e.gsub(/^\s*r(\d+) \| [^\|]+? \| /, "")	
+
+			if e =~ /(\*\*PRE\-COMMIT STATUS\*\*\n)(.+)$/m
+				status_changes = [];
+				$2.split("\n").each do |line|
+					(status, file) = line.split(" "); 
+					status_changes << "<div class='svn_file_status'><span class='label label-invert'>#{status}</span>&nbsp;<span class=''>#{file}</span></div>"
+				end
+
+				(status, file) = $2.split(" ");
+				e.gsub!("#{$1}#{$2}", "<div class='svn_status_toggle btn btn-small'>Changes</div><div class='svn_status monospace'>#{status_changes.join(' ')}</div>")
+			end
 
 			arr = e.split("\n")
 
-			logger.info("***ARR = #{arr}")
+			#logger.info("***ARR = #{arr}")
 			next if arr.length == 0
 
 			dateString = arr[0];
 			msg = arr[2..-1].join("<br/>")
 
-			if version != 0
-				msg = msg.split("<br/>")
-				
-				name = ""
-				if(msg.shift =~ /User Name: (.+)$/)
-					name = $1
-				end
-				
-				email = ""
-				if(msg.shift =~ /User Email: (.+)$/)
-					email = $1
-				end
-				
-				logger.info ("***MSG = #{msg}")
-				msg = msg.join("<br/>")
-				
-				commits << {:version => version, :dateString => dateString, :msg => msg, :name => name, :email => email}
+			
+			msg = msg.split("<br/>")
+			
+			name = ""
+			if(msg.shift =~ /User Name: (.+)$/)
+				name = $1
 			end
+			
+			email = ""
+			if(msg.shift =~ /User Email: (.+)$/)
+				email = $1
+			end
+			
+			#logger.info ("***MSG = #{msg}")
+
+			msg = msg.join("<br/>")
+			
+			commits << {:version => version, :dateString => dateString, :msg => msg, :name => name, :email => email}
+			
 		end
 		return commits
 	end
