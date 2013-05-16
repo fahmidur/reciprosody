@@ -849,20 +849,20 @@ class CorporaController < ApplicationController
 		FileUtils.mv(@file.path, @archive)
 		#FileUtils.cp(@file.path, @archive)
 
-		unless Dir.glob(@corpus.svn_path + "/*").empty?
-			logger.info "**************PULLING FROM SVN HEAD****************"
-			# pull from svn head
-			Dir.chdir @corpus.tmp_path
+		# unless Dir.glob(@corpus.svn_path + "/*").empty?
+		# 	logger.info "**************PULLING FROM SVN HEAD****************"
+		# 	# pull from svn head
+		# 	Dir.chdir @corpus.tmp_path
 
-			logger.info "svn co #{@corpus.svn_file_url} ."
-			`svn co #{@corpus.svn_file_url} .`
+		# 	logger.info "svn co #{@corpus.svn_file_url} ."
+		# 	`svn co #{@corpus.svn_file_url} .`
 
-			Dir.glob(@corpus.svn_path+"/*").each do |f|
-				puts "***#{f}"
-			end
+		# 	Dir.glob(@corpus.svn_path+"/*").each do |f|
+		# 		puts "***#{f}"
+		# 	end
 
-			Dir.chdir Rails.root
-		end
+		# 	Dir.chdir Rails.root
+		# end
 		
 		begin
 			if archive_ext == "zip"
@@ -875,9 +875,10 @@ class CorporaController < ApplicationController
 			return false
 		end
 
-		# tmp Directory is ready for processing
+		#----tmp directory is ready for processing----------------------------------------
 
-		#clear_directory(@corpus.head_path)
+		@corpus.prepare_upload_stage
+		@corpus.rsync_tmp_and_upload_stage
 
 		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
 
@@ -888,14 +889,14 @@ class CorporaController < ApplicationController
 			logger.info "svnadmin create #{@corpus.svn_path}"
 			`svnadmin create #{@corpus.svn_path}` #initialize svn storage
 
-			Dir.chdir @corpus.tmp_path
+			Dir.chdir @corpus.upload_stage_path
 			logger.info "svn import . #{@corpus.svn_file_url} -m #{Shellwords.escape(msg)}"
 			`svn import . #{@corpus.svn_file_url} -m #{Shellwords.escape(msg)}`
 
 			Dir.chdir Rails.root
 		else
 			Dir.chdir Rails.root
-			Dir.chdir @corpus.tmp_path
+			Dir.chdir @corpus.upload_stage_path
 			
 			# Check if tmp is a valid SVN Working Copy
 			unless Dir.exists? "./.svn"
@@ -935,19 +936,22 @@ class CorporaController < ApplicationController
 			Dir.chdir Rails.root
 		end
 
-		#`cp -r #{@corpus.tmp_path}/* #{@corpus.head_path}`
+
 		Dir.chdir @corpus.head_path
+
 		`svn update`
 
-		#logger.info "svn co #{@corpus.svn_file_url} ."
-		#`svn co #{@corpus.svn_file_url} .`
+		# logger.info "svn co #{@corpus.svn_file_url} ."
+		# `svn co #{@corpus.svn_file_url} .`
 
 		Dir.chdir Rails.root
 
 		#------------------LOCKED------------------------------------------------------------
 		# /tmp Directory Locked. Must UNLOCK after this method is called
 		#------------------------------------------------------------------------------------
-		
+
+		@corpus.remove_upload_stage
+
 		#----------------------------UNLOCKED--------------------------------------
 		return true
 		#--------------------------------------------------------------------------

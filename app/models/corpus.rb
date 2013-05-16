@@ -183,6 +183,12 @@ class Corpus < ActiveRecord::Base
 		Dir.chdir Rails.root
 		FileUtils.rm_rf self.upload_stage_path if Dir.exists? self.upload_stage_path
 		`cp -al #{self.head_path} #{self.upload_stage_path}`
+		`rm -rf #{self.upload_stage_path}/.svn`
+		`cp -r #{self.head_path}/.svn #{self.upload_stage_path}/.svn`
+	end
+
+	def rsync_tmp_and_upload_stage
+		`rsync -ar #{self.tmp_path}/ #{self.upload_stage_path}/`
 	end
 
 	def remove_upload_stage
