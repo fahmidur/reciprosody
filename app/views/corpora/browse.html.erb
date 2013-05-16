@@ -25,10 +25,26 @@
 						<i class='icon-folder-close'></i>
 						<%= File.basename(file) %>
 
-						<a href='#' role="button" class='pull-right badge' style="visibility:hidden"><i class='icon-remove'></i></a>
+						<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal"><i class='icon-remove'></i></a>
+
 						<span class='pull-right'>&nbsp;</span>
 						<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
 					</div>
+
+					<div class="modal hide fade" id="dfc-<%= file.hash %>" style="display:none">
+						<div class="modal-header">
+							<a class="close" data-dismiss="modal">×</a>
+							<h3>Are you sure you want to delete <%= File.basename(file) %>?</h3>
+						</div>
+						<div class="modal-body">
+							<p>Just checking.</p>
+						</div>
+						<div class="modal-footer">
+							<%= link_to 'Destroy', '/corpora/'+@corpus.id.to_s+"/single_delete?rpath=#{@rpath}#{'/' if @rpath != '/'}#{File.basename(file)}", :method => :delete, :class => 'btn' %>
+							<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+						</div>
+					</div>
+
 			<% else %>
 
 				<div class='corpi_item_small' onclick="download('<%= File.basename(file) %>')">
@@ -37,6 +53,7 @@
 					
 					
 					<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal"><i class='icon-remove'></i></a>
+
 					<span class='pull-right'>&nbsp;</span>
 					<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
 				</div>
@@ -138,15 +155,17 @@
 <script type='text/javascript'>
 	var _overDelete = false;
 	$('.delete-confirm').mouseenter(function() {
-		//console.log("You're entering delete");
+		console.log("You're entering delete");
 		_overDelete = true;
 	});
 	$('.delete-confirm').mouseleave(function() {
-		//console.log("You're leaving delete");
+		console.log("You're leaving delete");
 		_overDelete = false;
 	});
 
 	function browse(basename) {
+		if(_overDelete)
+			return;
 		var url = "<%=browse_corpus_path(@corpus)%>?path=<%= @rpath if @rpath != '/' %>/"+basename;
 		console.log(url);
 		window.location = url;

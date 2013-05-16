@@ -654,7 +654,7 @@ class CorporaController < ApplicationController
 	end
 
 	# DELETE /corppora/:id/single_delete
-	# deletes target file in
+	# deletes target file or folder in
 	# rpath
 	def single_delete
 		@corpus = Corpus.find_by_id(params[:id])
@@ -662,14 +662,20 @@ class CorporaController < ApplicationController
 		@rpath = params[:rpath] || "/"
 		@rpath.gsub("..", "")
 
+		if @rpath == "/"
+			redirect_to '/perm'
+			return
+		end
+
 		file = "#{@corpus.head_path}#{@rpath}"
 		file.chop! if file.length > 1 && file[-1] == "/"
 
-		if invalid_filename?(file) || !File.exists?(file) || !File.file?(file)
+		if invalid_filename?(file) || !File.exists?(file)
 			logger.info "*************INVALID FILE*********** #{file}"
 			redirect_to '/perm'
 			return
 		end
+		
 		directory = File.dirname(file).gsub(/^#{@corpus.head_path}/, "")
 		directory = "/" if directory.blank?
 		filename = File.basename(file)
