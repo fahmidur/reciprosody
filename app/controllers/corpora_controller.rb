@@ -675,7 +675,7 @@ class CorporaController < ApplicationController
 			redirect_to '/perm'
 			return
 		end
-		
+
 		directory = File.dirname(file).gsub(/^#{@corpus.head_path}/, "")
 		directory = "/" if directory.blank?
 		filename = File.basename(file)
@@ -734,8 +734,6 @@ class CorporaController < ApplicationController
 		
 		
 		if @corpus.errors.none? && create_corpus("Initial") && @corpus.save
-			clear_directory(@corpus.tmp_path) if @corpus.utoken
-			
 			Membership.create(:user_id => @owner.id, :corpus_id => @corpus.id, :role => 'owner');
 
 			#If the License does not exist add the License
@@ -747,12 +745,14 @@ class CorporaController < ApplicationController
 			#format.html { redirect_to @corpus, notice: 'Corpus was successfully created.' }
 			render :json => {:ok => true, :id => @corpus.id}
 		else
-			clear_directory(@corpus.tmp_path) if @corpus.utoken
+			
 			delete_archive(@archive) if @archive
 			
 			#format.html { render action: "new" }
 			render :json => {:ok => false, :errors => @corpus.errors.to_a}
 		end
+
+		clear_directory(@corpus.tmp_path) if @corpus.utoken
 	end
  
 	# POST /corpora/1 
@@ -772,25 +772,20 @@ class CorporaController < ApplicationController
 		logger.info "---------------FILE = #{@file}"
 
 		@corpus.valid?
-		
 
 		if @corpus.update_attributes(params[:corpus]) && create_corpus(msg) && @corpus.save
-			clear_directory(@corpus.tmp_path) if @corpus.utoken
 			#format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
-
 			#If the License does not exist add the License
 			license = License.find_by_name(@corpus.license)
 			License.create(:name => @corpus.license) unless license
 
 			render :json => {:ok => true, :id => @corpus.id}
 		else
-			clear_directory(@corpus.tmp_path) if @corpus.utoken
 			delete_archive(@archive) if @archive
-			
 			#format.html { render action: "edit" }
 			render :json => {:ok => false, :errors => @corpus.errors.to_a}
 		end
-
+		clear_directory(@corpus.tmp_path) if @corpus.utoken
 	end
 
 	# DELETE /corpora/1
@@ -869,13 +864,12 @@ class CorporaController < ApplicationController
 			Dir.chdir Rails.root
 		end
 		
-		begin		
+		begin
 			if archive_ext == "zip"
 				unzip(@archive, @corpus.tmp_path)
 			end
 		rescue => exception
-			@corpus.errors[:internal] = " issue extracting your archive #{exception}"
-			
+			@corpus.errors[:internal] = " issue extracting your archive #{exception}"	
 			#----------
 			File.delete @archive if File.exists?(@archive) && !File.directory?(@archive)
 			return false
@@ -883,7 +877,7 @@ class CorporaController < ApplicationController
 
 		# tmp Directory is ready for processing
 
-		clear_directory(@corpus.head_path)
+		#clear_directory(@corpus.head_path)
 
 		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
 
@@ -943,9 +937,10 @@ class CorporaController < ApplicationController
 
 		#`cp -r #{@corpus.tmp_path}/* #{@corpus.head_path}`
 		Dir.chdir @corpus.head_path
+		`svn update`
 
-		logger.info "svn co #{@corpus.svn_file_url} ."
-		`svn co #{@corpus.svn_file_url} .`
+		#logger.info "svn co #{@corpus.svn_file_url} ."
+		#`svn co #{@corpus.svn_file_url} .`
 
 		Dir.chdir Rails.root
 

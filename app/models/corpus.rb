@@ -60,6 +60,11 @@ class Corpus < ActiveRecord::Base
 	def self.download_stage_subFolder
 		"download_stage"
 	end
+
+	# AKA "Fake SVN Head"
+	def self.upload_stage_subFolder
+		"upload_stage"
+	end
 	
 	#------------------------------------------------------
 	# Non-Static Helpers
@@ -173,6 +178,18 @@ class Corpus < ActiveRecord::Base
 		return archive
 	end
 
+	# Creates a fake hard-linked head
+	def prepare_upload_stage
+		Dir.chdir Rails.root
+		FileUtils.rm_rf self.upload_stage_path if Dir.exists? self.upload_stage_path
+		`cp -al #{self.head_path} #{self.upload_stage_path}`
+	end
+
+	def remove_upload_stage
+		Dir.chdir Rails.root
+		FileUtils.rm_rf self.upload_stage_path if Dir.exists? self.upload_stage_path
+	end
+
 	#-----PATH HELPERS-------------------------------------
 	def home_path
 		if self.utoken == nil
@@ -188,6 +205,10 @@ class Corpus < ActiveRecord::Base
 
 	def download_stage_path
 		home_path + "/" + Corpus.download_stage_subFolder
+	end
+
+	def upload_stage_path
+		home_path + "/" + Corpus.upload_stage_subFolder
 	end
 	
 	def tmp_path
