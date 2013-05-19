@@ -19,9 +19,9 @@
 		<h6>Version <%= c[:version] %> <span class='pull-right'> <%= time_ago_in_words(c[:dateString]) %> ago</span></h6>
 		<%=raw c[:msg] %>
 		<br/>
-
+		<br/>
+		
 		<div class='svn_status_toggle btn btn-mini'>Pre-Commit Status</div>
-
 		<div class='svn_status monospace'>
 		<% c[:status_changes].each do |change| %>
 			<div class='svn_file_status'>

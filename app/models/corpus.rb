@@ -89,7 +89,7 @@ class Corpus < ActiveRecord::Base
 
 	def svn_log(version = nil)
 		return `svn log #{self.svn_file_url}` unless version
-		return `svn log #{self.svn_file_url} -r #{version}`.gsub("-"*72, "");
+		return `svn log #{self.svn_file_url} -r #{version}`.gsub("-"*72, "")
 	end
 
 	def svn_log_array()
@@ -155,7 +155,7 @@ class Corpus < ActiveRecord::Base
 				:status_changes => status_changes
 			}
 		end
-		
+
 		return commits
 	end
 
