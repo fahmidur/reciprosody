@@ -536,8 +536,16 @@ class CorporaController < ApplicationController
 		dir = "#{@corpus.head_path}#{@rpath}"
 		dir.chop! if dir.length > 1 && dir[-1] == '/'
 
-		unless Dir.exists?(dir) && File.directory?(dir)
+		unless File.exists?(dir) || Dir.exists?(dir)
 			redirect_to '/perm'
+			return
+		end
+
+		if !File.directory?(dir)
+			dir.gsub!(/#{@corpus.head_path}/, '')
+			rd = "/corpora/#{@corpus.id}/single_download?path=#{dir}"
+			logger.info "**************#{rd}"
+			redirect_to rd
 			return
 		end
 

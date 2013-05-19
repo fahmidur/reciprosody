@@ -14,9 +14,9 @@
 <% if @rpath != "/" %>
 	<a href='<%= browse_corpus_path(@corpus) %>?path=<%= File.dirname(@rpath) %>'>..</a>
 <% end %>
+<%= @rpath %><% if @file %><%= "/" if @rpath != "/"%><%=File.basename(@file)%><% end %>
 
-
-<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %></h4>
+</h4>
 <div class='dir_browser'>
 	<% @files.each do |file| %>
 	
