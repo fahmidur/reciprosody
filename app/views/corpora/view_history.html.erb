@@ -19,6 +19,20 @@
 		<h6>Version <%= c[:version] %> <span class='pull-right'> <%= time_ago_in_words(c[:dateString]) %> ago</span></h6>
 		<%=raw c[:msg] %>
 		<br/>
+
+		<div class='svn_status_toggle btn btn-mini'>Pre-Commit Status</div>
+
+		<div class='svn_status monospace'>
+		<% c[:status_changes].each do |change| %>
+			<div class='svn_file_status'>
+				<span class='label label-inverse'><%= change.status %></span>
+				&nbsp;
+				<span class=''><%= change.file %></span>
+			</div>
+		<% end %>
+		</div>
+		
+
 		<span class="member_email pull-right" title="<%= c[:name] %>">
 			<a href="/users/<%= c[:email] %>" class="btn btn-mini" target="_BLANK">
 			<i class="icon-user"></i>&nbsp;<%= c[:name]%></a>
@@ -55,11 +69,12 @@
 	$('.svn_status_toggle').click(function() {
 		var st = $(this).next('.svn_status');
 		if(st.is(":visible")) {
-			st.slideUp();
+			st.hide();
 		} else {
-			st.slideDown();
+			st.show();
 		}
 	});
+	$('.svn_status').hide();
 </script>
 
 <%= render :partial => 'footer' %>

@@ -102,6 +102,8 @@ class Corpus < ActiveRecord::Base
 	end
 
 	def svn_commits_array()
+		require 'ostruct'
+
 		log_array = self.svn_log_array()
 		commits = []
 		log_array.each do |e|
@@ -110,30 +112,24 @@ class Corpus < ActiveRecord::Base
 			if e =~ /^\s*r(\d+)/
 				version = $1
 			end
+
 			next if !version || version == 0
 
+			status_changes = [];
 			e = e.gsub(/^\s*r(\d+) \| [^\|]+? \| /, "")	
-
 			if e =~ /(\*\*PRE\-COMMIT STATUS\*\*\n)(.+)$/m
-				status_changes = [];
 				$2.split("\n").each do |line|
 					(status, file) = line.split(" "); 
-					status_changes << "<div class='svn_file_status'><span class='label label-inverse'>#{status}</span>&nbsp;<span class=''>#{file}</span></div>"
+					status_changes << OpenStruct.new({:status => status, :file => file})
 				end
-
-				(status, file) = $2.split(" ");
-				e.gsub!("#{$1}#{$2}", "<div class='svn_status_toggle btn btn-small'>Changes</div><div class='svn_status monospace'>#{status_changes.join(' ')}</div>")
+				e.gsub!("#{$1}#{$2}", "");
 			end
 
 			arr = e.split("\n")
-
-			#logger.info("***ARR = #{arr}")
 			next if arr.length == 0
 
 			dateString = arr[0];
 			msg = arr[2..-1].join("<br/>")
-
-			
 			msg = msg.split("<br/>")
 			
 			name = ""
@@ -150,9 +146,16 @@ class Corpus < ActiveRecord::Base
 
 			msg = msg.join("<br/>")
 			
-			commits << {:version => version, :dateString => dateString, :msg => msg, :name => name, :email => email}
-			
+			commits << {
+				:version => version, 
+				:dateString => dateString, 
+				:msg => msg, 
+				:name => name, 
+				:email => email, 
+				:status_changes => status_changes
+			}
 		end
+		
 		return commits
 	end
 
