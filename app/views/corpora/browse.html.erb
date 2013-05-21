@@ -70,7 +70,7 @@
 </div>
 
 <% if current_user() && @corpus.canEdit?(current_user()) %>
-<div id='single_file_uploader' class='box row-fluid' style="display:none">
+<div id='single_file_uploader' class='box row-fluid' style="display:none;box-sizing:border-box;">
 	<br/>
 	<%= form_tag single_upload_corpus_path(@corpus) do %>
 	<%= render :partial => 'shared/resumable_stuff' %>
