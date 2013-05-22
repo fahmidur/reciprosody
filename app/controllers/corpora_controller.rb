@@ -621,35 +621,52 @@ class CorporaController < ApplicationController
 			return
 		end
 		resumable_filename = session[:resumable_filename]
+
 		if resumable_filename
 			original_filename = session[:resumable_original_filename]
+
 			logger.info "***ORIGINAL_FILENAME = #{original_filename}"
 			logger.info "***RPATH = #{@rpath}"
 			logger.info "***CORPUS_URL = #{@corpus.svn_file_url}"
 
 			repo_target = "#{@corpus.svn_file_url}#{@rpath if @rpath != '/'}/#{original_filename}"
 
-			
-
 			files = `svn ls #{@corpus.svn_file_url}#{@rpath if @rpath != '/'}`.split("\n")
 			logger.info "***************FILES"
 
-			if files.include?(original_filename)
-				logger.info("****SVN OVERWRITE***")
-				msg = "Removed Target File: #{@rpath if @rpath != '/'}/#{original_filename}"
-				msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
-				`svn delete #{repo_target} -m "#{msg}"`
-			end
 
 			msg = params[:msg]
 			msg = "" unless msg
-			
 			msg += "\nAdded #{@rpath if @rpath != '/'}/#{original_filename}"
-			msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
-			command = "svn import ./#{resumable_filename} #{repo_target} -m '#{msg}'"
-			logger.info command
+			msg = current_user().commit_header + msg
 
-			system(command)
+			Dir.chdir Rails.root
+
+			if files.include?(original_filename)
+				logger.info("****SVN STAMP***")
+				@corpus.prepare_upload_stage
+
+				tmp_filepath = "./#{@corpus.tmp_path}/#{original_filename}"
+				FileUtils.mv("./#{resumable_filename}", tmp_filepath)
+				logger.info("****TMP_FILEPATH = #{tmp_filepath}")
+
+				@corpus.rsync_tmp_and_upload_stage()
+
+				Dir.chdir @corpus.upload_stage_path
+				svn_stamp_commands()
+
+				msg += "\n\n**PRE-COMMIT STATUS**\n" + `svn status`
+				logger.info("svn commit -m #{Shellwords.escape(msg)}")
+				safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")
+
+				Dir.chdir Rails.root
+				clear_directory(@corpus.tmp_path)
+
+			else # New File, simply import it
+				command = "svn import ./#{resumable_filename} #{repo_target} -m '#{msg}'"
+				logger.info command
+				system(command)
+			end
 
 			
 
@@ -692,7 +709,7 @@ class CorporaController < ApplicationController
 		repo_target = "#{@corpus.svn_file_url}#{fullpath}"
 
 		msg = "\Deleted #{fullpath}"
-		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
+		msg = current_user().commit_header + msg
 
 		
 
@@ -823,8 +840,8 @@ class CorporaController < ApplicationController
 		# create corpora directory if necessary
 		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
 		
-		# Generate uToken		
-		@corpus.utoken = gen_unique_token() unless @corpus.utoken
+		# Generate uToken # This is redundant REMOVE/REFACTOR - SFR
+		@corpus.utoken = gen_unique_token() unless @corpus.utoken 
 		@corpus.create_dirs
 		
 		return true unless @file 
@@ -873,7 +890,7 @@ class CorporaController < ApplicationController
 		@corpus.prepare_upload_stage
 		@corpus.rsync_tmp_and_upload_stage
 
-		msg = "User Name: #{current_user().name}<br/>User Email: #{current_user().email}<br/>\n" + msg
+		msg = current_user().commit_header + msg
 
 		if Dir.glob(@corpus.svn_path + "/*").empty?
 			# Initial commit
@@ -897,33 +914,17 @@ class CorporaController < ApplicationController
 				#-----------
 				return false
 			end
-
-			#--In /tmp Directory--
 			
-			# Forcefully add all new files
-			logger.info("svn add . --force")
-			`svn add . --force`	
+			svn_stamp_commands()
 
-			# If anything is still untracked '?' then add it
-			logger.info("svn st | grep ^\? | awk '{print $2}' | xargs -r svn add")
-			`svn st | grep ^\? | awk '{print $2}' | xargs -r svn add`
-
-			# If anything is missing '!' then mark for deletion
-			logger.info("svn st | grep ^\! | awk '{print $2}' | xargs -r svn delete --force")
-			`svn st | grep ^\! | awk '{print $2}' | xargs -r svn delete --force`
-			
-			# TO-Do:
-			# http://vcs.atspace.co.uk/2012/06/20/missing-pristines-in-svn-working-copy/
-			# until then enable overwrite
-			
 			logger.info("svn merge --dry-run -r BASE:HEAD .")
 			unless safe_shell_execute('svn merge --dry-run -r BASE:HEAD .')	
 				return false
 			end
 
 			msg += "\n\n**PRE-COMMIT STATUS**\n" + `svn status`
-			
 			logger.info("svn commit -m #{Shellwords.escape(msg)}")
+
 			unless safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")
 				return false
 			end
@@ -952,6 +953,24 @@ class CorporaController < ApplicationController
 		#--------------------------------------------------------------------------
 	end
 
+	def svn_stamp_commands()
+			# Forcefully add all new files
+			logger.info("svn add . --force")
+			`svn add . --force`	
+
+			# If anything is still untracked '?' then add it
+			logger.info("svn st | grep ^\? | awk '{print $2}' | xargs -r svn add")
+			`svn st | grep ^\? | awk '{print $2}' | xargs -r svn add`
+
+			# If anything is missing '!' then mark for deletion
+			logger.info("svn st | grep ^\! | awk '{print $2}' | xargs -r svn delete --force")
+			`svn st | grep ^\! | awk '{print $2}' | xargs -r svn delete --force`
+			
+			# TO-Do:
+			# http://vcs.atspace.co.uk/2012/06/20/missing-pristines-in-svn-working-copy/
+			# until then enable overwrite
+	end
+
 	def retro_browse_patch
 		Dir.chdir(Rails.root)
 		@archive_names = Dir.entries(@corpus.archives_path).select {|n| n != ".." && n != "." }
@@ -966,147 +985,6 @@ class CorporaController < ApplicationController
 		unless @archive_names.empty?
 			unzip("#{@corpus.archives_path}/#{@archive_names[0]}", "#{@corpus.head_path}")
 		end
-	end
-	
-	def unused_create_corpus(msg = "unspecified")
-		require 'shellwords'
-		Dir.chdir(Rails.root)
-		
-		# create corpora directory if necessary
-		Dir.mkdir Corpus.corpora_folder unless Dir.exists? Corpus.corpora_folder
-		
-		# Generate uToken		
-		@corpus.utoken = gen_unique_token() unless @corpus.utoken
-		@corpus.create_dirs
-		
-		return true unless @file 
-		#-------------We're done if there's no file-----------------------
-		
-		archive_ext = get_archive_ext(@file.original_filename);
-		unless archive_ext
-			@corpus.errors[:file_type] = "must be zip"
-			return false
-		end
-		
-		#------------Locking for Multiple Users----------------------------
-		unless Dir.glob(@corpus.tmp_path + "/*").empty?
-			@corpus.errors[:upload_in_use] = ": Please try again in just a minute."
-			return false
-		end
-		
-		#---------Extract Archive-------------------------------------------------
-		# Archive should be deleted should this function return false
-		# at any point
-		#-------------------------------------------------------------------------
-		
-		archive_name = @corpus.name.downcase.gsub(/\s+/, '_');
-		archive_name.gsub!(/[;<>\*\|`&\$!#\(\)\[\]\{\}:'"]/, '');
-		version = file_count(@corpus.archives_path)
-		
-		@archive = @corpus.archives_path + "/#{archive_name}.#{version}.#{archive_ext}"
-		File.open(@archive, "wb") {|f| f.write(@file.read)}
-		
-		#------------------LOCKED------------------------------------------------------------
-		# /tmp Directory Locked. Must UNLOCK prior to any return via clear_directory(tmp_dir)
-		#------------------------------------------------------------------------------------
-		begin		
-			if archive_ext == "zip"
-				unzip(@archive, @corpus.tmp_path)
-			end
-		rescue => exception
-			@corpus.remove_dirs
-			@corpus.errors[:internal] = " issue extracting your archive #{exception}"
-			
-			#----------
-			return false
-		end
-		
-		msg = "User Name: #{current_user().name}\n<br/>\nUser Email: #{current_user().email}\n<br/>\n" + msg
-		initial_commit = false
-		
-		if Dir.glob("#{@corpus.svn_path}/*").empty?
-			# Initial commit
-				
-			Dir.chdir Rails.root
-			`svnadmin create #{@corpus.svn_path}` #initialize svn storage
-		
-			Dir.chdir @corpus.tmp_path
-			
-			`svn import . #{@corpus.svn_file_url} -m #{Shellwords.escape(msg)}`
-			
-			initial_commit = true
-		else
-			Dir.chdir Rails.root
-			Dir.chdir @corpus.tmp_path
-			
-			# Check if tmp is a valid SVN Working Copy
-			unless Dir.exists? "./.svn"
-				@corpus.errors[:your_upload] = " is not a recent svn working copy"
-				#-----------
-				return false
-			end
-			#--In /tmp Directory--
-			
-			# Forcefully add all new files
-			`svn add . --force`	
-			# If anything is still untracked '?' then add it
-			`svn st | grep ^\? | awk '{print $2}' | xargs svn add`
-			# If anything is missing '!' then mark for deletion
-			`svn st | grep ^\! | awk '{print $2}' | xargs svn delete --force`
-			
-			# TO-Do:
-			# http://vcs.atspace.co.uk/2012/06/20/missing-pristines-in-svn-working-copy/
-			# until then enable overwrite
-			
-			unless safe_shell_execute('svn merge --dry-run -r BASE:HEAD .')	
-				return false
-			end
-			
-			unless safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")
-				return false
-			end
-		end
-		
-		#SVN Checkout to @corpus.head_path
-		Dir.chdir Rails.root
-		Dir.chdir @corpus.head_path
-		
-		if Dir.glob("*").empty?
-			`svn co #{@corpus.svn_file_url} .`
-		else
-			`svn update`
-		end
-
-		
-		Dir.chdir Rails.root
-		Dir.chdir @corpus.head_path
-		
-		if initial_commit
-			delete_archive(@archive)
-			Dir.chdir @corpus.head_path
-			
-			`zip -r ../#{Corpus.archives_subFolder}/#{archive_name}.0.zip .`
-		else
-			delete_archive(@archive)
-			Dir.chdir @corpus.head_path
-			`zip -r ../#{Corpus.archives_subFolder}/#{archive_name}.#{version}.zip .`
-			
-			# Ah yes, now we know that zip -u (update)
-			# doesn't always work.
-			# testi				ng to see if what happens below is corruptive
-			
-			# update the zip file
-			#`zip -u ../#{Corpus.archives_subFolder}/#{archive_name}.#{version}.zip`
-		end
-		
-		revision = `svn info | grep Revision: `[/\d+/].to_i
-		unless revision == version+1
-			@corpus.errors[:commit] = " issue. #{revision} != #{version}"
-			return false
-		end
-		#----------------------------UNLOCKED--------------------------------------
-		return true
-		#--------------------------------------------------------------------------
 	end
 	
 	def safe_shell_execute(string)

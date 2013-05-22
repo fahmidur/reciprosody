@@ -39,6 +39,10 @@ class User < ActiveRecord::Base
 		ResumableIncompleteUpload.where(:user_id => self.id).order("updated_at DESC")
 	end
 
+	def commit_header
+		"User Name: #{self.name}<br/>User Email: #{self.email}<br/>\n"
+	end
+
 	# get all super key holders
 	def self.supers
 		User.joins(:super_key)
