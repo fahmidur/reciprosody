@@ -7,11 +7,12 @@
     <p><%=raw snippet(markdown(corpus.description)) %></p>
 
     <%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
-    <%= link_to 'Browse', browse_corpus_path(corpus), :class => 'btn btn-mini' %>
     <%= link_to 'Publications', publications_corpus_path(corpus), :class => 'btn btn-mini' %>
     <%= link_to 'Tools', tools_corpus_path(corpus), :class => 'btn btn-mini' %>
     <%= link_to 'Comments', comments_corpus_path(corpus), :class => 'btn btn-mini' %>
+    
 	<% if user_signed_in? %>
+		<%= link_to 'Browse', browse_corpus_path(corpus), :class => 'btn btn-mini' %>
 	  	<% if corpus.canEdit?(current_user())%>
 	    	<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
 	    	<%= link_to 'Manage Members', manage_members_corpus_path(corpus), :class => 'btn btn-mini' %>
