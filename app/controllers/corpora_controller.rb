@@ -8,7 +8,8 @@ class CorporaController < ApplicationController
 		 :delete_tool_rel, :add_tool_rel, :update_tool_rel,
 		 :manage_members, :add_member, :update_member, :remove_member,
 		 :comments, :add_comment, :remove_comment, :refresh_comments,
-		 :view_history, :edit, :download, :browse, :single_download, :single_upload, :single_delete,
+		 :view_history, :edit, :download, :browse, 
+		 :single_download, :single_upload, :single_delete, :single_rename,
 		 :update, :destroy]
 
 	before_filter :owner_filter, 
@@ -17,7 +18,7 @@ class CorporaController < ApplicationController
 				  :add_member, :update_member,:remove_member,
 				  :delete_tool_rel, :add_tool_rel, :update_tool,
 				  :delete_publication_rel, :add_publication_rel, :update_publication_rel,
-				  :single_upload, :single_delete]
+				  :single_upload, :single_delete, :single_rename]
 
 	before_filter :assoc_filter,
 		:only => [:add_comment, :remove_comment, :refresh_comments]
@@ -549,7 +550,7 @@ class CorporaController < ApplicationController
 			return
 		end
 
-		@files = Dir.glob("#{dir}/*")
+		@files = Dir.glob("#{dir}/*").sort {|a,b| a.downcase <=> b.downcase}.partition{|f|File.directory?(f)}.flatten
 
 		#---retroactive patch for old corpora---
 		if(@files.empty? && !Dir.glob(@corpus.archives_path).empty?)
@@ -661,6 +662,7 @@ class CorporaController < ApplicationController
 
 				Dir.chdir Rails.root
 				clear_directory(@corpus.tmp_path)
+				@corpus.remove_upload_stage
 
 			else # New File, simply import it
 				command = "svn import ./#{resumable_filename} #{repo_target} -m '#{msg}'"
@@ -678,14 +680,79 @@ class CorporaController < ApplicationController
 		redirect_to "/corpora/#{@corpus.id}/browse?path=#{@rpath}"
 	end
 
-	# DELETE /corppora/:id/single_delete
+	# POST /corpora/:id/single_rename
+	# renames target file or folder in rpath
+	# TODO: Add to Filters
+	# @param rpath
+	# @param newname
+	def single_rename
+		@corpus = Corpus.find_by_id(params[:id])
+
+		@rpath = params[:rpath] || "/"
+		@rpath.gsub!("..", "")
+
+		if @rpath == "/"
+			redirect_to '/perm'
+			return
+		end
+
+		newname = params[:newname]
+		if !newname || invalid_filename?(newname)
+			redirect_to '/perm'
+			return
+		end
+
+		file = "#{@corpus.head_path}#{@rpath}"
+		file.chop! if file.length > 1 && file[-1] == "/"
+
+		if(invalid_filename?(file) || !File.exists?(file))
+			logger.info "*************INVALID FILE*********** #{file}"
+			redirect_to '/perm'
+			return
+		end
+
+		directory = File.dirname(file).gsub(/^#{@corpus.head_path}/, "")
+		directory = "/" if directory.blank?
+
+		filename = File.basename(file)
+
+		if(filename == newname)
+			redirect_to "/corpora/#{@corpus.id}/browse?path=#{directory}"
+			return
+		end
+
+		fullpath = "#{directory}#{'/' if directory != '/'}#{filename}"
+		renamepath = "#{directory}#{'/' if directory != '/'}#{newname}"
+
+		repo_target = "#{@corpus.svn_file_url}#{fullpath}"
+		rename_target = "#{@corpus.svn_file_url}#{renamepath}"
+
+		msg = "\Renamed #{fullpath} to #{renamepath}"
+		msg = current_user().commit_header + msg
+		
+
+		logger.info("*******************REPO TARGET = #{repo_target}")
+		logger.info("*******************RENAME TARGET = #{rename_target}")
+		logger.info("*******************MSG = #{msg}")
+
+		`svn move #{repo_target} #{rename_target} -m "#{msg}"`
+
+		Dir.chdir Rails.root
+		Dir.chdir @corpus.head_path
+		`svn update`
+		Dir.chdir Rails.root
+
+		redirect_to "/corpora/#{@corpus.id}/browse?path=#{directory}"
+	end
+
+	# DELETE /corpora/:id/single_delete
 	# deletes target file or folder in
 	# rpath
 	def single_delete
 		@corpus = Corpus.find_by_id(params[:id])
 
 		@rpath = params[:rpath] || "/"
-		@rpath.gsub("..", "")
+		@rpath.gsub!("..", "")
 
 		if @rpath == "/"
 			redirect_to '/perm'

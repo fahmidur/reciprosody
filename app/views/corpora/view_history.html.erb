@@ -21,6 +21,7 @@
 		<br/>
 		<br/>
 
+		<% if c[:status_changes] && c[:status_changes].size > 0 %>
 		<div class='svn_status_toggle btn btn-mini'>Pre-Commit Status</div>
 		<div class='svn_status monospace'>
 		<% c[:status_changes].each do |change| %>
@@ -31,6 +32,7 @@
 			</div>
 		<% end %>
 		</div>
+		<% end %>
 		
 
 		<span class="member_email pull-right" title="<%= c[:name] %>">
