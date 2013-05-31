@@ -38,7 +38,7 @@
 
 		<div class='field span4'>
 			<%= f.label :programming_language, "Programming Language" %>
-			<%= f.text_field :programming_language, :class => 'span12' %>
+			<%= f.autocomplete_field :programming_language, '/tools/autocomplete_programming_language_name', :class => 'span12' %>
 		</div>
 
 	</div>

@@ -52,6 +52,7 @@ Reciprosody2::Application.routes.draw do
     end
 
     get :autocomplete_tool_name, :on => :collection
+    get :autocomplete_programming_language_name, :on => :collection
   end
 
   resources :publications do

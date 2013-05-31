@@ -4,6 +4,7 @@ class ToolsController < ApplicationController
 		:only => [:edit, :update, :destroy]
 
 	autocomplete :tool, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id]
+	autocomplete :programming_language, :name, :full => false, :limit => 20, :extra_data => [:id]
 
 	def index
 		@tools = Tool.all
