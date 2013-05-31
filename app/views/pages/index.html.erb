@@ -1,18 +1,50 @@
-<div class="center hero-unit">
-  <h1>Welcome to Reciprosody!</h1>
-	<p>
-		A repository of prosodically annotated material.  <br />
-
+<div class="hero-unit well">
+	<h1 class='center'>Welcome to Reciprosody.</h1>
+	<hr class='featurette-divider inverse'>
+	<h2 class='featurette-heading'>
+		A repository of prosodically annotated material.
+		<span class='muted'>
 		All material is distributed under open-source or academic/scholarly research licenses. 
-	</p>
+		</span>
+	</h2>
 	
 	<% if user_signed_in? %>
 		Signed in as <%= current_user.email %>.<br/>
 		Not you? Then <%= link_to "Sign out", destroy_user_session_path, :method => :delete %><br/>
 	<%else%>
-		<p>Start using Reciprosody today.  <a href='/users/sign_in'>Sign in</a> or...</p>
-		<%= link_to "Sign up now!", new_user_registration_path, class: "btn btn-large btn-primary" %>
+		<%= link_to "Sign up today", new_user_registration_path, class: "btn btn-large btn-primary" %>
 	<%end%>
-	
 </div>
+<div class='row-fluid'>
+	<div class='well span4'>
+		<%= form_for("user", :url => user_session_path) do |f| %>
+			<div class='row-fluid'>
+				<%= f.label :email, :class => 'span4' %>
+				<%= f.email_field :email, :class => 'span8' %>
+			</div>
+
+			<div class='row-fluid'>
+				<%= f.label :password, :class => 'span4' %>
+				<%= f.password_field :password, :class => 'span8' %>
+			</div>
+
+			<div class='row-fluid'>
+				<span class='span2'></span>
+			</div>
+
+			<div class='row-fluid'>
+				<label class='checkbox span12'>
+					<%= f.check_box :remember_me %> Remember Me
+				</label>
+			</div>
+
+			<div class='row-fluid'>
+				<%= f.submit "Sign in", :class => 'btn span12' %>
+			</div>
+		<% end unless user_signed_in?%>
+	</div>
+</div>
+
+
+
 

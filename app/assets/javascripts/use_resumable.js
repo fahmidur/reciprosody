@@ -34,9 +34,12 @@ r.on('fileAdded', function(file){
   _resumable_upload_done = false;
 
   console.log(r.files);
+
   // Remove all old files from list
-  for(var i = 0; i < r.files.length-1; i++) {
-    resumableAbort(r.files[i]);
+  if(typeof _resumableAllowMultifile === 'undefined') {
+    for(var i = 0; i < r.files.length-1; i++) {
+      resumableAbort(r.files[i]);
+    }
   }
   console.log(r.files);
 
@@ -55,6 +58,7 @@ r.on('fileAdded', function(file){
 
   // Actually start the upload
   //r.upload();
+  $('.resumable-remove').css("margin-left", "0px");
 });
 
 r.on('pause', function(){
