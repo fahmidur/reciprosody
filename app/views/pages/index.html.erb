@@ -1,4 +1,4 @@
-<div class="hero-unit well">
+<div class="hero-unit well grad1">
 	<h1 class='center'>Welcome to Reciprosody.</h1>
 	<hr class='featurette-divider inverse'>
 	<h2 class='featurette-heading'>
@@ -16,7 +16,7 @@
 	<%end%>
 </div>
 <div class='row-fluid'>
-	<div class='well span4'>
+	<div class='span4 grad2 well'>
 		<%= form_for("user", :url => user_session_path) do |f| %>
 			<div class='row-fluid'>
 				<%= f.label :email, :class => 'span4' %>
@@ -42,8 +42,13 @@
 				<%= f.submit "Sign in", :class => 'btn span12' %>
 			</div>
 		<% end unless user_signed_in?%>
+		<%= link_to "Forgot your password?", new_password_path("user") %><br />
+
 	</div>
 </div>
+<script type='text/javascript'>
+	$('#user_email').focus();
+</script>
 
 
 
