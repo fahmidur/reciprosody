@@ -2,9 +2,14 @@
 <% end %>
 
 <h2><%= @tool.name %> 
+	<% if @tool.programming_language && @tool.programming_language.present? %>
+		<span class='badge'><%= @tool.programming_language %></span>
+	<% end %>
+
 	<span class='badge'>
 		<%= @tool.to_timestring %>
 	</span>
+
 </h2>
 
 <ul class="nav nav-tabs">
