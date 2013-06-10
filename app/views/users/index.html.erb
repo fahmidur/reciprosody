@@ -2,6 +2,11 @@
 	<tr>
 		<th>Name</th>
 		<th>Email</th>
+		<% if current_user().super_key %>
+		<th>
+			<button class='btn' id='uselect_btn'>Select</button>
+		</th>
+		<% end %>
 	</tr>
 	
 	
@@ -10,12 +15,33 @@
 		<td><%=user.name%></td>
 		<td>
 			<%= render :partial => 'shared/mail_button', :locals => {:user => user } %>
-			
-			
 		</td>
+		<% if current_user().super_key %>
+		<td>
+			<input type='checkbox' class='uselect' data-uname='<%= user.name %>' data-uemail='<%= user.email%>'/>
+		</td>
+		<% end %>
 	</tr>
 	<% end %>
 </table>
+
+<% if current_user().super_key %>
+<br/>
+<div class='row-fluid'>
+	<pre class='span12' id='emails_selected'>
+
+	</pre>
+</div>
+<h4>CSV for Importing</h4>
+<div class='row-fluid'>
+	<pre class='span12 box grad2'>
+Name,Email
+<% @users.each do |user| %>
+<%= user.name %>,<%= user.email %>
+<% end %>
+	</pre>
+</div>
+<% end %>
 
 <script type="text/javascript">
  $(function() {
@@ -25,5 +51,20 @@
         $("table td:first-child, table th:first-child").addClass("first");
         /* For removing the last border */
         $("table td:last-child, table th:last-child").addClass("last");
+
+        $('#uselect_btn').click(function() {
+        	$('.uselect').each(function(e) {
+        		$(this).click();
+        	});
+        });
+
+        $('.uselect').on('change', function() {
+        	var emails = new Array();
+        	$('.uselect').each(function() {
+        		if($(this).prop('checked'))
+        		emails.push( $(this).attr('data-uname') + " <" + $(this).attr('data-uemail') + ">" );
+        	});
+        	$('#emails_selected').text(emails.join(","));
+        });
 	});
 </script>

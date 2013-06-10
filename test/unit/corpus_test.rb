@@ -2,6 +2,7 @@ require 'test_helper'
 
 
 class CorpusTest < ActiveSupport::TestCase
+  
   test "empty corpus should not save" do
   	corpus = Corpus.new
   	assert !corpus.save
