@@ -211,7 +211,8 @@ class ResumableController < ApplicationController
 
 		chunkFileName = getChunkFilename(@resumableIdentifier, @resumableChunkNumber)
 
-		Dir.mkdir FOLDER unless Dir.exists? FOLDER
+		Dir.chdir Rails.root
+		Dir.mkdir "./#{FOLDER}" unless Dir.exists?("./#{FOLDER}")
 
 		# Write file to FOLDER
 		File.open(chunkFileName, "wb") {|f| f.write(@resumableFile.read) }
