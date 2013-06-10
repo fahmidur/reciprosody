@@ -24,7 +24,7 @@
 
 			<div class="span5 input-prepend">
 				<span class="add-on"><i class="icon-list"></i></span>
-				<%= select_tag "member[role]", options_for_select(Membership.roles.map {|m| [m.capitalize, m] }, 'member'), :class => 'span11' %>
+				<%= select_tag "member[role]", options_for_select(Membership.roles.map {|m| [m.capitalize, m] }, 'member'), :class => '' %>
 			</div>
 
 			<div class="span2">

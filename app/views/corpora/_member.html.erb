@@ -8,7 +8,7 @@
 
 	<div class="span5 input-prepend">
 		<span class="add-on"><i class="icon-list"></i></span>
-		<%= select_tag "member_role_id-"+mem.id.to_s, options_for_select(Membership.roles.map {|m| [m.capitalize, m] }, mem.role), :class => 'mem_role span11', 'data-id' => mem.id, 'data-cid' => @corpus.id %>
+		<%= select_tag "member_role_id-"+mem.id.to_s, options_for_select(Membership.roles.map {|m| [m.capitalize, m] }, mem.role), :class => 'mem_role', 'data-id' => mem.id, 'data-cid' => @corpus.id %>
 	</div>
 
 	<div class='span2 btn-group hButton'>
