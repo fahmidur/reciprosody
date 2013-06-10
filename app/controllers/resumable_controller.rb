@@ -1,5 +1,6 @@
 class ResumableController < ApplicationController
 	require 'shellwords'
+	require 'json'
 
 	before_filter :user_filter, :except => [:resumable_test]
 
@@ -140,26 +141,42 @@ class ResumableController < ApplicationController
 
 	# GET /resumable_upload_combine
 	def resumable_upload_combine
-		filename = params[:filename]
-		identifier = params[:identifier]
-		numChunks = params[:numChunks]
+		files = params[:files].to_i
 
-		unless filename && identifier && numChunks
-			render :json => {:ok => false, :msg => "Invalid Arguments.\nfilename = #{filename}\nidentifier = #{identifier}\nnumChunks = #{numChunks}"}
+		filename_list = JSON.parse(params[:filename_list])
+		identifier_list = JSON.parse(params[:identifier_list])
+		numChunks_list = JSON.parse(params[:numChunks_list])
+
+		unless filename_list && identifier_list && numChunks_list
+			render :json => {:ok => false, :msg => "Invalid Arguments.\nfilename_list = #{filename_list}\nidentifier_list = #{identifier_list}\nnumChunks_list = #{numChunks_list}"}
 			return
 		end
 
-		@resumableFilename = "#{Shellwords.escape(filename)}"
-		@resumableIdentifier = identifier
-		@numberOfChunks = numChunks.to_i
+		# render :json => {:ok => true, :msg => "TESTING\nfiles = #{files}\nfilename_list = #{filename_list}\nidentifier_list = #{identifier_list}\nnumChunks_list = #{numChunks_list}"}
+		# return;
 
-		unless File.exists?(@resumableFilename)
-			combine_chunks!
-			render :json => {:ok => true, :msg => "Combining Chunks"}
-			return
+		logger.info ("****FILENAME_LIST = #{filename_list}")
+
+		filepath_list = []
+		(0...files).each do |n|
+			logger.info "****FILE NUMBER #{n}\t#{filename_list[n]}"
+
+			@resumableFilename = "#{Shellwords.escape(filename_list[n])}"
+			@resumableIdentifier = identifier_list[n]
+			@numberOfChunks = numChunks_list[n].to_i
+
+			unless File.exists?(@resumableFilename)
+				logger.info "****COMBINING #{@resumableFilename}"
+				filepath_list << combine_chunks!
+			else
+				filepath_list << nil
+			end
 		end
+		
+		session[:resumable_filenames] = filename_list
+		session[:resumable_filepaths] = filepath_list
 
-		render :json => {:ok => false, :msg => "File already combined."}
+		render :json => {:ok => true, :msg => "Combining Chunks"}
 	end
 
 
@@ -201,7 +218,7 @@ class ResumableController < ApplicationController
 
 		if(all_chunks_here?)
 			logger.info "***ALL CHUNKS HERE***"
-			# combine_chunks!
+			# combine_chunks! #Combine chunks is now called from the client-side
 			logger.info("***DONE***")
 			render :json => {}
 		else
@@ -262,8 +279,13 @@ class ResumableController < ApplicationController
 		cmd = "cat #{resumable_globstring} > #{output_filename}"
 		logger.info("***#{cmd}")
 		`#{cmd}`
+
+		# Let this continue to hold the last file combined 
+		# so that we don't have to change corpora, publication, and tools controllers
 		session[:resumable_filename] = output_filename
 		session[:resumable_original_filename] = @resumableFilename
+
+		return output_filename
 	end
 
 	def cleanFilename(name)

@@ -621,61 +621,54 @@ class CorporaController < ApplicationController
 			redirect_to '/perm'
 			return
 		end
-		resumable_filename = session[:resumable_filename]
 
-		if resumable_filename
-			original_filename = session[:resumable_original_filename]
+		resumable_filename_list = session[:resumable_filenames]
+		resumable_filepath_list = session[:resumable_filepaths]
 
-			logger.info "***ORIGINAL_FILENAME = #{original_filename}"
-			logger.info "***RPATH = #{@rpath}"
-			logger.info "***CORPUS_URL = #{@corpus.svn_file_url}"
-
-			repo_target = "#{@corpus.svn_file_url}#{@rpath if @rpath != '/'}/#{original_filename}"
-
-			files = `svn ls #{@corpus.svn_file_url}#{@rpath if @rpath != '/'}`.split("\n")
-			logger.info "***************FILES"
+		logger.info "***RESUMABLE FILES COUNT: #{resumable_filename_list.length}"
+		logger.info "***RESUMABLE FILES: #{resumable_filename_list}"
 
 
-			msg = params[:msg]
-			msg = "" unless msg
-			msg += "\nAdded #{@rpath if @rpath != '/'}/#{original_filename}"
-			msg = current_user().commit_header + msg
-
-			Dir.chdir Rails.root
-
-			if files.include?(original_filename)
-				logger.info("****SVN STAMP***")
-				@corpus.prepare_upload_stage
-
-				tmp_filepath = "./#{@corpus.tmp_path}/#{original_filename}"
-				FileUtils.mv("./#{resumable_filename}", tmp_filepath)
-				logger.info("****TMP_FILEPATH = #{tmp_filepath}")
-
-				@corpus.rsync_tmp_and_upload_stage()
-
-				Dir.chdir @corpus.upload_stage_path
-				svn_stamp_commands()
-
-				msg += "\n\n**PRE-COMMIT STATUS**\n" + `svn status`
-				logger.info("svn commit -m #{Shellwords.escape(msg)}")
-				safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")
-
-				Dir.chdir Rails.root
-				clear_directory(@corpus.tmp_path)
-				@corpus.remove_upload_stage
-
-			else # New File, simply import it
-				command = "svn import ./#{resumable_filename} #{repo_target} -m '#{msg}'"
-				logger.info command
-				system(command)
-			end
-
-			
-
-			Dir.chdir @corpus.head_path
-			`svn update`
-			Dir.chdir Rails.root
+		msg = params[:msg]
+		msg = "" unless msg
+		msg += "\n"
+		resumable_filename_list.each do |fname|
+			msg += "\nUploaded #{@rpath if @rpath != '/'}/#{fname}"
 		end
+
+		msg = current_user().commit_header + msg
+
+		files = `svn ls #{@corpus.svn_file_url}#{@rpath if @rpath != '/'}`.split("\n")
+		logger.info "***************FILES = #{files}"
+
+		if resumable_filename_list.length == 1 && !files.include?(resumable_filename_list[0])
+			#SPECIAL CASE, ADD FILE THROUGH IMPORT
+			repo_target = "#{@corpus.svn_file_url}#{@rpath if @rpath != '/'}/#{resumable_filename_list[0]}"
+			system("svn import ./#{resumable_filepath_list[0]} #{repo_target} -m '#{msg}'")
+			FileUtils.rm("./#{resumable_filepath_list[0]}")
+			# TO-DO: CALL TO CLEAN UP CHUNKS
+		elsif resumable_filename_list.length > 1
+			logger.info("***SVN STAMP***")
+			@corpus.prepare_upload_stage
+			resumable_filename_list.each_with_index do |fname, index|
+				FileUtils.mv("./#{resumable_filepath_list[index]}", "./#{@corpus.tmp_path}/#{fname}")
+			end
+			@corpus.rsync_tmp_and_upload_stage()
+
+			Dir.chdir @corpus.upload_stage_path
+			svn_stamp_commands()
+			msg += "\n\n**PRE-COMMIT STATUS**\n" + `svn status`
+			logger.info("svn commit -m #{Shellwords.escape(msg)}")
+			safe_shell_execute("svn commit -m #{Shellwords.escape(msg)}")
+			Dir.chdir Rails.root
+
+			clear_directory(@corpus.tmp_path)
+			@corpus.remove_upload_stage
+		end
+
+		Dir.chdir @corpus.head_path
+		`svn update`
+		Dir.chdir Rails.root
 
 		redirect_to "/corpora/#{@corpus.id}/browse?path=#{@rpath}"
 	end

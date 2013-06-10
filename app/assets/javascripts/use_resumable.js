@@ -70,11 +70,33 @@ r.on('pause', function(){
 r.on('complete', function(){
   _resumable_upload_done = true;
   console.log("Combining...");
+  var uniqueIdentifier_list = new Array();
+  var filename_list = new Array();
+  var numChunks_list = new Array();
+
+  for(var i = 0; i < r.files.length; i++) {
+    uniqueIdentifier_list.push(r.files[i].uniqueIdentifier);
+    filename_list.push(r.files[i].fileName);
+    numChunks_list.push(r.files[i].chunks.length);
+  }
+  console.log(uniqueIdentifier_list);
+  console.log(filename_list);
+  console.log(numChunks_list);
+
+  // $.getJSON('/resumable_upload_combine', {
+  //   identifier: r.files[0].uniqueIdentifier, 
+  //   filename: r.files[0].fileName,
+  //   numChunks: r.files[0].chunks.length,
+  //   'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content')
+  // }, function(data) {
+  //   console.log(data);
+  // });
 
   $.getJSON('/resumable_upload_combine', {
-    identifier: r.files[0].uniqueIdentifier, 
-    filename: r.files[0].fileName,
-    numChunks: r.files[0].chunks.length,
+    files: r.files.length,
+    identifier_list: JSON.stringify(uniqueIdentifier_list), 
+    filename_list: JSON.stringify(filename_list),
+    numChunks_list: JSON.stringify(numChunks_list),
     'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content')
   }, function(data) {
     console.log(data);
