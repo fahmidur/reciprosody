@@ -39,6 +39,7 @@ gem "redcarpet", "1.17.2"
 gem "nokogiri"
 gem 'acts_as_commentable_with_threading'
 gem 'carrierwave'
+gem 'waveinfo'
 
 gem 'bibtex-ruby'
 gem 'citeproc-ruby'

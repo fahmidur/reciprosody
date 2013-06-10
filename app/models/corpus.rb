@@ -1,4 +1,6 @@
 class Corpus < ActiveRecord::Base
+	require 'waveinfo'
+	
 	acts_as_commentable
 
 	attr_accessible :description, :language, :name, :upload, :duration, :num_speakers, :speaker_desc, :genre, :annotation, :license, :citation, :hours, :minutes, :seconds
@@ -31,6 +33,22 @@ class Corpus < ActiveRecord::Base
 
 
 	after_find :set_times
+
+	def calc_wav_times
+		Dir.chdir Rails.root
+		dir = self.head_path
+		Dir.chdir dir
+		total = 0
+		Dir.glob("**/*").each do |file|
+			next unless File.extname(file) == ".wav"
+			wave = WaveInfo.new(file)
+			total += wave.duration.to_f
+		end
+		seconds = total = total.round
+		hours = seconds / 3600; seconds -= hours*3600;
+		minutes = seconds / 60; seconds -= minutes*60;
+		return hours, minutes, seconds, total
+	end
 
 	def ac_small_format
 		"#{self.name}<#{self.id}>"
