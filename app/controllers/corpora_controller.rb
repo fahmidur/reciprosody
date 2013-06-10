@@ -650,8 +650,12 @@ class CorporaController < ApplicationController
 		elsif resumable_filename_list.length > 1
 			logger.info("***SVN STAMP***")
 			@corpus.prepare_upload_stage
+
+			Dir.chdir Rails.root
+			logger.info FileUtils.mkdir_p("./#{@corpus.tmp_path}#{@rpath}")
+
 			resumable_filename_list.each_with_index do |fname, index|
-				FileUtils.mv("./#{resumable_filepath_list[index]}", "./#{@corpus.tmp_path}/#{fname}")
+				FileUtils.mv("./#{resumable_filepath_list[index]}", "./#{@corpus.tmp_path}#{@rpath}/#{fname}")
 			end
 			@corpus.rsync_tmp_and_upload_stage()
 
