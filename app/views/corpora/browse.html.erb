@@ -35,15 +35,16 @@
 							<i class='icon-edit'></i>
 						</a>
 
-
 						<span class='pull-right'>&nbsp;</span>
 
+						<a href='#' class='pull-right badge badge-info' style="visibility:hidden"><i class='icon-download'></i></a>
+
+						<span class='pull-right'>&nbsp;</span>
 
 						<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
 					</div>
 
 			<% else %>
-
 				<div class='corpi_item_small' onclick="download('<%= File.basename(file) %>')">
 					<i class='icon-file'></i>
 					<%= File.basename(file) %>
@@ -58,6 +59,10 @@
 					<a href='#rfc-<%= file.hash %>' role="button" class='pull-right rename-confirm badge badge-info' data-toggle="modal">
 						<i class='icon-edit'></i>
 					</a>
+
+					<span class='pull-right'>&nbsp;</span>
+
+					<a href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(file) if file %>&noview=true' class='pull-right badge badge-inverse download'><i class='icon-download'></i></a>
 
 					<span class='pull-right'>&nbsp;</span>
 
@@ -179,6 +184,7 @@
 <script type='text/javascript'>
 	var _overDelete = false;
 	var _overRename = false;
+	var _overDownload = false;
 
 	$('.delete-confirm').mouseenter(function() {
 		_overDelete = true;
@@ -192,22 +198,27 @@
 	$('.rename-confirm').mouseleave(function() {
 		_overRename = false;
 	});
+	$('.download').mouseenter(function() {
+		_overDownload  = true;
+	});
+	$('.download').mouseleave(function() {
+		_overDownload = false;
+	});
 
 	function browse(basename) {
-		if(_overDelete || _overRename)
+		if(_overDelete || _overRename || _overDownload)
 			return;
 		var url = "<%=browse_corpus_path(@corpus)%>?path=<%= @rpath if @rpath != '/' %>/"+basename;
 		console.log(url);
 		window.location = url;
 	}
 	function download(basename) {
-		if(_overDelete || _overRename)
+		if(_overDelete || _overRename || _overDownload)
 			return;
 		var url = "<%=single_download_corpus_path(@corpus)%>?path=<%= @rpath if @rpath != '/' %>/"+basename;
 		console.log(url);
 		window.location = url;
 	}
-
 	var wavesurfer = (function () {
 	    'use strict';
 
