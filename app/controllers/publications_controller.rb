@@ -43,7 +43,7 @@ class PublicationsController < ApplicationController
 		@publicationCorpusRelationship.name = relationship
 		@publicationCorpusRelationship.save
 
-		
+		redirect_to "/publications/#{@pub.id}/corpora" 		
 	end
 
 	def delete_corpus_rel
@@ -52,7 +52,7 @@ class PublicationsController < ApplicationController
 			redirect_to '/perm'
 			return
 		end
-		
+
 		@corpus = Corpus.find_by_id(params[:id])
 		
 		@publicationCorpusRelationship = PublicationCorpusRelationship.find_by_id(params[:rid])
