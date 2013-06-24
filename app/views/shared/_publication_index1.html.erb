@@ -20,6 +20,9 @@
 
 	
 	<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
+	<a href='<%= corpora_publication_path(p)%>' class='btn btn-mini'>Corpora</a>
+	<a href='<%= tools_publication_path(p)%>' class='btn btn-mini'>Tools</a>
+	
 	<% if p.url && !p.url.blank? %>
 		<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
 	<% end %>
