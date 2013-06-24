@@ -16,18 +16,20 @@
 	<li class='pull-right <%= "active" if tab=="details"%> '>
 		<a href="<%=tool_path(@tool)%>">Details</a>
 	</li>
-
 	
-	<% if @tool.canEdit?(current_user) %>
-	<li class='pull-right <%= "active" if tab=="members"%> '>
-		<a href="<%= manage_members_tool_path(@tool)%>">Manage Members</a>
-	</li>
 	<li class='pull-right <%= "active" if tab=="corpora"%>'>
 		<a href="<%= corpora_tool_path(@tool)%>">Corpora</a>
 	</li>
 	<li class='pull-right <%= "active" if tab=="publications"%>'>
 		<a href="<%= publications_tool_path(@tool)%>">Publications</a>
 	</li>
+
+	
+	<% if @tool.canEdit?(current_user) %>
+	<li class='pull-right <%= "active" if tab=="members"%> '>
+		<a href="<%= manage_members_tool_path(@tool)%>">Manage Members</a>
+	</li>
+	
 	<% end %>
 
 

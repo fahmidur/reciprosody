@@ -3,6 +3,7 @@ class PublicationsController < ApplicationController
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy,
 				  :add_corpus_rel, :update_corpus_rel, :delete_corpus_rel,
+				  :add_tool_rel, :update_tool_rel, :delete_tool_rel,
 				  :manage_members, :add_member, :update_member,:remove_member]
 
 

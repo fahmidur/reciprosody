@@ -83,15 +83,5 @@
 	</div>
 <% end %>
 
-
-<!--
-<% if @pub.tools && @pub.tools.size > 0 %>
-	<h3 class=''><%= pluralize(@pub.tools.length, "Tool", "Tools") %></h3>
-	<% @pub.tools.each do |t| %>
-		<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>
-	<% end %>
-<% end %>
--->
-
 <%= render :partial => 'footer' %>
 
