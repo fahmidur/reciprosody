@@ -12,5 +12,4 @@ $(function() {
 		$('#pubi-' + id).remove();
 		$('#delete-confirm-pub-' + id).modal('hide');
 	});
-
 });

@@ -81,8 +81,18 @@ Reciprosody2::Application.routes.draw do
   devise_for :users, :controllers => {:registrations => "registrations"}
   
 
-	match 'users'	=> 'users#index'
-	
+	#match 'users'	=> 'users#index'
+
+	resources :users do
+    collection do
+      get :index
+    end
+    
+    member do
+      get :show
+    end
+  end
+
 	#----maps to users controller-------------
 	resource :user do
 		member do

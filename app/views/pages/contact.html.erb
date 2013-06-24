@@ -17,14 +17,15 @@
 	</center>
 	
 	<div class='quick_question'>
-		<a class='btn btn-large' href='#' id='sug_toggle'>Message</a>
+		<a class='btn' href='#' id='sug_toggle'>Toggle Message Form</a><br/>
+
 		<div id='sug_wrapper'>
 			<%= form_tag '/sug_submit', :remote => true, :method => 'get', 'data-type' => :json, :id => 'sug_form' do%>
 			<%= text_field_tag "name", nil, :placeholder => 'Your Name', :id => 'sug_name'%> 
 			<%= text_field_tag "email", nil, :placeholder => 'you@gmail.com', :id => 'sug_email' %><br/>
 			<%= text_area "text", nil, :placeholder => 'I think you should...', :id => 'sug_text' %>
-			<%= recaptcha_tags :ajax => true, :display => {:theme => 'clean'}%>
-			<%= submit_tag "Send", :id => 'submit', :class => 'btn btn-large'%>
+			<%= recaptcha_tags :ajax => true, :display => {:theme => 'clean'}%><br/>
+			<%= submit_tag "Send", :id => 'submit', :class => 'btn btn-large btn-primary span12'%>
 			<% end %>
 			
 			<div id='response'>

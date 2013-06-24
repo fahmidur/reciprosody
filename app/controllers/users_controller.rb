@@ -2,8 +2,18 @@ class UsersController < ApplicationController
 	protect_from_forgery
 	before_filter :auth
 	
+
+	# GET /users/:id
 	def show # show current user home page
-		
+		logger.info "**USER SHOW**"
+		@user = User.find_by_id(params[:id])
+
+		if @user && current_user() != @user
+			render :public_profile
+			return
+		end
+
+		render :show
 	end
 	
 	# GET /user/

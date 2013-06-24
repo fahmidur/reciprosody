@@ -1,0 +1,56 @@
+<div class='row-fluid'>
+	<div class="span2">
+		<div class='box' style='word-wrap: break-word'> 
+			<center>
+				<h4><%= @user.name%></h4>
+
+				<br/>
+			</center>
+		</div>
+	</div>
+	<div class='span5'>
+
+	</div>
+
+	<div class='span5'>
+		<% if @user.owner_of.size > 0 || @user.approver_of.size > 0 || @user.member_of.size > 0 %>
+			<div class='row-fluid'>
+				<div class='span2'>
+					<span class='badge badge-info'><%= @user.owner_of.size + @user.member_of.size + @user.approver_of.size%></span>
+				</div>
+				<div class='span10'><strong>Corpora</strong></div>
+			</div>
+			<% (@user.owner_of + @user.approver_of + @user.member_of).uniq.each do |corpus| %>
+				<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => corpus} %>
+			<% end %>
+		<% end %>
+
+		<% if @user.publication_owner_of.size > 0 %>
+			<div class='row-fluid'>
+				<div class='span2'>
+					<span class='badge badge-info'><%= @user.publication_owner_of.size%></span>
+				</div>
+				<div class='span10'><strong>Publications</strong></div>
+			</div>
+			<% @user.publication_owner_of.each do |pub| %>
+				<%= render :partial => 'shared/publication_index_small.html.erb', 
+				:locals => {:p => pub} %>
+			<% end %>
+		<% end %>
+
+		
+
+
+		<% if @user.tool_owner_of.size > 0 %>
+			<div class='row-fluid'>
+				<div class='span2'>
+					<span class='badge badge-info'><%= @user.tool_owner_of.size%></span>
+				</div>
+				<div class='span10'><strong>Tools</strong></div>
+			</div>
+			<% @user.tool_owner_of.each do |tool| %>
+				<%= render :partial => 'shared/tool_index_small', :locals => {:tool => tool} %>
+			<% end %>
+		<% end %>
+	</div>
+</div>

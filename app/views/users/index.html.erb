@@ -1,5 +1,11 @@
 <table class='pretty-table'>
 	<tr>
+		<% if current_user().super_key %>
+		<th>
+			ID
+		</th>
+		<% end %>
+
 		<th>Name</th>
 		<th>Email</th>
 		<% if current_user().super_key %>
@@ -12,6 +18,12 @@
 	
 	<%@users.each do |user| %>
 	<tr>
+		<% if current_user().super_key %>
+		<td>
+			<%= user.id %>
+		</td>
+		<% end %>
+
 		<td><%=user.name%></td>
 		<td>
 			<%= render :partial => 'shared/mail_button', :locals => {:user => user } %>
