@@ -1,12 +1,64 @@
 class PublicationsController < ApplicationController
 	before_filter :user_filter, :except => [:index, :show, :download]
 	before_filter :owner_filter, 
-		:only => [:edit, :update, :destroy, 
+		:only => [:edit, :update, :destroy,
+				  :add_corpus_rel, :update_corpus_rel, :delete_corpus_rel,
 				  :manage_members, :add_member, :update_member,:remove_member]
 
 
 	autocomplete :publication_keyword, :name, :full => true
 	autocomplete :publication, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id]
+
+	# GET /publications/5/add_tool_rel
+	def add_tool_rel
+		logger.info("********************************GOT HERE******************")
+		@pub = Publication.find_by_id(params[:id])
+		name = params[:name]
+		name[/<(\d+)>/]
+		tool_id = $1.to_i
+		@tool = Tool.find_by_id(tool_id)
+
+		#relationship to tool
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		if @tool && ToolPublicationRelationship.where(:publication_id => @pub.id, :tool_id => @tool.id).empty?
+			logger.info("********************************GOT HERE******MAKING RELATIONSHIP************")
+			ToolPublicationRelationship.create(:publication_id => @pub.id, :tool_id => @tool.id, :name => relationship)
+		end
+
+		redirect_to "/publications/#{@pub.id}/tools"
+	end
+
+	def update_tool_rel
+		@pub = Publication.find_by_id(params[:id])
+		@publicationToolRelationship = ToolPublicationRelationship.find_by_id(params[:rid])
+		unless @publicationToolRelationship
+			redirect_to '/perm'
+			return
+		end
+
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		@publicationToolRelationship.name = relationship
+		@publicationToolRelationship.save
+
+		redirect_to "/publications/#{@pub.id}/tools"
+	end
+
+	def delete_tool_rel
+		@pub = Publication.find_by_id(params[:id])
+		# forget the check if pub exists, make existence_filter later
+		@publicationToolRelationship = ToolPublicationRelationship.find_by_id(params[:rid])
+		unless @publicationToolRelationship
+			redirect_to '/perm'
+			return
+		end
+
+		@publicationToolRelationship.destroy
+		redirect_to "/publications/#{@pub.id}/tools"
+	end
 
 	# GET /publication/5/add_corpus_rel
 	# params[:name] = AutoBI<38>
@@ -43,7 +95,7 @@ class PublicationsController < ApplicationController
 		@publicationCorpusRelationship.name = relationship
 		@publicationCorpusRelationship.save
 
-		redirect_to "/publications/#{@pub.id}/corpora" 		
+		redirect_to "/publications/#{@pub.id}/corpora"
 	end
 
 	def delete_corpus_rel
@@ -52,8 +104,6 @@ class PublicationsController < ApplicationController
 			redirect_to '/perm'
 			return
 		end
-
-		@corpus = Corpus.find_by_id(params[:id])
 		
 		@publicationCorpusRelationship = PublicationCorpusRelationship.find_by_id(params[:rid])
 		unless @publicationCorpusRelationship
@@ -176,7 +226,8 @@ class PublicationsController < ApplicationController
 			@tools.each do |tool|
 				ToolPublicationRelationship.create(
 					:publication_id => @pub.id,
-					:tool_id => tool.id
+					:tool_id => tool.id,
+					:name => "uses"
 				);
 			end
 		end
@@ -381,10 +432,16 @@ class PublicationsController < ApplicationController
 
 	def tools
 		@pub = Publication.find_by_id(params[:id])
+		
 		unless @pub
 			redirect_to '/perm'
 			return
 		end
+
+		# To-Do: Rename ToolPublicationRelationship model to PublicationToolRelationship
+		# because it is a relationship from Tools to Publications
+
+		@publicationToolRelationships = ToolPublicationRelationship.where(:publication_id => @pub.id).includes(:tool)
 	end
 
 	private
