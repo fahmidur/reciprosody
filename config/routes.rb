@@ -64,6 +64,11 @@ Reciprosody2::Application.routes.draw do
 
 
       get :corpora
+        get :add_corpus_rel
+        get :update_corpus_rel
+        delete :delete_corpus_rel
+
+        
       get :tools
       
       

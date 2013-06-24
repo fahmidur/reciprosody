@@ -8,6 +8,62 @@ class PublicationsController < ApplicationController
 	autocomplete :publication_keyword, :name, :full => true
 	autocomplete :publication, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id]
 
+	# GET /publication/5/add_corpus_rel
+	# params[:name] = AutoBI<38>
+	# params[:relationship] = for
+	# params[:id] = <the id of the publication>
+	def add_corpus_rel
+		@pub = Publication.find_by_id(params[:id])
+		name = params[:name]
+		name[/<(\d+)>/]
+		corpus_id = $1.to_i
+		@corpus = Corpus.find_by_id(corpus_id)
+
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		if @corpus && PublicationCorpusRelationship.where(:corpus_id => @corpus.id, :publication_id => @pub.id).empty?
+			PublicationCorpusRelationship.create(:corpus_id => @corpus.id, :publication_id => @pub.id, :name => relationship)
+		end
+
+		redirect_to "/publications/#{@pub.id}/corpora"
+	end
+
+
+	def update_corpus_rel
+		@pub = Publication.find_by_id(params[:id])
+		@publicationCorpusRelationship = PublicationCorpusRelationship.find_by_id(params[:rid])
+		unless @publicationCorpusRelationship
+			redirect_to '/perm'
+			return
+		end
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		@publicationCorpusRelationship.name = relationship
+		@publicationCorpusRelationship.save
+
+		
+	end
+
+	def delete_corpus_rel
+		@pub = Publication.find_by_id(params[:id])
+		unless @pub
+			redirect_to '/perm'
+			return
+		end
+		
+		@corpus = Corpus.find_by_id(params[:id])
+		
+		@publicationCorpusRelationship = PublicationCorpusRelationship.find_by_id(params[:rid])
+		unless @publicationCorpusRelationship
+			redirect_to '/perm'
+			return
+		end
+		@publicationCorpusRelationship.destroy
+		redirect_to "/publications/#{@pub.id}/corpora"
+	end
+
 	def index
 		#renders view/publications/index.html.erb
 		@pubs = Publication.all
@@ -320,6 +376,7 @@ class PublicationsController < ApplicationController
 			redirect_to '/perm'
 			return
 		end
+		@publicationCorpusRelationships = PublicationCorpusRelationship.where(:publication_id => @pub.id).includes(:corpus)
 	end
 
 	def tools

@@ -16,7 +16,7 @@ class CorporaController < ApplicationController
 		:only => [:edit, :update, :destroy, 
 				  :manage_members, :view_history,
 				  :add_member, :update_member,:remove_member,
-				  :delete_tool_rel, :add_tool_rel, :update_tool,
+				  :delete_tool_rel, :add_tool_rel, :update_tool_rel,
 				  :delete_publication_rel, :add_publication_rel, :update_publication_rel,
 				  :single_upload, :single_delete, :single_rename]
 
@@ -65,14 +65,6 @@ class CorporaController < ApplicationController
 		Dir.chdir Rails.root
 
 		@archive_names = Dir.entries(@corpus.archives_path).select {|n| n != ".." && n != "." }
-
-		#--Sort from highest to lowest Version
-		# @archive_names.sort! do |a, b|
-		# 	logger.info("a=#{a} b=#{b}")
-		# 	x = a.gsub(/\.#{get_archive_ext(a)}$/, '')[/\d+$/].to_i
-		# 	y = b.gsub(/\.#{get_archive_ext(b)}$/, '')[/\d+$/].to_i
-		# 	y <=> x
-		# end
 		
 		archive_path = ""
 		time = nil
@@ -180,8 +172,8 @@ class CorporaController < ApplicationController
 	end
 
 	# GET /corpora/:id/add_tool_rel
-	# name: AutoBI<38>
-	# relationship: for
+	# params[:name] = AutoBI<38>
+	# params[:relationship] = for
 	def add_tool_rel
 		@corpus = Corpus.find_by_id(params[:id])
 		
