@@ -1,5 +1,5 @@
 class PagesMailer < ActionMailer::Base
-  default from: "info@reciprosody.com"
+  default from: "info@reciprosody.org"
   
   def sug_mail(from, name, text)
   	@from = from

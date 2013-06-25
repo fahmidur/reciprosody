@@ -1,5 +1,5 @@
 class UsersMailer < ActionMailer::Base
-  default from: "info@reciprosody.com"
+  default from: "info@reciprosody.org"
   
 	def invitation_mail(from_user, to_user, tmp_password)
   	@from_user = from_user

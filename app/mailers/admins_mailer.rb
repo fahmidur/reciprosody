@@ -1,5 +1,5 @@
 class AdminsMailer < ActionMailer::Base
-	default :from => 'info@reciprosody.com'
+	default :from => 'info@reciprosody.org'
 
 	def request_a_key(user, token)
 		@user = user

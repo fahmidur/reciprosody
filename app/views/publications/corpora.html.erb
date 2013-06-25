@@ -28,6 +28,7 @@
 		<% end %>
 	<% end %>
 <% end %>
+
 <% @publicationCorpusRelationships.each do |rel| %>
 <div class='row-fluid'>
 		<% if current_user() && @pub.canEdit?(current_user()) %>
@@ -81,14 +82,5 @@
 		
 	</div>
 <% end %>
-
-<!--
-<% if @pub.corpora && @pub.corpora.size > 0%>
-		<h3 class=''><%= pluralize(@pub.corpora.length, "Corpus", "Corpora") %></h3>
-		<% @pub.corpora.each do |c|%>
-			<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => c} %>
-		<% end %>
-<% end %>
--->
 
 <%= render :partial => 'footer' %>

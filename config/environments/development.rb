@@ -56,13 +56,25 @@ Reciprosody2::Application.configure do
 
   
 	config.action_mailer.smtp_settings = {
-		:enable_starttls_auto => true,
-		:address		=> "smtp.gmail.com",
-		:port 			=> "587",
-		:authenticaton	=> :plain,
-		:user_name 		=> "WebDevMailer1@gmail.com",
-		:password		=> "itdoesnotmatter",
-		:host			=> "localhost:3000" 
-	}
-	
+    :enable_starttls_auto   => true,
+    :address		            => "smtp.gmail.com",
+    :port 			            => "587",
+    :authenticaton          => :plain,
+    :user_name              => "WebDevMailer1@gmail.com",
+    :password               => "itdoesnotmatter",
+    :host                   => "localhost:3000" 
+ }
+
+  # config.action_mailer.smtp_settings = {
+  #     :enable_starttls_auto => true,
+  #     :address => "mail.reciprosody.org",
+  #     :port => "25",
+  #     :authenticaton => :none,
+  #     :host => "localhost:3000"
+  # }
+
+  # Above results in:
+	# SocketError (getaddrinfo: Name or service not known)
+  # 
+
 end

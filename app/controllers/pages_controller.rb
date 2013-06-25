@@ -21,6 +21,10 @@ class PagesController < ApplicationController
   
   def how_to
   end
+
+  def test_mail
+    
+  end
   
   #-- submit a new faq --
   def faq_submit

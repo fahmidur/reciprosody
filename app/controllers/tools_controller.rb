@@ -6,12 +6,70 @@ class ToolsController < ApplicationController
 	autocomplete :tool, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id]
 	autocomplete :programming_language, :name, :full => false, :limit => 20, :extra_data => [:id]
 
+	def update_corpus_rel
+		@tool = Tool.find_by_id(params[:id])
+		unless @tool
+			redirect_to '/perm'
+			return
+		end
+		@toolCorpusRelationship = ToolCorpusRelationship.find_by_id(params[:rid])
+		unless @toolCorpusRelationship
+			redirect_to '/perm'
+			return
+		end
+
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		@toolCorpusRelationship.name = relationship
+		@toolCorpusRelationship.save
+
+		redirect_to "/tools/#{@tool.id}/corpora"
+	end
+
+	def delete_corpus_rel
+		@tool = Tool.find_by_id(params[:id])
+		unless @tool
+			redirect_to '/perm'
+			return
+		end
+		@toolCorpusRelationship = ToolCorpusRelationship.find_by_id(params[:rid])
+		unless @toolCorpusRelationship
+			redirect_to '/perm'
+			return
+		end
+		@toolCorpusRelationship.destroy
+		redirect_to "/tools/#{@tool.id}/corpora"
+	end
+
+	def add_corpus_rel
+		@tool = Tool.find_by_id(params[:id])
+		unless @tool
+			redirect_to '/perm'
+			return
+		end
+		name = params[:name]
+		name[/<(\d+)>/]
+		corpus_id = $1.to_i
+		@corpus = Corpus.find_by_id(corpus_id)
+
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		if @corpus && ToolCorpusRelationship.where(:corpus_id => @corpus.id, :tool_id => @tool.id).empty?
+			ToolCorpusRelationship.create(:corpus_id => @corpus.id, :tool_id => @tool.id, :name => relationship)
+		end
+
+		redirect_to "/tools/#{@tool.id}/corpora"
+	end
+
 	def index
 		@tools = Tool.all
 	end
 
 	def corpora
 		@tool = Tool.find_by_id(params[:id])
+		@toolCorpusRelationships = ToolCorpusRelationship.where(:tool_id => @tool.id)
 		redirect_to '/perm' unless @tool
 	end
 

@@ -43,6 +43,10 @@ Reciprosody2::Application.routes.draw do
       get :download
 
       get :corpora
+        get :add_corpus_rel
+        get :update_corpus_rel
+        delete :delete_corpus_rel
+
       get :publications
 
       get :manage_members
@@ -125,14 +129,13 @@ Reciprosody2::Application.routes.draw do
 	
 	#--------only a few static pages----------------------
 	resources :pages
-	root :to 			=> 'pages#index'
-	match 'about' 		=> 'pages#about'
-	match 'faq' 		=> 'pages#faq'
-	match 'contact'		=> 'pages#contact'
-	match 'perm'		=> 'pages#permission'
-	match 'welcome'		=> 'pages#welcome'
-	match 'how-to'		=> 'pages#how_to'
-	
+	root :to           => 'pages#index'
+	match 'about'      => 'pages#about'
+	match 'faq'        => 'pages#faq'
+	match 'contact'    => 'pages#contact'
+	match 'perm'       => 'pages#permission'
+	match 'welcome'    => 'pages#welcome'
+	match 'how-to'     => 'pages#how_to'	
 	match '/faq_submit'	=> 'pages#faq_submit', :via => :get
 	match '/sug_submit' => 'pages#sug_submit', :via => :get
 	#-----------------------------------------------------

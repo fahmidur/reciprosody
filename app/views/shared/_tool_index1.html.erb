@@ -15,6 +15,9 @@
 	
 	<br/>
 	<a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a>
+	<a href='<%= publications_tool_path(tool)%>' class='btn btn-mini'>Publications</a>
+	<a href='<%= corpora_tool_path(tool)%>' class='btn btn-mini'>Corpora</a>
+
 	<% if tool.url && !tool.url.blank? %>
 		<a href='<%= tool.url %>' target='_blank' class='btn btn-mini'>URL</a>
 	<% end %>
