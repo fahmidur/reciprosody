@@ -15,7 +15,7 @@
 	</div>
 	<br/>
 	<% if @corpus.canEdit?(current_user()) %>
-		<%= form_tag add_tool_rel_corpus_path(@corpus), :method => 'get', :id => 'add_tool_form' do%>
+		<%= form_tag add_tool_rel_corpus_path(@corpus), :method => 'get', :id => 'add_tool_rel' do%>
 			<div class='row-fluid'>
 				<div class='span6'>
 					<div class="input-prepend span11">

@@ -31,6 +31,7 @@ class CorporaController < ApplicationController
 	autocomplete :corpus, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id, :duration]
 	autocomplete :tool_corpus_relationship, :name, :full => true
 	autocomplete :publication_corpus_relationship, :name, :full => true
+	autocomplete :tool_publication_relationship, :name, :full => true
 	
 	# GET /corpora
 	# GET /corpora.json

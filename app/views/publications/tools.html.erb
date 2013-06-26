@@ -9,7 +9,7 @@
 
 <% if current_user() %>
 	<% if @pub.canEdit?(current_user()) %>
-		<%= form_tag add_tool_rel_publication_path(@pub), :method => 'get', :id => 'add_publication_form' do%>
+		<%= form_tag add_tool_rel_publication_path(@pub), :method => 'get', :id => 'add_tool_rel' do%>
 			<div class='row-fluid'>
 				<div class='span6'>
 					<div class="input-prepend span11">
@@ -19,7 +19,7 @@
 				</div>
 
 				<div class='span4'>
-					<input id="new_rel_input" class="ui-autocomplete-input span12" data-autocomplete="/corpora/autocomplete_publication_corpus_relationship_name" type="text" value="" autocomplete="on" role="textbox" aria-autocomplete="list" aria-haspopup="true" name="relationship" placeholder="Relationship">
+					<input id="new_rel_input" class="ui-autocomplete-input span12" data-autocomplete="/corpora/autocomplete_tool_publication_relationship_name" type="text" value="" autocomplete="on" role="textbox" aria-autocomplete="list" aria-haspopup="true" name="relationship" placeholder="Relationship">
 				</div>
 				<div class='span2'>
 					<input type='submit' class='btn btn-small' value="Add Relationship" />

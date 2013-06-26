@@ -9,7 +9,7 @@
 
 <% if current_user() %>
 	<% if @pub.canEdit?(current_user()) %>
-		<%= form_tag add_corpus_rel_publication_path(@pub), :method => 'get', :id => 'add_publication_form' do%>
+		<%= form_tag add_corpus_rel_publication_path(@pub), :method => 'get', :id => 'add_corpora_rel' do%>
 			<div class='row-fluid'>
 				<div class='span6'>
 					<div class="input-prepend span11">

@@ -10,12 +10,12 @@
 <% if current_user() %>
 	<div class='row-fluid'>
 		<a href='/publications/new?corpus_id=<%= @corpus.id %>' class='btn span12'>
-			New Publication
+			New Publication For This Corpus
 		</a>
 	</div>
 	<br/>
 	<% if @corpus.canEdit?(current_user()) %>
-		<%= form_tag add_publication_rel_corpus_path(@corpus), :method => 'get', :id => 'add_publication_form' do%>
+		<%= form_tag add_publication_rel_corpus_path(@corpus), :method => 'get', :id => 'add_publication_rel' do%>
 			<div class='row-fluid'>
 				<div class='span6'>
 					<div class="input-prepend span11">

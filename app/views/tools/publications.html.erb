@@ -7,13 +7,74 @@
 
 <%= render :partial => 'tabs', :locals => {:tab => 'publications'} %>
 
-<% if @tool.publications && @tool.publications.size > 0 %>
+<% if current_user() %>
+	<% if @tool.canEdit?(current_user()) %>
+		<%= form_tag add_publication_rel_tool_path(@tool), :method => 'get', :id => 'add_publication_rel' do%>
+			<div class='row-fluid'>
+				<div class='span6'>
+					<div class="input-prepend span11">
+						<span class="add-on"><i class="icon-file"></i></span>
+						<input class="span12 ui-autocomplete-input" data-autocomplete="/publications/autocomplete_publication_name" id="corp_in" name="name" type="text" value="" autocomplete="on" required>
+					</div>
+				</div>
 
-	<h3 class=''><%= pluralize(@tool.publications.length, "Publication", "Publications") %></h3>
-
-	<%@tool.publications.each do |p|%>
-		<%= render :partial => 'shared/publication_index1', :locals => {:p => p} %>
+				<div class='span4'>
+					<input id="new_rel_input" class="ui-autocomplete-input span12" data-autocomplete="/corpora/autocomplete_tool_publication_relationship_name" type="text" value="" autocomplete="on" role="textbox" aria-autocomplete="list" aria-haspopup="true" name="relationship" placeholder="Relationship">
+				</div>
+				<div class='span2'>
+					<input type='submit' class='btn btn-small' value="Add Relationship" />
+				</div>
+			</div>
+		<% end %>
 	<% end %>
+<% end %>
 
+<% @publicationToolRelationships.each do |rel| %>
+<div class='row-fluid'>
+		<% if current_user() && @tool.canEdit?(current_user()) %>
+		<div class='span3'>
+			<label for='relationship-<%=rel.id%>' class='tag'>
+				Relationship To Tool
+			</label>
 
+			<%= form_tag update_publication_rel_tool_path(@tool), :method => "get" do%>
+				<input id="relationship-<%= rel.id %>" class="ui-autocomplete-input span12" data-autocomplete="/corpora/autocomplete_tool_publication_relationship_name" type="text" value="<%= rel.name %>" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true" name="relationship">
+				<input type="hidden" name="rid" value="<%= rel.id %>"/>
+
+				<div class="btn-group" data-toggle="buttons-radio">
+					<input type="submit" value="Update Relationship" class="btn"/>
+					<a href="#delete-rel-<%= rel.id %>" class='delete-confirm btn btn-danger' data-id='<%= rel.id %>' data-toggle="modal">Unlink</a>
+				</div>
+				
+			<% end %>
+
+			
+
+			<div class="modal fade" id="delete-rel-<%= rel.id %>" style="display:none">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Are you sure?</h3>
+				</div>
+				<div class="modal-body">
+					<p>Just checking.</p>
+				</div>
+				<div class="modal-footer">
+					<%= link_to 'Destroy', '/tools/'+@tool.id.to_s+"/delete_publication_rel?rid="+rel.id.to_s, :method => :delete, :class => 'btn' %>
+					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+				</div>
+			</div>
+
+		</div>
+		<% end %>
+
+		<div class='<%= (current_user() && @tool.canEdit?(current_user())) ? "span9" : "span12" %>'>
+			<%= render :partial => 'shared/publication_index1', :locals => {:p => rel.publication} %>
+			
+			<i class='icon-arrow-right'></i>
+			<span class='badge badge-warning'><%= rel.name %></span>
+			<i class='icon-arrow-right'></i>
+			<span class='label label-important'>This Tool</span>
+		</div>
+		
+	</div>
 <% end %>

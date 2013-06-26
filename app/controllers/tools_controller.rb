@@ -1,17 +1,81 @@
 class ToolsController < ApplicationController
 	before_filter :user_filter, :except => [:index, :show, :download]
-	before_filter :owner_filter, 
-		:only => [:edit, :update, :destroy]
+	before_filter :existence_filter, :only => [
+		:show, :edit, :update, :destroy,
+		:add_corpus_rel, :update_corpus_rel, :delete_corpus_rel,
+		:add_publication_rel, :update_publication_rel, :delete_publication_rel,
+		:publications, :corpora,
+	]
+	before_filter :owner_filter, :only => [
+			:edit, :update, :destroy,
+			:add_corpus_rel, :update_corpus_rel, :delete_corpous_rel,
+			:add_publication_rel, :update_publication_rel, :delete_publication_rel,
+		]
 
 	autocomplete :tool, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id]
 	autocomplete :programming_language, :name, :full => false, :limit => 20, :extra_data => [:id]
 
-	def update_corpus_rel
+	def add_publication_rel
 		@tool = Tool.find_by_id(params[:id])
-		unless @tool
+		name = params[:name]
+		name[/<(\d+)>/]
+		publication_id = $1.to_i
+		@pub = Publication.find_by_id(publication_id)
+
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		if @pub && ToolPublicationRelationship.where(:tool_id => @tool.id, :publication_id => @pub.id)
+			ToolPublicationRelationship.create(:tool_id => @tool.id, :publication_id => @pub.id, :name => relationship)
+		end
+		redirect_to "/tools/#{@tool.id}/publications"
+	end
+
+	def delete_publication_rel
+		@tool = Tool.find_by_id(params[:id])
+		@publicationToolRelationship = ToolPublicationRelationship.find_by_id(params[:rid])
+		unless @publicationToolRelationship
 			redirect_to '/perm'
 			return
 		end
+		@publicationToolRelationship.destroy
+		redirect_to "/tools/#{@tool.id}/publications"
+	end
+
+	def update_publication_rel
+		@tool = Tool.find_by_id(params[:id])
+		@publicationToolRelationship = ToolPublicationRelationship.find_by_id(params[:rid])
+		unless @publicationToolRelationship
+			redirect_to '/perm'
+			return
+		end
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		@publicationToolRelationship.name = relationship
+		@publicationToolRelationship.save
+
+		redirect_to "/tools/#{@tool.id}/publications"
+	end
+
+	def add_corpus_rel
+		@tool = Tool.find_by_id(params[:id])
+		name = params[:name]
+		name[/<(\d+)>/]
+		corpus_id = $1.to_i
+		@corpus = Corpus.find_by_id(corpus_id)
+
+		relationship = params[:relationship]
+		relationship = "uses" if !relationship || relationship.blank?
+
+		if @corpus && ToolCorpusRelationship.where(:corpus_id => @corpus.id, :tool_id => @tool.id).empty?
+			ToolCorpusRelationship.create(:corpus_id => @corpus.id, :tool_id => @tool.id, :name => relationship)
+		end
+		redirect_to "/tools/#{@tool.id}/corpora"
+	end
+
+	def update_corpus_rel
+		@tool = Tool.find_by_id(params[:id])
 		@toolCorpusRelationship = ToolCorpusRelationship.find_by_id(params[:rid])
 		unless @toolCorpusRelationship
 			redirect_to '/perm'
@@ -29,37 +93,12 @@ class ToolsController < ApplicationController
 
 	def delete_corpus_rel
 		@tool = Tool.find_by_id(params[:id])
-		unless @tool
-			redirect_to '/perm'
-			return
-		end
 		@toolCorpusRelationship = ToolCorpusRelationship.find_by_id(params[:rid])
 		unless @toolCorpusRelationship
 			redirect_to '/perm'
 			return
 		end
 		@toolCorpusRelationship.destroy
-		redirect_to "/tools/#{@tool.id}/corpora"
-	end
-
-	def add_corpus_rel
-		@tool = Tool.find_by_id(params[:id])
-		unless @tool
-			redirect_to '/perm'
-			return
-		end
-		name = params[:name]
-		name[/<(\d+)>/]
-		corpus_id = $1.to_i
-		@corpus = Corpus.find_by_id(corpus_id)
-
-		relationship = params[:relationship]
-		relationship = "uses" if !relationship || relationship.blank?
-
-		if @corpus && ToolCorpusRelationship.where(:corpus_id => @corpus.id, :tool_id => @tool.id).empty?
-			ToolCorpusRelationship.create(:corpus_id => @corpus.id, :tool_id => @tool.id, :name => relationship)
-		end
-
 		redirect_to "/tools/#{@tool.id}/corpora"
 	end
 
@@ -70,12 +109,11 @@ class ToolsController < ApplicationController
 	def corpora
 		@tool = Tool.find_by_id(params[:id])
 		@toolCorpusRelationships = ToolCorpusRelationship.where(:tool_id => @tool.id)
-		redirect_to '/perm' unless @tool
 	end
 
 	def publications
 		@tool = Tool.find_by_id(params[:id])
-		redirect_to '/perm' unless @tool
+		@publicationToolRelationships = ToolPublicationRelationship.where(:tool_id => @tool.id).includes(:publication)
 	end
 
 	def manage_members
@@ -182,17 +220,12 @@ class ToolsController < ApplicationController
 
 	def destroy
 		@tool = Tool.find_by_id(params[:id])
-		unless @tool
-			redirect_to '/perm'
-			return
-		end
 		@tool.destroy
 		redirect_to '/tools'
 	end
 
 	def show
 		@tool = Tool.find_by_id(params[:id])
-		redirect_to '/perm' unless @tool
 	end
 
 	def new
@@ -203,14 +236,11 @@ class ToolsController < ApplicationController
 
 	def edit
 		@tool = Tool.find_by_id(params[:id])
-		redirect_to '/perm' unless @tool
 		session[:resumable_filename] = nil
 	end
 
 	def update
 		@tool = Tool.find_by_id(params[:id])
-		redirect_to '/perm' unless @tool
-
 		owner_text = params[:tool].delete(:owner)
 		corpora_text = params[:tool].delete(:corpora)
 		publications_text = params[:tool].delete(:publications)
@@ -383,6 +413,12 @@ class ToolsController < ApplicationController
   	# Allows only users
 	def user_filter
 		redirect_to '/perm' unless user_signed_in?
+	end
+
+	# Blocks if Corpus does not exist
+	def existence_filter
+		@tool = Tool.find_by_id(params[:id])
+		redirect_to '/perm' unless @tool
 	end
 
 	# Allows only owners

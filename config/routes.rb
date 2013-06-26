@@ -36,6 +36,7 @@ Reciprosody2::Application.routes.draw do
     get :autocomplete_corpus_name,    :on => :collection
     get :autocomplete_tool_corpus_relationship_name, :on => :collection
     get :autocomplete_publication_corpus_relationship_name, :on => :collection
+    get :autocomplete_tool_publication_relationship_name, :on => :collection
   end
 
   resources :tools do
@@ -48,6 +49,9 @@ Reciprosody2::Application.routes.draw do
         delete :delete_corpus_rel
 
       get :publications
+        get :add_publication_rel
+        get :update_publication_rel
+        delete :delete_publication_rel
 
       get :manage_members
       get :add_member
