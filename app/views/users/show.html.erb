@@ -93,7 +93,6 @@ updateResult();
 
 _people_search_div.keyup(function() {
 	var v=$(this).val();
-	console.log(v);
 	$.getJSON("/users/mixed_search", {q:v}, function(data) {
 		_people_result = data;
 		updateResult();
@@ -102,7 +101,6 @@ _people_search_div.keyup(function() {
 
 $('.presult').live('click', function() {
 	var id = $(this).attr('data-id');
-	console.log(id);
 	window.location = "/users/"+id;
 });
 
