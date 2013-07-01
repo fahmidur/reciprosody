@@ -18,7 +18,16 @@ class UsersController < ApplicationController
 	# GET /users/:id
 	def show # show current user home page
 		logger.info "**USER SHOW**"
-		@user = User.find_by_id(params[:id])
+		@user = nil
+		q = params[:id]
+
+		if q
+			if q.include?("@")
+				@user = User.find_by_email(q)
+			else
+				@user = User.find_by_id(q)
+			end
+		end
 
 		if @user && current_user() != @user
 			render :public_profile

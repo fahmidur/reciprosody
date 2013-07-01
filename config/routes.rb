@@ -99,7 +99,7 @@ Reciprosody2::Application.routes.draw do
 
 	#match 'users'	=> 'users#index'
 
-	resources :users do
+	resources :users, :constraints => {:id => /.*/} do
     collection do
       get :index
       get :mixed_search

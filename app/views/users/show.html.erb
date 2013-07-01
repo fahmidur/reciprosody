@@ -113,7 +113,7 @@ function updateResult() {
 		var html = "";
 		var onclick = "";
 		for(var i in _people_result) {
-			html += "<div class='corpi_item_small presult' data-id='"+_people_result[i].id+"'>"+_people_result[i].name+"</div>";
+			html += "<div class='corpi_item_small presult' data-id='"+_people_result[i].email+"'>"+_people_result[i].name+"</div>";
 		}
 		_people_result_div.html(html);
 		_people_result_div.slideDown();
