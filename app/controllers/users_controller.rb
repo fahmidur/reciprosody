@@ -2,6 +2,18 @@ class UsersController < ApplicationController
 	protect_from_forgery
 	before_filter :auth
 	
+	#GET /users/mixed_search
+	#params[:q] = query
+	def mixed_search
+		q = params[:q]
+		unless q && q.length > 2
+			render :json => []
+			return
+		end
+
+		q = "%#{q}%"
+		render :json => User.where("name LIKE ? OR email LIKE ?", q, q)
+	end
 
 	# GET /users/:id
 	def show # show current user home page

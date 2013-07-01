@@ -102,6 +102,7 @@ Reciprosody2::Application.routes.draw do
 	resources :users do
     collection do
       get :index
+      get :mixed_search
     end
     
     member do

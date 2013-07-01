@@ -4,7 +4,7 @@
 <% end %>
 
 <div class='row-fluid'>
-	<div class="span2">
+	<div class="span3">
 		<div class='box' style='word-wrap: break-word'> 
 			<center>
 				<h4><%= current_user.name%></h4>
@@ -13,6 +13,11 @@
 				</small>
 				<br/>
 			</center>
+		</div>
+
+		<input id='people_search' type='text' class='span12' placeholder='Search People'>
+		
+		<div id='people_result' style="margin-bottom:5px">
 		</div>
 
 		<ul class="nav nav-tabs nav-stacked">
@@ -28,7 +33,7 @@
 		</ul>
 	</div>
 
-	<div class='span5'>
+	<div class='span4'>
 
 	</div>
 
@@ -77,6 +82,41 @@
 		
 
 	</div>
-	
+
 </div>
 
+<script type='text/javascript'>
+var _people_result = new Array();
+var _people_result_div = $('#people_result');
+var _people_search_div = $('#people_search');
+updateResult();
+
+_people_search_div.keyup(function() {
+	var v=$(this).val();
+	console.log(v);
+	$.getJSON("/users/mixed_search", {q:v}, function(data) {
+		_people_result = data;
+		updateResult();
+	});
+});
+
+$('.presult').live('click', function() {
+	var id = $(this).attr('data-id');
+	console.log(id);
+	window.location = "/users/"+id;
+});
+
+function updateResult() {
+	if(_people_result.length == 0) {
+		_people_result_div.hide();
+	} else {
+		var html = "";
+		var onclick = "";
+		for(var i in _people_result) {
+			html += "<div class='corpi_item_small presult' data-id='"+_people_result[i].id+"'>"+_people_result[i].name+"</div>";
+		}
+		_people_result_div.html(html);
+		_people_result_div.slideDown();
+	}
+}
+</script>
