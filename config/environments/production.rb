@@ -70,19 +70,23 @@ Reciprosody2::Application.configure do
   ## Mailer options
   config.action_mailer.default_url_options = {:host => 'reciprosody.org'}
 
-  config.action_mailer.delivery_method = :smtp
+
+  # No longer using smtp
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = {
+  #     :enable_starttls_auto => true,
+  #     :address => "eniac.cs.qc.cuny.edu",
+  #     :port => "25",
+  #     :authenticaton => :none,
+  #     :host => "localhost:3000"
+  # }
+
+  #send mail through sendmail
+  config.action_mailer.delivery_method = :sendmail
+  # By default looks for sendmail at /usr/sbin/sendmail
+  config.action_mailer.default_options = {from: 'no-reply@reciprosody.org'}
+
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-
-
-  config.action_mailer.smtp_settings = {
-      :enable_starttls_auto => true,
-      :address => "eniac.cs.qc.cuny.edu",
-      #:address => "mail.reciprosody.org", #does not work, delayed
-      :port => "25",
-      :authenticaton => :none,
-      :host => "localhost:3000"
-  }
-
   config.active_support.deprecation = :log
 end

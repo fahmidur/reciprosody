@@ -6,7 +6,7 @@ Devise.setup do |config|
   # note that it will be overwritten if you use your own mailer class with default "from" parameter.
   # config.mailer_sender = "info@reciprosody.org"
   
-  config.mailer_sender = "noreply@reciprosody.org"
+  config.mailer_sender = "no-reply@reciprosody.org"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
