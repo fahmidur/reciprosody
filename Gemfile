@@ -40,6 +40,7 @@ gem "nokogiri"
 gem 'acts_as_commentable_with_threading'
 gem 'carrierwave'
 gem 'waveinfo'
+gem 'acts-as-messageable'
 
 gem 'bibtex-ruby'
 gem 'citeproc-ruby'

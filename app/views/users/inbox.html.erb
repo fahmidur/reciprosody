@@ -1,0 +1,55 @@
+<h2>User Inbox</h2>
+
+
+<div class='row-fluid'>
+	<div class='span3'>
+		<ul class="nav nav-tabs nav-stacked">
+			<li class='l-nav' id='received_tab'><a href='/user/inbox?v=received' class=''>Inbox 
+				<span class='badge pull-right'><%= @received.size %></span>
+			</a></li>
+
+			<li class='l-nav' id='unread_tab'><a href='/user/inbox?v=unread' class=''>Unread 
+				<span class='badge pull-right'><%= @received.unreaded.size %></span>
+			</a></li>
+
+			<li class='l-nav' id='read_tab'><a href='/user/inbox?v=read' class=''>Read
+				<span class='badge pull-right'><%= @received.readed.size %></span>
+			</a></li>
+
+			<li class='l-nav' id='trash_tab'><a href='/user/inbox?v=trash' class=''>Trash
+				<span class='badge pull-right'><%= @deleted.size %></span>
+			</a></li>
+		</ul>
+	</div>
+
+	<div class='span9'>
+		<% if @message %>
+			
+			<div class='row-fluid'>
+				<h5>From: <%= render :partial => 'shared/user_small1', :locals => { :user => @message.from} %> </h5>
+				<h5>Subject: <%= @message.topic %> </h5>
+			</div>
+			<div class='row-fluid'>
+				<div class='span12 box'>
+					<%= @message.body %>
+				</div>
+			</div>
+
+		<% else %>
+
+		<% @select_messages.process do |m| %>
+			<%= render :partial => 'inbox_message', :locals => {:m => m, :view => @view} %>
+		<% end %>
+
+		<% end %>
+	</div>
+</div>
+
+<script type='text/javascript'>
+	var _view = "";
+
+	var capture = /v=(\w+)$/.exec(document.URL);
+	_view = capture[1];
+
+	$('#'+_view + "_tab").addClass('active');
+</script>

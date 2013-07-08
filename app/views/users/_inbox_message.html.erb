@@ -1,0 +1,12 @@
+<div class='corpi_item_small' onclick="window.location = '/user/inbox?v=<%=view %>&mid=<%= m.id %>';">
+
+	<% if m.topic && ! m.topic.blank? %>
+		<%= m.topic %>
+	<% else %>
+		<%= text_snippet(m.body,20) %>
+	<% end %>
+
+	<span class='pull-right'>
+		<%= render :partial => 'shared/user_small1', :locals => {:user => m.from } %>
+	</span>
+</div>

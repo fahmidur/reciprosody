@@ -99,9 +99,9 @@ Reciprosody2::Application.routes.draw do
 
 	#match 'users'	=> 'users#index'
 
-	resources :users, :constraints => {:id => /.*/} do
+	resources :users, :constraints => {:id => /\d+|.+\@.+/} do
     collection do
-      get :index
+      get :index #user home page
       get :mixed_search
     end
     
@@ -110,10 +110,10 @@ Reciprosody2::Application.routes.draw do
     end
   end
 
-	#----maps to users controller-------------
 	resource :user do
 		member do
 			get :invite
+      get :inbox #user inbox
 			post :invite_user
 		end
 	end

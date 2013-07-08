@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 	protect_from_forgery
 	before_filter :auth
+
 	
 	#GET /users/mixed_search
 	#params[:q] = query
@@ -13,6 +14,41 @@ class UsersController < ApplicationController
 
 		q = "%#{q}%"
 		render :json => User.where("name LIKE ? OR email LIKE ?", q, q)
+	end
+
+	# GET /users/inbox
+	def inbox
+		view = params[:v]
+		mid = params[:mid]
+
+		@user = current_user
+		@received = @user.received_messages
+		@deleted = @user.deleted_messages
+		@sent = @user.sent_messages
+
+		@select_messages = nil
+		case view
+		when "received"
+			@select_messages = @received
+			@view = :received
+		when "sent"
+			@select_messages = @user.sent_messages
+			@view = :sent
+		when "trash"
+			@select_messages = @deleted
+			@view = :trash
+		else
+			@select_messages = @received
+			@view = :received
+		end
+
+		if mid && !mid.blank?
+			@message = @select_messages.with_id(mid).all
+		else
+			@message = nil
+		end
+
+		@message = @message[0] if @message && @message.length > 0
 	end
 
 	# GET /users/:id

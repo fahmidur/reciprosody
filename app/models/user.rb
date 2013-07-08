@@ -8,6 +8,18 @@ class User < ActiveRecord::Base
 	# Setup accessible (or protected) attributes for your model
 	attr_accessible :email, :password, :password_confirmation, :remember_me, :name
 
+	#----------------------------------------
+
+	acts_as_messageable :table_name => "messages",
+						:required => [:topic, :body],
+						:class_name => "ActsAsMessageable::Message",
+						:dependent => :destroy
+
+
+
+
+	#----------------------------------------
+
 	has_many :corpora, :through => :memberships
 
 	has_many :publications, :through => :publication_memberships

@@ -10,4 +10,8 @@ module ApplicationHelper
 		return first_paragraph.inner_html if first_paragraph
 		return ""
 	end
+
+	def text_snippet(text, chars)
+		text[0..chars] + "..."
+	end
 end
