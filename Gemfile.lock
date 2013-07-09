@@ -240,6 +240,6 @@ DEPENDENCIES
   simplecov
   sqlite3
   therubyracer
-  twitter-bootstrap-rails
+  twitter-bootstrap-rails (= 2.2.7)
   uglifier (>= 1.0.3)
   waveinfo

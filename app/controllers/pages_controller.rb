@@ -61,6 +61,7 @@ class PagesController < ApplicationController
   			break
   		end
   	end
+
   	if(okay)
   		#---send email---
 	  	PagesMailer.sug_mail(email, name, text).deliver

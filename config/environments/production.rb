@@ -84,7 +84,7 @@ Reciprosody2::Application.configure do
   #send mail through sendmail
   config.action_mailer.delivery_method = :sendmail
   # By default looks for sendmail at /usr/sbin/sendmail
-  config.action_mailer.default_options = {from: 'no-reply@reciprosody.org'}
+  # config.action_mailer.default_options = {from: 'no-reply@reciprosody.org'}
 
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true

@@ -29,7 +29,7 @@ end
 gem 'jquery-rails', '2.1.4'
 
 #---Modified by Me -SFR----------------
-gem 'twitter-bootstrap-rails'
+gem 'twitter-bootstrap-rails', '2.2.7'
 gem 'devise'
 gem "recaptcha", :require => "recaptcha/rails"
 gem 'nifty-generators'

@@ -1,25 +1,45 @@
 @import "twitter/bootstrap/bootstrap";
+@import "twitter/bootstrap/responsive";
+
 body {
 	padding-top: 60px;
 }
 
-@import "twitter/bootstrap/responsive";
-
 // Set the correct sprite paths
-@iconSpritePath: asset-path('twitter/bootstrap/glyphicons-halflings.png');
-@iconWhiteSpritePath: asset-path('twitter/bootstrap/glyphicons-halflings-white.png');
+@iconSpritePath: asset-url('twitter/bootstrap/glyphicons-halflings.png');
+@iconWhiteSpritePath: asset-url('twitter/bootstrap/glyphicons-halflings-white.png');
 
+//@iconSpritePath: '/assets/twitter/bootstrap/glyphicons-halflings.png';
+//@iconWhiteSpritePath: '/assets/twitter/bootstrap/glyphicons-halflings-white.png';
 // Set the Font Awesome (Font Awesome is default. You can disable by commenting below lines)
 // Note: If you use asset_path() here, your compiled boostrap_and_overrides.css will not
 //       have the proper paths. So for now we use the absolute path.
-@fontAwesomeEotPath: '/assets/fontawesome-webfont.eot';
-@fontAwesomeWoffPath: '/assets/fontawesome-webfont.woff';
-@fontAwesomeTtfPath: '/assets/fontawesome-webfont.ttf';
-@fontAwesomeSvgPath: '/assets/fontawesome-webfont.svg';
-
+//@fontAwesomeEotPath: '/assets/fontawesome-webfont.eot';
+//@fontAwesomeWoffPath: '/assets/fontawesome-webfont.woff';
+//@fontAwesomeTtfPath: '/assets/fontawesome-webfont.ttf';
+//@fontAwesomeSvgPath: '/assets/fontawesome-webfont.svg';
 // Font Awesome
-@import "fontawesome";
-@fontAwesomeEotPath_iefix: '/assets/fontawesome-webfont.eot#iefix';
+//@import "font-awesome";
+//@fontAwesomeEotPath_iefix: '/assets/fontawesome-webfont.eot#iefix';
+
+// Set the Font Awesome (Font Awesome is default. You can disable by commenting below lines)
+@fontAwesomeEotPath: asset-url("fontawesome-webfont.eot");
+@fontAwesomeEotPath_iefix: asset-url("fontawesome-webfont.eot#iefix");
+@fontAwesomeWoffPath: asset-url("fontawesome-webfont.woff");
+@fontAwesomeTtfPath: asset-url("fontawesome-webfont.ttf");
+@fontAwesomeSvgPath: asset-url("fontawesome-webfont.svg#fontawesomeregular");
+@import "fontawesome/font-awesome";
+
+
+
+
+
+
+
+
+
+
+
 
 // Your custom LESS stylesheets goes here
 //
@@ -138,10 +158,10 @@ body {
 	-moz-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
 }
 .corpi_item_small:hover {
-		color:#2d2d2d;
-		background-color:#fafaff;
-		border:1px solid #adadad;
-		border-left:2px solid #4FD5D6;
+	color:#2d2d2d;
+	background-color:#fafaff;
+	border:1px solid #adadad;
+	border-left:2px solid #4FD5D6;
 }
 .corpi_l {
 	font-weight:bold;
@@ -413,4 +433,30 @@ body .modal {
 }
 h1 {
 	word-wrap:break-word;
+}
+table.inbox_table tr {
+	margin-bottom:15px;
+	font-weight: bold;
+	margin-bottom:0.2em;
+	background-color:#fefefe;
+	border:1px solid #eee;
+	border-left:2px solid #eee;
+	padding:1em;
+	padding-top:0.3em;
+	padding-bottom:0.3em;
+	cursor: pointer;
+	color:#6d6d6d;
+	-webkit-transition-property:background, border, color;
+	-webkit-transition-duration:1s, 1s, 1s;
+	-webkit-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
+	
+	-moz-transition-property:background, border, color;
+	-moz-transition-duration:1s, 1s, 1s;
+	-moz-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
+}
+table.inbox_table tr:hover {
+	color:#2d2d2d;
+	background-color:#fafaff;
+	border:1px solid #adadad;
+	border-left:2px solid #4FD5D6;	
 }
