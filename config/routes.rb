@@ -113,7 +113,9 @@ Reciprosody2::Application.routes.draw do
 	resource :user do
 		member do
 			get :invite
-      get :inbox #user inbox
+      get :inbox
+        get :inbox_delete
+      
 			post :invite_user
 		end
 	end

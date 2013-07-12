@@ -1,5 +1,4 @@
-<h2>User Inbox</h2>
-
+<h2>Messages <%= @view.to_s.capitalize %></h2>
 
 <div class='row-fluid'>
 	<div class='span3'>
@@ -16,6 +15,10 @@
 				<span class='badge pull-right'><%= @received.readed.size %></span>
 			</a></li>
 
+			<li class='l-nav' id='sent_tab'><a href='/user/inbox?v=sent' class=''>Sent 
+				<span class='badge pull-right'><%= @sent.size %></span>
+			</a></li>
+
 			<li class='l-nav' id='trash_tab'><a href='/user/inbox?v=trash' class=''>Trash
 				<span class='badge pull-right'><%= @deleted.size %></span>
 			</a></li>
@@ -23,35 +26,191 @@
 	</div>
 
 	<div class='span9'>
+		<div class='row-fluid' style="margin-bottom:5px;">
+			<% unless @message %>
+				<div class='btn btn-mini' id='messagesToggle_bt'>Toggle</div>
+			<% end %>
+
+			<div class='btn-group'>
+				<% if @view == :trash %>
+					<button class='btn btn-mini' id='restore_bt'>Restore</button>
+					<button class='btn btn-mini btn-danger' id='delete_bt'>Delete</button>
+				<% else %>
+					<% if @view != :sent %>
+						<% if @view != :read %>
+						<button class='btn btn-mini <%= "btn-primary" if @message %>'>Mark as Read</button>
+						<% end %>
+						<% if @view != :unread %>
+						<button class='btn btn-mini'>Mark as Unread</button>
+						<% end %>
+					<% end %>
+					<button class='btn btn-mini btn-danger'>Delete</button>
+				<% end %>
+			</div>
+			<span class='badge badge-info'><span id='numMessagesSelected'>0</span> Selected</span>
+		</div>
+
 		<% if @message %>
-			
-			<div class='row-fluid'>
-				<h6><span class=''><%= @message.created_at %></span><span class='badge pull-right'><%= time_ago_in_words(@message.created_at)%></span></h6>
-				<h6>From: <%= render :partial => 'shared/user_small1', :locals => { :user => @message.from} %> </h6>
-				<h6>Subject: <%= @message.topic %> </h6>
+			<div class='row-fluid' id='current-message' data-id='<%= @message.id %>'>
+				<h6>
+					<span class=''><%= @message.created_at %></span>
+					<span class='badge pull-right'>
+						<%= time_ago_in_words(@message.created_at)%> ago
+					</span>
+				</h6>
+
+				<table>
+					<tr>
+						<td>
+							<span class='label'>From: </span>
+						</td>
+
+						<td>
+							<%= render :partial => 'shared/user_small1', :locals => { :user => @message.from} %></td>
+						</td>
+
+					</tr>
+					<td>
+						<span class='label'>To:</span>
+					</td>
+					<td>
+						<%= render :partial => 'shared/user_small1', :locals => { :user => @message.to } %> </h6>
+					</td>
+					<tr>
+						<td colspan='2'>
+							<span class='label'>Subject:</span> &nbsp;
+							<span><%= @message.topic %></span>
+						</td>
+					</tr>
+				</table>
+				<br/>
 			</div>
 			<div class='row-fluid'>
-				<div class='span12'>
+				<div class='span12' style="padding:1em; border-left:2px solid orange;background-color:#fafafa">
 					<%= @message.body %>
 				</div>
 			</div>
 
 		<% else %>
-		<table width="100%" class='inbox_table'>
-		<% @select_messages.process do |m| %>
-			<%= render :partial => 'inbox_message', :locals => {:m => m, :view => @view} %>
+			<table width="100%" class='inbox_table'>
+			<% @select_messages.process do |m| %>
+				<%= render :partial => 'inbox_message', :locals => {:m => m, :view => @view} %>
+			<% end %>
+			</table>
 		<% end %>
-		</table>
+	</div>
+</div>
 
-		<% end %>
+<div class="modal hide fade" id="delete-confirm" style="display:none">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Are you sure?</h3>
+	</div>
+	<div class="modal-body">
+		<p id='delete-message'>You are about to delete <span class='badge badge-warning' id='delete-count'></span> message item<span id='delete-plural'>s</span>.</p>
+	</div>
+	<div class="modal-footer">
+		<button class='btn btn-danger' id='yes-delete'>Yes, Delete</button>
+		<a href="#" data-dismiss="modal" class="btn">Cancel</a>
 	</div>
 </div>
 
 <script type='text/javascript'>
 	var _view = "";
+	var _overMessageSelect = false;
+	var _selectedMessages = null;
+	var _maxMemberSize = 0;
 
-	var capture = /v=(\w+)$/.exec(document.URL);
+
+
+	//----MAIN-----
+	var capture = /v=(\w+)/.exec(document.URL);
 	_view = capture[1];
-
 	$('#'+_view + "_tab").addClass('active');
+
+	<% if @message %>
+		_selectedMessages = [$('#current-message').attr('data-id')];
+		console.log(_selectedMessages);
+		$('#numMessagesSelected').html(_selectedMessages.length);
+	<% else %>
+		updateSelected();
+	<% end %>
+
+	adjustMemberLinks();
+	//----------------------------------------------------------------------
+
+
+	//----EVENTS------------------------------------------------------------
+	$('.messageSelect').on('mouseenter', function() {
+		//console.log("over message select");
+		_overMessageSelect = true;
+	});
+	$('.messageSelect').on('mouseleave', function() {
+		//console.log("left message select");
+		_overMessageSelect = false;
+	});
+	$('#messagesToggle_bt').click(function() {
+		_overMessageSelect = true;
+		$('.messageSelect').each(function() {
+			$(this).click();
+		});
+		_overMessageSelect = false;
+	});
+	$('.messageSelect').on('change', updateSelected);
+	$('#delete_bt').click(function() {
+		console.log("DELETE!");
+		if(_selectedMessages.length > 0) {
+			$('#delete-confirm').modal('show');
+			if(_selectedMessages.length == 1) {
+				$('#delete-plural').html("");
+			} else {
+				$('#delete-plural').html("");
+			}
+			$('#delete-count').html(_selectedMessages.length);
+		}
+	});
+	$('#yes-delete').click(function() {
+		console.log("YES DELETE");
+		for(i in _selectedMessages) {
+			$('#message-row-'+_selectedMessages[i]).remove();
+		}
+		$('#delete-confirm').modal('hide');
+	});
+	//------FUNCTIONS---------------------------------------------
+	function messageOpen(str) {
+		if(_overMessageSelect) {
+			return;
+		}
+		window.location = str;
+	}
+	function updateSelected() {
+		_selectedMessages = new Array();
+		$('.messageSelect').each(function(item) {
+			var row = $(this).parent().parent();
+			if($(this).attr('checked') === 'checked') {
+				row.addClass('selected');
+				_selectedMessages.push(row.attr('data-id'));
+			} else {
+				row.removeClass('selected');
+			}
+		});
+		console.log(_selectedMessages);
+		$('#numMessagesSelected').html(_selectedMessages.length);
+	}
+
+	function adjustMemberLinks() {
+		$(".member-link").each(function() {
+			var w = $(this).html().length;
+			if(w > _maxMemberSize) {
+				_maxMemberSize = w;
+			}
+		});
+		$(".member-link").each(function() {
+			var h = $(this).html();
+			var w = h.length;
+			if(w < _maxMemberSize) {
+				$(this).html(h + Array(_maxMemberSize-w+1).join("&nbsp; "));
+			}
+		});
+	}
 </script>

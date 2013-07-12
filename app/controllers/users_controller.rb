@@ -16,6 +16,16 @@ class UsersController < ApplicationController
 		render :json => User.where("name LIKE ? OR email LIKE ?", q, q)
 	end
 
+	# GET /user/inbox_delete
+	# params[:mids] = message ids (space separated)
+	def inbox_delete
+		@user = current_user()
+		@user.deleted_messages.process do |message|
+			message.delete
+		end
+		redirect_to '/user/inbox?v=trash'
+	end
+
 	# GET /users/inbox
 	def inbox
 		view = params[:v]
@@ -23,16 +33,24 @@ class UsersController < ApplicationController
 
 		@user = current_user
 		@received = @user.received_messages
-		@deleted = @user.deleted_messages
+		@readed = @user.received_messages.readed
+		@unreaded = @user.received_messages.unreaded
+		@deleted = @user.deleted_messages.are_to(@user)
 		@sent = @user.sent_messages
 
 		@select_messages = nil
 		case view
 		when "received"
 			@select_messages = @received
-			@view = :received
+			@view = :received #inbox
+		when "read"
+			@select_messages = @readed
+			@view = :read
+		when "unread"
+			@select_messages = @unreaded
+			@view = :unread
 		when "sent"
-			@select_messages = @user.sent_messages
+			@select_messages = @sent
 			@view = :sent
 		when "trash"
 			@select_messages = @deleted

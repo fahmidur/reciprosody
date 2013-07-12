@@ -1,13 +1,35 @@
-<tr onclick="window.location = '/user/inbox?v=<%=view %>&mid=<%= m.id %>';">
-	<td>
+<tr class='row-fluid message-row' data-id='<%= m.id %>' onclick="messageOpen('/user/inbox?v=<%=view %>&mid=<%= m.id %>');" id='message-row-<%= m.id %>'>
+	<td class=''>
+		<input type='checkbox' class='messageSelect' data-id='<%= m.id %>' style='display:inline-block; height:20px;'/>
+	</td>
+	<td class=''>
 		<% if m.topic && ! m.topic.blank? %>
 			<%= m.topic %>
 		<% else %>
-			<%= text_snippet(m.body,20) %>
+			<%= text_snippet(m.body,25) %>
 		<% end %>
 	</td>
 
 	<td>
-		<%= render :partial => 'shared/user_small1', :locals => {:user => m.from } %>
+		<small class='label pull-right'>
+			<%= time_ago_in_words(m.updated_at) %> ago
+		</small>
+	</td>
+
+
+	<td>
+		<span class="member_email pull-right" title="<%= m.from.name %>">
+		<a href="/users/<%= m.from.email %>" class="btn btn-mini member-link" target="_BLANK">
+		<i class="icon-user"></i>&nbsp;<%= m.from.name %></a>
+		</span>
+	</td>
+	<td>
+		<i class='icon-arrow-right'></i>
+	</td>
+	<td>
+		<span class="member_email pull-right" title="<%= m.to.name %>">
+		<a href="/users/<%= m.to.email %>" class="btn btn-mini member-link" target="_BLANK">
+		<i class="icon-user"></i>&nbsp;<%= m.to.name %></a>
+		</span>
 	</td>
 </tr>
