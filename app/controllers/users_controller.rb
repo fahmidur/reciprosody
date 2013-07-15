@@ -17,13 +17,33 @@ class UsersController < ApplicationController
 	end
 
 	# GET /user/inbox_delete
-	# params[:mids] = message ids (space separated)
+	# params[:mids] = message ids (newline separated)
 	def inbox_delete
 		@user = current_user()
-		@user.deleted_messages.process do |message|
-			message.delete
+		mids = params[:mids]
+		unless mids
+			render :json => {:ok => false}
+			return
 		end
-		redirect_to '/user/inbox?v=trash'
+		mids_hash = Hash.new
+
+		mids = mids.split("\n").map {|e| e.to_i}
+		mids.each do |id| mids_hash[id] = true end
+
+		permanently_deleted = 0
+		@user.deleted_messages.process do |message|
+			if mids_hash[message.id]
+				message.delete
+				permanently_deleted += 1
+			end
+		end
+
+		moved_to_trash = 0
+		@user.received_messages.process do |message|
+			
+		end
+
+		render :json => {:ok => true, :mids => mids, :permanently_deleted => permanently_deleted}
 	end
 
 	# GET /users/inbox

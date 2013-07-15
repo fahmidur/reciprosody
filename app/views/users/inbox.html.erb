@@ -4,23 +4,23 @@
 	<div class='span3'>
 		<ul class="nav nav-tabs nav-stacked">
 			<li class='l-nav' id='received_tab'><a href='/user/inbox?v=received' class=''>Inbox 
-				<span class='badge pull-right'><%= @received.size %></span>
+				<span class='badge pull-right' id='received-size'><%= @received.size %></span>
 			</a></li>
 
 			<li class='l-nav' id='unread_tab'><a href='/user/inbox?v=unread' class=''>Unread 
-				<span class='badge pull-right'><%= @received.unreaded.size %></span>
+				<span class='badge pull-right' id='unreaded-size'><%= @received.unreaded.size %></span>
 			</a></li>
 
 			<li class='l-nav' id='read_tab'><a href='/user/inbox?v=read' class=''>Read
-				<span class='badge pull-right'><%= @received.readed.size %></span>
+				<span class='badge pull-right' id='readed-size'><%= @received.readed.size %></span>
 			</a></li>
 
 			<li class='l-nav' id='sent_tab'><a href='/user/inbox?v=sent' class=''>Sent 
-				<span class='badge pull-right'><%= @sent.size %></span>
+				<span class='badge pull-right' id='sent-size'><%= @sent.size %></span>
 			</a></li>
 
 			<li class='l-nav' id='trash_tab'><a href='/user/inbox?v=trash' class=''>Trash
-				<span class='badge pull-right'><%= @deleted.size %></span>
+				<span class='badge pull-right' id='deleted-size'><%= @deleted.size %></span>
 			</a></li>
 		</ul>
 	</div>
@@ -171,9 +171,16 @@
 	});
 	$('#yes-delete').click(function() {
 		console.log("YES DELETE");
+		var mids = _selectedMessages.join("\n");
+		$.getJSON('/user/inbox_delete', {'mids': mids}, function(data) {
+			console.log(data);
+		});
 		for(i in _selectedMessages) {
 			$('#message-row-'+_selectedMessages[i]).remove();
 		}
+		updateSelected();
+		console.log(_selectedMessages.size);
+		$('#deleted-size').html(_selectedMessages.size);
 		$('#delete-confirm').modal('hide');
 	});
 	//------FUNCTIONS---------------------------------------------
@@ -197,7 +204,6 @@
 		console.log(_selectedMessages);
 		$('#numMessagesSelected').html(_selectedMessages.length);
 	}
-
 	function adjustMemberLinks() {
 		$(".member-link").each(function() {
 			var w = $(this).html().length;
