@@ -2,30 +2,56 @@
 
 <div class='row-fluid'>
 	<div class='span3'>
+		<a class='btn span12' id='compose_bt' href='#compose'>
+			<i class='icon-pencil'></i>&nbsp; Compose
+		</a>
+		<br/><br/>
 		<ul class="nav nav-tabs nav-stacked">
 			<li class='l-nav' id='received_tab'><a href='/user/inbox?v=received' class=''>Inbox 
-				<span class='badge pull-right' id='received-size'><%= @received.size %></span>
+				<span class='badge pull-right count' id='received-size'><%= @received.size %></span>
 			</a></li>
 
 			<li class='l-nav' id='unread_tab'><a href='/user/inbox?v=unread' class=''>Unread 
-				<span class='badge pull-right' id='unreaded-size'><%= @received.unreaded.size %></span>
+				<span class='badge pull-right count' id='unreaded-size'><%= @received.unreaded.size %></span>
 			</a></li>
 
 			<li class='l-nav' id='read_tab'><a href='/user/inbox?v=read' class=''>Read
-				<span class='badge pull-right' id='readed-size'><%= @received.readed.size %></span>
+				<span class='badge pull-right count' id='readed-size'><%= @received.readed.size %></span>
 			</a></li>
 
 			<li class='l-nav' id='sent_tab'><a href='/user/inbox?v=sent' class=''>Sent 
-				<span class='badge pull-right' id='sent-size'><%= @sent.size %></span>
+				<span class='badge pull-right count' id='sent-size'><%= @sent.size %></span>
 			</a></li>
 
 			<li class='l-nav' id='trash_tab'><a href='/user/inbox?v=trash' class=''>Trash
-				<span class='badge pull-right' id='deleted-size'><%= @deleted.size %></span>
+				<span class='badge pull-right count' id='deleted-size'><%= @deleted.size %></span>
 			</a></li>
 		</ul>
 	</div>
 
 	<div class='span9'>
+
+		<div class='row-fluid' id='compose_panel' style="display:none;border:1px solid gray;margin-bottom:10px;padding:5px;box-shadow:0 0 5px #000; background-color:#fefefe">
+				
+				
+				<a class='pull-right' id='compose_close_bt' href='#'>
+					<i class='icon-remove'></i>
+				</a>
+				<span style='position:relative;top:-2px; color:#8f8f8f;border-bottom:1px solid #efefef;font-size:13px;margin:0px;'>To &nbsp; </span><span class='message-recipients' style='position: relative; top:-2px; margin: 0px; border-bottom:1px solid #efefef'></span><input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:90%;border-bottom:1px solid #efefef'></input>
+
+				<!--
+				<div class="input-prepend" id='message-to'>
+					<span class="add-on"><i class="icon-user"></i></span>
+					<input class="ui-autocomplete-input" data-autocomplete="/corpora/autocomplete_user_name" id="corpus_member" name="member[email]" size="30" type="text" value="" autocomplete="on" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+				</div>-->
+				<input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:98%;border-bottom:1px solid #efefef' placeholder="Subject"/>
+				
+				
+					
+		</div>
+
+		<div class='ib-component'>
+
 		<div class='row-fluid' style="margin-bottom:5px;">
 			<% unless @message %>
 				<div class='btn btn-mini' id='messagesToggle_bt'>Toggle</div>
@@ -44,13 +70,13 @@
 						<button class='btn btn-mini'>Mark as Unread</button>
 						<% end %>
 					<% end %>
-					<button class='btn btn-mini btn-danger'>Delete</button>
+					<button class='btn btn-mini btn-danger' id='delete_bt'>Delete</button>
 				<% end %>
 			</div>
 			<span class='badge badge-info'><span id='numMessagesSelected'>0</span> Selected</span>
 		</div>
 
-		<% if @message %>
+		<% if @message && !@message.is_a?(Array)%>
 			<div class='row-fluid' id='current-message' data-id='<%= @message.id %>'>
 				<h6>
 					<span class=''><%= @message.created_at %></span>
@@ -92,13 +118,14 @@
 			</div>
 
 		<% else %>
-			<table width="100%" class='inbox_table'>
+			<table width="100%" class='inbox_table' id='message-table'>
 			<% @select_messages.process do |m| %>
 				<%= render :partial => 'inbox_message', :locals => {:m => m, :view => @view} %>
 			<% end %>
 			</table>
 		<% end %>
-	</div>
+	</div> <!---end of .ib-component-->
+	</div> <!---end of .span9-->
 </div>
 
 <div class="modal hide fade" id="delete-confirm" style="display:none">
@@ -121,12 +148,17 @@
 	var _selectedMessages = null;
 	var _maxMemberSize = 0;
 
-
+	var _counts = new Array();
+	$('.count').each(function(i) {
+		_counts.push(parseInt($(this).html()));
+	});
+	console.log(_counts);
 
 	//----MAIN-----
-	var capture = /v=(\w+)/.exec(document.URL);
-	_view = capture[1];
-	$('#'+_view + "_tab").addClass('active');
+	restoreState();
+
+
+
 
 	<% if @message %>
 		_selectedMessages = [$('#current-message').attr('data-id')];
@@ -141,6 +173,19 @@
 
 
 	//----EVENTS------------------------------------------------------------
+	$('#compose_bt').live('click',function() {
+		console.log("Compose BT");
+		$('.ib-component').slideUp();
+	
+		$('#compose_panel').slideDown();
+	});
+	$('#compose_close_bt').live('click', function() {
+		console.log("Compose Close BT");
+		$('#compose_panel').slideUp();
+
+		$('.ib-component').slideDown();
+
+	});
 	$('.messageSelect').on('mouseenter', function() {
 		//console.log("over message select");
 		_overMessageSelect = true;
@@ -172,18 +217,47 @@
 	$('#yes-delete').click(function() {
 		console.log("YES DELETE");
 		var mids = _selectedMessages.join("\n");
+
 		$.getJSON('/user/inbox_delete', {'mids': mids}, function(data) {
 			console.log(data);
 		});
+
 		for(i in _selectedMessages) {
 			$('#message-row-'+_selectedMessages[i]).remove();
 		}
 		updateSelected();
 		console.log(_selectedMessages.size);
+
+
 		$('#deleted-size').html(_selectedMessages.size);
+
 		$('#delete-confirm').modal('hide');
 	});
 	//------FUNCTIONS---------------------------------------------
+	function restoreState() {
+		var capture = /v=(\w+)/.exec(document.URL);
+		if(capture) {
+			_view = capture[1];
+		}
+		var target = $('#'+_view + "_tab");
+		if(target.length) {
+			target.addClass('active');
+		} else {
+			$('#received_tab').addClass('active');
+		}
+
+		//now restore composition state
+		capture = /\#(\w+)/.exec(document.URL);
+		if(capture) {
+			eval("stateRestore_"+capture[1]+"()");
+		}
+
+	}
+	function stateRestore_compose() {
+		console.log("Restoring compose state");
+		$('.ib-component').slideUp();
+		$('#compose_panel').slideDown();
+	}
 	function messageOpen(str) {
 		if(_overMessageSelect) {
 			return;

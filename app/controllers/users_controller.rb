@@ -40,10 +40,17 @@ class UsersController < ApplicationController
 
 		moved_to_trash = 0
 		@user.received_messages.process do |message|
-			
+			if mids_hash[message.id]
+				message.delete
+				moved_to_trash += 1
+			end
 		end
-
-		render :json => {:ok => true, :mids => mids, :permanently_deleted => permanently_deleted}
+		
+		render :json => {
+			:ok => true, :mids => mids, 
+			:permanently_deleted => permanently_deleted,
+			:moved_to_trash => moved_to_trash
+		}
 	end
 
 	# GET /users/inbox

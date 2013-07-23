@@ -6,6 +6,8 @@ gem 'rails', '>= 3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
+gem 'puma' #07-22-2013
+gem 'thin'
 
 
 # Gems used only for assets and not required
@@ -22,19 +24,22 @@ group :assets do
 
   gem 'font-awesome-rails'
   gem 'less-rails'
-  gem 'libv8'
-  gem 'therubyracer', :require => 'v8'
+  #gem 'libv8', '~> 3.3.10'
+  gem 'therubyracer'
 end
 
 gem 'jquery-rails', '2.1.4'
 
 #---Modified by Me -SFR----------------
-gem 'twitter-bootstrap-rails', '2.2.7'
+gem 'twitter-bootstrap-rails', '2.2.7' #Needed for Glyphicons to work
 gem 'devise'
 gem "recaptcha", :require => "recaptcha/rails"
 gem 'nifty-generators'
 gem "rails3-jquery-autocomplete"
-gem "activerecord-import" #for bulk importing data
+
+# HAD to get rid of this, it was causing `require` failures
+#gem "activerecord-import" #for bulk importing data
+
 gem "redcarpet", "1.17.2"
 gem "nokogiri"
 gem 'acts_as_commentable_with_threading'
@@ -46,12 +51,16 @@ gem 'bibtex-ruby'
 gem 'citeproc-ruby'
 gem 'mail_view', '~> 1.0.3'
 gem 'simplecov', :require => false, :group => :test
+#---------------------------------------------
+
+
 
 group :production do
   gem "mysql2"
 end
 
 group :development, :test do
+  gem 'sqlite3'
   gem "mysql"
   gem "activerecord-mysql-adapter"
   gem "activerecord-mysql2-adapter"
