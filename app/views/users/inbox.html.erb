@@ -31,18 +31,21 @@
 
 	<div class='span9'>
 
-		<div class='row-fluid' id='compose_panel' style="display:none;border:1px solid gray;margin-bottom:10px;padding:5px; padding-top:8px;box-shadow:0 0 5px #000; background-color:#fefefe">
+		<div class='row-fluid' id='compose_panel' style="display:none;border:1px solid #bbb;margin-bottom:10px;padding:5px; padding-top:8px;box-shadow:0 0 5px #888; background-color:#fff">
 				
 				
-				<a class='pull-right' id='compose_close_bt' href='#'>
+				<a class='pull-right' id='compose_close_bt' href='#' style="margin-top:-8px;text-decoration:none">
 					<i class='icon-remove'></i>
 				</a>
-				<span style='position:relative;top:-2px; color:#8f8f8f;border-bottom:1px solid #efefef;font-size:13px;margin:0px;'>To &nbsp; </span><span class='message-recipients' style='position: relative; top:-2px; margin: 0px; border-bottom:1px solid #efefef'></span><input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:90%;border-bottom:1px solid #efefef' id='user-search'/>
+				<span id='to-label' style='position:relative;top:-2px; color:#8f8f8f;border-bottom:1px solid #efefef;font-size:14px;margin:0px;text-align:right; padding-left:5px'>To &nbsp; </span><span class='message-recipients' style='position: relative; top:-2px; margin: 0px; border-bottom:1px solid #efefef'></span><input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:80%;border-bottom:1px solid #efefef' id='user-search'/>
 
-				<input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:98%;border-bottom:1px solid #efefef' placeholder="Subject" id='compose-subject'/>
+				<input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:84%;border-bottom:1px solid #efefef' placeholder="Subject" id='compose-subject'/>
+
+				<textarea style='border:0px solid black; border-radius:0px;resize:none;width:98%;height:10em;box-shadow: inset 0px 0px 0px;'></textarea>
+
+				<hr style='margin-bottom:4px;'/>
+				<button class='btn btn-small btn-primary' style="opacity:0.9">Send</button>
 				
-				
-					
 		</div>
 
 		<div class='ib-component'>
@@ -137,7 +140,7 @@
 	</div>
 </div>
 
-<div id='user-search-result' style="position:absolute; display:none; background-color:#efefef;">
+<div id='user-search-result' style="position:absolute; display:none; background-color:#fefefe; border:1px solid #efefef;">
 </div>
 
 <script type='text/javascript'>
@@ -145,6 +148,7 @@
 	var _overMessageSelect = false;
 	var _selectedMessages = null;
 	var _maxMemberSize = 0;
+	var _people_result = null;
 
 	var _counts = new Array();
 	$('.count').each(function(i) {
@@ -175,19 +179,54 @@
 		console.log("compose subject focus");
 		$('#user-search-result').hide();
 	});
-	$('#user-search').live('keyup', function() {
+	$('.user-result').live('mouseenter', function() {
+		$(".user-result").removeClass("user-selected");
+		$(this).addClass('user-selected');
+	});
+
+	$('#user-search').live('keyup', function(e) {
+		if(e.keyCode == 27) {
+			$('#user-search-result').hide();
+			return;
+		}
+
 		var v = $(this).val();
 		if(v.length == 0 || v.match(/^\s+$/)) {
 			$('#user-search-result').hide();
 			return;
 		}
-		var o = $(this).offset();
 
-		$('#user-search-result').css('top',o.top+22);
-		$('#user-search-result').css('left',o.left+$('#message-recipients').width()+13);
-		$('#user-search-result').css('width',$('#user-search').width() + $('#message-recipients').width());
-		$('#user-search-result').css('height',"47px");
-		$('#user-search-result').show();
+		$.getJSON("/users/mixed_search", {q:v}, function(data) {
+			_people_result = data;
+			// console.log(_people_result);
+			var html = "";
+			for(var i in _people_result) {
+				html += "<div class='user-result' data-id='"+_people_result[i].id+"' data-index='"+i+"'><div class='name'>"+_people_result[i].name+"</div><div class='email'>"+_people_result[i].email+"</div></div>";
+			}
+			$('#user-search-result').html(html);
+
+			//refactor this into CSS
+			// $('.user-result').css('padding', '5px');
+			// $('.user-result').css('margin', '0px');
+			// $('.user-result .name').css('font-weight', 'bold');
+			// $('.user-result .name').css('font-size', '12px');
+			// $('.user-result .email').css('font-size', '10px');
+			// $('.user-result .email').css('color', '#444');
+			// $('.user-result .email').css('padding', '0px');
+			// $('.user-result .email').css('margin-top', '-8px');
+			//---------------------------------------------
+
+			var o = $('#user-search').offset();
+			$('#user-search-result').css('top',o.top+22);
+			$('#user-search-result').css('left',o.left+$('#message-recipients').width()+13);
+			$('#user-search-result').css('width',$('#user-search').width() + $('#message-recipients').width());
+			$('#user-search-result').css('height',($('.user-result:first').height()+12)*_people_result.length);
+			$('#user-search-result').show();
+
+
+			$('.user-result:first').addClass('user-selected');
+			// $('.user-selected').css("background-color", "#efefef");
+		});
 
 	});
 
@@ -199,6 +238,7 @@
 	});
 	$('#compose_close_bt').live('click', function() {
 		console.log("Compose Close BT");
+		$('#user-search-result').hide();
 		$('#compose_panel').slideUp();
 		$('.ib-component').slideDown();
 	});
