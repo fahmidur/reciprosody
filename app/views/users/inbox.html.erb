@@ -37,9 +37,14 @@
 				<a class='pull-right' id='compose_close_bt' href='#' style="margin-top:-8px;text-decoration:none">
 					<i class='icon-remove'></i>
 				</a>
-				<span id='to-label' style='position:relative;top:-2px; color:#8f8f8f;border-bottom:1px solid #efefef;font-size:14px;margin:0px;text-align:right; padding-left:5px'>To &nbsp; </span><span class='message-recipients' style='position: relative; top:-2px; margin: 0px; border-bottom:1px solid #efefef'></span><input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:80%;border-bottom:1px solid #efefef' id='user-search'/>
+				<div id='to-wrapper'>
+				<span id='to-label' style='display: inline-block;position:relative;top:-2px; color:#8f8f8f;border-bottom:0px solid #efefef;font-size:14px;margin:0px;text-align:right; padding-left:5px;'>To &nbsp; </span><span id='message-recipients' style='position: relative; top:-2px; margin: 0px; border-bottom:0px solid #efefef'></span><input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:80%;border-bottom:0px solid #efefef' id='user-search'/>
+				</div>
+				<hr style="margin:0px;padding:0px;margin-bottom:10px;"/>
 
-				<input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:84%;border-bottom:1px solid #efefef' placeholder="Subject" id='compose-subject'/>
+				<input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:84%;border-bottom:0px solid #efefef;' placeholder="Subject" id='compose-subject'/>
+
+				<hr style="margin:0px;padding:0px;"/>
 
 				<textarea style='border:0px solid black; border-radius:0px;resize:none;width:98%;height:10em;box-shadow: inset 0px 0px 0px;'></textarea>
 
@@ -140,15 +145,17 @@
 	</div>
 </div>
 
-<div id='user-search-result' style="position:absolute; display:none; background-color:#fefefe; border:1px solid #efefef;">
+<div id='user-search-result' style="position:absolute; display:none; background-color:#fefefe; border:1px solid #efefef;padding-top:10px;">
 </div>
 
 <script type='text/javascript'>
 	var _view = "";
 	var _overMessageSelect = false;
 	var _selectedMessages = null;
+	var _selectedUsers = new Array();
 	var _maxMemberSize = 0;
 	var _people_result = null;
+	var _userSearchEmpty = false;
 
 	var _counts = new Array();
 	$('.count').each(function(i) {
@@ -173,7 +180,6 @@
 	adjustMemberLinks();
 	//----------------------------------------------------------------------
 
-
 	//----EVENTS------------------------------------------------------------
 	$('#compose-subject').live('focus', function() {
 		console.log("compose subject focus");
@@ -183,21 +189,76 @@
 		$(".user-result").removeClass("user-selected");
 		$(this).addClass('user-selected');
 	});
+	$('.user-result').live('click', function() {
+		addSelectedUser();
+	});
+	function removeUser(user) {
+		var id = user.attr('data-id');
+		user.remove();
+		delete _selectedUsers[id];
 
+		console.log("Selected Users:");
+		console.log(_selectedUsers);
+	}
+	function fixSearchWidth() {
+		console.log("fixing search width");
+		var currentWidth = $('#user-search').width();
+		var newWidth = $('#compose_panel').width() - $('#to-label').width() - $('#message-recipients').width() - 200;
+
+		if(newWidth < currentWidth && newWidth > 200) {
+			$('#user-search').width(newWidth);
+		} else if(newWidth > currentWidth) {
+			$('#user-search').width(newWidth);
+		}
+	}
+	$('#compose-subject').focus(function() {
+		$('#user-search').hide();
+	});
+	$('#to-wrapper').click(function() {
+		$('#user-search').show();
+		$('#user-search').focus();
+	});
 	$('#user-search').live('keyup', function(e) {
+		if(e.keyCode == 13) {
+			console.log("Enter event!");
+			addSelectedUser();
+			return;
+		}
+		if(e.keyCode == 38 && $('.user-selected').prev().is('.user-result')) {
+			var target = $('.user-selected').prev();
+			$('.user-result').removeClass('user-selected');
+			target.addClass('user-selected');
+			return;
+		} 
+		if(e.keyCode == 40 && $('.user-selected').next().is('.user-result')) {
+			var target = $('.user-selected').next();
+			$('.user-result').removeClass('user-selected');
+			target.addClass('user-selected');
+			return;
+		}
 		if(e.keyCode == 27) {
 			$('#user-search-result').hide();
+			$('#user-search').val("");
 			return;
 		}
-
 		var v = $(this).val();
+		if(e.keyCode == 8 && _userSearchEmpty && v.length == 0) {
+			removeUser($('.user-label:last'));
+			_userSearchEmpty = false; //give them a chance
+			return;
+		}
 		if(v.length == 0 || v.match(/^\s+$/)) {
 			$('#user-search-result').hide();
+			$('#user-search').val("");
+			_userSearchEmpty = true;
 			return;
+		} else {
+			_userSearchEmpty = false;
 		}
-
+		
 		$.getJSON("/users/mixed_search", {q:v}, function(data) {
 			_people_result = data;
+			if(data.length <= 0) {return;}
 			// console.log(_people_result);
 			var html = "";
 			for(var i in _people_result) {
@@ -205,29 +266,20 @@
 			}
 			$('#user-search-result').html(html);
 
-			//refactor this into CSS
-			// $('.user-result').css('padding', '5px');
-			// $('.user-result').css('margin', '0px');
-			// $('.user-result .name').css('font-weight', 'bold');
-			// $('.user-result .name').css('font-size', '12px');
-			// $('.user-result .email').css('font-size', '10px');
-			// $('.user-result .email').css('color', '#444');
-			// $('.user-result .email').css('padding', '0px');
-			// $('.user-result .email').css('margin-top', '-8px');
-			//---------------------------------------------
+			var o = $('#to-label').offset();
+			var io = $('#user-search').offset();
 
-			var o = $('#user-search').offset();
-			$('#user-search-result').css('top',o.top+22);
-			$('#user-search-result').css('left',o.left+$('#message-recipients').width()+13);
+			$('#user-search-result').css('top',io.top+22);
+			$('#user-search-result').css('left',o.left);
 			$('#user-search-result').css('width',$('#user-search').width() + $('#message-recipients').width());
-			$('#user-search-result').css('height',($('.user-result:first').height()+12)*_people_result.length);
-			$('#user-search-result').show();
+			$('#user-search-result').css('height',(32+10)*_people_result.length + 10);
+			$('#user-search-result').delay(200).show(0);
 
 
 			$('.user-result:first').addClass('user-selected');
-			// $('.user-selected').css("background-color", "#efefef");
-		});
 
+			setTimeout(fixSearchWidth, 400);
+		});
 	});
 
 	$('#compose_bt').live('click',function() {
@@ -287,6 +339,32 @@
 	});
 	window.onpopstate = restoreState;
 	//------FUNCTIONS---------------------------------------------
+	function addSelectedUser() {
+		$('#user-search-result').hide();
+		$('#user-search').val("");
+
+		var user = $('.user-selected');
+
+		var name = user.find('.name').text();
+		var email = user.find('.email').text();
+		var id = user.attr('data-id');
+
+		console.log(name + "\t" + email + "\t" + id);
+
+		if(_selectedUsers[id]) { return; }
+		
+		_selectedUsers[id] = {
+			'name': name,
+			'email': email,
+			'id': id
+		};
+
+		console.log(_selectedUsers);
+
+		$('#message-recipients').append('<span class="label user-label" data-id="'+id+'"><i class="icon-user"></i>&nbsp; '+name+'&nbsp;<i class="icon-remove"></i></span>');
+
+		// $('#to-label').height($('#message-recipients').height());
+	}
 	function restoreState() {
 		console.log("restoring state");
 		var capture = /v=(\w+)/.exec(document.URL);
