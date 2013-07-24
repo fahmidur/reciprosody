@@ -157,7 +157,7 @@
 	console.log(_counts);
 
 	//----MAIN-----
-	restoreState();
+	// restoreState();
 
 
 
@@ -232,15 +232,11 @@
 
 	$('#compose_bt').live('click',function() {
 		console.log("Compose BT");
-		$('.ib-component').slideUp();
-		$('#compose_panel').slideDown();
-		$('#user-search').focus();
+		stateRestore_compose();
 	});
 	$('#compose_close_bt').live('click', function() {
 		console.log("Compose Close BT");
-		$('#user-search-result').hide();
-		$('#compose_panel').slideUp();
-		$('.ib-component').slideDown();
+		stateRestore_normal();
 	});
 	$('.messageSelect').on('mouseenter', function() {
 		//console.log("over message select");
@@ -289,8 +285,10 @@
 
 		$('#delete-confirm').modal('hide');
 	});
+	window.onpopstate = restoreState;
 	//------FUNCTIONS---------------------------------------------
 	function restoreState() {
+		console.log("restoring state");
 		var capture = /v=(\w+)/.exec(document.URL);
 		if(capture) {
 			_view = capture[1];
@@ -306,6 +304,8 @@
 		capture = /\#(\w+)/.exec(document.URL);
 		if(capture) {
 			eval("stateRestore_"+capture[1]+"()");
+		} else {
+			stateRestore_normal();
 		}
 
 	}
@@ -314,6 +314,12 @@
 		$('.ib-component').slideUp();
 		$('#compose_panel').slideDown();
 		$('#user-search').focus();
+	}
+	function stateRestore_normal() {
+		console.log("Restoring normal state");
+		$('#user-search-result').hide();
+		$('#compose_panel').slideUp();
+		$('.ib-component').slideDown();
 	}
 	function messageOpen(str) {
 		if(_overMessageSelect) {
