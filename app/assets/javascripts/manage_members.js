@@ -25,8 +25,8 @@ $(function() {
 		$('#yesDelete').val(memId);
 
 		$('#newMem').val("");
-	})
-;  
+	});
+
 	$('.mem_role').live('change', function() {
 		var role = $(this).val();
 		var memId = $(this).attr('data-id');

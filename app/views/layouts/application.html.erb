@@ -9,8 +9,7 @@
 
 
   <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application.js" %>
-  
+  <%= javascript_include_tag "application.js" %>  
   
   <%= yield :javascript_includes %>
   
@@ -94,5 +93,6 @@
 	</div>
 </div>
 <input type='hidden' id='hf-userID' value="<%= current_user()? current_user().id : "NA"%>"/>
+<%= javascript_include_tag "bootstrap_fix.js" %>
 </body>
 </html>

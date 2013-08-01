@@ -34,9 +34,19 @@ class UsersController < ApplicationController
 		@user.deleted_messages.process do |message|
 			if mids_hash[message.id]
 				message.delete
+
 				permanently_deleted += 1
 			end
 		end
+
+		gone = 0
+		@user.sent_messages.process do |message|
+			if mids_hash[message.id]
+				message.delete
+				gone += 1
+			end
+		end
+
 
 		moved_to_trash = 0
 		@user.received_messages.process do |message|
@@ -49,11 +59,34 @@ class UsersController < ApplicationController
 		render :json => {
 			:ok => true, :mids => mids, 
 			:permanently_deleted => permanently_deleted,
-			:moved_to_trash => moved_to_trash
+			:moved_to_trash => moved_to_trash,
+			:gone => gone
 		}
 	end
 
+	# GET /user/send_message
+	# params[:to] -- json array of ids
+	# params[:subject]
+	# params[:body]
+	# returns json
+	def send_message
+		to = params[:to]
+		subject = params[:subject]
+		body = params[:body]
+
+		me = current_user()
+
+		to.each do |id|
+			user = User.find_by_id(id)
+			next unless user
+			me.send_message(user, {:topic => subject, :body => body})
+		end
+		render :json => {:ok => true, :to => to, :subject => subject, :body => body}
+	end
+
 	# GET /users/inbox
+	# Yes, I agree this should all be refactored into a
+	# a separate Inbox controller but Meh
 	def inbox
 		view = params[:v]
 		mid = params[:mid]

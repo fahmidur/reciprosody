@@ -13,7 +13,8 @@ class User < ActiveRecord::Base
 	acts_as_messageable :table_name => "messages",
 						:required => :body,
 						:class_name => "ActsAsMessageable::Message",
-						:dependent => :destroy
+						:dependent => :destroy,
+						:group_messages => true
 
 
 	#----------------------------------------
