@@ -13,7 +13,7 @@ class UsersController < ApplicationController
 		end
 
 		q = "%#{q}%"
-		render :json => User.where("name LIKE ? OR email LIKE ?", q, q)
+		render :json => User.where("name LIKE ? OR email LIKE ?", q, q)-[current_user()]
 	end
 
 	# GET /user/inbox_delete
