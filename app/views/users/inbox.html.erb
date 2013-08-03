@@ -151,6 +151,8 @@
 </script>
 
 <script type='text/javascript'>
+	
+
 	var _view = "";
 	var _overMessageSelect = false;
 	var _selectedMessages = null;
@@ -165,6 +167,8 @@
 	var _myid = null;
 	var _is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 	//----MAIN-----
+
+
 	$(function() {
 		_myid = $('#hf-userID').val();
 		console.log(_myid);
@@ -176,7 +180,6 @@
 		if(_is_firefox) {
 			restoreState();
 		}
-
 		var _fsub = _fclient.subscribe('/messages/'+_myid, function(data) {
 			//console.log(data);
 
@@ -192,21 +195,259 @@
 				target.css("background-color", "orange");
 			}
 		});
+
 		adjustMemberLinks();
 		window.onpopstate = restoreState;
-	});
 
-	$('#compose-subject').live('focus', function() {
-		/*console.log("compose subject focus");*/
-		$('#user-search-result').hide();
-	});
-	$('.user-result').live('mouseenter', function() {
-		$(".user-result").removeClass("user-selected");
-		$(this).addClass('user-selected');
-	});
-	$('.user-result').live('click', function() {
-		addSelectedUser();
-	});
+		$('#compose-subject').live('focus', function() {
+			/*console.log("compose subject focus");*/
+			$('#user-search-result').hide();
+		});
+		$('.user-result').live('mouseenter', function() {
+			$(".user-result").removeClass("user-selected");
+			$(this).addClass('user-selected');
+		});
+		$('.user-result').live('click', function() {
+			addSelectedUser();
+		});
+		$('#compose-subject').focus(function() {
+			$('#user-search').hide();
+		});
+		$('#to-wrapper').click(function() {
+			$('#user-search').show();
+			$('#user-search').focus();
+		});
+		$('#user-search').live('keydown', function(e) {
+			if(e.keyCode == 9) {
+				//console.log("Tab event!");
+				addSelectedUser();
+				return;
+			}
+		});
+		$('#user-search').live('keyup', function(e) {
+			if(e.keyCode == 13) {
+				/*console.log("Enter event!");*/
+				addSelectedUser();
+				return;
+			}
+			if(e.keyCode == 38 && $('.user-selected').prev().is('.user-result')) {
+				var target = $('.user-selected').prev();
+				$('.user-result').removeClass('user-selected');
+				target.addClass('user-selected');
+				return;
+			} 
+			if(e.keyCode == 40 && $('.user-selected').next().is('.user-result')) {
+				var target = $('.user-selected').next();
+				$('.user-result').removeClass('user-selected');
+				target.addClass('user-selected');
+				return;
+			}
+			if(e.keyCode == 27) {
+				$('#user-search-result').hide();
+				$('#user-search').val("");
+				return;
+			}
+			var v = $(this).val();
+			if(e.keyCode == 8 && _userSearchEmpty && v.length == 0) {
+				removeUser($('.user-label:last'));
+				_userSearchEmpty = false; //give them a chance
+				return;
+			}
+			if(v.length == 0 || v.match(/^\s+$/)) {
+				$('#user-search-result').hide();
+				$('#user-search').val("");
+				_userSearchEmpty = true;
+				return;
+			} else {
+				_userSearchEmpty = false;
+			}
+			
+			$.getJSON("/users/mixed_search", {q:v}, function(data) {
+				if(document.activeElement !== document.getElementById('user-search')) {
+					return;
+				}
+				_people_result = data;
+				if(data.length <= 0) {return;}
+				// /*console.log(_people_result);*/
+				var html = "";
+				for(var i in _people_result) {
+					html += "<div class='user-result' data-id='"+_people_result[i].id+"' data-index='"+i+"'><div class='name'>"+_people_result[i].name+"</div><div class='email'>"+_people_result[i].email+"</div></div>";
+				}
+				$('#user-search-result').html(html);
+
+				var o = $('#to-label').offset();
+				var io = $('#user-search').offset();
+
+				$('#user-search-result').css('top',io.top+22);
+				$('#user-search-result').css('left',o.left);
+				$('#user-search-result').css('width',$('#user-search').width() + $('#message-recipients').width());
+				$('#user-search-result').css('height',(32+10)*_people_result.length + 10);
+				$('#user-search-result').delay(200).show(0);
+
+
+				$('.user-result:first').addClass('user-selected');
+
+				setTimeout(fixSearchWidth, 400);
+			});
+		});
+
+		if(!_is_firefox) {
+			$('#compose_bt').live('click',function() {
+				/*console.log("Compose BT");*/
+				history.pushState({state: 'compose'}, "Reciprosody", "#compose");
+				//stateRestore_compose();
+			});
+		}
+
+		$('#compose_close_bt').live('click', function() {
+			history.go(-1);
+		});
+
+		$('#cmessage_close_bt').click(function() {
+			history.go(-1);
+		});
+
+		$('.messageSelect').on('mouseenter', function() {
+			///*console.log("over message select");*/
+			_overMessageSelect = true;
+		});
+		$('.messageSelect').on('mouseleave', function() {
+			///*console.log("left message select");*/
+			_overMessageSelect = false;
+		});
+		$('#messagesToggle_bt').click(function() {
+			_overMessageSelect = true;
+			$('.messageSelect').each(function() {
+				$(this).click();
+			});
+			_overMessageSelect = false;
+		});
+		$('.messageSelect').on('change', updateSelected);
+		$('#delete_bt').click(function() {
+			/*console.log("DELETE!");*/
+			if(_selectedMessages.length > 0) {
+				$('#delete-confirm').modal('show');
+				if(_selectedMessages.length == 1) {
+					$('#delete-plural').html("");
+				} else {
+					$('#delete-plural').html("");
+				}
+				$('#delete-count').html(_selectedMessages.length);
+			}
+		});
+		$('.user-label').live('mouseenter', function() {
+			var id = $(this).attr('data-id');
+			$('#user-search-result').html("<div class='user-result' data-id='"+id+"''><div class='name'>"+_selectedUsers[id].name+"</div><div class='email'>"+_selectedUsers[id].email+"</div></div>");
+			$('#user-search-result').height(48);
+			$('#user-search-result').show();
+		});
+		$('.user-label').live('mouseleave', function() {
+			$('#user-search-result').hide();
+		});
+		$('.user-label').live('click', function() {
+			var id = $(this).attr('data-id');
+			$(this).remove();
+			delete _selectedUsers[id];
+			fixSearchWidth();
+			$('#user-search-result').hide();
+		});
+		$('#yes-delete').click(function() {
+			/*console.log("YES DELETE");*/
+			console.log(_selectedMessages);
+			var mids = _selectedMessages.join("\n");
+
+			$.getJSON('/user/inbox_delete', {'mids': mids}, function(data) {
+				console.log(data);
+				if(data.ok) {
+					var current = $('#current-size');
+					var deleted = $('#deleted-size');
+					if(deleted.length == 0) {
+						deleted = $('#current-size');
+					}
+
+
+					var v = parseInt(current.html());
+					current.html((v -= data.moved_to_trash));
+					current.html(v - data.gone);
+
+					v = parseInt(deleted.html());
+					deleted.html(v+data.moved_to_trash);
+
+					v = parseInt(deleted.html());
+					deleted.html(v-data.permanently_deleted);
+
+					for(i in _selectedMessages) {
+						$('#message-row-'+_selectedMessages[i]).remove();
+					}
+
+					stateRestore_normal();
+				}
+			});
+
+			/*console.log(_selectedMessages.size);*/
+
+
+			$('#deleted-size').html(_selectedMessages.size);
+			$('#delete-confirm').modal('hide');
+		});
+
+		$('#send_bt').click(function() {
+			var ids = new Array();
+			$('.user-label').each(function(i) {
+				// console.log($(this).attr('data-id'));
+				ids.push($(this).attr('data-id'));
+			});
+			console.log(ids);
+			var subject = $('#compose-subject').val();
+			var body = $('#compose-body').val();
+
+			// console.log("Subject: " + subject);
+			// console.log("Body: " + body);
+
+			//--do validation
+			var blank = /^\s*$/;
+			if(ids.length == 0 || subject.match(blank) || body.match(blank)) {
+				console.log("Message not sent");
+
+				setTimeout(stateRestore_compose, 500);
+				return;
+			}
+
+			console.log("Sending Message...");
+			$.getJSON('/user/send_message', {'to': ids, 'subject': subject, 'body': body}, function(data) {
+				console.log(data);
+				stateRestore_normal();
+				clear_compose();
+
+				var target = $('#sent-size');
+				if(target.length == 0) { target = $('#current-size');}
+				target.html(parseInt(target.html())+ids.length);
+
+				if(_view == "sent") {
+					for(var i in data.message_rows) {
+						prepend_message(data.message_rows[i]);
+					}
+				}
+			});
+
+		});
+
+		$('.message-row').live('click', function() {
+			if(_overMessageSelect) {
+				return;
+			}
+			mid = $(this).attr('data-id');
+			console.log("MID = " + mid);
+			if(!mid) { return; }
+
+			history.pushState({state: 'cmessage'+mid}, "Reciprosody", "#cmessage-"+mid);
+
+			stateRestore_cmessage(mid);
+			
+		});
+	}); //end of document.ready
+
+	//------FUNCTIONS---------------------------------------------
 	function removeUser(user) {
 		var id = user.attr('data-id');
 		user.remove();
@@ -226,243 +467,6 @@
 			$('#user-search').width(newWidth);
 		}
 	}
-	$('#compose-subject').focus(function() {
-		$('#user-search').hide();
-	});
-	$('#to-wrapper').click(function() {
-		$('#user-search').show();
-		$('#user-search').focus();
-	});
-	$('#user-search').live('keydown', function(e) {
-		if(e.keyCode == 9) {
-			//console.log("Tab event!");
-			addSelectedUser();
-			return;
-		}
-	});
-	$('#user-search').live('keyup', function(e) {
-		if(e.keyCode == 13) {
-			/*console.log("Enter event!");*/
-			addSelectedUser();
-			return;
-		}
-		if(e.keyCode == 38 && $('.user-selected').prev().is('.user-result')) {
-			var target = $('.user-selected').prev();
-			$('.user-result').removeClass('user-selected');
-			target.addClass('user-selected');
-			return;
-		} 
-		if(e.keyCode == 40 && $('.user-selected').next().is('.user-result')) {
-			var target = $('.user-selected').next();
-			$('.user-result').removeClass('user-selected');
-			target.addClass('user-selected');
-			return;
-		}
-		if(e.keyCode == 27) {
-			$('#user-search-result').hide();
-			$('#user-search').val("");
-			return;
-		}
-		var v = $(this).val();
-		if(e.keyCode == 8 && _userSearchEmpty && v.length == 0) {
-			removeUser($('.user-label:last'));
-			_userSearchEmpty = false; //give them a chance
-			return;
-		}
-		if(v.length == 0 || v.match(/^\s+$/)) {
-			$('#user-search-result').hide();
-			$('#user-search').val("");
-			_userSearchEmpty = true;
-			return;
-		} else {
-			_userSearchEmpty = false;
-		}
-		
-		$.getJSON("/users/mixed_search", {q:v}, function(data) {
-			if(document.activeElement !== document.getElementById('user-search')) {
-				return;
-			}
-			_people_result = data;
-			if(data.length <= 0) {return;}
-			// /*console.log(_people_result);*/
-			var html = "";
-			for(var i in _people_result) {
-				html += "<div class='user-result' data-id='"+_people_result[i].id+"' data-index='"+i+"'><div class='name'>"+_people_result[i].name+"</div><div class='email'>"+_people_result[i].email+"</div></div>";
-			}
-			$('#user-search-result').html(html);
-
-			var o = $('#to-label').offset();
-			var io = $('#user-search').offset();
-
-			$('#user-search-result').css('top',io.top+22);
-			$('#user-search-result').css('left',o.left);
-			$('#user-search-result').css('width',$('#user-search').width() + $('#message-recipients').width());
-			$('#user-search-result').css('height',(32+10)*_people_result.length + 10);
-			$('#user-search-result').delay(200).show(0);
-
-
-			$('.user-result:first').addClass('user-selected');
-
-			setTimeout(fixSearchWidth, 400);
-		});
-	});
-
-	if(!_is_firefox) {
-		$('#compose_bt').live('click',function() {
-			/*console.log("Compose BT");*/
-			history.pushState({state: 'compose'}, "Reciprosody", "#compose");
-			//stateRestore_compose();
-		});
-	}
-
-	$('#compose_close_bt').live('click', function() {
-		history.go(-1);
-	});
-
-	$('#cmessage_close_bt').click(function() {
-		history.go(-1);
-	});
-
-	$('.messageSelect').on('mouseenter', function() {
-		///*console.log("over message select");*/
-		_overMessageSelect = true;
-	});
-	$('.messageSelect').on('mouseleave', function() {
-		///*console.log("left message select");*/
-		_overMessageSelect = false;
-	});
-	$('#messagesToggle_bt').click(function() {
-		_overMessageSelect = true;
-		$('.messageSelect').each(function() {
-			$(this).click();
-		});
-		_overMessageSelect = false;
-	});
-	$('.messageSelect').on('change', updateSelected);
-	$('#delete_bt').click(function() {
-		/*console.log("DELETE!");*/
-		if(_selectedMessages.length > 0) {
-			$('#delete-confirm').modal('show');
-			if(_selectedMessages.length == 1) {
-				$('#delete-plural').html("");
-			} else {
-				$('#delete-plural').html("");
-			}
-			$('#delete-count').html(_selectedMessages.length);
-		}
-	});
-	$('.user-label').live('mouseenter', function() {
-		var id = $(this).attr('data-id');
-		$('#user-search-result').html("<div class='user-result' data-id='"+id+"''><div class='name'>"+_selectedUsers[id].name+"</div><div class='email'>"+_selectedUsers[id].email+"</div></div>");
-		$('#user-search-result').height(48);
-		$('#user-search-result').show();
-	});
-	$('.user-label').live('mouseleave', function() {
-		$('#user-search-result').hide();
-	});
-	$('.user-label').live('click', function() {
-		var id = $(this).attr('data-id');
-		$(this).remove();
-		delete _selectedUsers[id];
-		fixSearchWidth();
-		$('#user-search-result').hide();
-	});
-	$('#yes-delete').click(function() {
-		/*console.log("YES DELETE");*/
-		console.log(_selectedMessages);
-		var mids = _selectedMessages.join("\n");
-
-		$.getJSON('/user/inbox_delete', {'mids': mids}, function(data) {
-			console.log(data);
-			if(data.ok) {
-				var current = $('#current-size');
-				var deleted = $('#deleted-size');
-				if(deleted.length == 0) {
-					deleted = $('#current-size');
-				}
-
-
-				var v = parseInt(current.html());
-				current.html((v -= data.moved_to_trash));
-				current.html(v - data.gone);
-
-				v = parseInt(deleted.html());
-				deleted.html(v+data.moved_to_trash);
-
-				v = parseInt(deleted.html());
-				deleted.html(v-data.permanently_deleted);
-
-				for(i in _selectedMessages) {
-					$('#message-row-'+_selectedMessages[i]).remove();
-				}
-
-				stateRestore_normal();
-			}
-		});
-
-		/*console.log(_selectedMessages.size);*/
-
-
-		$('#deleted-size').html(_selectedMessages.size);
-		$('#delete-confirm').modal('hide');
-	});
-
-	$('#send_bt').click(function() {
-		var ids = new Array();
-		$('.user-label').each(function(i) {
-			// console.log($(this).attr('data-id'));
-			ids.push($(this).attr('data-id'));
-		});
-		console.log(ids);
-		var subject = $('#compose-subject').val();
-		var body = $('#compose-body').val();
-
-		// console.log("Subject: " + subject);
-		// console.log("Body: " + body);
-
-		//--do validation
-		var blank = /^\s*$/;
-		if(ids.length == 0 || subject.match(blank) || body.match(blank)) {
-			console.log("Message not sent");
-
-			setTimeout(stateRestore_compose, 500);
-			return;
-		}
-
-		console.log("Sending Message...");
-		$.getJSON('/user/send_message', {'to': ids, 'subject': subject, 'body': body}, function(data) {
-			console.log(data);
-			stateRestore_normal();
-			clear_compose();
-
-			var target = $('#sent-size');
-			if(target.length == 0) { target = $('#current-size');}
-			target.html(parseInt(target.html())+ids.length);
-
-			if(_view == "sent") {
-				for(var i in data.message_rows) {
-					prepend_message(data.message_rows[i]);
-				}
-			}
-		});
-
-	});
-
-	$('.message-row').live('click', function() {
-		if(_overMessageSelect) {
-			return;
-		}
-		mid = $(this).attr('data-id');
-		console.log("MID = " + mid);
-		if(!mid) { return; }
-
-		history.pushState({state: 'cmessage'+mid}, "Reciprosody", "#cmessage-"+mid);
-
-		stateRestore_cmessage(mid);
-		
-	});
-
-	//------FUNCTIONS---------------------------------------------
 	function prepend_message(html) {
 		$('#message-table').prepend(html);
 		adjustMemberLinks();
@@ -524,8 +528,7 @@
 			$('#unread_tab').addClass('active');
 			_view = "unread";
 		}
-		console.log("VIEW = " + _view);
-
+		//console.log("VIEW = " + _view);
 		$('#lmenu').find(".active a .count").css('background-color', 'black');
 		$('#lmenu').find(".active a .count").attr('id', 'current-size');
 
