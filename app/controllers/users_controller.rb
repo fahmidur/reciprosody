@@ -96,7 +96,6 @@ class UsersController < ApplicationController
 			end
 		end
 
-
 		moved_to_trash = 0
 		@user.received_messages.process do |message|
 			if mids_hash[message.id]
@@ -123,7 +122,7 @@ class UsersController < ApplicationController
 		subject = params[:subject]
 		body = params[:body]
 
-		me = current_user()
+		@user = current_user()
 
 		error = []
 		if !subject || subject.blank?
@@ -146,20 +145,20 @@ class UsersController < ApplicationController
 			return
 		end
 
-		message = nil
+		message_rows = []
+		client = Faye::Client.new(get_faye_url)
 		to.each do |id|
 			user = User.find_by_id(id)
 			next unless user
-			message = me.send_message(user, {:topic => subject, :body => body})
+			message = @user.send_message(user, {:topic => subject, :body => body})
+
+			message_row = render_to_string :partial => 'inbox_message', :layout => false, :locals => {:m => message}
+
+			client.publish("/messages/#{user.id}", {:message_row => message_row});
+			message_rows << message_row
 		end
 
-		unless message
-			render :json => {:ok => false, :error => 'sent message is nil'}
-			return
-		end
-
-		message_row = render_to_string :partial => 'inbox_message', :layout => false, :locals => {:m => message}
-		render :json => {:ok => true, :message_row => message_row}
+		render :json => {:ok => true, :message_rows => message_rows}
 	end
 
 	# GET /users/inbox
@@ -197,6 +196,8 @@ class UsersController < ApplicationController
 			@select_messages = @received
 			@view = :unread
 		end
+
+		get_faye_url
 
 		if mid && !mid.blank?
 			@message = @select_messages.with_id(mid).all
@@ -270,6 +271,17 @@ class UsersController < ApplicationController
 	end
 	
 	private
+
+	def get_faye_url
+		@faye_url = Rails.application.config.action_mailer.default_url_options[:host]
+		if @faye_url =~ /\:\d+$/
+			@faye_url.gsub!(/\:\d+$/, ':9292')
+		else
+			@faye_url += ":9292"
+		end
+		@faye_url = "http://#{@faye_url}/faye"
+		return @faye_url
+	end
 	
 	def auth
 		if !user_signed_in?

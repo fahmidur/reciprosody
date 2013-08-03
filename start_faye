@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-rackup -E production -s thin
+rackup faye.ru -E production -s thin

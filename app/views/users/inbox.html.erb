@@ -35,11 +35,9 @@
 	<div class='span9'>
 
 		<div class='row-fluid' id='compose_panel' style="display:none;border:1px solid #bbb;margin-bottom:10px;padding:5px; padding-top:8px;box-shadow:0 0 5px #888; background-color:#fff">
-				
-				
-				<a class='pull-right' id='compose_close_bt' href='#' style="margin-top:-8px;text-decoration:none">
+				<span class='pull-right' id='compose_close_bt' style="margin-top:-8px;text-decoration:none;cursor:pointer;">
 					<i class='icon-remove'></i>
-				</a>
+				</span>
 
 				<div id='to-wrapper'>
 				<span id='to-label' style='display: inline-block;position:relative;top:-2px; color:#8f8f8f;border-bottom:0px solid #efefef;font-size:14px;margin:0px;text-align:right; padding-left:5px;'>To &nbsp; </span><span id='message-recipients' style='position: relative; top:-2px; margin: 0px; border-bottom:0px solid #efefef'></span><input type='text' style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:80%;border-bottom:0px solid #efefef' id='user-search'/>
@@ -53,8 +51,7 @@
 				<textarea style='border:0px solid black; border-radius:0px;resize:none;width:98%;height:10em;box-shadow: inset 0px 0px 0px;' id='compose-body'></textarea>
 
 				<hr style='margin-bottom:4px;'/>
-				<a href='#' class='btn btn-small btn-primary' style="opacity:0.9" id='send_bt'>Send</a>
-				
+				<button class='btn btn-small btn-primary' style="opacity:0.9" id='send_bt'>Send</button>
 		</div>
 
 		<div id='cmessage' data-id='' style='display:none; border:1px solid #bbb;margin-bottom:10px;padding:5px; padding-top:8px;box-shadow:0 0 5px #888; background-color:#fff'>
@@ -80,9 +77,9 @@
 				</div>
 			<% end %>
 
-			<a class='pull-right' id='cmessage_close_bt' href='#' style="margin-top:-8px;text-decoration:none">
+			<span class='pull-right' id='cmessage_close_bt' href='#' style="margin-top:-8px;text-decoration:none;cursor:pointer;">
 				<i class='icon-remove'></i>
-			</a>
+			</span>
 
 			<hr style="margin:0px;padding:0px;margin-bottom:10px;margin-top:10px;"/>
 			<div style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:84%;border-bottom:0px solid #efefef;padding:3px;padding-bottom:15px;' placeholder="Subject" id='cmessage-subject'></div>
@@ -147,6 +144,11 @@
 
 <div id='user-search-result' style="position:absolute; display:none; background-color:#fefefe; border:1px solid #efefef;padding-top:10px;">
 </div>
+<script type='text/javascript' src='/assets/moment.js'></script>
+<script type='text/javascript' src='<%= @faye_url %>.js'></script>
+<script type='text/javascript'>
+	var _faye_url = "<%= @faye_url %>";
+</script>
 
 <script type='text/javascript'>
 	var _view = "";
@@ -159,13 +161,25 @@
 	var _userSearchEmpty = false;
 	var _validStates = {"compose": 1, "": 1, "cmessage": 1};
 	var _savedMessages = new Array();
+	var _fclient = new Faye.Client(_faye_url);
+	var _myid = null;
 
 	//----MAIN-----
-	adjustMemberLinks();
-	//----------------------------------------------------------------------
-
-	//----EVENTS------------------------------------------------------------
-	window.onpopstate = restoreState;
+	$(function() {
+		_myid = $('#hf-userID').val();
+		console.log(_myid);
+		var _fsub = _fclient.subscribe('/messages/'+_myid, function(data) {
+			console.log(data);
+			$('#message-table').prepend(data.message_row);
+			var target = $('#unread-size');
+			if(target.length == 0) {
+				target = $('#current-size');
+			}
+			target.html(parseInt(target.html())+1);
+		});
+		adjustMemberLinks();
+		window.onpopstate = restoreState;
+	});
 
 	$('#compose-subject').live('focus', function() {
 		/*console.log("compose subject focus");*/
@@ -284,13 +298,11 @@
 		//stateRestore_compose();
 	});
 	$('#compose_close_bt').live('click', function() {
-		/*console.log("Compose Close BT");*/
-		history.pushState({state: 'normal'}, "Reciprosody", "#");
-		//stateRestore_normal();
+		history.go(-1);
 	});
+
 	$('#cmessage_close_bt').click(function() {
-		$('#cmessage').slideUp(300);
-		setTimeout(goToBase, 400);
+		history.go(-1);
 	});
 
 	$('.messageSelect').on('mouseenter', function() {
@@ -387,13 +399,14 @@
 		var subject = $('#compose-subject').val();
 		var body = $('#compose-body').val();
 
-		console.log("Subject: " + subject);
-		console.log("Body: " + body);
+		// console.log("Subject: " + subject);
+		// console.log("Body: " + body);
 
 		//--do validation
 		var blank = /^\s*$/;
 		if(ids.length == 0 || subject.match(blank) || body.match(blank)) {
 			console.log("Message not sent");
+
 			setTimeout(stateRestore_compose, 500);
 			return;
 		}
@@ -409,7 +422,9 @@
 			target.html(parseInt(target.html())+ids.length);
 
 			if(_view == "sent") {
-				$('#message-table').prepend(data.message_row);
+				for(var i in data.message_rows) {
+					$('#message-table').prepend(data.message_rows[i]);
+				}
 			}
 		});
 
@@ -454,7 +469,7 @@
 		var email = user.find('.email').text();
 		var id = user.attr('data-id');
 
-		if(id == $('#hf-userID').val()) {
+		if(id == _myid) {
 			return;
 		}
 
@@ -519,7 +534,7 @@
 
 		$('#cmessage-subject').html(data.topic);
 		$('#cmessage-body').html(data.body);
-		$('#cmessage-time').html(data.created);
+		$('#cmessage-time').html(moment(data.created).format('MMMM Do YYYY, h:mm:ss A'));
 		$('#cmessage-time-ago').html(data.time_ago + " ago");
 
 		_selectedMessages = [data.mid];
@@ -529,6 +544,7 @@
 		$('#messagesToggle_bt').hide();
 	}
 	function stateRestore_cmessage(mid) {
+		$('#compose_panel').slideUp();
 		if(_savedMessages[mid]) {
 			fill_cmessage(_savedMessages[mid]);
 			return;
@@ -550,7 +566,12 @@
 		$('.ib-component').slideUp();
 		$('#ibar').slideUp();
 		$('#compose_panel').slideDown();
+
 		$('#user-search').focus();
+		setTimeout(function() {
+			$('#user-search').focus();
+		},200);
+
 		history.replaceState({state: 'compose'}, "Title", "#compose");
 	}
 	function stateRestore_normal() {
