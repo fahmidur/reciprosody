@@ -57,12 +57,48 @@
 				
 		</div>
 
-		<div class='ib-component'>
+		<div id='cmessage' data-id='' style='display:none; border:1px solid #bbb;margin-bottom:10px;padding:5px; padding-top:8px;box-shadow:0 0 5px #888; background-color:#fff'>
+			<div class='btn-group'>
+				<a href='#' class="btn btn-mini" target='_blank' id='cmessage-from-link'>
+					<i class='icon-user'></i>&nbsp;
+					<span id='cmessage-from-name'></span>
+				</a>
+				<button class="btn btn-mini disabled">
+					<span id='cmessage-from-email'></span>
+				</button>
+			</div>
 
-		<div class='row-fluid' style="margin-bottom:5px;">
-			<% unless @message %>
-				<div class='btn btn-mini' id='messagesToggle_bt'>Toggle</div>
+			<% if @view == :sent %>
+				<i class='icon-arrow-right'></i>
+				<div class='btn-group'>
+					<a href='#' class="btn btn-mini" target='_blank' id='cmessage-to-link'>
+						<i class='icon-user'></i>&nbsp;
+						<span id='cmessage-to-name'></span>
+					</a>
+					<button class="btn btn-mini disabled"><span id='cmessage-to-email'></span>
+					</button>
+				</div>
 			<% end %>
+
+			<a class='pull-right' id='cmessage_close_bt' href='#' style="margin-top:-8px;text-decoration:none">
+				<i class='icon-remove'></i>
+			</a>
+
+			<hr style="margin:0px;padding:0px;margin-bottom:10px;margin-top:10px;"/>
+			<div style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:84%;border-bottom:0px solid #efefef;padding:3px;padding-bottom:15px;' placeholder="Subject" id='cmessage-subject'></div>
+
+			<hr style="margin:0px;padding:0px;"/>
+
+			<div style='border:0px solid black; border-radius:0px;resize:none;width:98%;height:10em;box-shadow: inset 0px 0px 0px;padding:3px;' id='cmessage-body'></div>
+
+			<hr style='margin-bottom:4px;'/>
+			<small style='font-weight:bold;color:#8d8d8d' id='cmessage-time'></small>
+			<small class='pull-right' style='font-weight:bold;color:#8d8d8d' id='cmessage-time-ago'></small>
+
+		</div>
+
+		<div class='row-fluid' id='ibar' style="margin-bottom:5px;">
+			<div class='btn btn-mini' id='messagesToggle_bt'>Toggle</div>
 
 			<div class='btn-group'>
 				<% if @view == :trash %>
@@ -71,7 +107,7 @@
 				<% else %>
 					<% if @view != :sent %>
 						<% if @view != :read %>
-						<button class='btn btn-mini <%= "btn-primary" if @message %>'>Mark as Read</button>
+						<button class='btn btn-mini'>Mark as Read</button>
 						<% end %>
 						<% if @view != :unread %>
 						<button class='btn btn-mini'>Mark as Unread</button>
@@ -83,91 +119,14 @@
 			<span class='badge badge-info'><span id='numMessagesSelected'>0</span> Selected</span>
 		</div>
 
-		<% if @message && !@message.is_a?(Array)%>
-			<!--
-			<div class='row-fluid' id='current-message' data-id='<%= @message.id %>'>
+		<div class='ib-component'>
 
-				<h6>
-					<span class=''><%= @message.created_at %></span>
-					<span class='badge pull-right'>
-						<%= time_ago_in_words(@message.created_at)%> ago
-					</span>
-				</h6>
-
-				<table>
-					<tr>
-						<td>
-							<span class='label'>From: </span>
-						</td>
-
-						<td>
-							<%= render :partial => 'shared/user_small1', :locals => { :user => @message.from} %></td>
-						</td>
-
-					</tr>
-					<td>
-						<span class='label'>To:</span>
-					</td>
-					<td>
-						<%= render :partial => 'shared/user_small1', :locals => { :user => @message.to } %> </h6>
-					</td>
-					<tr>
-						<td colspan='2'>
-							<span class='label'>Subject:</span> &nbsp;
-							<span><%= @message.topic %></span>
-						</td>
-					</tr>
-				</table>
-				<br/>
-			</div>
-			<div class='row-fluid'>
-				<div class='span12' style="padding:1em; border-left:2px solid orange;background-color:#fafafa">
-					<%= @message.body %>
-				</div>
-			</div>
-			-->
-			<div id='cmessage' data-id='<%= @message.id %>' style='border:1px solid #bbb;margin-bottom:10px;padding:5px; padding-top:8px;box-shadow:0 0 5px #888; background-color:#fff'>
-				<!--<%= render :partial => 'shared/user_small1', :locals => {:user => @message.from } %>-->
-				<div class='btn-group'>
-					<a href='/users/<%= @message.from.email %>' class="btn btn-mini" target='_blank'>
-						<i class='icon-user'></i>&nbsp;<%= @message.from.name %>
-					</a>
-					<button class="btn btn-mini disabled"><%= @message.from.email %></button>
-				</div>
-
-				<% if @view == :sent %>
-					<i class='icon-arrow-right'></i>
-					<div class='btn-group'>
-						<a href='/users/<%= @message.from.email %>' class="btn btn-mini" target='_blank'>
-							<i class='icon-user'></i>&nbsp;<%= @message.to.name %>
-						</a>
-						<button class="btn btn-mini disabled"><%= @message.to.email %></button>
-					</div>
-				<% end %>
-
-				<a class='pull-right' id='cmessage_close_bt' href='#' style="margin-top:-8px;text-decoration:none">
-					<i class='icon-remove'></i>
-				</a>
-
-				<hr style="margin:0px;padding:0px;margin-bottom:10px;margin-top:10px;"/>
-				<div style='border-radius:0px; height:1em; outline:none; border:0px solid black; box-shadow: inset 0px 0px 0px;width:84%;border-bottom:0px solid #efefef;padding:3px;padding-bottom:15px;' placeholder="Subject" id='cmessage-subject'><%= @message.topic %></div>
-
-				<hr style="margin:0px;padding:0px;"/>
-
-				<div style='border:0px solid black; border-radius:0px;resize:none;width:98%;height:10em;box-shadow: inset 0px 0px 0px;padding:3px;' id='cmessage-body'><%= @message.body %></div>
-
-				<hr style='margin-bottom:4px;'/>
-				<small style='font-weight:bold;color:#8d8d8d'><%= @message.created_at %></small>
-				<small class='pull-right' style='font-weight:bold;color:#8d8d8d'><%= time_ago_in_words(@message.created_at) %> ago</small>
-
-			</div>
-		<% else %>
-			<table width="100%" class='inbox_table' id='message-table'>
-			<% @select_messages.process do |m| %>
-				<%= render :partial => 'inbox_message', :locals => {:m => m, :view => @view} %>
-			<% end %>
-			</table>
+		<table width="100%" class='inbox_table' id='message-table'>
+		<% @select_messages.process do |m| %>
+			<%= render :partial => 'inbox_message', :locals => {:m => m} %>
 		<% end %>
+		</table>
+
 	</div> <!---end of .ib-component-->
 	</div> <!---end of .span9-->
 </div>
@@ -195,31 +154,19 @@
 	var _selectedMessages = null;
 	var _selectedUsers = new Array();
 	var _maxMemberSize = 0;
+	var _maxMrowAgoSize = 0;
 	var _people_result = null;
 	var _userSearchEmpty = false;
-
-	var _counts = new Array();
-	$('.count').each(function(i) {
-		_counts.push(parseInt($(this).html()));
-	});
-	/*console.log(_counts);*/
+	var _validStates = {"compose": 1, "": 1, "cmessage": 1};
+	var _savedMessages = new Array();
 
 	//----MAIN-----
-
-
-
-	<% if @message && !@message.is_a?(Array) %>
-		_selectedMessages = [$('#cmessage').attr('data-id')];
-		console.log(_selectedMessages);
-		$('#numMessagesSelected').html(_selectedMessages.length);
-	<% else %>
-		updateSelected();
-	<% end %>
-
 	adjustMemberLinks();
 	//----------------------------------------------------------------------
 
 	//----EVENTS------------------------------------------------------------
+	window.onpopstate = restoreState;
+
 	$('#compose-subject').live('focus', function() {
 		/*console.log("compose subject focus");*/
 		$('#user-search-result').hide();
@@ -333,11 +280,13 @@
 
 	$('#compose_bt').live('click',function() {
 		/*console.log("Compose BT");*/
-		stateRestore_compose();
+		history.pushState({state: 'compose'}, "Reciprosody", "#compose");
+		//stateRestore_compose();
 	});
 	$('#compose_close_bt').live('click', function() {
 		/*console.log("Compose Close BT");*/
-		stateRestore_normal();
+		history.pushState({state: 'normal'}, "Reciprosody", "#");
+		//stateRestore_normal();
 	});
 	$('#cmessage_close_bt').click(function() {
 		$('#cmessage').slideUp(300);
@@ -403,43 +352,31 @@
 				}
 
 
-				<% if @message && !@message.is_a?(Array) %>
-					console.log("No reason to update");
-				<% else %>
-					var v = parseInt(current.html());
-					current.html((v -= data.moved_to_trash));
-					current.html(v - data.gone);
+				var v = parseInt(current.html());
+				current.html((v -= data.moved_to_trash));
+				current.html(v - data.gone);
 
-					v = parseInt(deleted.html());
-					deleted.html(v+data.moved_to_trash);
+				v = parseInt(deleted.html());
+				deleted.html(v+data.moved_to_trash);
 
-					v = parseInt(deleted.html());
-					deleted.html(v-data.permanently_deleted);
-				<% end %>
+				v = parseInt(deleted.html());
+				deleted.html(v-data.permanently_deleted);
 
-				
+				for(i in _selectedMessages) {
+					$('#message-row-'+_selectedMessages[i]).remove();
+				}
+
+				stateRestore_normal();
 			}
 		});
-		
-
-		<% if @message && !@message.is_a?(Array) %>
-			$('#cmessage').slideUp(200);
-			setTimeout(goToBase, 300);
-		<% else %>
-			updateSelected();
-			for(i in _selectedMessages) {
-				$('#message-row-'+_selectedMessages[i]).remove();
-			}
-		<% end %>
 
 		/*console.log(_selectedMessages.size);*/
 
 
 		$('#deleted-size').html(_selectedMessages.size);
-
 		$('#delete-confirm').modal('hide');
 	});
-	window.onpopstate = restoreState;
+
 	$('#send_bt').click(function() {
 		var ids = new Array();
 		$('.user-label').each(function(i) {
@@ -465,15 +402,40 @@
 		$.getJSON('/user/send_message', {'to': ids, 'subject': subject, 'body': body}, function(data) {
 			console.log(data);
 			stateRestore_normal();
+			clear_compose();
+
 			var target = $('#sent-size');
-			if(target.length == 0) {
-				target = $('#current-size');
-			}
+			if(target.length == 0) { target = $('#current-size');}
 			target.html(parseInt(target.html())+ids.length);
+
+			if(_view == "sent") {
+				$('#message-table').prepend(data.message_row);
+			}
 		});
 
 	});
+
+	$('.message-row').live('click', function() {
+		if(_overMessageSelect) {
+			return;
+		}
+		mid = $(this).attr('data-id');
+		console.log("MID = " + mid);
+		if(!mid) { return; }
+
+		history.pushState({state: 'cmessage'+mid}, "Reciprosody", "#cmessage-"+mid);
+
+		stateRestore_cmessage(mid);
+		
+	});
+
 	//------FUNCTIONS---------------------------------------------
+	function clear_compose() {
+		$('#compose-subject').val("");
+		$('#message-recipients').html("");
+		_selectedUsers = new Array();
+		$('#compose-body').val("");
+	}
 	function goToBase() {
 		url = window.location.href;
 		url = url.replace(/\&mid=\d+\#*.*$/, '')
@@ -523,22 +485,70 @@
 			target.addClass('active');
 		} else {
 			$('#unread_tab').addClass('active');
+			_view = "unread";
 		}
+		console.log("VIEW = " + _view);
+
 		$('#lmenu').find(".active a .count").css('background-color', 'black');
 		$('#lmenu').find(".active a .count").attr('id', 'current-size');
 
-		//now restore composition state
-		capture = /\#(\w+)/.exec(document.URL);
-		if(capture) {
-			eval("stateRestore_"+capture[1]+"()");
+		//now restore state
+		capture = /\#([a-z]+)/.exec(document.URL);
+		if(capture && _validStates[capture[1]]) {
+			if(capture[1] === 'cmessage') {
+				capture = /\#([a-z]+)-(\d+)/.exec(document.URL);
+				stateRestore_cmessage(parseInt(capture[2]));
+			}else {
+				eval("stateRestore_"+capture[1]+"()");
+			}
 		} else {
 			stateRestore_normal();
 		}
 
 	}
+	function fill_cmessage(data) {
+		$('.ib-component').slideUp();
+		$('#cmessage').attr('data-id', data.mid);
+		$('#cmessage-from-name').html(data.from.name);
+		$('#cmessage-from-email').html(data.from.email);
+		$('#cmessage-from-link').attr("href", "/users/"+data.from.email);
+
+		$('#cmessage-to-name').html(data.to.name);
+		$('#cmessage-to-email').html(data.to.email);
+		$('#cmessage-to-link').attr("href", "/users/"+data.to.email);
+
+		$('#cmessage-subject').html(data.topic);
+		$('#cmessage-body').html(data.body);
+		$('#cmessage-time').html(data.created);
+		$('#cmessage-time-ago').html(data.time_ago + " ago");
+
+		_selectedMessages = [data.mid];
+		$('#numMessagesSelected').html("1");
+
+		$('#cmessage').slideDown();
+		$('#messagesToggle_bt').hide();
+	}
+	function stateRestore_cmessage(mid) {
+		if(_savedMessages[mid]) {
+			fill_cmessage(_savedMessages[mid]);
+			return;
+		}
+		$.getJSON('/user/inbox_get', {'mid': mid}, function(data) {
+			console.log(data);
+			if(data.ok) {
+				_savedMessages[mid] = data;
+				fill_cmessage(data);
+			} else {
+				history.go(-1);
+			}
+		});
+
+		history.replaceState({state: 'compose'}, "Title", "#cmessage-"+mid);
+	}
 	function stateRestore_compose() {
 		/*console.log("Restoring compose state");*/
 		$('.ib-component').slideUp();
+		$('#ibar').slideUp();
 		$('#compose_panel').slideDown();
 		$('#user-search').focus();
 		history.replaceState({state: 'compose'}, "Title", "#compose");
@@ -546,16 +556,32 @@
 	function stateRestore_normal() {
 		/*console.log("Restoring normal state");*/
 		$('#user-search-result').hide();
-		$('#compose_panel').slideUp();
+
+		if($('#compose_panel').is(":visible")) {
+			$('#compose_panel').slideUp();
+		}
+		if($('#cmessage').is(":visible")) {
+			$('#cmessage').slideUp();
+		}
+
+		updateSelected();
+
+
 		$('.ib-component').slideDown();
+		$('#messagesToggle_bt').show();
+		$('#ibar').slideDown();
+
 		history.replaceState({state: 'normal'}, "Title", "#");
 	}
+
+	//MARKED FOR DELETION
 	function messageOpen(str) {
 		if(_overMessageSelect) {
 			return;
 		}
-		window.location = str;
+		//window.location = str;
 	}
+
 	function updateSelected() {
 		_selectedMessages = new Array();
 		$('.messageSelect').each(function(item) {
@@ -570,6 +596,7 @@
 		/*console.log(_selectedMessages);*/
 		$('#numMessagesSelected').html(_selectedMessages.length);
 	}
+
 	function adjustMemberLinks() {
 		$(".member-link").each(function() {
 			var w = $(this).html().length;
@@ -577,6 +604,14 @@
 				_maxMemberSize = w;
 			}
 		});
+
+		$(".message-row-ago").each(function() {
+			var w = $(this).width();
+			if(w > _maxMrowAgoSize) {
+				_maxMrowAgoSize = w;
+			}
+		});
+
 		$(".member-link").each(function() {
 			var h = $(this).html();
 			var w = h.length;
@@ -584,5 +619,7 @@
 				$(this).html(h + Array(_maxMemberSize-w+1).join("&nbsp; "));
 			}
 		});
+
+		$(".message-row-ago").width(_maxMrowAgoSize);
 	}
 </script>

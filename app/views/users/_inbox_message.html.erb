@@ -1,4 +1,4 @@
-<tr class='row-fluid message-row' data-id='<%= m.id %>' onclick="messageOpen('/user/inbox?v=<%=view %>&mid=<%= m.id %>');" id='message-row-<%= m.id %>'>
+<tr class='row-fluid message-row' data-id='<%= m.id %>' id='message-row-<%= m.id %>'>
 	<td class=''>
 		<input type='checkbox' class='messageSelect' data-id='<%= m.id %>' style='display:inline-block; height:20px;'/>
 	</td>
@@ -11,7 +11,7 @@
 	</td>
 
 	<td>
-		<small class='label pull-right'>
+		<small class='label pull-right message-row-ago'>
 			<%= time_ago_in_words(m.updated_at) %> ago
 		</small>
 	</td>

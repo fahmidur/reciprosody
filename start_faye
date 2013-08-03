@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+rackup -E production -s thin

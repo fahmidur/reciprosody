@@ -8,6 +8,8 @@ gem 'rails', '>= 3.2.8'
 gem 'sqlite3'
 gem 'puma' #07-22-2013
 gem 'thin'
+gem 'faye' #sfr
+gem 'eventmachine' #sfr
 
 
 # Gems used only for assets and not required

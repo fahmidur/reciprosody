@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+	require 'faye'
+	require 'eventmachine'
+
 	protect_from_forgery
 	before_filter :auth
 
@@ -14,6 +17,52 @@ class UsersController < ApplicationController
 
 		q = "%#{q}%"
 		render :json => User.where("name LIKE ? OR email LIKE ?", q, q)-[current_user()]
+	end
+
+
+	# GET /user/inbox_get
+	# params[:mid] = message id
+	def inbox_get
+		@user = current_user()
+		mid = params[:mid]
+
+		unless mid && mid =~ /^\d+$/
+			render :json => {:ok => false, :mid => mid, :error => 'message id not valid'}
+			return
+		end
+
+		mid = mid.to_i
+
+		message = nil
+		@user.messages.process do |m|
+			if m.id == mid
+				message = m
+				break
+			end
+		end
+
+		@user.deleted_messages.process do |m|
+			if m.id == mid
+				message = m
+				break
+			end
+		end
+
+		unless message
+			render :json => {:ok => false, :mid => mid, :error => 'message not found'}
+			return
+		end
+
+		render :json => {
+			:ok => true, 
+			:mid => mid,
+			:from => message.from, 
+			:to => message.to, 
+			:topic => message.topic, 
+			:body => message.body, 
+			:created => message.created_at,
+			:time_ago => help.time_ago_in_words(message.created_at),
+		}
 	end
 
 	# GET /user/inbox_delete
@@ -76,12 +125,41 @@ class UsersController < ApplicationController
 
 		me = current_user()
 
+		error = []
+		if !subject || subject.blank?
+			error << "Subject is invalid"
+		end
+
+		if !body || body.blank?
+			error << "Body is invalid"
+		end
+
+		to.each do |id|
+			if !id || id !~ /^\d+$/
+				error << "To field is invalid"
+				break
+			end
+		end
+
+		if error.size > 0
+			render :json => {:okay => false, :error => error}
+			return
+		end
+
+		message = nil
 		to.each do |id|
 			user = User.find_by_id(id)
 			next unless user
-			me.send_message(user, {:topic => subject, :body => body})
+			message = me.send_message(user, {:topic => subject, :body => body})
 		end
-		render :json => {:ok => true, :to => to, :subject => subject, :body => body}
+
+		unless message
+			render :json => {:ok => false, :error => 'sent message is nil'}
+			return
+		end
+
+		message_row = render_to_string :partial => 'inbox_message', :layout => false, :locals => {:m => message}
+		render :json => {:ok => true, :message_row => message_row}
 	end
 
 	# GET /users/inbox
@@ -117,7 +195,7 @@ class UsersController < ApplicationController
 			@view = :trash
 		else
 			@select_messages = @received
-			@view = :received
+			@view = :unread
 		end
 
 		if mid && !mid.blank?
