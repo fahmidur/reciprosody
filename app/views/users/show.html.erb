@@ -90,14 +90,46 @@
 var _people_result = new Array();
 var _people_result_div = $('#people_result');
 var _people_search_div = $('#people_search');
+var _previous_search = "";
 updateResult();
 
-_people_search_div.keyup(function() {
+_people_search_div.keydown(function(e) {
+	//console.log(e.keyCode);
+	if(e.keyCode == 40) {
+		var next = $('.presult.selected').next(".presult");
+		$('.presult').removeClass('selected');
+		if(next.length > 0) {
+			next.addClass('selected');
+		} else {
+			$('.presult:first').addClass('selected');
+		}
+	}
+	else
+	if(e.keyCode == 38) {
+		var prev = $('.presult.selected').prev(".presult");
+		$('.presult').removeClass('selected');
+		if(prev.length > 0) {
+			prev.addClass('selected');
+		} else {
+			$('.presult:last').addClass('selected');
+		}
+	}
+	else
+	if(e.keyCode == 13) {
+		$(".presult.selected").click();
+	}
+});
+
+_people_search_div.keyup(function(e) {
 	var v=$(this).val();
-	$.getJSON("/users/mixed_search", {q:v}, function(data) {
-		_people_result = data;
-		updateResult();
-	});
+	if(v !== _previous_search) {
+		console.log("HERE");
+		$.getJSON("/users/mixed_search", {q:v}, function(data) {
+			_people_result = data;
+			updateResult();
+		});
+		_previous_search = v;
+	}
 });
 
 $('.presult').live('click', function() {
@@ -115,6 +147,7 @@ function updateResult() {
 			html += "<div class='corpi_item_small presult' data-id='"+_people_result[i].email+"'>"+_people_result[i].name+"</div>";
 		}
 		_people_result_div.html(html);
+		$('.presult:first').addClass("selected");
 		_people_result_div.slideDown();
 	}
 }
