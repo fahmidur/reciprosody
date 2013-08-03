@@ -123,7 +123,6 @@ _people_search_div.keydown(function(e) {
 _people_search_div.keyup(function(e) {
 	var v=$(this).val();
 	if(v !== _previous_search) {
-		console.log("HERE");
 		$.getJSON("/users/mixed_search", {q:v}, function(data) {
 			_people_result = data;
 			updateResult();
