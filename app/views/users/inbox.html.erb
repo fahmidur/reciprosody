@@ -168,14 +168,26 @@
 	$(function() {
 		_myid = $('#hf-userID').val();
 		console.log(_myid);
+		var capture = /v=(\w+)/.exec(document.URL);
+		if(capture) {
+			_view = capture[1];
+		}
+		console.log(_view);
+
 		var _fsub = _fclient.subscribe('/messages/'+_myid, function(data) {
-			console.log(data);
-			$('#message-table').prepend(data.message_row);
-			var target = $('#unread-size');
-			if(target.length == 0) {
+			//console.log(data);
+
+			var target = $('#unreaded-size');
+			if(target.length === 0) {
 				target = $('#current-size');
 			}
 			target.html(parseInt(target.html())+1);
+
+			if(_view === "unread") {
+				prepend_message(data.message_row);
+			} else {
+				target.css("background-color", "orange");
+			}
 		});
 		adjustMemberLinks();
 		window.onpopstate = restoreState;
@@ -423,7 +435,7 @@
 
 			if(_view == "sent") {
 				for(var i in data.message_rows) {
-					$('#message-table').prepend(data.message_rows[i]);
+					prepend_message(data.message_rows[i]);
 				}
 			}
 		});
@@ -445,6 +457,10 @@
 	});
 
 	//------FUNCTIONS---------------------------------------------
+	function prepend_message(html) {
+		$('#message-table').prepend(html);
+		adjustMemberLinks();
+	}
 	function clear_compose() {
 		$('#compose-subject').val("");
 		$('#message-recipients').html("");
@@ -570,7 +586,7 @@
 		$('#user-search').focus();
 		setTimeout(function() {
 			$('#user-search').focus();
-		},200);
+		},500);
 
 		history.replaceState({state: 'compose'}, "Title", "#compose");
 	}
@@ -619,8 +635,11 @@
 	}
 
 	function adjustMemberLinks() {
+		_maxMemberSize = 0;
+		_maxMrowAgoSize = 0;
+
 		$(".member-link").each(function() {
-			var w = $(this).html().length;
+			var w = $(this).width();
 			if(w > _maxMemberSize) {
 				_maxMemberSize = w;
 			}
@@ -632,15 +651,7 @@
 				_maxMrowAgoSize = w;
 			}
 		});
-
-		$(".member-link").each(function() {
-			var h = $(this).html();
-			var w = h.length;
-			if(w < _maxMemberSize) {
-				$(this).html(h + Array(_maxMemberSize-w+1).join("&nbsp; "));
-			}
-		});
-
+		$(".member-link").width(_maxMemberSize);
 		$(".message-row-ago").width(_maxMrowAgoSize);
 	}
 </script>
