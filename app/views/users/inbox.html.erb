@@ -163,7 +163,7 @@
 	var _savedMessages = new Array();
 	var _fclient = new Faye.Client(_faye_url);
 	var _myid = null;
-
+	var _is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 	//----MAIN-----
 	$(function() {
 		_myid = $('#hf-userID').val();
@@ -173,6 +173,9 @@
 			_view = capture[1];
 		}
 		console.log(_view);
+		if(_is_firefox) {
+			restoreState();
+		}
 
 		var _fsub = _fclient.subscribe('/messages/'+_myid, function(data) {
 			//console.log(data);
@@ -304,11 +307,14 @@
 		});
 	});
 
-	$('#compose_bt').live('click',function() {
-		/*console.log("Compose BT");*/
-		history.pushState({state: 'compose'}, "Reciprosody", "#compose");
-		//stateRestore_compose();
-	});
+	if(!_is_firefox) {
+		$('#compose_bt').live('click',function() {
+			/*console.log("Compose BT");*/
+			history.pushState({state: 'compose'}, "Reciprosody", "#compose");
+			//stateRestore_compose();
+		});
+	}
+
 	$('#compose_close_bt').live('click', function() {
 		history.go(-1);
 	});
