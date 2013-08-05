@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130708162610) do
+ActiveRecord::Schema.define(:version => 20130805161104) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -216,6 +216,16 @@ ActiveRecord::Schema.define(:version => 20130708162610) do
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
   end
+
+  create_table "user_properties", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "value"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "user_properties", ["user_id"], :name => "index_user_properties_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false

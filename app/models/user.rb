@@ -29,6 +29,8 @@ class User < ActiveRecord::Base
 	has_many :publication_memberships
 	has_many :tool_memberships
 
+	has_many :user_properties
+
 
 	
 	has_one :super_key
@@ -45,6 +47,27 @@ class User < ActiveRecord::Base
 	scope :tool_owners, where(:tool_memberships => {:role => 'owner'})
 	scope :tool_reviewers, where(:tool_memberships => {:role => 'reviewer'})
 	scope :tool_members, where(:tool_memberships => {:role => 'member'})
+
+	def setProp(name, value)
+		prop = self.user_properties.find_by_name(name)
+		if(prop)
+			prop.destroy()
+		end
+
+		if value != nil
+			self.user_properties.create(:name => name, :value => value)
+		end
+	end
+
+	def getProp(name = nil)
+		if(name == nil)
+			return self.user_properties
+		end
+		prop = self.user_properties.find_by_name(name)
+		return prop.value if prop
+		return nil
+	end
+
 
 	def resumables
 		ResumableIncompleteUpload.where(:user_id => self.id).order("updated_at DESC")

@@ -45,7 +45,8 @@ Reciprosody2::Application.configure do
 	# config.action_mailer.default_url_options = { :host => '108.29.43.202:3000' }
 	
 	#-Localhost for Testing
-	config.action_mailer.default_url_options = { :host => '192.168.1.2:3000' }
+  config.action_mailer.default_url_options = { :host => '127.0.0.1:3000' }
+	# config.action_mailer.default_url_options = { :host => '192.168.1.2:3000' }
 	
 	#-Development machine i.e Jaguare
 	#config.action_mailer.default_url_options = { :host => `curl ifconfig.me`+":3000" }

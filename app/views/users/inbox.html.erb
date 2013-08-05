@@ -30,6 +30,11 @@
 				<span class='badge pull-right count' id='deleted-size'><%= @deleted.size %></span>
 			</a></li>
 		</ul>
+
+		<span class='btn btn-mini btn-inverse' id='block-emails-bt' data-name="inbox_block_emails">
+			<input type='checkbox' data-name="inbox_block_emails" id="prop-block-emails" style="margin-top:-2px;" <%= 'checked' if @block_emails%>/>&nbsp;Block Emails
+		</span>
+					
 	</div>
 
 	<div class='span9'>
@@ -199,6 +204,25 @@
 		adjustMemberLinks();
 		window.onpopstate = restoreState;
 
+		$('#block-emails-bt').click(function() {
+			console.log("block-emails-bt click event");
+			var cb = $('#prop-block-emails');
+			cb.prop("checked", !cb.prop("checked"));
+			var name = $(this).attr('data-name');
+
+			console.log(name);
+			var value = cb.prop("checked") ? true : false;
+			console.log("VALUE = " + value);
+
+			$.getJSON("/user/set_prop", {'name': name, 'value': value}, function(data) {
+				console.log(data);
+			});
+		});
+		$('#prop-block-emails').click(function(e) {
+			//console.log("preventing default");
+			e.preventDefault();
+			e.stopPropagation();
+		});
 
 		$('#mark_read_bt').click(function() {
 			console.log("Marking as read...");

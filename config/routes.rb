@@ -114,6 +114,7 @@ Reciprosody2::Application.routes.draw do
 		member do
 			get :invite
 
+
       get :inbox        #users_controller#inbox
       get :inbox_delete #users_controller#inbox_delete
       get :send_message #users_controller#send_message
@@ -121,6 +122,8 @@ Reciprosody2::Application.routes.draw do
       get :inbox_mark_read #users_controller#inbox_mark_read
       get :inbox_mark_unread #users_controller#inbox_mark_unread
       get :inbox_restore #users_controller#inbox_restore
+
+      get :set_prop #users_controller#set_prop
       
 			post :invite_user
 		end

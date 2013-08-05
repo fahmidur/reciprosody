@@ -221,8 +221,11 @@ class UsersController < ApplicationController
 			client.publish("/messages/#{user.id}", {:message_row => message_row});
 			message_rows << message_row
 
+
 			Thread.new do
-				UsersMailer.message_mail(@user, user, subject, body, message.id).deliver
+				unless user.getProp("inbox_block_emails")
+					UsersMailer.message_mail(@user, user, subject, body, message.id).deliver
+				end
 				ActiveRecord::Base.connection.close
 			end
 		end
@@ -275,6 +278,31 @@ class UsersController < ApplicationController
 		end
 
 		@message = @message[0] if @message && @message.length > 0
+
+		@block_emails = @user.getProp("inbox_block_emails")
+	end
+
+	# GET /user/set_prop
+	# params[:name] = name of property
+	# params[:value] = value of property
+	def set_prop
+		@user = current_user()
+		name = params[:name]
+		value = params[:value]
+
+		unless UserProperty.valid_properties.include?(name)
+			render :json => {:ok => false, :error => "#{name} is not a valid property", :name => name, :value => value}
+			return
+		end
+		if !value || value.blank?
+			value = nil
+		end
+		value = nil if value == "false"
+		value = true if value == "true"
+
+
+		@user.setProp(name, value)
+		render :json => {:ok => true, :name => name, :value => value}
 	end
 
 	# GET /users/:id
