@@ -221,7 +221,10 @@ class UsersController < ApplicationController
 			client.publish("/messages/#{user.id}", {:message_row => message_row});
 			message_rows << message_row
 
-			UsersMailer.message_mail(@user, user, subject, body, message.id).deliver
+			Thread.new do
+				UsersMailer.message_mail(@user, user, subject, body, message.id).deliver
+				ActiveRecord::Base.connection.close
+			end
 		end
 
 		render :json => {:ok => true, :message_rows => message_rows}
