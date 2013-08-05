@@ -104,16 +104,16 @@
 				<% else %>
 					<% if @view != :sent %>
 						<% if @view != :read %>
-						<button class='btn btn-mini'>Mark as Read</button>
+						<button class='btn btn-mini' id='mark_read_bt'>Mark as Read</button>
 						<% end %>
 						<% if @view != :unread %>
-						<button class='btn btn-mini'>Mark as Unread</button>
+						<button class='btn btn-mini' id='mark_unread_bt'>Mark as Unread</button>
 						<% end %>
 					<% end %>
 					<button class='btn btn-mini btn-danger' id='delete_bt'>Delete</button>
 				<% end %>
 			</div>
-			<span class='badge badge-info'><span id='numMessagesSelected'>0</span> Selected</span>
+			<span class='badge badge-inverse'><span id='numMessagesSelected'>0</span> Selected</span>
 		</div>
 
 		<div class='ib-component'>
@@ -198,6 +198,102 @@
 
 		adjustMemberLinks();
 		window.onpopstate = restoreState;
+
+
+		$('#mark_read_bt').click(function() {
+			console.log("Marking as read...");
+			var mids = _selectedMessages.join("\n");
+
+			$.getJSON('/user/inbox_mark_read', {'mids': mids}, function(data) {
+				console.log(data);
+				if(!data.ok) {
+					console.log("Error marking messages as read");
+					return;
+				}
+				
+				if(_view === "unread") {
+					for(var i in _selectedMessages) {
+						$('#message-row-'+_selectedMessages[i]).remove();
+						delete _savedMessages[_selectedMessages[i]];
+					}
+				}
+
+				var v = parseInt($('#current-size').html());
+				$('#current-size').html(v-data.found);
+
+				v = parseInt($('#readed-size').html());
+				$('#readed-size').html(v+data.found);
+
+				stateRestore_normal();
+			});
+		});
+		$('#mark_unread_bt').click(function() {
+			console.log("Marking as unread...");
+			var mids = _selectedMessages.join("\n");
+			$.getJSON('/user/inbox_mark_unread', {'mids': mids}, function(data) {
+				console.log(data);
+				if(!data.ok) {
+					console.log("Error marking messages as unread");
+					return;
+				}
+				if(_view === "read") {
+					for(var i in _selectedMessages) {
+						$('#message-row-'+_selectedMessages[i]).remove();
+						delete _savedMessages[_selectedMessages[i]];
+					}
+				}
+
+				var v = parseInt($('#current-size').html());
+				$('#current-size').html(v-data.found);
+
+				v = parseInt($('#unreaded-size').html());
+				$('#unreaded-size').html(v+data.found);
+
+				stateRestore_normal();
+			});
+		});
+
+		$('#yes-delete').click(function() {
+			/*console.log("YES DELETE");*/
+			console.log(_selectedMessages);
+			var mids = _selectedMessages.join("\n");
+
+			$.getJSON('/user/inbox_delete', {'mids': mids}, function(data) {
+				console.log(data);
+				if(data.ok) {
+					var current = $('#current-size');
+					var deleted = $('#deleted-size');
+					if(deleted.length == 0) {
+						deleted = $('#current-size');
+					}
+
+
+					var v = parseInt(current.html());
+					current.html((v -= data.moved_to_trash));
+					current.html(v - data.gone);
+
+					v = parseInt(deleted.html());
+					deleted.html(v+data.moved_to_trash);
+
+					v = parseInt(deleted.html());
+					deleted.html(v-data.permanently_deleted);
+
+					for(i in _selectedMessages) {
+						$('#message-row-'+_selectedMessages[i]).remove();
+					}
+					for(var i in mids) {
+						delete _savedMessages[i];
+					}
+					stateRestore_normal();
+				}
+			});
+
+			/*console.log(_selectedMessages.size);*/
+
+
+			$('#deleted-size').html(_selectedMessages.size);
+			$('#delete-confirm').modal('hide');
+		});
 
 		$('#compose-subject').live('focus', function() {
 			/*console.log("compose subject focus");*/
@@ -307,11 +403,11 @@
 			history.go(-1);
 		});
 
-		$('.messageSelect').on('mouseenter', function() {
+		$('.messageSelect').live('mouseenter', function() {
 			///*console.log("over message select");*/
 			_overMessageSelect = true;
 		});
-		$('.messageSelect').on('mouseleave', function() {
+		$('.messageSelect').live('mouseleave', function() {
 			///*console.log("left message select");*/
 			_overMessageSelect = false;
 		});
@@ -322,7 +418,8 @@
 			});
 			_overMessageSelect = false;
 		});
-		$('.messageSelect').on('change', updateSelected);
+		$('.messageSelect').live('change', updateSelected);
+
 		$('#delete_bt').click(function() {
 			/*console.log("DELETE!");*/
 			if(_selectedMessages.length > 0) {
@@ -335,6 +432,7 @@
 				$('#delete-count').html(_selectedMessages.length);
 			}
 		});
+		
 		$('.user-label').live('mouseenter', function() {
 			var id = $(this).attr('data-id');
 			$('#user-search-result').html("<div class='user-result' data-id='"+id+"''><div class='name'>"+_selectedUsers[id].name+"</div><div class='email'>"+_selectedUsers[id].email+"</div></div>");
@@ -350,45 +448,6 @@
 			delete _selectedUsers[id];
 			fixSearchWidth();
 			$('#user-search-result').hide();
-		});
-		$('#yes-delete').click(function() {
-			/*console.log("YES DELETE");*/
-			console.log(_selectedMessages);
-			var mids = _selectedMessages.join("\n");
-
-			$.getJSON('/user/inbox_delete', {'mids': mids}, function(data) {
-				console.log(data);
-				if(data.ok) {
-					var current = $('#current-size');
-					var deleted = $('#deleted-size');
-					if(deleted.length == 0) {
-						deleted = $('#current-size');
-					}
-
-
-					var v = parseInt(current.html());
-					current.html((v -= data.moved_to_trash));
-					current.html(v - data.gone);
-
-					v = parseInt(deleted.html());
-					deleted.html(v+data.moved_to_trash);
-
-					v = parseInt(deleted.html());
-					deleted.html(v-data.permanently_deleted);
-
-					for(i in _selectedMessages) {
-						$('#message-row-'+_selectedMessages[i]).remove();
-					}
-
-					stateRestore_normal();
-				}
-			});
-
-			/*console.log(_selectedMessages.size);*/
-
-
-			$('#deleted-size').html(_selectedMessages.size);
-			$('#delete-confirm').modal('hide');
 		});
 
 		$('#send_bt').click(function() {
@@ -566,7 +625,11 @@
 		$('#numMessagesSelected').html("1");
 
 		$('#cmessage').slideDown();
-		$('#messagesToggle_bt').hide();
+		//$('#messagesToggle_bt').hide();
+		$('#messagesToggle_bt').animate({width:"hide"},300, function() {
+			
+		});
+
 	}
 	function stateRestore_cmessage(mid) {
 		$('#compose_panel').slideUp();
@@ -614,7 +677,11 @@
 
 
 		$('.ib-component').slideDown();
-		$('#messagesToggle_bt').show();
+		//$('#messagesToggle_bt').show();
+		$('#messagesToggle_bt').animate({width: "show"}, 300, function() {
+
+		});
+
 		$('#ibar').slideDown();
 
 		history.replaceState({state: 'normal'}, "Title", "#");

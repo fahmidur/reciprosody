@@ -19,7 +19,6 @@ class UsersController < ApplicationController
 		render :json => User.where("name LIKE ? OR email LIKE ?", q, q)-[current_user()]
 	end
 
-
 	# GET /user/inbox_get
 	# params[:mid] = message id
 	def inbox_get
@@ -65,19 +64,60 @@ class UsersController < ApplicationController
 		}
 	end
 
+	# GET /inbox_mark_unread
+	def inbox_mark_unread
+		@user = current_user()
+		mids = params[:mids]
+		unless mids
+			render :json => {:ok => false, :error => 'mids missing'}
+			render
+		end
+
+		mids_hash = nl_ids_to_hash(mids)
+		found = 0
+		@user.messages.readed.process do |m|
+			if mids_hash[m.id]
+				m.mark_as_unread
+				found += 1
+			end
+		end
+
+		render :json => {:ok => true, :mids => mids, :found => found}
+	end
+	# GET /inbox_mark_read
+	# params[:mids] = message ids (newline separated)
+	def inbox_mark_read
+		@user = current_user()
+		mids = params[:mids]
+		unless mids
+			render :json => {:ok => false, :error => 'mids missing'}
+			return
+		end
+
+		mids_hash = nl_ids_to_hash(mids)
+
+		found = 0
+		@user.messages.unreaded.process do |m|
+			if mids_hash[m.id]
+				m.mark_as_read 
+				found += 1
+			end
+		end
+
+		render :json => {:ok => true, :mids => mids, :found => found}
+	end
+
 	# GET /user/inbox_delete
 	# params[:mids] = message ids (newline separated)
 	def inbox_delete
 		@user = current_user()
 		mids = params[:mids]
 		unless mids
-			render :json => {:ok => false}
+			render :json => {:ok => false, :error => 'mids missing'}
 			return
 		end
-		mids_hash = Hash.new
 
-		mids = mids.split("\n").map {|e| e.to_i}
-		mids.each do |id| mids_hash[id] = true end
+		mids_hash = nl_ids_to_hash(mids)
 
 		permanently_deleted = 0
 		@user.deleted_messages.process do |message|
@@ -292,6 +332,13 @@ class UsersController < ApplicationController
 	def email_valid(email)
 		return true if email =~ /^.+\@.+\..+$/
 		return false
+	end
+
+	def nl_ids_to_hash(mids)
+		mids_hash = Hash.new
+		mids = mids.split("\n").select{|e| e =~ /^\d+$/}.map{|e| e.to_i}
+		mids.each do |id| mids_hash[id] = true end
+		return mids_hash
 	end
 	
 end

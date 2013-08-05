@@ -118,6 +118,8 @@ Reciprosody2::Application.routes.draw do
       get :inbox_delete #users_controller#inbox_delete
       get :send_message #users_controller#send_message
       get :inbox_get    #users_controller#inbox_get
+      get :inbox_mark_read #users_controller#inbox_mark_read
+      get :inbox_mark_unread #users_controller#inbox_mark_unread
       
 			post :invite_user
 		end
