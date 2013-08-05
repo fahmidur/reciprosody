@@ -4,7 +4,7 @@ class AdminsMailer < ActionMailer::Base
 	def request_a_key(user, token)
 		@user = user
 		@token = token
-		mail(:from => 'info@reciprosody.com', :to => 's.f.reza+reciprosody@gmail.com', :subject => 'Reciprosody::Key_Request for ' + user.name)
+		mail(:from => 'info@reciprosody.org', :to => 's.f.reza+reciprosody@gmail.com', :subject => 'Reciprosody::Key_Request for ' + user.name)
 	end
 
 	class Preview < MailView

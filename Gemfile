@@ -9,6 +9,7 @@ gem 'sqlite3'
 gem 'puma' #07-22-2013
 gem 'thin'
 gem 'faye' #sfr
+gem 'passenger'
 gem 'eventmachine' #sfr
 
 

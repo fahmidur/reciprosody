@@ -202,6 +202,11 @@
 
 		$('#mark_read_bt').click(function() {
 			console.log("Marking as read...");
+
+			if(_selectedMessages.length == 0) {
+				return;
+			}
+
 			var mids = _selectedMessages.join("\n");
 
 			$.getJSON('/user/inbox_mark_read', {'mids': mids}, function(data) {
@@ -210,13 +215,11 @@
 					console.log("Error marking messages as read");
 					return;
 				}
-				
-				if(_view === "unread") {
-					for(var i in _selectedMessages) {
-						$('#message-row-'+_selectedMessages[i]).remove();
-						delete _savedMessages[_selectedMessages[i]];
-					}
+				for(var i in _selectedMessages) {
+					$('#message-row-'+_selectedMessages[i]).remove();
+					delete _savedMessages[_selectedMessages[i]];
 				}
+				
 
 				var v = parseInt($('#current-size').html());
 				$('#current-size').html(v-data.found);
@@ -229,6 +232,10 @@
 		});
 		$('#mark_unread_bt').click(function() {
 			console.log("Marking as unread...");
+
+			if(_selectedMessages.length == 0) {
+				return;
+			}
 			var mids = _selectedMessages.join("\n");
 			$.getJSON('/user/inbox_mark_unread', {'mids': mids}, function(data) {
 				console.log(data);
@@ -236,11 +243,9 @@
 					console.log("Error marking messages as unread");
 					return;
 				}
-				if(_view === "read") {
-					for(var i in _selectedMessages) {
-						$('#message-row-'+_selectedMessages[i]).remove();
-						delete _savedMessages[_selectedMessages[i]];
-					}
+				for(var i in _selectedMessages) {
+					$('#message-row-'+_selectedMessages[i]).remove();
+					delete _savedMessages[_selectedMessages[i]];
 				}
 
 				var v = parseInt($('#current-size').html());
@@ -253,9 +258,37 @@
 			});
 		});
 
+		$('#restore_bt').click(function() {
+			console.log("Restoring messages...");
+			if(_selectedMessages.length == 0) {
+				return;
+			}
+			var mids = _selectedMessages.join("\n");
+			$.getJSON('/user/inbox_restore', {'mids': mids}, function(data) {
+				console.log(data);
+				if(!data.ok) {
+					console.log("Error marking messages as unread");
+					return;
+				}
+				for(var i in _selectedMessages) {
+					$('#message-row-'+_selectedMessages[i]).remove();
+					delete _savedMessages[_selectedMessages[i]];
+				}
+				var v = parseInt($('#current-size').html());
+				$('#current-size').html(v - data.found);
+				$('#unreaded-size').html(data.unreaded);
+				$('#readed-size').html(data.readed);
+
+				stateRestore_normal();
+			});
+
+
+		});
+
 		$('#yes-delete').click(function() {
-			/*console.log("YES DELETE");*/
-			console.log(_selectedMessages);
+			if(_selectedMessages.length == 0) {
+				return;
+			}
 			var mids = _selectedMessages.join("\n");
 
 			$.getJSON('/user/inbox_delete', {'mids': mids}, function(data) {

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  
+  <body>
+    <a target='_blank' href='http://<%= Rails.application.config.action_mailer.default_url_options[:host]%>/user/inbox?v=unread#cmessage-<%=@message_id%>' style='display:block; text-decoration:none; font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;color:#6d6d6d;font-weight:bold; font-size:25px;margin-top:20px;margin-bottom:20'>
+      <span style='color:#9d9d9d;'>New Message From</span> <%= @from_user.name %>
+    </a>
+    <div style="border:1px solid #bbb;margin-bottom:10px;padding:5px; padding-top:8px;box-shadow:0 0 5px #888; background-color:#fff;font-family:'Helvetica Neue',Arial,Helvetica,sans-serif;max-width:700px;color:#7d7d7d">
+    <span style='font-weight:bold'><%= @from_user.name %></span><small> &lt;<%= @from_user.email %>&gt; </small>
+    <hr style="border:1px solid #efefef;border-bottom:0px solid red"/>
+    <%= @message_topic %>
+    <hr style="border:1px solid #efefef;border-bottom:0px solid red"/>
+    <%= @message_body %>
+    </div>
+    
+    <hr style="border:1px solid #efefef;border-bottom:0px solid red"/>
+		<h1 style='font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;color:#cdcdcd;margin-bottom:0px;padding-bottom:0px;'>
+      <span style='color:#9d9d9d'>R</span>eci<span style='color:#9d9d9d'>p</span>rosody
+    </h1>
+
+    <h1 style='font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;color:#cdcdcd;margin-top:0px;padding-top:0px;'>    
+      <span style="font-size:small">A repository of prosodically annotated material.</span>
+      <br/>
+      <span style="font-size:small;color:#efefef">Because sharing is caring.</span>
+    </h1>
+     <hr style="border:1px solid #efefef;border-bottom:0px solid red"/>
+		  
+      <div style="color:#efefef;font-family:'Helvetica Neue',Arial,Helvetica,sans-serif;color:#adadad;font-size:10px;">
+        <a target='_blank' href="http://<%= Rails.application.config.action_mailer.default_url_options[:host]%>" style="text-decoration:none;color:#efefef;font-family:'Helvetica Neue',Arial,Helvetica,sans-serif;color:#6d6d6d;">Reciprosody</a>&nbsp;is hosted and maintained by the 
+        <a href="http://speech.cs.qc.cuny.edu/" target="_blank" style="text-decoration:none;color:#efefef;font-family:'Helvetica Neue',Arial,Helvetica,sans-serif;color:#6d6d6d;">
+          Speech Lab @ Queens College
+        </a>
+      </div>
+  </body>
+</html>

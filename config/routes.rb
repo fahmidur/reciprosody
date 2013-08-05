@@ -120,6 +120,7 @@ Reciprosody2::Application.routes.draw do
       get :inbox_get    #users_controller#inbox_get
       get :inbox_mark_read #users_controller#inbox_mark_read
       get :inbox_mark_unread #users_controller#inbox_mark_unread
+      get :inbox_restore #users_controller#inbox_restore
       
 			post :invite_user
 		end
@@ -136,6 +137,7 @@ Reciprosody2::Application.routes.draw do
 
   if Rails.env.development?
     mount AdminsMailer::Preview => 'admins_mail_view'
+    mount UsersMailer::Preview => 'users_mail_view'
   end
 	
 	

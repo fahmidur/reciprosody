@@ -64,7 +64,31 @@ class UsersController < ApplicationController
 		}
 	end
 
-	# GET /inbox_mark_unread
+	# GET /user/inbox_restore
+	def inbox_restore
+		@user = current_user()
+		mids = params[:mids]
+		unless mids
+			render :json => {:ok => false, :error => 'mids missing'}
+			return
+		end
+
+		mids_hash = nl_ids_to_hash(mids)
+
+		found = 0
+		@user.deleted_messages.process do |m|
+			if mids_hash[m.id]
+				m.restore
+				found += 1
+			end
+		end
+		readed = @user.received_messages.readed.size
+		unreaded = @user.received_messages.unreaded.size
+
+		render :json => {:ok => true, :mids => mids, :found => found, :readed => readed, :unreaded => unreaded}
+	end
+
+	# GET /user/inbox_mark_unread
 	def inbox_mark_unread
 		@user = current_user()
 		mids = params[:mids]
@@ -84,7 +108,7 @@ class UsersController < ApplicationController
 
 		render :json => {:ok => true, :mids => mids, :found => found}
 	end
-	# GET /inbox_mark_read
+	# GET /user/inbox_mark_read
 	# params[:mids] = message ids (newline separated)
 	def inbox_mark_read
 		@user = current_user()
@@ -196,6 +220,8 @@ class UsersController < ApplicationController
 
 			client.publish("/messages/#{user.id}", {:message_row => message_row});
 			message_rows << message_row
+
+			UsersMailer.message_mail(@user, user, subject, body, message.id).deliver
 		end
 
 		render :json => {:ok => true, :message_rows => message_rows}
@@ -313,7 +339,7 @@ class UsersController < ApplicationController
 	private
 
 	def get_faye_url
-		@faye_url = Rails.application.config.action_mailer.default_url_options[:host]
+		@faye_url = Rails.application.config.action_mailer.default_url_options[:host].clone
 		if @faye_url =~ /\:\d+$/
 			@faye_url.gsub!(/\:\d+$/, ':9292')
 		else
