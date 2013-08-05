@@ -390,7 +390,9 @@
 		if(!_is_firefox) {
 			$('#compose_bt').live('click',function() {
 				/*console.log("Compose BT");*/
-				history.pushState({state: 'compose'}, "Reciprosody", "#compose");
+				if(history.state.state !== "compose") {
+					history.pushState({state: 'compose'}, "Reciprosody", "#compose");
+				}
 				//stateRestore_compose();
 			});
 		}
