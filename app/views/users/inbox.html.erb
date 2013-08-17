@@ -32,7 +32,7 @@
 		</ul>
 
 		<span class='btn btn-mini btn-inverse' id='block-emails-bt' data-name="inbox_block_emails">
-			<input type='checkbox' data-name="inbox_block_emails" id="prop-block-emails" style="margin-top:-2px;" <%= 'checked' if @block_emails%>/>&nbsp;Block Emails
+			<input type='checkbox' data-name="inbox_block_emails" id="prop-block-emails" style="margin-top:-2px;" <%= 'checked' if @block_emails%>/>&nbsp;Block Notification Forwarding To <%= current_user().email %>
 		</span>
 					
 	</div>
