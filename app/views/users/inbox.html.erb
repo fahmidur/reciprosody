@@ -168,11 +168,10 @@
 	var _userSearchEmpty = false;
 	var _validStates = {"compose": 1, "": 1, "cmessage": 1};
 	var _savedMessages = new Array();
-	var _fclient = new Faye.Client(_faye_url);
+	var _fclient = null;
 	var _myid = null;
 	var _is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 	//----MAIN-----
-
 
 	$(function() {
 		_myid = $('#hf-userID').val();
@@ -185,21 +184,31 @@
 		if(_is_firefox) {
 			restoreState();
 		}
-		var _fsub = _fclient.subscribe('/messages/'+_myid, function(data) {
-			//console.log(data);
+		try {
+			_fclient = new Faye.Client(_faye_url);
+		} catch(err) {
+			console.log("FAYE NOT FOuND");
+			console.log(err);
+			_fclient = null;
+		}
+		
+		if(_fclient) {
+			var _fsub = _fclient.subscribe('/messages/'+_myid, function(data) {
+				//console.log(data);
 
-			var target = $('#unreaded-size');
-			if(target.length === 0) {
-				target = $('#current-size');
-			}
-			target.html(parseInt(target.html())+1);
+				var target = $('#unreaded-size');
+				if(target.length === 0) {
+					target = $('#current-size');
+				}
+				target.html(parseInt(target.html())+1);
 
-			if(_view === "unread") {
-				prepend_message(data.message_row);
-			} else {
-				target.css("background-color", "orange");
-			}
-		});
+				if(_view === "unread") {
+					prepend_message(data.message_row);
+				} else {
+					target.css("background-color", "orange");
+				}
+			});
+		}
 
 		adjustMemberLinks();
 		window.onpopstate = restoreState;
