@@ -185,6 +185,7 @@ class UsersController < ApplicationController
 			error << "Body is invalid"
 		end
 
+		# Allow HTML but remove all script tags
 		body.gsub! /\<\s*script.+\<\s*\/\s*script\s*\>/m, ""
 		body.gsub! /\<\s*script.+/m, ""
 
