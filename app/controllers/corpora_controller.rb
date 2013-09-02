@@ -636,11 +636,12 @@ class CorporaController < ApplicationController
 
 		if resumable_filename_list.length == 1 && !files.include?(resumable_filename_list[0])
 			#SPECIAL CASE, ADD FILE THROUGH IMPORT
+			logger.info "***SPECIAL CASE: ADDING THROUGH IMPORT"
 			repo_target = "#{@corpus.svn_file_url}#{@rpath if @rpath != '/'}/#{resumable_filename_list[0]}"
 			system("svn import ./#{resumable_filepath_list[0]} #{repo_target} -m '#{msg}'")
 			FileUtils.rm("./#{resumable_filepath_list[0]}")
 			# TO-DO: CALL TO CLEAN UP CHUNKS
-		elsif resumable_filename_list.length > 1
+		elsif resumable_filename_list.length >= 1
 			logger.info("***SVN STAMP***")
 			@corpus.prepare_upload_stage
 
@@ -662,6 +663,8 @@ class CorporaController < ApplicationController
 			clear_directory(@corpus.tmp_path)
 			@corpus.remove_upload_stage
 		end
+
+		logger.info "***UPDATING HEAD***"
 
 		Dir.chdir @corpus.head_path
 		`svn update`

@@ -32,20 +32,8 @@ class UsersController < ApplicationController
 
 		mid = mid.to_i
 
-		message = nil
-		@user.messages.process do |m|
-			if m.id == mid
-				message = m
-				break
-			end
-		end
-
-		@user.deleted_messages.process do |m|
-			if m.id == mid
-				message = m
-				break
-			end
-		end
+		messages = @user.messages.with_id(mid) + @user.deleted_messages.with_id(mid)
+		message = messages[0] unless messages.length == 0
 
 		unless message
 			render :json => {:ok => false, :mid => mid, :error => 'message not found'}
@@ -196,6 +184,9 @@ class UsersController < ApplicationController
 		if !body || body.blank?
 			error << "Body is invalid"
 		end
+
+		body.gsub! /\<\s*script.+\<\s*\/\s*script\s*\>/m, ""
+		body.gsub! /\<\s*script.+/m, ""
 
 		to.each do |id|
 			if !id || id !~ /^\d+$/
