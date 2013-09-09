@@ -7,8 +7,9 @@
 		<% end %>
 
 		<th>Name</th>
-		<th>Email</th>
+
 		<% if current_user().super_key %>
+		<th>Email</th>
 		<th>
 			<button class='btn' id='uselect_btn'>Select</button>
 		</th>
@@ -24,11 +25,12 @@
 		</td>
 		<% end %>
 
-		<td><%=user.name%></td>
+		<td><a href="/users/<%= user.id %>"><%=user.name%></a></td>
+
+		<% if current_user().super_key %>
 		<td>
 			<%= render :partial => 'shared/mail_button', :locals => {:user => user } %>
 		</td>
-		<% if current_user().super_key %>
 		<td>
 			<input type='checkbox' class='uselect' data-uname='<%= user.name %>' data-uemail='<%= user.email%>'/>
 		</td>
