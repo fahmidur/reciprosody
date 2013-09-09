@@ -6,7 +6,6 @@
 			<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
 
 					<%= devise_error_messages! %>
-
 				
 				<div>
 					<%= f.label :name %>
@@ -32,6 +31,13 @@
 			<% end %>
 
 			<%= render "devise/shared/links" %>
+		</div>
+		<div class='span7 well'>
+			<h4>Registration Suggestions</h4>
+			<ul>
+				<li>Please your public email address.</li>
+				<li>Please use a reasonably strong password.</li>
+			</ul>
 		</div>
 	</div>
 </div>
