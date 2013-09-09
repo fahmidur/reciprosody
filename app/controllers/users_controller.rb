@@ -16,7 +16,13 @@ class UsersController < ApplicationController
 		end
 
 		q = "%#{q}%"
-		render :json => User.where("name LIKE ? OR email LIKE ?", q, q)-[current_user()]
+		result = User.where("name LIKE ? OR email LIKE ?", q, q) -[current_user()]
+		result.each do |r|
+			r.email = nil
+		end if result != nil
+		
+		# Feel free to order results by friendship or something like that in the future
+		render :json => result
 	end
 
 	# GET /user/inbox_get

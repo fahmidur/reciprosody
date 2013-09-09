@@ -3,8 +3,10 @@
 		<div class='box' style='word-wrap: break-word'> 
 			<center>
 				<h4><%= @user.name%></h4>
-				<br/>
-				<small><%= @user.email %></small>
+				<% if current_user.super_key != nil %>
+					<br/>
+					<small><%= @user.email%></small>&nbsp;<span class='badge badge-inverse'><i class='icon-eye-open'></i></span>
+				<% end %>
 			</center>
 		</div>
 	</div>
