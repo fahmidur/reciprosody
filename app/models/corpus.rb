@@ -9,10 +9,10 @@ class Corpus < ActiveRecord::Base
 	has_many :memberships, :dependent => :delete_all #cascading delete
 
 	has_many :publications, :through => :publication_corpus_relationships
-	has_many :publication_corpus_relationships, :dependent => :delete_all
+	has_many :publication_corpus_relationships, :dependent => :delete_all #cascading delete
 
 	has_many :tools, :through => :tool_corpus_relationships
-	has_many :tool_corpus_relationships, :dependent => :delete_all
+	has_many :tool_corpus_relationships, :dependent => :delete_all #cascading delete
 
 	has_many :comments, :as => :commentable, :order => 'updated_at DESC'
 

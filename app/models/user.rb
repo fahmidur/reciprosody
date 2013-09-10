@@ -25,14 +25,12 @@ class User < ActiveRecord::Base
 
 	has_many :tools, :through => :tool_memberships
 
-	has_many :memberships #to corpora
-	has_many :publication_memberships
-	has_many :tool_memberships
+	has_many :memberships, :dependent => :delete_all # cascading delete
+	has_many :publication_memberships, :dependent => :delete_all #cascading delete
+	has_many :tool_memberships, :dependent => :delete_all
 
 	has_many :user_properties
 
-
-	
 	has_one :super_key
 
 	scope :owners,		where(:memberships => {role: 'owner'})

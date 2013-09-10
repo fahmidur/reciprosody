@@ -3,9 +3,9 @@
 		<div class='box' style='word-wrap: break-word'> 
 			<center>
 				<h4><%= @user.name%></h4>
-				<% if current_user.super_key != nil %>
+				<% if current_user && current_user.super_key != nil %>
 					<br/>
-					<small><%= @user.email%></small>&nbsp;<span class='badge badge-inverse'><i class='icon-eye-open'></i></span>
+					<small><%= @user.email%></small>&nbsp;<span class='badge badge-inverse'><i class='icon-eye-open'></i></span> <br/>
 				<% end %>
 			</center>
 		</div>
@@ -40,8 +40,6 @@
 			<% end %>
 		<% end %>
 
-		
-
 
 		<% if @user.tool_owner_of.size > 0 %>
 			<div class='row-fluid'>
@@ -54,5 +52,29 @@
 				<%= render :partial => 'shared/tool_index_small', :locals => {:tool => tool} %>
 			<% end %>
 		<% end %>
+	</div>
+</div>
+<% if current_user && current_user.super_key != nil %>
+<br/>
+<div class='row-fluid'>
+		<div class='span6'>
+			<a href='#destroy-confirm-<%= @user.id %>' class='delete-confirm btn btn-small btn-danger' data-toggle='modal'>Destroy User</a>
+		</div>
+</div>
+<% end %>
+
+<div class='modal hide fade' id='destroy-confirm-<%= @user.id %>' style='display:none'>
+	<div class='modal-header'>
+		<a class='close' data-dismiss='modal'>x</a>
+		<h3>Are you sure?</h3>
+	</div>
+	<div class='modal-body'>
+		<p>Are you sure you wish to permanently <b>destroy</b>
+			user <span class='label'><%= @user.name %></span> with email <span class='label label-info'><i><%= @user.email%></i></span>?
+		</p>
+	</div>
+	<div class='modal-footer'>
+		<%= link_to 'Destroy', '/users/'+@user.id.to_s, :method => :delete, :class => 'btn btn-danger' %>
+		<a href="#" data-dismiss="modal" class="btn">Cancel</a>
 	</div>
 </div>

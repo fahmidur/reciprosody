@@ -3,9 +3,21 @@ class UsersController < ApplicationController
 	require 'eventmachine'
 
 	protect_from_forgery
-	before_filter :auth
+	before_filter :auth_filter
 
-	
+	# DELETE /users/1
+	def destroy
+		unless current_user && current_user.super_key
+			redirect_to '/perm'
+			return
+		end
+
+		@user = User.find_by_id(params[:id])
+		@user.destroy
+
+		redirect_to "/users/#{current_user.id}"
+	end
+
 	#GET /users/mixed_search
 	#params[:q] = query
 	def mixed_search
@@ -219,7 +231,6 @@ class UsersController < ApplicationController
 			client.publish("/messages/#{user.id}", {:message_row => message_row});
 			message_rows << message_row
 
-
 			Thread.new do
 				unless user.getProp("inbox_block_emails")
 					UsersMailer.message_mail(@user, user, subject, body, message.id).deliver
@@ -378,7 +389,7 @@ class UsersController < ApplicationController
 		return @faye_url
 	end
 	
-	def auth
+	def auth_filter
 		if !user_signed_in?
 			redirect_to '/perm'
 		end
