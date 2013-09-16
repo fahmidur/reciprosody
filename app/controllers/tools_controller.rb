@@ -376,7 +376,7 @@ class ToolsController < ApplicationController
 		#name = @tool.name.underscore
 		name = session[:resumable_original_filename]
 
-		path += "/#{name}#{extname}"
+		path += "/#{name}"
 		File.open(path, "wb") {|f| f.write(@file.read)}
 
 		@tool.local = path

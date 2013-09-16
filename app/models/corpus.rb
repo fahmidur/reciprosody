@@ -6,13 +6,13 @@ class Corpus < ActiveRecord::Base
 	attr_accessible :description, :language, :name, :upload, :duration, :num_speakers, :speaker_desc, :genre, :annotation, :license, :citation, :hours, :minutes, :seconds
 
 	has_many :users, :through => :memberships
-	has_many :memberships, :dependent => :delete_all #cascading delete
+	has_many :memberships, :dependent => :delete_all								#delete *corpus-user relationships
 
 	has_many :publications, :through => :publication_corpus_relationships
-	has_many :publication_corpus_relationships, :dependent => :delete_all #cascading delete
+	has_many :publication_corpus_relationships, :dependent => :delete_all			#delete pub-*corp relationships
 
 	has_many :tools, :through => :tool_corpus_relationships
-	has_many :tool_corpus_relationships, :dependent => :delete_all #cascading delete
+	has_many :tool_corpus_relationships, :dependent => :delete_all					#delete tool-*corp relationships
 
 	has_many :comments, :as => :commentable, :order => 'updated_at DESC'
 

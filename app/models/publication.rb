@@ -2,13 +2,13 @@ class Publication < ActiveRecord::Base
 	attr_accessible :description, :keywords, :local, :name, :url, :authors, :citation, :pubdate, :venue
 
 	has_many :corpora, :through => :publication_corpus_relationships
-	has_many :publication_corpus_relationships, :dependent => :delete_all
+	has_many :publication_corpus_relationships, :dependent => :delete_all #delete *pub-corp relationships
 
 	has_many :users, :through => :publication_memberships
-	has_many :publication_memberships
+	has_many :publication_memberships, :dependent => :delete_all		#delete *pub-user relationships
 
 	has_many :tools, :through => :tool_publication_relationships
-	has_many :tool_publication_relationships, :dependent => :delete_all
+	has_many :tool_publication_relationships, :dependent => :delete_all #delete tool-*pub relationships
 
 	accepts_nested_attributes_for :publication_memberships, :users
 
