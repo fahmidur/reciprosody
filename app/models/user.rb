@@ -25,9 +25,9 @@ class User < ActiveRecord::Base
 
 	has_many :tools, :through => :tool_memberships
 
-	has_many :memberships, :dependent => :delete_all # cascading delete
-	has_many :publication_memberships, :dependent => :delete_all #cascading delete
-	has_many :tool_memberships, :dependent => :delete_all
+	has_many :memberships, :dependent => :delete_all					# delete *user-corpus relationships (memberships)
+	has_many :publication_memberships, :dependent => :delete_all		# delete *user-pub relationships	(memberships)
+	has_many :tool_memberships, :dependent => :delete_all				# delete *user-tool relationships	(meberships)
 
 	has_many :user_properties
 
