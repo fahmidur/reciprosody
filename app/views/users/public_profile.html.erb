@@ -2,16 +2,21 @@
 	<div class="span3">
 		<div class='box' style='word-wrap: break-word'> 
 			<center>
-				<h4><%= @user.name%></h4>
+				<h5 class='boxheader'><%= @user.name%></h5>
+				<% @user.insts.each do |inst| %>
+				<span class='badge badge-info inst' style='cursor:pointer'><%= inst.name %><span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span> &nbsp;
+				<% end %>
+
 				<% if current_user && current_user.super_key != nil %>
-					<br/>
+					<br/><br/>
 					<small><%= @user.email%></small>&nbsp;<span class='badge badge-inverse'><i class='icon-eye-open'></i></span> <br/>
 				<% end %>
 			</center>
 		</div>
 	</div>
+
 	<div class='span4'>
-		<!--this is a comment-->
+		
 	</div>
 
 	<div class='span5'>

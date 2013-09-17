@@ -5,6 +5,34 @@ class UsersController < ApplicationController
 	protect_from_forgery
 	before_filter :auth_filter
 
+	# GET /users/1/remove_inst
+	# params[:inst_id] = id of inst
+	def remove_inst_rel
+		rel = UserInstitutionRelationship.where(:user_id => current_user.id, :institution_id => params[:inst_id]).first
+		unless rel
+			render :json => {:ok => false, :msg => 'invalid relationship id'}
+			return
+		end
+		rel.destroy
+		render :json => {:ok => true}
+	end
+
+	# GET /users/1/add_inst
+	# params[:name] = name of inst
+	def add_inst_rel
+		name = params[:name]
+		name.strip! if name
+		unless name && name.present?
+			render :json => {:ok => false, :msg => 'Name invalid'}
+			return
+		end
+
+		#rails 4 way
+		inst = Institution.where(:name => name).first_or_create
+		rel = UserInstitutionRelationship.where(:user_id => current_user.id, :institution_id => inst.id).first_or_create
+		render :json => {:ok => true, :inst_id => inst.id, :inst_name => inst.name}
+	end
+
 	# DELETE /users/1
 	def destroy
 		unless current_user && current_user.super_key
@@ -29,8 +57,11 @@ class UsersController < ApplicationController
 
 		q = "%#{q}%"
 		result = User.where("name LIKE ? OR email LIKE ?", q, q) -[current_user()]
+
+		insts_string = ""
 		result.each do |r|
-			r.email = nil
+			insts_string = r.insts_string
+			r.email = insts_string if insts_string && insts_string.present?
 		end if result != nil
 		
 		# Feel free to order results by friendship or something like that in the future
@@ -58,11 +89,21 @@ class UsersController < ApplicationController
 			return
 		end
 
+		from = message.from.clone
+		to = message.to.clone
+
+		from_insts = from.insts_string
+		to_insts = to.insts_string
+
+		from.email = from_insts if from_insts && from_insts.present?
+		to.email = to_insts if to_insts && to_insts.present?
+
+
 		render :json => {
 			:ok => true, 
 			:mid => mid,
 			:from => message.from, 
-			:to => message.to, 
+			:to => message.to,
 			:topic => message.topic, 
 			:body => message.body, 
 			:created => message.created_at,
@@ -332,6 +373,8 @@ class UsersController < ApplicationController
 			render :public_profile
 			return
 		end
+
+		get_faye_url
 
 		render :show
 	end

@@ -19,15 +19,21 @@ class User < ActiveRecord::Base
 
 	#----------------------------------------
 
+	
+
 	has_many :corpora, :through => :memberships
 
 	has_many :publications, :through => :publication_memberships
 
 	has_many :tools, :through => :tool_memberships
 
+	has_many :institutions, :through => :user_institution_relationships
+
+
 	has_many :memberships, :dependent => :delete_all					# delete *user-corpus relationships (memberships)
 	has_many :publication_memberships, :dependent => :delete_all		# delete *user-pub relationships	(memberships)
 	has_many :tool_memberships, :dependent => :delete_all				# delete *user-tool relationships	(meberships)
+	has_many :user_institution_relationships, :dependent => :delete_all #delete *user-insutution relationships
 
 	has_many :user_properties
 
@@ -45,6 +51,14 @@ class User < ActiveRecord::Base
 	scope :tool_owners, where(:tool_memberships => {:role => 'owner'})
 	scope :tool_reviewers, where(:tool_memberships => {:role => 'reviewer'})
 	scope :tool_members, where(:tool_memberships => {:role => 'member'})
+
+	def insts
+		UserInstitutionRelationship.where(:user_id => self.id).map{|rel| Institution.find_by_id(rel.institution_id)}
+	end
+
+	def insts_string
+		insts.map{|inst| inst.name }.join(", ")
+	end
 
 	def setProp(name, value)
 		prop = self.user_properties.find_by_name(name)

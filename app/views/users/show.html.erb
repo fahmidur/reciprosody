@@ -3,16 +3,39 @@
 	<%= javascript_include_tag "user_home.js" %>
 <% end %>
 
+<% my_corpora = current_user.owner_of %>
+<% my_pubs = current_user.publication_owner_of %>
+<% my_tools = current_user.tool_owner_of %>
+
 <div class='row-fluid'>
 	<div class="span3">
 		<div class='box' style='word-wrap: break-word'> 
 			<center>
-				<h4><%= current_user.name%></h4>
-				<small>
-					<%= current_user.email %>
-				</small>
+				<h5 class='boxheader'><%= current_user.name%></h5>
+				
+				<div id='inst_holder'>
+					<% inst_flag = false %>
+					<% current_user.insts.each do |inst| %>
+						<span class='badge badge-info inst' style='cursor:pointer' id='inst-<%= inst.id %>'><%= inst.name %><span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>
+						<% inst_flag = true %>
+					<% end %>
+					<span id='add-inst' class='badge badge-info' style='cursor:pointer' title="Add Institution"><%=raw 'Add Institution &nbsp;' unless inst_flag %><i class='icon-plus-sign'></i></span>
+				</div>
+
+				<div id='inst_search_wrapper' style='display:none'>
+					<br/>
+					<input id='inst_search' type='text' class='span12' placeholder='Add Institution' data-autocomplete="/institutions/autocomplete_institution_name"/>
+				</div>
+				<br/>
+				<span class='email'>
+					<% current_user.email.split(/(\W)/).each do |part| %>
+						<span class='email-dec' style='color:#cdcdcd;font-weight:bolder;font-size:large'><%= part %></span>
+					<% end %>
+				</span>
+
 				<br/>
 			</center>
+
 		</div>
 
 		<input id='people_search' type='text' class='span12' placeholder='Search People'>
@@ -20,17 +43,20 @@
 		<div id='people_result' style="margin-bottom:5px">
 		</div>
 
-		<ul class="nav nav-tabs nav-stacked">
-			<li class='l-nav'><a href='/user/inbox?v=unread' class=''>Inbox</a></li>
+		<ul class="nav nav-tabs nav-stacked" id='side_menu'>
+			<li class='l-nav'><a href='/user/inbox?v=unread' class=''>Inbox <span class='badge pull-right' id='inbox-count'><%= current_user.received_messages.unreaded.size %></span></a></li>
 			<li class='l-nav'><a href='/users' class=''>Show All Users</a></li>
 			<li class='l-nav'><a href='/user/invite' class=''>Invite a Friend</a></li>
 
+			<!--
 			<li class='l-nav'><a href='/corpora' class=''>View All Corpora</a></li>
 			<li class='l-nav'><a href='/publications' class=''>View All Publications</a></li>
 			<li class='l-nav'><a href='/tools' class=''>View All Tools</a></li>
+			-->
 
-			<li><a href='/corpora/new' class='lnav_hl'>New Corpus</a></li>
-			<li><a href='/publications/new' class='lnav_hl'>New Publication</a></li>
+			<% unless my_corpora.size > 0 %> <li><a href='/corpora/new' class='lnav_hl'>New Corpus</a></li> <% end %>
+			<% unless my_pubs.size > 0 %> <li><a href='/publications/new' class='lnav_hl'>New Publication</a></li> <% end %>
+			<% unless my_tools.size > 0 %> <li><a href='/tools/new' class='lnav_hl'>New Tool</a></li> <% end %>
 		</ul>
 	</div>
 
@@ -39,59 +65,89 @@
 	</div>
 	
 	<div class='span5'>
-		<% if current_user().owner_of.size > 0 %>
+		<% if my_corpora.size > 0 %>
 			<div class='row-fluid'>
 				<div class='span2'>
-					<span class='badge badge-info'><%= current_user().owner_of.size%></span>
+					<span class='badge badge-info'><%= my_corpora.size%></span>
 				</div>
 				<div class='span10'><strong>My Corpora</strong></div>
 			</div>
-			<% current_user().owner_of.each do |corpus| %>
+			<% my_corpora.each do |corpus| %>
 				<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => corpus} %>
 			<% end %>
+			<div><a href='/corpora/new' class='pull-right'>New Corpus</a></div><br/>
 		<% end %>
+		
 
-		<% if current_user().publication_owner_of.size > 0 %>
+		<% if my_pubs.size > 0 %>
 			<div class='row-fluid'>
 				<div class='span2'>
-					<span class='badge badge-info'><%= current_user().publication_owner_of.size%></span>
+					<span class='badge badge-info'><%= my_pubs.size%></span>
 				</div>
 				<div class='span10'><strong>My Publications</strong></div>
 			</div>
-			<% current_user().publication_owner_of.each do |pub| %>
+			<% my_pubs.each do |pub| %>
 				<%= render :partial => 'shared/publication_index_small.html.erb', 
 				:locals => {:p => pub} %>
 			<% end %>
+			<div><a href='/publications/new' class='pull-right'>New Publication</a></div></br/>
 		<% end %>
 
-		
 
-
-		<% if current_user().tool_owner_of.size > 0 %>
+		<% if my_tools.size > 0 %>
 			<div class='row-fluid'>
 				<div class='span2'>
-					<span class='badge badge-info'><%= current_user().tool_owner_of.size%></span>
+					<span class='badge badge-info'><%= my_tools.size%></span>
 				</div>
 				<div class='span10'><strong>My Tools</strong></div>
 			</div>
-			<% current_user().tool_owner_of.each do |tool| %>
+			<% my_tools.each do |tool| %>
 				<%= render :partial => 'shared/tool_index_small', :locals => {:tool => tool} %>
 			<% end %>
+			<div><a href='/tools/new' class='pull-right'>New Tool</a></div><br/>
 		<% end %>
-
 
 		
 
 	</div>
 
 </div>
+<script type='text/javascript' src='<%= @faye_url %>.js'></script>
+<script type='text/javascript'>
+	var _faye_url = "<%= @faye_url %>";
+	var _myid = '<%= current_user.id %>';
+</script>
 
 <script type='text/javascript'>
 var _people_result = new Array();
 var _people_result_div = $('#people_result');
 var _people_search_div = $('#people_search');
+var _side_menu_div = $('#side_menu');
+var _inst_search_wrapper = $('#inst_search_wrapper');
+var _inst_search = $('#inst_search');
+var _fclient = null;
+var _fsub = null;
+
 var _previous_search = "";
 updateResult();
+
+try {
+	_fclient = new Faye.Client(_faye_url);
+} catch(err) {
+	console.log("FAYE NOT FOuND");
+	console.log(err);
+	_fclient = null;
+}
+if(_fclient) {
+	_fsub = _fclient.subscribe('/messages/'+_myid, function(data) {
+		// console.log(data);
+		var target = $('#inbox-count');
+		target.html(parseInt(target.html())+1);
+		target.css("background-color", "orange");
+	});
+} else {
+	console.log("fclient not found");
+}
 
 _people_search_div.keydown(function(e) {
 	//console.log(e.keyCode);
@@ -136,9 +192,53 @@ $('.presult').live('click', function() {
 	window.location = "/users/"+id;
 });
 
+$('.inst').live('mouseenter', function() {
+	$(this).find('.x').show().animate({'width': '15px'}, 200);
+});
+$('.inst').live('mouseleave', function() {
+	$(this).find('.x').animate({'width': '0px'}, 200, function() {$(this).hide();});
+});
+$('.inst').live('click', function() {
+	$(this).animate({'width':'0px'}, 300, function() {
+		$(this).remove();
+	});
+	$.getJSON('/user/remove_inst_rel', {'inst_id': ($(this).attr('id').split("-")[1])}, function(data) {
+		console.log(data);
+	});
+});
+$('#add-inst').click(function() {
+	_inst_search_wrapper.show();
+	_inst_search.show().focus();
+	$(this).hide();
+});
+_inst_search.on('keyup', function(e) {
+	if(e.keyCode != 13) {return;}
+	$.getJSON('/user/add_inst_rel', {'name':$(this).val()}, function(data) {
+		console.log(data);
+		if(data.ok) {
+			if($('#inst-'+data.inst_id).length == 0) {
+				$('#inst_holder').prepend("&nbsp; <span class='badge badge-info inst' style='cursor:pointer' id='inst-"+data.inst_id+">'>"+data.inst_name+"<span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>");
+			}
+		}
+		hideInstSearch();
+	});
+
+});
+_inst_search.on('keydown', function(e) {
+	if(($(this).val() == "" && e.keyCode == 8)|| e.keyCode == 27) {
+		hideInstSearch();	
+	}
+});
+function hideInstSearch() {
+	_inst_search.val("");
+	_inst_search.blur();
+	_inst_search_wrapper.slideUp();
+	$('#add-inst').show();
+}
 function updateResult() {
 	if(_people_result.length == 0) {
 		_people_result_div.hide();
+		_side_menu_div.slideDown();
 	} else {
 		var html = "";
 		var onclick = "";
@@ -148,6 +248,7 @@ function updateResult() {
 		_people_result_div.html(html);
 		$('.presult:first').addClass("selected");
 		_people_result_div.slideDown();
+		_side_menu_div.slideUp();
 	}
 }
 </script>

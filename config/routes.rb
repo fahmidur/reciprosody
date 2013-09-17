@@ -39,6 +39,12 @@ Reciprosody2::Application.routes.draw do
     get :autocomplete_tool_publication_relationship_name, :on => :collection
   end
 
+  resources :institutions do
+    member do
+    end
+    get :autocomplete_institution_name, :on => :collection
+  end
+
   resources :tools do
     member do
       get :download
@@ -124,6 +130,8 @@ Reciprosody2::Application.routes.draw do
       get :inbox_restore #users_controller#inbox_restore
 
       get :set_prop #users_controller#set_prop
+      get :add_inst_rel #users_controller#add_inst_rel
+      get :remove_inst_rel #users_controller#remove_inst_rel
       
 			post :invite_user
 		end

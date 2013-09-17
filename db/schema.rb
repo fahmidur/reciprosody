@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130805161104) do
+ActiveRecord::Schema.define(:version => 20130917002329) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -48,6 +48,12 @@ ActiveRecord::Schema.define(:version => 20130805161104) do
 
   create_table "faq_questions", :force => true do |t|
     t.text     "question"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "institutions", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -216,6 +222,16 @@ ActiveRecord::Schema.define(:version => 20130805161104) do
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
   end
+
+  create_table "user_institution_relationships", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "institution_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "user_institution_relationships", ["institution_id"], :name => "index_user_institution_relationships_on_institution_id"
+  add_index "user_institution_relationships", ["user_id"], :name => "index_user_institution_relationships_on_user_id"
 
   create_table "user_properties", :force => true do |t|
     t.integer  "user_id"

@@ -1,9 +1,14 @@
 <div class='member'>
-	<span class='member_name'><%= mem.name %></span>
-
+	<a class='member_name' href='/users/<%= mem.id %>'><%= mem.name %></a>
+	
+	
+	<% if current_user && current_user.super_key %>
 	<span class='member_email pull-right'>
-		<a href="mailto:<%= mem.email%>" class='btn btn-mini' target='_BLANK'>
+		<a href="/users/<%= mem.id %>" class='btn btn-mini' target='_BLANK'>
 			<i class='icon-envelope'></i>&nbsp; <%= mem.email %>
 		</a>
+		<i class='icon-eye-open'></i>
 	</span>
+
+	<% end %>
 </div>
