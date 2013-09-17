@@ -680,11 +680,11 @@
 		$('#cmessage').attr('data-id', data.mid);
 		$('#cmessage-from-name').html(data.from.name);
 		$('#cmessage-from-email').html(data.from.email);
-		$('#cmessage-from-link').attr("href", "/users/"+data.from.email);
+		$('#cmessage-from-link').attr("href", "/users/"+data.from.id);
 
 		$('#cmessage-to-name').html(data.to.name);
 		$('#cmessage-to-email').html(data.to.email);
-		$('#cmessage-to-link').attr("href", "/users/"+data.to.email);
+		$('#cmessage-to-link').attr("href", "/users/"+data.to.id);
 
 		$('#cmessage-subject').html(data.topic);
 		$('#cmessage-body').html(data.body);
