@@ -9,11 +9,11 @@
 				<br/><br/>
 
 				<% insts.each do |inst| %>
-				<span class='badge badge-info inst' style='cursor:pointer'><%= inst.name %></span>
+				<span class='badge badge-info inst'><%= inst.name %></span>
 				<% end %>
 
 				<% if insts.size == 0 %>
-					<span class='badge badge-warning inst' style='cursor:pointer'>Unaffiliated</span>
+					<span class='badge badge-warning inst'>Unaffiliated</span>
 				<% end %>
 
 				<% if current_user && current_user.super_key != nil %>
