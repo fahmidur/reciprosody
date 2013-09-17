@@ -3,13 +3,21 @@
 		<div class='box' style='word-wrap: break-word'> 
 			<center>
 				<h5 class='boxheader'><%= @user.name%></h5>
-				<% @user.insts.each do |inst| %>
-				<span class='badge badge-info inst' style='cursor:pointer'><%= inst.name %><span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span> &nbsp;
+				<% insts = @user.insts %>
+
+				<% insts.each do |inst| %>
+				<span class='badge badge-info inst' style='cursor:pointer'><%= inst.name %></span>
+				<% end %>
+
+				<% if insts.size == 0 %>
+					<span class='badge badge-warning inst' style='cursor:pointer'>Unaffiliated</span>
 				<% end %>
 
 				<% if current_user && current_user.super_key != nil %>
 					<br/><br/>
-					<small><%= @user.email%></small>&nbsp;<span class='badge badge-inverse'><i class='icon-eye-open'></i></span> <br/>
+					<small><%= @user.email%></small>&nbsp;
+					<i class='icon-eye-open'></i>
+					<br/>
 				<% end %>
 			</center>
 		</div>
