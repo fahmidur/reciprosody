@@ -70,13 +70,25 @@ $(window).on('resize', resizeCallback);
 	_sys.addEdge('user-<%= e.user_id %>', 'tool-<%= e.tool_id %>', {directed: true, edgelabel: '<%= e.role %>'});
 <% end %>
 
+<% @pub_corp_rel.each do |e| %>
+	_sys.addEdge('pub-<%= e.publication_id %>', 'corp-<%= e.corpus_id %>', {directed: true, edgelabel: '<%= e.name %>'});
+<% end %>
+
+<% @tool_pub_rel.each do |e| %>
+	_sys.addEdge('pub-<%= e.publication_id %>', 'tool-<%= e.tool_id %>', {directed: true, edgelabel: '<%= e.name %>'});
+<% end %>
+
+<% @tool_corp_rel.each do |e| %>
+	_sys.addEdge('tool-<%= e.tool_id %>', 'corp-<%= e.corpus_id %>', {directed: true, edgelabel: '<%= e.name %>'});
+<% end %>
+
 
 function initializeGlobals() {
 	_jcanvas = $('#target');
 
 	_canvas = document.getElementById('target');
 
-	_sys = arbor.ParticleSystem(4000, 200, 0.7, true, 60, 0.006, 0.8);
+	_sys = arbor.ParticleSystem(4000, 200, 0.5, true, 60, 0.003, 0.8);
 	_sys.parameters({gravity: false});
 
 	_sys.renderer = Renderer('#target');
