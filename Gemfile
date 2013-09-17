@@ -54,6 +54,9 @@ gem 'bibtex-ruby'
 gem 'citeproc-ruby'
 gem 'mail_view', '~> 1.0.3'
 gem 'simplecov', :require => false, :group => :test
+
+gem 'paperclip', '~> 3.0'
+gem 'fog'
 #---------------------------------------------
 
 

@@ -33,7 +33,7 @@ Reciprosody2::Application.configure do
   config.assets.compress = false
   config.assets.enabled = true
   config.assets.debug = false
-  config.serve_static_assets = false #Prevents precompiled assets being included twice - SFR
+  config.serve_static_assets = true #Prevents precompiled assets being included twice - SFR
   # Generate digests for assets URLs.
   config.assets.digest = true
   
@@ -77,5 +77,17 @@ Reciprosody2::Application.configure do
   # Above results in:
 	# SocketError (getaddrinfo: Name or service not known)
   # 
+
+  Paperclip.options[:command_path] = "/usr/bin"
+  # config.paperclip_defaults = {
+  #   :storage => :fog, 
+  #   :fog_credentials => {
+  #     :provider => "Local", 
+  #     :local_root => "#{Rails.root}/public"
+  #   }, 
+  #   :fog_directory => "", 
+  #   :fog_host => "localhost"
+  # }
+
 
 end

@@ -134,6 +134,8 @@ Reciprosody2::Application.routes.draw do
       get :remove_inst_rel #users_controller#remove_inst_rel
       
 			post :invite_user
+
+      get :edit_avatar
 		end
 	end
 

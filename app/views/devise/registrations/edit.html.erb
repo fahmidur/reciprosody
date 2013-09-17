@@ -8,32 +8,53 @@
 	</div>
 	<% end %>
 	
-  <div class='field row-fluid'>
+	<div class='field row-fluid'>
+		<div class='span6'>
 		<%= f.label :name %>
-		<%= f.text_field :name %><br/>	
+		<%= f.text_field :name, :class => 'span12' %>
+		</div>
+
+		<div class='span6'>
+			<%= f.label :email %>
+			<%= f.email_field :email, 'title' => 'Reminder', 'data-content' => 'Please enter a valid email address', :class => 'span12'%>
+		</div>
+
+	</div>
+
+	<div class='field row-fluid'>
+		<div class='span6'>
+			<%= f.label :password %>
+			<%= f.password_field :password, :autocomplete => "off", 'title' => 'Reminder', 'data-content' => "Leave blank if you don't want to change anything.", :class => 'span12' %>
+		</div>
+
+		<div class='span6'>
+			<%= f.label :password_confirmation %>
+			<%= f.password_field :password_confirmation, 'title' => 'Reminder', 'data-content' => "Make sure this matches your password", :class => 'span12' %>
+		</div>
+
 	</div>
 				
-  <div class='field row-fluid'>
-  	<%= f.label :email %>
-	  <%= f.email_field :email, 'title' => 'Reminder', 'data-content' => 'Please enter a valid email address' %>
+
+	<div class='field row-fluid'>
+		<div class='span6'>
+			<%= f.label :current_password %>
+			<%= f.password_field :current_password, 'title' => 'Reminder', 'data-content' => "We need your current password to confirm your changes", :class => 'span12', :required => true %>
+		</div>
+	</div>		
+
+	<div class'field row-fluid'>
+		
+		<%= f.label :avatar %>
+		<%= f.file_field :avatar%>
+
 	</div>
 
-  <div class='field row-fluid'>
-  	<%= f.label :password %>
-  	<%= f.password_field :password, :autocomplete => "off", 'title' => 'Reminder', 'data-content' => "Leave blank if you don't want to change anything." %>
-  </div>
+	<br/>
 
-  <div class='field row-fluid'>
-  	<%= f.label :password_confirmation %>
-  	<%= f.password_field :password_confirmation, 'title' => 'Reminder', 'data-content' => "Make sure this matches your password" %>
-  </div>
+	<div class='row-fluid'>
+		<%= f.submit "Update", :class => 'btn span6' %>
+	</div>
 
-  <div class='field row-fluid'>
-  	<%= f.label :current_password %>
-  	<%= f.password_field :current_password, 'title' => 'Reminder', 'data-content' => "We need your current password to confirm your changes" %>
-  </div>
-
-  <div><%= f.submit "Update", :class => 'btn' %></div>
 <% end %>
 
 <br/>

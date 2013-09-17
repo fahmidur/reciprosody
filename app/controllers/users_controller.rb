@@ -5,6 +5,10 @@ class UsersController < ApplicationController
 	protect_from_forgery
 	before_filter :auth_filter
 
+	def edit_avatar
+		@user = current_user
+	end
+
 	# GET /users/1/remove_inst
 	# params[:inst_id] = id of inst
 	def remove_inst_rel

@@ -5,6 +5,9 @@
 				<h5 class='boxheader'><%= @user.name%></h5>
 				<% insts = @user.insts %>
 
+				<%= image_tag @user.avatar.url(:medium) %>
+				<br/><br/>
+
 				<% insts.each do |inst| %>
 				<span class='badge badge-info inst' style='cursor:pointer'><%= inst.name %></span>
 				<% end %>
