@@ -1,0 +1,105 @@
+<center>
+	<canvas id='target'>
+	</canvas>
+</center>
+
+<% corp_color = 'purple' %>
+<% pub_color = '#4671d5' %>
+<% tool_color = '#FF8100' %>
+<% user_color = '#000' %>
+
+<div id='legend' style='border:0px solid red;background-color:#fafafa; padding:5px;padding-top:10px;padding-left:10px;'>
+	<span style='margin-right:20px;'>
+		<div class='leg-color' style='display:inline-block; width:20px; height:20px;background-color:<%= corp_color %>; border: 2px solid white'></div>
+		<span class='leg-name' style="font-weight:bold;display:inline-block;position:relative;top:-5px;">Corpora</span>
+	</span>
+
+	<span style='margin-right:20px;'>
+		<div class='leg-color' style='display:inline-block; width:20px; height:20px;background-color:<%= pub_color %>; border: 2px solid white'></div>
+		<span class='leg-name' style="font-weight:bold;display:inline-block;position:relative;top:-5px;">Publications</span>
+	</span>
+
+	<span style='margin-right:20px;'>
+		<div class='leg-color' style='display:inline-block; width:20px; height:20px;background-color:<%= tool_color %>; border: 2px solid white'></div>
+		<span class='leg-name' style="font-weight:bold;display:inline-block;position:relative;top:-5px;">Tools</span>
+	</span>
+
+	<span style='margin-right:20px;'>
+		<div class='leg-color' style='display:inline-block; width:20px; height:20px;background-color:<%= user_color %>; border: 2px solid white'></div>
+		<span class='leg-name' style="font-weight:bold;display:inline-block;position:relative;top:-5px;">Users</span>
+	</span>
+</div>
+
+<script type='text/javascript' src='/assets/arbor.js'></script>
+<script type='text/javascript' src='/assets/arbor-tween.js'></script>
+<script type='text/javascript' src='/assets/renderer.js'></script>
+<script type='text/javascript' src='/assets/graphics.js'></script>
+
+<script type='text/javascript'>
+var _sys, _jcanvas;
+
+initializeGlobals();
+resizeCallback();
+$(window).on('resize', resizeCallback);
+
+<% @corpora.each do |e| %>
+	_sys.addNode('corp-<%= e. id %>', {label:"<%= e.name.html_safe %>", color: 'purple', shape: 'rectangle'});
+<% end %>
+
+<% @pubs.each do |e| %>
+	_sys.addNode('pub-<%= e. id %>', {label:"<%= e.name.html_safe %>", color: '<%= pub_color %>', shape: 'rectangle'});
+<% end %>
+
+<% @tools.each do |e| %>
+	_sys.addNode('tool-<%= e. id %>', {label:"<%= e.name.html_safe %>", color: '<%= tool_color %>', shape: 'rectangle'});
+<% end %>
+
+<% @users.each do |e| %>
+	_sys.addNode('user-<%= e. id %>', {label:"<%= e.name.html_safe %>", color: '<%= user_color %>', shape: 'rectangle'});
+<% end %>
+
+<% @user_corp_rel.each do |e| %>
+	_sys.addEdge('user-<%= e.user_id %>', 'corp-<%= e.corpus_id %>', {directed: true, edgelabel: '<%= e.role %>'});
+<% end %>
+
+<% @user_pub_rel.each do |e| %>
+	_sys.addEdge('user-<%= e.user_id %>', 'pub-<%= e.publication_id %>', {directed: true, edgelabel: '<%= e.role %>'});
+<% end %>
+
+<% @user_tool_rel.each do |e| %>
+	_sys.addEdge('user-<%= e.user_id %>', 'tool-<%= e.tool_id %>', {directed: true, edgelabel: '<%= e.role %>'});
+<% end %>
+
+
+function initializeGlobals() {
+	_jcanvas = $('#target');
+
+	_canvas = document.getElementById('target');
+
+	_sys = arbor.ParticleSystem(9000, 100, 0.5, true);
+	_sys.parameters({gravity: false});
+
+	_sys.renderer = Renderer('#target');
+}
+function resizeCallback() {
+	console.log('resize');
+	sizeCanvas();
+	_sys.renderer.redraw();
+	$('#input').focus();
+}
+function sizeCanvas() {
+	var maxWidth = $(window).width();
+	var maxHeight = $(window).height() - 200;
+
+	console.log(_canvas);
+
+	console.log("maxWidth = " + maxWidth);
+	console.log("maxHeight = " + maxHeight);
+
+	_jcanvas.height(maxHeight-25);
+	_jcanvas.width(maxWidth-20);
+
+	_jcanvas.attr('height', maxHeight-25);
+	_jcanvas.attr('width', maxWidth-20);
+}
+</script>

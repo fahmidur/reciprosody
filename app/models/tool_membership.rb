@@ -6,4 +6,15 @@ class ToolMembership < ActiveRecord::Base
   def self.roles
   	['owner', 'reviewer', 'member']
   end
+
+  def self.clean
+  	ToolMembership.all.each do |mem|
+  		user = User.find_by_id(mem.user_id)
+  		tool = Tool.find_by_id(mem.tool_id)
+  		unless user && tool
+  			mem.destroy
+  		end
+  	end
+  end
+
 end

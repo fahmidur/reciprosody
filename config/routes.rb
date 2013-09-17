@@ -152,6 +152,8 @@ Reciprosody2::Application.routes.draw do
     mount AdminsMailer::Preview => 'admins_mail_view'
     mount UsersMailer::Preview => 'users_mail_view'
   end
+
+  match '/graphics/one' => 'graphics#one'
 	
 	
 	#--------only a few static pages----------------------
