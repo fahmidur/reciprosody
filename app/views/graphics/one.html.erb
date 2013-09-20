@@ -88,7 +88,7 @@ function initializeGlobals() {
 
 	_canvas = document.getElementById('target');
 
-	_sys = arbor.ParticleSystem(4000, 200, 0.5, true, 60, 0.003, 0.8);
+	_sys = arbor.ParticleSystem(9400, 100, 0.5, false, 60, 0.01, 0.6);
 	_sys.parameters({gravity: false});
 
 	_sys.renderer = Renderer('#target');

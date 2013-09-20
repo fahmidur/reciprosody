@@ -57,6 +57,7 @@
 			<li class='l-nav'><a href='/user/inbox?v=unread' class=''>Inbox <span class='badge pull-right' id='inbox-count'><%= current_user.received_messages.unreaded.size %></span></a></li>
 			<li class='l-nav'><a href='/users' class=''>Show All Users</a></li>
 			<li class='l-nav'><a href='/user/invite' class=''>Invite a Friend</a></li>
+			<li class='l-nav'><a href='/graphics/one' class=''>Graph View</a></li>
 
 			<!--
 			<li class='l-nav'><a href='/corpora' class=''>View All Corpora</a></li>
@@ -223,14 +224,17 @@ $('#add-inst').click(function() {
 	_inst_search_wrapper.show();
 	_inst_search.show().focus();
 	$(this).hide();
+	_people_search_div.hide();
+	_side_menu_div.hide();
 });
 _inst_search.on('keyup', function(e) {
 	if(e.keyCode != 13) {return;}
 	$.getJSON('/user/add_inst_rel', {'name':$(this).val()}, function(data) {
 		console.log(data);
 		if(data.ok) {
-			if($('#inst-'+data.inst_id).length == 0) {
-				$('#inst_holder').prepend("&nbsp; <span class='badge badge-info inst' style='cursor:pointer' id='inst-"+data.inst_id+">'>"+data.inst_name+"<span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>");
+			if($('#inst-'+data.inst_id).length === 0) {
+				$('#inst_holder').prepend("&nbsp; <span class='badge badge-info inst' style='cursor:pointer' id='inst-"+data.inst_id+"'>"+data.inst_name+"<span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>");
+				$('#add-inst').html("<i class='icon-plus-sign'></i>");
 			}
 		}
 		hideInstSearch();
@@ -247,6 +251,9 @@ function hideInstSearch() {
 	_inst_search.blur();
 	_inst_search_wrapper.slideUp();
 	$('#add-inst').show();
+
+	_people_search_div.show();
+	_side_menu_div.show();
 }
 function updateResult() {
 	if(_people_result.length == 0) {

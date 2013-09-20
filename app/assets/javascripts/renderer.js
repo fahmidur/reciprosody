@@ -384,7 +384,7 @@
           }
 
           if(edge.data.edgelabel) {
-            console.log("edge has label");
+            // console.log("edge has label");
             ctx.save();
               ctx.fillStyle = "#777";
               ctx.font = "bold 12px Helvetica";
