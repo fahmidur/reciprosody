@@ -932,7 +932,6 @@ class CorporaController < ApplicationController
 
 		# Move the file to archive folder
 		FileUtils.mv(@file.path, @archive)
-		
 
 		begin
 			if archive_ext == "zip"

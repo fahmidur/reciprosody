@@ -164,12 +164,15 @@ class Corpus < ActiveRecord::Base
 
 			msg = msg.join("<br/>")
 			
+			user_id = User.find_by_email(email)
+			user_id = user_id.id if user_id
 			commits << {
 				:version => version, 
 				:dateString => dateString, 
 				:msg => msg, 
 				:name => name, 
-				:email => email, 
+				:email => email,
+				:user_id => user_id,
 				:status_changes => status_changes
 			}
 		end
@@ -287,6 +290,10 @@ class Corpus < ActiveRecord::Base
 	scope :approver_of,	where(memberships: {role: 'approver'})
 	scope :member_of, 	where(memberships: {role: 'member'})
 
+
+	def associated_users
+		owners + approvers + members
+	end
 
 	def owners
 		self.users.owners.all

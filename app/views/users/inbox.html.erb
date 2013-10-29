@@ -2,38 +2,45 @@
 
 <div class='row-fluid'>
 	<div class='span3'>
-		<a class='btn span12' id='compose_bt' href='#compose'>
-			<i class='icon-pencil'></i>&nbsp; Compose
-		</a>
-		<br/><br/>
-		<ul class="nav nav-tabs nav-stacked" id='lmenu'>
+		<div class='row-fluid' id='compose-wrapper'>
+			<a class='btn span12' id='compose_bt' href='#compose'>
+				<i class='icon-pencil'></i>&nbsp; Compose
+			</a>
+		</div>
+		<div class='row-fluid' id='replyAll-wrapper'>
+			<a class='btn span12' id='replyAll_bt' href='#replyall' style='display:none'>
+				<i class='icon-arrow-left'></i>&nbsp; Reply
+			</a>
+		</div>
+		<br/>
+		<div class='row-fluid'>
+			<ul class="nav nav-tabs nav-stacked" id='lmenu'>
+				
+				<li class='l-nav' id='unread_tab'><a href='/user/inbox?v=unread' class=''>Unread 
+					<span class='badge pull-right count' id='unreaded-size'><%= @received.unreaded.size %></span>
+				</a></li>
 
-			<!--
-			<li class='l-nav' id='received_tab'><a href='/user/inbox?v=received' class=''>Inbox 
-				<span class='badge pull-right count' id='received-size'><%= @received.size %></span>
-			</a></li>
-			-->
+				<li class='l-nav' id='read_tab'><a href='/user/inbox?v=read' class=''>Read
+					<span class='badge pull-right count' id='readed-size'><%= @received.readed.size %></span>
+				</a></li>
 
-			<li class='l-nav' id='unread_tab'><a href='/user/inbox?v=unread' class=''>Unread 
-				<span class='badge pull-right count' id='unreaded-size'><%= @received.unreaded.size %></span>
-			</a></li>
+				<li class='l-nav' id='sent_tab'><a href='/user/inbox?v=sent' class=''>Sent 
+					<span class='badge pull-right count' id='sent-size'><%= @sent.size %></span>
+				</a></li>
 
-			<li class='l-nav' id='read_tab'><a href='/user/inbox?v=read' class=''>Read
-				<span class='badge pull-right count' id='readed-size'><%= @received.readed.size %></span>
-			</a></li>
+				<li class='l-nav' id='trash_tab'><a href='/user/inbox?v=trash' class=''>Trash
+					<span class='badge pull-right count' id='deleted-size'><%= @deleted.size %></span>
+				</a></li>
+			</ul>
+		</div>
 
-			<li class='l-nav' id='sent_tab'><a href='/user/inbox?v=sent' class=''>Sent 
-				<span class='badge pull-right count' id='sent-size'><%= @sent.size %></span>
-			</a></li>
 
-			<li class='l-nav' id='trash_tab'><a href='/user/inbox?v=trash' class=''>Trash
-				<span class='badge pull-right count' id='deleted-size'><%= @deleted.size %></span>
-			</a></li>
-		</ul>
+		<div class='row-fluid'>
+			<span class='btn btn-mini btn-inverse' id='block-emails-bt' data-name="inbox_block_emails">
+				<input type='checkbox' data-name="inbox_block_emails" id="prop-block-emails" style="margin-top:-2px;" <%= 'checked' if @block_emails%>/>&nbsp;Block Notification Forwarding
+			</span>
+		</div>
 
-		<span class='btn btn-mini btn-inverse' id='block-emails-bt' data-name="inbox_block_emails">
-			<input type='checkbox' data-name="inbox_block_emails" id="prop-block-emails" style="margin-top:-2px;" <%= 'checked' if @block_emails%>/>&nbsp;Block Notification Forwarding
-		</span>
 		<br/>
 		<br/>
 					
@@ -61,7 +68,7 @@
 				<button class='btn btn-small btn-primary' style="opacity:0.9" id='send_bt'>Send</button>
 		</div>
 
-		<div id='cmessage' data-id='' style='display:none; border:1px solid #bbb;margin-bottom:10px;padding:5px; padding-top:8px;box-shadow:0 0 5px #888; background-color:#fff'>
+		<div class='row-fluid' id='cmessage' data-id='' style='display:none; border:1px solid #bbb;margin-bottom:10px;padding:5px; padding-top:8px;box-shadow:0 0 5px #888; background-color:#fff'>
 			<div class='btn-group'>
 				<a href='#' class="btn btn-mini" target='_blank' id='cmessage-from-link'>
 					<i class='icon-user'></i>&nbsp;
@@ -161,6 +168,7 @@
 	
 
 	var _view = "";
+	var _state = "";
 	var _overMessageSelect = false;
 	var _selectedMessages = null;
 	var _selectedUsers = new Array();
@@ -168,7 +176,7 @@
 	var _maxMrowAgoSize = 0;
 	var _people_result = null;
 	var _userSearchEmpty = false;
-	var _validStates = {"compose": 1, "": 1, "cmessage": 1};
+	var _validStates = {"compose": 1, "": 1, "cmessage": 1, "replyall": 1};
 	var _savedMessages = new Array();
 	var _fclient = null;
 	var _myid = null;
@@ -543,7 +551,14 @@
 			}
 
 			console.log("Sending Message...");
-			$.getJSON('/user/send_message', {'to': ids, 'subject': subject, 'body': body}, function(data) {
+			var sendback = {'to': ids, 'subject': subject, 'body': body};
+
+			if(_state === 'replyall') {
+				sendback['replyto'] = $(this).attr('data-replyto');
+			}
+			console.log(sendback);
+
+			$.getJSON('/user/send_message', sendback, function(data) {
 				console.log(data);
 				stateRestore_normal();
 				clear_compose();
@@ -628,8 +643,6 @@
 			return;
 		}
 
-		/*console.log(name + "\t" + email + "\t" + id);*/
-
 		if(_selectedUsers[id]) { return; }
 		
 		_selectedUsers[id] = {
@@ -663,18 +676,28 @@
 
 		//now restore state
 		capture = /\#([a-z]+)/.exec(document.URL);
+
+		$('#send_bt').attr('data-replyto', '');
+		$('#send_bt').html('Send');
+
 		if(capture && _validStates[capture[1]]) {
+			_state = capture[1];
 			if(capture[1] === 'cmessage') {
 				capture = /\#([a-z]+)-(\d+)/.exec(document.URL);
 				stateRestore_cmessage(parseInt(capture[2]));
-			}else {
+			} else
+			if(capture[1] === 'replyall') {
+				capture = /\#([a-z]+)-(\d+)/.exec(document.URL);
+				stateRestore_replyall(parseInt(capture[2]));
+			}
+			else {
 				eval("stateRestore_"+capture[1]+"()");
 			}
 		} else {
 			stateRestore_normal();
 		}
-
 	}
+
 	function fill_cmessage(data) {
 		$('.ib-component').slideUp();
 		$('#cmessage').attr('data-id', data.mid);
@@ -696,17 +719,23 @@
 
 		$('#cmessage').slideDown();
 		//$('#messagesToggle_bt').hide();
+
 		$('#messagesToggle_bt').animate({width:"hide"},300, function() {
 			
 		});
-
 	}
 	function stateRestore_cmessage(mid) {
 		$('#compose_panel').slideUp();
+
+		$('#compose_bt').hide();
+		$('#replyAll_bt').attr('href', '#replyall-'+mid);
+		$('#replyAll_bt').show().removeClass('disabled');
+
 		if(_savedMessages[mid]) {
 			fill_cmessage(_savedMessages[mid]);
 			return;
 		}
+
 		$.getJSON('/user/inbox_get', {'mid': mid}, function(data) {
 			console.log(data);
 			if(data.ok) {
@@ -717,10 +746,17 @@
 			}
 		});
 
-		history.replaceState({state: 'compose'}, "Title", "#cmessage-"+mid);
+		history.replaceState({state: 'cmessage', 'mid': mid}, "Title", "#cmessage-"+mid);
 	}
 	function stateRestore_compose() {
 		/*console.log("Restoring compose state");*/
+
+		$('#compose_bt').show().addClass('disabled');
+
+		$('#message-recipients').html('');
+		$('#compose-subject').val('');
+		$('#compose-body').val('');
+
 		$('.ib-component').slideUp();
 		$('#ibar').slideUp();
 		$('#compose_panel').slideDown();
@@ -732,8 +768,56 @@
 
 		history.replaceState({state: 'compose'}, "Title", "#compose");
 	}
+	//the mid is the message you are replying to
+	function stateRestore_replyall(mid) {
+		console.log("___Reply All___");
+
+		$('#replyAll_bt').show().addClass('disabled');
+		$('#compose_bt').hide();
+
+		$('.ib-component').slideUp();
+
+		if(_savedMessages[mid]) {
+			fill_cmessage(_savedMessages[mid]);
+			stateRestore_replyall_continue(mid);
+
+		} else {
+			$.getJSON('/user/inbox_get', {'mid': mid}, function(data) {
+				if(data.ok) {
+					_savedMessages[mid] = data;
+					stateRestore_replyall_continue(mid);
+				} else {
+					history.go(-1);
+				}
+			});
+		}
+	}
+	function stateRestore_replyall_continue(mid) {
+		var from = _savedMessages[mid].from;
+
+		$('#message-recipients').html('');
+		$('#message-recipients').append('<span class="label user-label" data-id="'+from.id+'"><i class="icon-user"></i>&nbsp; '+from.name+'&nbsp;<i class="icon-remove"></i></span>');
+
+		$('#compose-subject').val("Re: "+ _savedMessages[mid].topic);
+		$('#compose-body').focus();
+		setTimeout(function() {
+			$('#compose-body').focus();
+		},500);
+
+		$('#send_bt').attr('data-replyto', mid);
+		$('#send_bt').html('Reply');
+
+		fill_cmessage(_savedMessages[mid]);
+
+		$('#compose_panel').slideDown();
+	}
 	function stateRestore_normal() {
 		/*console.log("Restoring normal state");*/
+
+		$('#compose_bt').show();
+		$('#replyAll_bt').hide();
+
+		$('#compose_bt').removeClass('disabled');
 		$('#user-search-result').hide();
 
 		if($('#compose_panel').is(":visible")) {

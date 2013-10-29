@@ -231,6 +231,7 @@ class UsersController < ApplicationController
 	# params[:to] -- json array of ids
 	# params[:subject]
 	# params[:body]
+	# params[:replyto] if you're replying to a message, include this message id
 	# returns json
 	def send_message
 		to = params[:to]
@@ -266,10 +267,19 @@ class UsersController < ApplicationController
 
 		message_rows = []
 		client = Faye::Client.new(get_faye_url)
+
+		replyto = current_user().received_messages.find_by_id(params[:replyto])
+
 		to.each do |id|
 			user = User.find_by_id(id)
 			next unless user
-			message = @user.send_message(user, {:topic => subject, :body => body})
+
+			message = nil
+			if replyto
+				message = replyto.reply({:topic => subject, :body => body})
+			else
+				message = @user.send_message(user, {:topic => subject, :body => body})
+			end
 
 			message_row = render_to_string :partial => 'inbox_message', :layout => false, :locals => {:m => message}
 
@@ -319,7 +329,7 @@ class UsersController < ApplicationController
 			@select_messages = @deleted
 			@view = :trash
 		else
-			@select_messages = @received
+			@select_messages = @unreaded
 			@view = :unread
 		end
 

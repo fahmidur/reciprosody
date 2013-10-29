@@ -64,6 +64,7 @@ GEM
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
       json (>= 1.7)
+    choice (0.1.6)
     citeproc-ruby (0.0.6)
       logging (~> 1.5)
       nokogiri (~> 1.5)
@@ -201,6 +202,11 @@ GEM
       activesupport (= 3.2.13)
       bundler (~> 1.0)
       railties (= 3.2.13)
+    rails-erd (1.1.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      choice (~> 0.1.6)
+      ruby-graphviz (~> 1.0.4)
     rails3-jquery-autocomplete (1.0.11)
       rails (~> 3.0)
     railties (3.2.13)
@@ -227,6 +233,7 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
+    ruby-graphviz (1.0.9)
     ruby-hmac (0.4.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
@@ -299,6 +306,7 @@ DEPENDENCIES
   passenger
   puma
   rails (>= 3.2.8)
+  rails-erd
   rails3-jquery-autocomplete
   recaptcha
   redcarpet (= 1.17.2)
