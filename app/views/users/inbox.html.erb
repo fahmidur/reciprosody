@@ -371,9 +371,10 @@
 			$('#delete-confirm').modal('hide');
 		});
 
-		$('#compose-subject').live('focus', function() {
+		$('#compose-subject, #compose-body').live('focus', function() {
 			/*console.log("compose subject focus");*/
 			$('#user-search-result').hide();
+			$('#user-search').hide();
 		});
 		$('.user-result').live('mouseenter', function() {
 			$(".user-result").removeClass("user-selected");
@@ -381,9 +382,6 @@
 		});
 		$('.user-result').live('click', function() {
 			addSelectedUser();
-		});
-		$('#compose-subject').focus(function() {
-			$('#user-search').hide();
 		});
 		$('#to-wrapper').click(function() {
 			$('#user-search').show();
