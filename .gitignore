@@ -13,25 +13,28 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+/tmp/*
+/tmp/**
 
-#ignore these folders -SFR
+#---ignore these folders---
 .redcar
-corpora/*
 *~
-public/assets/*
-.sass-cache/*
-vendor/*
-vendor/**
-upload/*
-upload/**
 
-resumable_uploads/*
-resumable_uploads/**
+corpora/**
 
-publications/*
 publications/**
 
-tools/*
 tools/**
 
+public/assets/**
+
+.sass-cache/**
+
+vendor/**
+
+upload/**
+
+resumable_uploads/**
+
 coverage
+coverage/**
