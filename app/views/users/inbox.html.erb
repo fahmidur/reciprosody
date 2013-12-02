@@ -724,10 +724,12 @@
 	}
 	function stateRestore_cmessage(mid) {
 		$('#compose_panel').slideUp();
-
 		$('#compose_bt').hide();
-		$('#replyAll_bt').attr('href', '#replyall-'+mid);
-		$('#replyAll_bt').show().removeClass('disabled');
+
+		if(_view != "sent") {
+			$('#replyAll_bt').attr('href', '#replyall-'+mid);
+			$('#replyAll_bt').show().removeClass('disabled');
+		}
 
 		if(_savedMessages[mid]) {
 			fill_cmessage(_savedMessages[mid]);

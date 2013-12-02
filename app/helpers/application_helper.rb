@@ -3,6 +3,10 @@ module ApplicationHelper
 		options = [:hard_wrap, :filter_html, :autolink, :no_intraemphasis, :fenced_code, :gh_blockcode]
 		::Redcarpet.new(text, *options).to_html
 	end
+
+	def mainUrl
+		"http://#{Rails.application.config.action_mailer.default_url_options[:host]}"
+	end
 	
 	def snippet(html)
 		doc = ::Nokogiri::HTML(html)

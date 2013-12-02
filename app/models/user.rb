@@ -74,6 +74,26 @@ class User < ActiveRecord::Base
 		end
 	end
 
+	def shout(users, topic, body, fayeproc)
+		users -= [self] if users
+
+		if !users || users.size <= 0
+			logger.into "***USER@SHOUT ! users empty"
+			return
+		end
+
+		unless fayeproc
+			logger.info "***USER@SHOUT ! Faye client not found"
+			return
+		end
+
+
+		users.each do |u|
+			message = self.send_message(u, {:topic => topic, :body => body})
+			fayeproc.call(message)
+		end
+	end
+
 	def getProp(name = nil)
 		if(name == nil)
 			return self.user_properties
@@ -121,6 +141,11 @@ class User < ActiveRecord::Base
 	
 	def email_format
 		"#{self.name}<#{self.email}>"
+	end
+
+	def gravatar_url(type)
+		gravatar_id = Digest::MD5.hexdigest(self.email.downcase)
+		return "http://gravatar.com/avatar/#{gravatar_id}.#{type}?s=200"
 	end
 
 end

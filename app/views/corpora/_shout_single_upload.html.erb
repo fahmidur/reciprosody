@@ -1,0 +1,15 @@
+<a href='<%= mainUrl %>/corpora/<%= @corpus.id %>' target='_blank'>View Corpus</a> &nbsp;
+<a href='<%= mainUrl %>/corpora/<%= @corpus.id %>/browse' target='_blank'>Browse Corpus</a>
+<h4>New Files:</h4>
+<ul>
+<% files.each do |fname| %>
+	<li>
+		<a href='<%= mainUrl %>/corpora/<%= @corpus.id %>/single_download?path=<%= rpath %>/<%= fname %>' target='_blank'>
+			<%=rpath%>/<%= fname %>
+		</a>
+	</li> 
+<% end %>
+</ul>
+
+<h4>Commit Message:</h4>
+<pre style='border:1px solid gray; padding:5px;'><%= message %></pre>

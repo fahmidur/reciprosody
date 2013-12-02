@@ -13,14 +13,14 @@
 			
 				<h5 class='boxheader'><%= current_user.name%></h5>
 
-				
-				<span id='avatar_holder' style='border:0px solid black'>
-					
-					<%= image_tag current_user.avatar.url(:thumb), :id => 'avatar', :class => 'pull-right' %>
-					<div id='qr' style='display:inline-block;' class=''></div>
+				<center>
+					<a href='http://gravatar.com' title='Change Gravatar' target='_blank'>
+						<%= image_tag current_user.gravatar_url(:png)%>
+					</a>
+				</center>
 
+			
 
-				</span>
 				<hr/>
 				<center>
 				<div id='inst_holder'>

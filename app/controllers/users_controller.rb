@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-	require 'faye'
 	require 'eventmachine'
 
 	protect_from_forgery
@@ -428,23 +427,10 @@ class UsersController < ApplicationController
 				logger.info("****Invalid Input")
 				format.html { redirect_to '/user/invite', :notice => "Invalid Input" }
 			end
-    end  
-      
- 
+    	end  
 	end
 	
 	private
-
-	def get_faye_url
-		@faye_url = Rails.application.config.action_mailer.default_url_options[:host].clone
-		if @faye_url =~ /\:\d+$/
-			@faye_url.gsub!(/\:\d+$/, ':9292')
-		else
-			@faye_url += ":9292"
-		end
-		@faye_url = "http://#{@faye_url}/faye"
-		return @faye_url
-	end
 	
 	def auth_filter
 		if !user_signed_in?

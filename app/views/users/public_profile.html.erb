@@ -5,7 +5,8 @@
 				<h5 class='boxheader'><%= @user.name%></h5>
 				<% insts = @user.insts %>
 
-				<%= image_tag @user.avatar.url(:medium) %>
+				<%= image_tag @user.gravatar_url(:png)%>
+				
 				<br/><br/>
 
 				<% insts.each do |inst| %>
