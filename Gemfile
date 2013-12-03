@@ -41,7 +41,7 @@ gem 'nifty-generators'
 gem "rails3-jquery-autocomplete"
 
 # HAD to get rid of this, it was causing `require` failures
-#gem "activerecord-import" #for bulk importing data
+# gem "activerecord-import" #for bulk importing data
 
 gem "redcarpet", "1.17.2"
 gem "nokogiri"

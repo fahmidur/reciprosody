@@ -214,10 +214,10 @@ ActiveRecord::Schema.define(:version => 20130917071433) do
     t.string   "name"
     t.string   "programming_language"
     t.string   "license"
+    t.string   "url"
     t.text     "authors"
     t.text     "description"
     t.text     "keywords"
-    t.string   "url"
     t.string   "local"
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
