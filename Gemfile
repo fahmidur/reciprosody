@@ -50,8 +50,8 @@ gem 'carrierwave'
 gem 'waveinfo'
 gem 'acts-as-messageable'
 
-gem 'bibtex-ruby'
-gem 'citeproc-ruby'
+gem 'bibtex-ruby', :require => 'bibtex'
+gem 'citeproc-ruby', :require => 'citeproc'
 gem 'mail_view', '~> 1.0.3'
 gem 'simplecov', :require => false, :group => :test
 

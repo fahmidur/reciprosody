@@ -46,8 +46,31 @@
 		<div class='row-fluid'>
 			<div class='box span12'>
 				<h5 class='boxheader'>Citation</h5>
-				
-				<%=raw markdown(@corpus.citation) %>
+				<div class='btn-group' id='citation-style-select'>
+					<button class='btn btn-mini active'>Raw</button>
+					<button class='btn btn-mini'>MLA</button>
+					<button class='btn btn-mini'>APA</button>
+					<button class='btn btn-mini'>Chicago</button>
+				</div>
+
+				<br/><br/>
+
+				<div class='citation-style' id='citation-style-raw'>
+					<%=raw markdown(@corpus.citation) %>
+				</div>
+
+				<div class='citation-style' id='citation-style-mla'>
+					<%=raw html_from_citation(@corpus.citation, :mla) %>
+				</div>
+
+				<div class='citation-style' id='citation-style-apa'>
+					<%=raw html_from_citation(@corpus.citation, :apa) %>
+				</div>
+
+				<div class='citation-style' id='citation-style-chicago'>
+					<%=raw html_from_citation(@corpus.citation, 'chicago-author-date') %>
+				</div>
+
 			</div>
 		</div>
 		<% end %>
@@ -157,5 +180,15 @@
 <br/>
 <%= render :partial => 'footer' %>
 
-
-
+<script type='text/javascript'>
+	$('.citation-style').hide();
+	$('#citation-style-raw').show();
+	
+	$('#citation-style-select .btn').click(function() {
+		$('#citation-style-select .btn').removeClass('active');
+		$(this).addClass('active');
+		var target = '#citation-style-' + $(this).html().toLowerCase();
+		$('.citation-style').hide();
+		$(target).show();
+	});
+</script>

@@ -18,4 +18,9 @@ module ApplicationHelper
 	def text_snippet(text, chars)
 		text[0..chars] + "..."
 	end
+
+	def html_from_citation(text, style)
+		b = BibTeX.parse text
+		CiteProc.process b.to_citeproc, :style => style, :format => :html
+	end
 end

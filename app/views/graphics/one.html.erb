@@ -88,7 +88,17 @@ function initializeGlobals() {
 
 	_canvas = document.getElementById('target');
 
-	_sys = arbor.ParticleSystem(9400, 100, 0.5, false, 60, 0.01, 0.6);
+	// _sys = arbor.ParticleSystem(9400, 100, 0.5, false, 60, 0.01, 0.6);
+	_sys = arbor.ParticleSystem({
+		repulsion: 2400,
+		stiffness: 100,
+		friction: 0.5,
+		gravity: true,
+		fps: 55,
+		dt: 0.02, 			//for stepping the simulation 			0.02 is default
+		precision: 0.60 	//for how accurate the simulation is 	0.60 is default
+	});
+
 	_sys.parameters({gravity: false});
 
 	_sys.renderer = Renderer('#target');
