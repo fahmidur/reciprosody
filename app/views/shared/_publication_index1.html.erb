@@ -7,18 +7,17 @@
 	</h4>
 	<% if p.authors && !p.authors.blank?%>
 		<span class='corpi_l'><%= p.authors.split("\n").join(", " )%></span>
+		<br/>
 	<% end %>
-
-
 
 	<% if p.keywords && !p.keywords.blank? %>
 		<% p.keywords_array.each do |kw| %>
 			<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
 		<% end %>
-		<br/><br/>
+		<br/>
 	<% end %>
 
-	
+	<br/>
 	<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
 	<a href='<%= corpora_publication_path(p)%>' class='btn btn-mini'>Corpora</a>
 	<a href='<%= tools_publication_path(p)%>' class='btn btn-mini'>Tools</a>

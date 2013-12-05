@@ -32,7 +32,7 @@ Reciprosody2::Application.configure do
   #-ASSETS-
   config.assets.compress = false
   config.assets.enabled = true
-  config.assets.debug = false
+  config.assets.debug = true
   config.serve_static_assets = true #Prevents precompiled assets being included twice - SFR
   # Generate digests for assets URLs.
   config.assets.digest = true

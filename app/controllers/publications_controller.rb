@@ -198,6 +198,8 @@ class PublicationsController < ApplicationController
 
 		params[:publication][:pubdate] = DateTime.new(params[:publication][:pubdate].to_i)
 
+		logger.info "**********PARAM[PUBLICATIONS] = #{params[:publication].to_yaml}"
+
 		respond_to do |format|
 			if @pub && @pub.update_attributes(params[:publication]) && create_publication()
 				PublicationMembership.where(:user_id => current_user().id, :publication_id => @pub.id).destroy_all
