@@ -15,7 +15,9 @@ $(function() {
 	$('#new_publication').on('ajax:beforeSend', function(e, xhr, settings) {
 		console.log("ORIGINAL = " + settings.data);
 
-		var obj = uri_to_obj(settings.data);
+		// var obj = uri_to_obj(settings.data);
+		var obj = uri_to_obj($(this));
+
 		var keywords = "";
 		var corpora = "";
 		var tools = "";
@@ -38,6 +40,7 @@ $(function() {
 		for(tool in _tools) {
 			tools += tool + "\n";
 		}
+
 		console.log(keywords);
 		console.log(corpora);
 		console.log(tools);
@@ -45,11 +48,12 @@ $(function() {
 		obj['publication[keywords]'] = keywords;
 		obj['publication[corpora]'] = corpora;
 		obj['publication[tools]'] = tools;
-		
+
+
+		console.log("final obj = ", obj);
 		settings.data = obj_to_uri(obj);
 
 		console.log(settings.data);
-
 	});
 	$('#new_publication').on('ajax:success', function(e, data) {
 		console.log("success!");

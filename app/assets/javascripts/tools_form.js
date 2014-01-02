@@ -13,7 +13,9 @@ $(function() {
 	$('#new_tool').on('ajax:beforeSend', function(e, xhr, settings) {
 		console.log("ORIGINAL = " + settings.data);
 
-		var obj = uri_to_obj(settings.data);
+		// var obj = uri_to_obj(settings.data);
+		var obj = uri_to_obj($(this));
+
 		var keywords = "";
 		var corpora = "";
 		var publications = "";

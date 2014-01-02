@@ -1,18 +1,29 @@
-function uri_to_obj(uricomp) {
-	var obj = {}, a,
-		els = decodeURIComponent(uricomp.replace(/\+/g, ' ')).split('&'),
-		p;
+// function uri_to_obj(uricomp) {
+// 	var obj = {}, a,
+// 		els = decodeURIComponent(uricomp.replace(/\+/g, ' ')).split('&'),
+// 		p;
 
-	for(i in els) {
-		p = els[i].indexOf('=');
-		if(p === -1) {
-			obj[els[i]] = "";
-			continue;
-		}
-		obj[els[i].substring(0, p)] = els[i].substring(p+1);
+// 	for(i in els) {
+// 		p = els[i].indexOf('=');
+// 		if(p === -1) {
+// 			obj[els[i]] = "";
+// 			continue;
+// 		}
+// 		obj[els[i].substring(0, p)] = els[i].substring(p+1);
+// 	}
+// 	return obj;
+// }
+
+function uri_to_obj($form) {
+	var dataArray = $form.serializeArray();
+	var obj = {};
+	for(var i in dataArray) {
+		obj[dataArray[i].name] = dataArray[i].value;
 	}
+	console.log(obj);
 	return obj;
 }
+
 function fixedEncodeURIComponent (str) {
   return encodeURIComponent(str).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
 }
