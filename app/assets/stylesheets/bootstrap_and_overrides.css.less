@@ -400,6 +400,25 @@ body .modal {
 }
 .newCommentBox {
 	resize:none;
+	box-shadow: none;
+}
+.replyCommentWrapper {
+	border-top: 1px solid #eee;
+	border-left: 1px solid #eee;
+}
+.replyCommentWrapper .btn {
+	border-radius: 0px;
+}
+.replyCommentBox {
+	outline: none;
+	resize: none;
+	margin-bottom: 0px;
+	border: 0px solid #eee;
+	box-shadow: none;
+}
+.replyCommentBox:focus {
+	box-shadow: none;
+	border: 0px solid #eee;
 }
 .lnav_hl:hover {
 	background-color:#FFFFBF;
@@ -492,4 +511,18 @@ table.inbox_table tr.selected {
 .user-label {
 	position:relative; top:-4px;margin-right:5px;
 	cursor:pointer;
+}
+.comment {
+	padding:3px; 
+	border-top: 1px solid #eee;
+	border-left: 1px solid #eee;
+	margin: 2px;
+	margin-right:4px;
+	/*border-radius: 3px;*/
+	box-sizing: border-box;
+}
+.comment .header {
+	font-size: x-small;
+	font-weight: 
+	bold;
 }

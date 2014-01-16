@@ -2,9 +2,23 @@ var numComments = 0;
 $(function() {
 	console.log("Comments Page");
 	numComments = $('.comment').length;
-	updateInputSize($('#input'));
+	if($('#input').length !== 0) {
+		updateInputSize($('#input'));
+	}
 
-	$('#input').live('keyup', function(e) {
+
+	var replyNode = $('#replyNode').remove();
+	$('.commentReply_bt').click(function() {
+		replyNode.remove();
+		$(this).closest('.comment').find('.commentBody').after(replyNode);
+		replyNode.find('textarea:first').focus();
+	});
+
+	$('#replyCancel_bt').live('click', function() {
+		replyNode.remove();
+	});
+
+	$('textarea.autosize').live('keyup', function(e) {
 		if(e.keyCode == 13 || e.keyCode == 8 || e.keyCode == 46) {
 			updateInputSize($(this));
 		}
@@ -47,11 +61,10 @@ function updateInputSize(container) {
 }
 function refreshComments() {
 	var cid = $('#input').attr('data-cid');
-	console.log("polling..."+numComments);
+	// console.log("polling..."+numComments);
 	$.getJSON("/corpora/"+cid+"/refresh_comments", {num_comments: numComments, data_type: 'json' }, 
 		function(data) {
-			
-			console.log(data);
+			// console.log(data);
 			if(data && data.ok) {
 				if(data.add) {
 					for(var i = 0; i < data.comms.length; i++) {

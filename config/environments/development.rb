@@ -33,9 +33,9 @@ Reciprosody2::Application.configure do
   config.assets.compress = false
   config.assets.enabled = true
   config.assets.debug = true
-  config.serve_static_assets = true #Prevents precompiled assets being included twice - SFR
+  config.serve_static_assets = false #Prevents precompiled assets being included twice - SFR
   # Generate digests for assets URLs.
-  config.assets.digest = true
+  config.assets.digest = false
   
 	#SMTP Gmail Action Mailer - SFR
 	#require 'tlsmail'

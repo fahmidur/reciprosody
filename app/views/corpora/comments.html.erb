@@ -14,18 +14,23 @@
 
 
 		<div class='row-fluid'>
-			<div class='box span12'>
-				<textarea class='newCommentBox span12' name="msg" id='input' placeholder="New Comment" data-cid="<%= @corpus.id %>"></textarea>
+			<div class='span12'>
+				<textarea class='autosize newCommentBox span12' name="msg" id='input' placeholder="New Comment" data-cid="<%= @corpus.id %>"></textarea>
 				<center>
 					<input type='submit' class='btn btn-small btn-primary span12' id='submit' value='Post!'/>
 				</center>
 			</div>
 		</div>
 
-
 	<% end %>
 
 <% end %>
+
+<div class='replyCommentWrapper row-fluid' id='replyNode'>
+	<textarea class='autosize span12 replyCommentBox' placeholder='Reply'></textarea><br/>
+	<button class='btn btn-mini' id='replyPost_bt'>Post</button>
+	<button class='btn btn-mini' id='replyCancel_bt'>Cancel</button>
+</div>
 
 <div id="comments_holder">
 	<% @comments.each do |comment| %>

@@ -1,12 +1,45 @@
-<div class='row-fluid comment' id='comment-<%= comment.id %>'>
-	<div class='box span12'>
-		<h5 class='boxheader'><%= comment.user.name %></h5>
+<div class='row-fluid comment' id='comment-<%= comment.id %>' data-id='<%= comment.id %>'>
+	<div class='span12 inner'>
+		<div class='header'>
+			<a href='/users/<%= comment.user.id %>'><%= comment.user.name %></a>
+			<span class='corpus_show_value'>
+				<%= comment.updated_at.to_formatted_s(:short) %>
+			</span>
+			&nbsp;/&nbsp;
+			<span class='corpus_show_value'>
+				<%= time_ago_in_words(comment.updated_at)%> ago
+			</span>
+
+			<span class='pull-right'>
+				
+				<% if current_user() && current_user().corpora.to_a.include?(@corpus)%>
+					<a href='#' class='commentReply_bt'>Reply <i class='icon-comment'></i></a>
+					&nbsp;
+					<% if comment.user_id == current_user().id %>
+					&nbsp;
+					<%= link_to raw("Delete <i class='icon-trash'></i>"), remove_comment_corpus_path(@corpus)+"?comment_id="+comment.id.to_s, :class => 'deletable', :remote => true, 'data-comid' => comment.id%>
+					&nbsp;
+					<% end %>
+				<% end %>	
+			</span>
+		</div>
+
+		<div class='commentBody'>
 		<p><%= comment.body %></p>
-		<p class='pull-right corpus_show_value'> 
-			<% if current_user() && comment.user_id == current_user().id %>
-				<%= link_to "remove comment", remove_comment_corpus_path(@corpus)+"?comment_id="+comment.id.to_s, :class => 'btn btn-mini deletable', :remote => true, 'data-comid' => comment.id%>
+		</div>
+
+		<% if comment.has_children? %>
+		<div class='children'>
+			<!-- <div class='row-fluid comment'>
+				<div class='span12 inner'>
+				</div>
+			</div> -->
+			<% comment.children.each do |child| %>
+				<%= render :partial => 'comment', :locals => {:comment => child} %>
 			<% end %>
-			<%= time_ago_in_words(comment.updated_at)%> ago
-		</p> <br/>
+		</div>	
+		<% end %>
 	</div>
+
+	
 </div>

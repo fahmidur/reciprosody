@@ -235,11 +235,12 @@ class CorporaController < ApplicationController
 	# Just the comments page
 	def comments
 		@corpus = Corpus.find_by_id(params[:id])
-		@comments = @corpus.comments
+		@comments = @corpus.root_comments
 	end
 
 	# GET /corpora/1/add_comment
-	# params[:msg] = comment
+	# params[:msg] = comment message
+	# params[:parentid] = id of the parent comment
 	# FILTERED_BY: assoc_filter
 	#
 	def add_comment
@@ -254,6 +255,10 @@ class CorporaController < ApplicationController
 				if @corpus && msg && !msg.blank? && user
 					comment = Comment.build_from(@corpus, user.id, msg)
 					comment.save
+					parent = Comment.find_by_id(params[:parentid])
+					if(parent)
+						comment.move_to_child_of(parent)
+					end
 					render :json => {
 						:ok => true, 
 						:resp => render_to_string(

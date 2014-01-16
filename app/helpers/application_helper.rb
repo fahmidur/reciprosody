@@ -20,8 +20,12 @@ module ApplicationHelper
 	end
 
 	def html_from_citation(text, style)
+		begin
 		text = "" if !text || text.blank?
 		b = BibTeX.parse text
 		CiteProc.process b.to_citeproc, :style => style, :format => :html
+		rescue
+			return ""
+		end
 	end
 end
