@@ -38,3 +38,8 @@ resumable_uploads/**
 
 coverage
 coverage/**
+
+devnotes
+devnotes/**
+
+static_secrets*

@@ -1,5 +1,4 @@
 <% content_for :javascript_includes do %>
-  <%= javascript_include_tag "comments.js" %>
 <% end %>
 
 <p id="notice"><%= notice %></p>
@@ -41,6 +40,12 @@
 <br/>
 
 <%= render :partial => 'footer' %>
+
+<script type='text/javascript' src='<%= @faye_url %>/faye.js'></script>
+<script type='text/javascript'>
+	var _faye_url = '<%= @faye_url %>';
+</script>
+<%= javascript_include_tag "comments.js", :locals => {:faye_url => @faye_url} %>
 
 
 

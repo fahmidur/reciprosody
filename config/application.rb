@@ -10,6 +10,10 @@ if defined?(Bundler)
 end
 
 module Reciprosody2
+  require 'yaml'
+  static_secrets = YAML.load(File.read('static_secrets.yaml'))
+  FAYE_PASSWORD = static_secrets[:faye_password]
+  
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -59,6 +63,5 @@ module Reciprosody2
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-
   end
 end

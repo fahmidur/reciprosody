@@ -265,10 +265,8 @@ class UsersController < ApplicationController
 		end
 
 		message_rows = []
-		client = Faye::Client.new(get_faye_url)
-
+		client = get_faye_client
 		replyto = current_user().received_messages.find_by_id(params[:replyto])
-
 		to.each do |id|
 			user = User.find_by_id(id)
 			next unless user

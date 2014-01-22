@@ -204,7 +204,7 @@
 
 		if(_fclient) {
 			var _fsub = _fclient.subscribe('/messages/'+_myid, function(data) {
-				//console.log(data);
+				console.log(data);
 
 				var target = $('#unreaded-size');
 				if(target.length === 0) {

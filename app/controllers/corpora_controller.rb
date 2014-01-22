@@ -235,7 +235,8 @@ class CorporaController < ApplicationController
 	# Just the comments page
 	def comments
 		@corpus = Corpus.find_by_id(params[:id])
-		@comments = @corpus.root_comments
+		get_faye_url
+		@comments = @corpus.root_comments.order("created_at DESC");
 	end
 
 	# GET /corpora/1/add_comment

@@ -34,7 +34,7 @@
 				<div class='span12 inner'>
 				</div>
 			</div> -->
-			<% comment.children.each do |child| %>
+			<% comment.children.reverse.each do |child| %>
 				<%= render :partial => 'comment', :locals => {:comment => child} %>
 			<% end %>
 		</div>	

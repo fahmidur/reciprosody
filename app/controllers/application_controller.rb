@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
 
 	def make_messager
 		client = Faye::Client.new(get_faye_url)
+
 		messager = Proc.new do |message|
 			message_row = render_to_string(
 				:partial => 'users/inbox_message', 
@@ -36,7 +37,16 @@ class ApplicationController < ActionController::Base
 		return messager
 	end
 
+	def get_faye_client
+		logger.info "GET FAYE CLIENT"
+		return @faye_client if @faye_client
+		@faye_client = Faye::Client.new(get_faye_url)
+		@faye_client.add_extension(FayeClientAugmenter.new)
+		return @faye_client
+	end
+
 	def get_faye_url
+		return @faye_url if @faye_url
 		@faye_url = Rails.application.config.action_mailer.default_url_options[:host].clone
 		if @faye_url =~ /\:\d+$/
 			@faye_url.gsub!(/\:\d+$/, ':9292')
