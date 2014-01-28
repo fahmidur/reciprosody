@@ -136,10 +136,8 @@ $(function() {
 		});
 	}
 	function replyInject(html, parentID) {
-		// var parentComment = $('#comment-'+parentID);
-		// parentComment.find('.commentBody:first').after(html);
-		$(html).appendTo('#comment-'+parentID+' .commentBody:first')
-		.hide().slideDown();
+		var parentComment = $('#comment-'+parentID);
+		parentComment.find('.commentBody:first').after(html);
 	}
 	function replyShow() {
 		replyNode.remove();

@@ -27,7 +27,7 @@
 		</div>
 
 		<div class='commentBody'>
-		<p><%= comment.body %></p>
+		<p><%=raw comment.body %></p>
 		</div>
 
 		<% if comment.has_children? %>

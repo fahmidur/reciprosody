@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
 	
 	class Helper
 		include Singleton
+		include ApplicationHelper
 		include ActionView::Helpers::DateHelper
 		include ActionView::Helpers::TextHelper
 	end

@@ -254,6 +254,7 @@ class CorporaController < ApplicationController
 
 			format.json do
 				if @corpus && msg && !msg.blank? && user
+					msg = help.markdown(msg);
 					comment = Comment.build_from(@corpus, user.id, msg)
 					comment.save
 					parent = Comment.find_by_id(params[:parentid])
