@@ -1,7 +1,0 @@
-== Welcome to Reciprosody
-
-Reciprosody is an open repository of prosodically annotated speech.
-
-Currently, prosody researchers lack a simple way to share their annotated data. This lack: (1) limits our ability to test robust supervised techniques for automatic prosody detection; (2) makes it difficult to compare performance across publications that operate on private corpora; and (3) puts the burden on the creators of a resource to maintain and distribute their data. The lack of shareable data is particularly worrisome in our field, since prosodic annotation, as we all know, is a very onerous and time-consuming task.
-
-This material is based upon work supported by the National Science Foundation under Grant Number #1205445. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
