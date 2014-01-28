@@ -250,7 +250,7 @@ class CorporaController < ApplicationController
 		msg = params[:msg]
 		user = current_user()
 		
-		respond_to do |format|	
+		respond_to do |format|
 
 			format.json do
 				if @corpus && msg && !msg.blank? && user
@@ -260,14 +260,25 @@ class CorporaController < ApplicationController
 					if(parent)
 						comment.move_to_child_of(parent)
 					end
+
+					comment_html = render_to_string(
+						:partial => 'comment', 
+						:locals => {:comment => comment}, 
+						:formats => [:html]
+					)
+
+					@faye_client = get_faye_client
+					@faye_client.publish("/corpora/#{@corpus.id}/comments/new", {
+						:comment_html => comment_html,
+						:comment_id => comment.id,
+						:user_id => comment.user_id,
+						:parent_id => parent ? parent.id : false,
+					})
+
 					render :json => {
 						:ok => true, 
-						:resp => render_to_string(
-							:partial => 'comment', 
-							:locals => {:comment => comment}, 
-							:formats => [:html])
-						}
-				
+						:resp => comment_html
+					}
 				else
 					render :json => {:ok => false}
 				end
@@ -289,18 +300,15 @@ class CorporaController < ApplicationController
 		comment = Comment.find_by_id(comment_id)
 
 		respond_to do |format|
-			format.html do
-				if comment && comment.user_id == user.id
-					comment.destroy
-					render :text => comment_id
-				else
-					render :text => "ERROR"
-				end
-			end
 			format.json do
 				if comment && comment.user_id == user.id
 					comment.destroy
-					render :json => {:ok => true}
+					@faye_client = get_faye_client
+					@faye_client.publish("/corpora/#{@corpus.id}/comments/delete", {
+						:user_id => comment.user_id,
+						:comment_id => comment.id
+					})
+					render :json => {:ok => true, :comment_id => comment_id}
 				else
 					render :json => {:ok => false}
 				end
@@ -677,6 +685,8 @@ class CorporaController < ApplicationController
 		Dir.chdir Rails.root
 
 		baseurl = "#{@rpath if @rpath != '/' }"
+
+
 
 		messager = make_messager
 		current_user.shout(

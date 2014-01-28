@@ -16,8 +16,11 @@ class ApplicationController < ActionController::Base
 
 	protected
 
+	# creates a user#inbox messager
+	# used to send any messages
+	# through the inbox#messaging system
 	def make_messager
-		client = Faye::Client.new(get_faye_url)
+		client = get_faye_client
 
 		messager = Proc.new do |message|
 			message_row = render_to_string(

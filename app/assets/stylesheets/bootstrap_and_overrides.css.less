@@ -520,6 +520,15 @@ table.inbox_table tr.selected {
 	margin-right:4px;
 	/*border-radius: 3px;*/
 	box-sizing: border-box;
+	-webkit-transition-property:background, border, color;
+	-webkit-transition-duration:1s, 1s, 1s;
+	-webkit-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);	
+	-moz-transition-property:background, border, color;
+	-moz-transition-duration:1s, 1s, 1s;
+	-moz-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
+}
+.comment:hover {
+	border-left: 1px solid orange;
 }
 .comment .header {
 	font-size: x-small;

@@ -14,11 +14,13 @@
 				
 				<% if current_user() && current_user().corpora.to_a.include?(@corpus)%>
 					<a href='#' class='commentReply_bt'>Reply <i class='icon-comment'></i></a>
-					&nbsp;
+					
 					<% if comment.user_id == current_user().id %>
+					<span class='removable'>
+					&nbsp;&nbsp;
+					<%= link_to raw("Delete <i class='icon-trash'></i>"), remove_comment_corpus_path(@corpus)+"?comment_id="+comment.id.to_s, :class => 'deletable', :remote => true, :format => :json, 'data-comid' => comment.id%>
 					&nbsp;
-					<%= link_to raw("Delete <i class='icon-trash'></i>"), remove_comment_corpus_path(@corpus)+"?comment_id="+comment.id.to_s, :class => 'deletable', :remote => true, 'data-comid' => comment.id%>
-					&nbsp;
+					</span>
 					<% end %>
 				<% end %>	
 			</span>

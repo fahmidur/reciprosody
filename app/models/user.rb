@@ -74,6 +74,7 @@ class User < ActiveRecord::Base
 		end
 	end
 
+	# messages a group of users
 	def shout(users, topic, body, fayeproc)
 		users -= [self] if users
 
@@ -86,7 +87,6 @@ class User < ActiveRecord::Base
 			logger.info "***USER@SHOUT ! Faye client not found"
 			return
 		end
-
 
 		users.each do |u|
 			message = self.send_message(u, {:topic => topic, :body => body})
