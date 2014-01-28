@@ -16,4 +16,8 @@ Reciprosody is developed at the [Speech Lab @ Queens College](http://speech.cs.q
 
 The code is written and maintained by [Syed Reza](http://syedreza.org).
 
-The Speech Lab @ Queens College is run by [Dr. Andrew Rosenberg](http://eniac.cs.qc.cuny.edu/andrew/) who also presides over this project.
+The Speech Lab @ Queens College is run by [Dr. Andrew Rosenberg](http://eniac.cs.qc.cuny.edu/andrew/) who presides over this project. The following is an excerpt from Dr. Rosenberg's original proposal:
+
+> Prosody researchers at CUNY, Columbia and MIT are developing Reciprosody, a web source of prosodically annotated data and tools for analysis. Reciprosody makes critical resources for the study and teaching of prosody available to a growing and diverse population of researchers, students, and technologists. This website hosts data in any language, annotated under any prosody standard. The only restriction for hosting data in the repository is that it must be made freely available for academic and educational activities.
+
+> Reciprosody is not merely a passive repository, but an active resource for researchers and educators to communicate with each other on a regular basis. This enables the resource to be a center not only for annotated data, but information and support related to ongoing prosody research.
