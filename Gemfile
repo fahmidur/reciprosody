@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '>= 3.2.8'
+gem 'rails', '4.0.2'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -26,7 +26,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 
   gem 'font-awesome-rails'
-  gem 'less-rails'
+  gem 'less-rails', '2.3.3'
   #gem 'libv8', '~> 3.3.10'
   gem 'therubyracer'
 end
@@ -34,8 +34,8 @@ end
 gem 'jquery-rails', '2.1.4'
 
 #---Modified by Me -SFR----------------
-gem 'twitter-bootstrap-rails', '2.2.7' #Needed for Glyphicons to work
-gem 'devise'
+gem 'twitter-bootstrap-rails', '2.2.7'  # Needed for Glyphicons to work
+gem 'devise', '3.0.0'                   # Must be specifically set to 3.0.0
 gem "recaptcha", :require => "recaptcha/rails"
 gem 'nifty-generators'
 gem "rails3-jquery-autocomplete"
@@ -48,7 +48,12 @@ gem "nokogiri"
 gem 'acts_as_commentable_with_threading'
 gem 'carrierwave'
 gem 'waveinfo'
-gem 'acts-as-messageable'
+
+# 01-28-2014
+# Rails 4 fix for this as of 13 days ago
+# The downside to being too bleeding edge
+# https://github.com/LTe/acts-as-messageable/issues/57
+gem 'acts-as-messageable', :git => 'git://github.com/hoczaj/acts-as-messageable.git'
 
 gem 'bibtex-ruby', :require => 'bibtex'
 gem 'citeproc-ruby', :require => 'citeproc'
@@ -99,3 +104,7 @@ end
 
 # To use debugger
 # gem 'debugger'
+
+#Added by SFR for Rails 4.0 transition
+gem "activerecord-session_store"
+gem "protected_attributes"

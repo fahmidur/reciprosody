@@ -83,9 +83,8 @@ class UsersController < ApplicationController
 		end
 
 		mid = mid.to_i
-
-		messages = @user.messages.with_id(mid) + @user.deleted_messages.with_id(mid)
-		message = messages[0] unless messages.length == 0
+		
+		message = @user.messages.find_by_id(mid) || @user.deleted_messages.find_by_id(mid)
 
 		unless message
 			render :json => {:ok => false, :mid => mid, :error => 'message not found'}

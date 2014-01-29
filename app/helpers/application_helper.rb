@@ -16,7 +16,8 @@ module ApplicationHelper
 	end
 
 	def text_snippet(text, chars)
-		text[0..chars] + "..."
+		return text[0..chars] + "..." if text
+		return "..."
 	end
 
 	def html_from_citation(text, style)

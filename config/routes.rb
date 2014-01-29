@@ -153,18 +153,18 @@ Reciprosody2::Application.routes.draw do
     mount UsersMailer::Preview => 'users_mail_view'
   end
 
-  match '/graphics/one' => 'graphics#one'
+  match '/graphics/one' => 'graphics#one', :via => :get
 	
 	
 	#--------only a few static pages----------------------
 	resources :pages
-	root :to           => 'pages#index'
-	match 'about'      => 'pages#about'
-	match 'faq'        => 'pages#faq'
-	match 'contact'    => 'pages#contact'
-	match 'perm'       => 'pages#permission'
-	match 'welcome'    => 'pages#welcome'
-	match 'how-to'     => 'pages#how_to'	
+	root :to           => 'pages#index', :via => :get
+	match 'about'      => 'pages#about', :via => :get
+	match 'faq'        => 'pages#faq', :via => :get
+	match 'contact'    => 'pages#contact', :via => :get
+	match 'perm'       => 'pages#permission', :via => :get
+	match 'welcome'    => 'pages#welcome', :via => :get
+	match 'how-to'     => 'pages#how_to', :via => :get
 	match '/faq_submit'	=> 'pages#faq_submit', :via => :get
 	match '/sug_submit' => 'pages#sug_submit', :via => :get
 	#-----------------------------------------------------

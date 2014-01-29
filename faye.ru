@@ -1,5 +1,15 @@
 require 'faye'
+require 'faye/websocket'
 require 'yaml'
+
+# 
+# Apparently this is necessary to avoid the
+# socket Upgrade header missing error in Chrome
+# 
+# Thank you Faye Team (once again) for 
+# the adventure of finding this in some obscure
+# thread.
+Faye::WebSocket.load_adapter('thin')
 
 SECRETS_FILE = 'static_secrets.yaml'
 # Major Security Fix 01-21-2014 (SFR)
@@ -35,4 +45,5 @@ end
 
 server = Faye::RackAdapter.new(:mount => '/faye', :timeout => 25);
 server.add_extension(ServerAuth.new)
-server.listen(9292);
+# server.listen(9292); # Apparently Deprecated by Faye 1.x since the Update 01-28-2014
+run server

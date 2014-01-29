@@ -7,7 +7,8 @@ Reciprosody2::Application.configure do
   config.cache_classes = false
 
   # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true
+  # config.whiny_nils = true
+  config.eager_load = false
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
@@ -23,11 +24,11 @@ Reciprosody2::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   # Raise exception on mass assignment protection for Active Record models
-  config.active_record.mass_assignment_sanitizer = :strict
+  # config.active_record.mass_assignment_sanitizer = :strict
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
-  config.active_record.auto_explain_threshold_in_seconds = 0.5
+  # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   #-ASSETS-
   config.assets.compress = false
@@ -45,8 +46,8 @@ Reciprosody2::Application.configure do
 	# config.action_mailer.default_url_options = { :host => '108.29.43.202:3000' }
 	
 	#-Localhost for Testing
-  # config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-	config.action_mailer.default_url_options = { :host => '192.168.1.4:3000' }
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+	# config.action_mailer.default_url_options = { :host => '192.168.1.4:3000' }
 	
 	#-Development machine i.e Jaguare
 	#config.action_mailer.default_url_options = { :host => `curl ifconfig.me`+":3000" }

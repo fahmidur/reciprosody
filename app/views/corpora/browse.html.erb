@@ -21,9 +21,36 @@
 	<% @files.each do |file| %>
 	
 			<% if File.directory?(file) %>
-					<div class='corpi_item_small' onclick="browse('<%= File.basename(file) %>')">
+					<div class='corpi_item_small file' onclick="browse('<%= File.basename(file) %>')">
 						<i class='icon-folder-close'></i>
 						<%= File.basename(file) %>
+						<span class='file-controls pull-right'>
+							<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal">
+								<i class='icon-remove'></i>
+							</a>
+
+							<span class='pull-right'>&nbsp;</span>
+
+							<a href='#rfc-<%= file.hash %>' role="button" class='pull-right rename-confirm badge badge-info' data-toggle="modal">
+								<i class='icon-edit'></i>
+							</a>
+
+							<span class='pull-right'>&nbsp;</span>
+
+							<a href='#' class='pull-right badge badge-info' style="visibility:hidden"><i class='icon-download'></i></a>
+
+							<span class='pull-right'>&nbsp;</span>
+
+							<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
+						</span>
+					</div>
+
+			<% else %>
+				<div class='corpi_item_small file' onclick="download('<%= File.basename(file) %>')">
+					<i class='icon-file'></i>
+					<%= File.basename(file) %>
+					
+					<span class='file-controls pull-right'>
 
 						<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal">
 							<i class='icon-remove'></i>
@@ -37,36 +64,13 @@
 
 						<span class='pull-right'>&nbsp;</span>
 
-						<a href='#' class='pull-right badge badge-info' style="visibility:hidden"><i class='icon-download'></i></a>
+						<a href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(file) if file %>&noview=true' class='pull-right badge badge-inverse download'><i class='icon-download'></i></a>
 
 						<span class='pull-right'>&nbsp;</span>
 
 						<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
-					</div>
 
-			<% else %>
-				<div class='corpi_item_small' onclick="download('<%= File.basename(file) %>')">
-					<i class='icon-file'></i>
-					<%= File.basename(file) %>
-					
-					
-					<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal">
-						<i class='icon-remove'></i>
-					</a>
-
-					<span class='pull-right'>&nbsp;</span>
-
-					<a href='#rfc-<%= file.hash %>' role="button" class='pull-right rename-confirm badge badge-info' data-toggle="modal">
-						<i class='icon-edit'></i>
-					</a>
-
-					<span class='pull-right'>&nbsp;</span>
-
-					<a href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(file) if file %>&noview=true' class='pull-right badge badge-inverse download'><i class='icon-download'></i></a>
-
-					<span class='pull-right'>&nbsp;</span>
-
-					<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
+					</span>
 				</div>
 
 			<% end %>
@@ -203,6 +207,13 @@
 	});
 	$('.download').mouseleave(function() {
 		_overDownload = false;
+	});
+
+	$('.file').hover(function(){
+		$('.file-controls').removeClass('active');
+		$(this).find('.file-controls').addClass('active');
+	}, function() {
+		// $(this).find('.file-controls').removeClass('active');
 	});
 
 	function browse(basename) {

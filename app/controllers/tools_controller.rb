@@ -267,7 +267,7 @@ class ToolsController < ApplicationController
 
 				# You cannot actually set someone other than yourself as the owner
 				ToolMembership.create(
-					:tool_id	=> @tool.id, 
+					:tool_id		=> @tool.id, 
 					:user_id		=> current_user().id,
 					:role			=> 'owner')
 

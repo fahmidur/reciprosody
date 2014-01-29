@@ -1,6 +1,9 @@
 class ApplicationController < ActionController::Base
 	require 'faye'
 
+	# Part of Devise 3.0 + Rails 4 fix
+	# before_filter :configure_devise_permitted_parameters, if: :devise_controller?
+
 	protect_from_forgery
 	
 	def help
@@ -16,6 +19,32 @@ class ApplicationController < ActionController::Base
 	end
 
 	protected
+
+	# Another Devise 3 Rails 4 fix
+	# 01-28-2014
+	# def configure_devise_permitted_parameters
+	#     registration_params = [:name, :email, :password, :password_confirmation]
+
+	#     if params[:action] == 'update'
+	# 		devise_parameter_sanitizer.for(:account_update) { 
+	# 			|u| u.permit(registration_params << :current_password)
+	# 		}
+	#     elsif params[:action] == 'create'
+	# 		devise_parameter_sanitizer.for(:sign_up) { 
+	# 			|u| u.permit(registration_params) 
+	# 		}
+	#     end
+	# end
+
+	# Yet another Rails 4.0 Fix
+	# 01-28-2014
+	def devise_parameter_sanitizer
+		if resource_class == User
+			UserSanitizer.new(User, :user, params)
+		else
+			super
+		end
+	end
 
 	# creates a user#inbox messager
 	# used to send any messages

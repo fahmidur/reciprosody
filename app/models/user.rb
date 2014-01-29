@@ -42,18 +42,18 @@ class User < ActiveRecord::Base
 
 	has_one :super_key
 
-	scope :owners,		where(:memberships => {role: 'owner'})
-	scope :approvers,	where(:memberships => {role: 'approver'})
-	scope :members,		where(:memberships => {role: 'member'})
+	scope :owners,		-> { where :memberships => {role: 'owner'} }
+	scope :approvers,	-> { where :memberships => {role: 'approver'} }
+	scope :members,		-> { where :memberships => {role: 'member'} }
 
 
-	scope :publication_owners, where(:publication_memberships => {role: 'owner'})
-	scope :publication_reviewers, where(:publication_memberships => {role: 'reviewer'})
-	scope :publication_members, where(:publication_memberships => {role: 'member'})
+	scope :publication_owners, -> { where :publication_memberships => {role: 'owner'} }
+	scope :publication_reviewers, -> { where :publication_memberships => {role: 'reviewer'} }
+	scope :publication_members, -> { where :publication_memberships => {role: 'member'} }
 
-	scope :tool_owners, where(:tool_memberships => {:role => 'owner'})
-	scope :tool_reviewers, where(:tool_memberships => {:role => 'reviewer'})
-	scope :tool_members, where(:tool_memberships => {:role => 'member'})
+	scope :tool_owners, -> { where :tool_memberships => {:role => 'owner'} }
+	scope :tool_reviewers, -> { where :tool_memberships => {:role => 'reviewer'} }
+	scope :tool_members, -> { where :tool_memberships => {:role => 'member'} }
 
 	def insts
 		UserInstitutionRelationship.where(:user_id => self.id).map{|rel| Institution.find_by_id(rel.institution_id)}

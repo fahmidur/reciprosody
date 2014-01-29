@@ -155,17 +155,11 @@ body {
 
 	box-sizing: border-box;
 }
-.corpi_item_small:hover {
+.corpi_item_small:hover, .corpi_item_small.selected {
 	color:#2d2d2d;
 	background-color:#fafaff;
 	border:1px solid #adadad;
 	border-left:2px solid #4FD5D6;
-}
-.corpi_item_small.selected {
-	color:#2d2d2d;
-	background-color:#fafaff;
-	border:1px solid #adadad;
-	border-left:2px solid orange;
 }
 .corpi_l {
 	font-weight:bold;
@@ -534,4 +528,13 @@ table.inbox_table tr.selected {
 	font-size: x-small;
 	font-weight: 
 	bold;
+}
+.file-controls {
+	opacity: 0.05;
+	transition-property: opacity;
+	transition-duration: 0.5s;
+	-transition-timing-function: cubic-bezier(.06,1.47,.29,.87);
+}
+.file-controls.active {
+	opacity: 1;
 }
