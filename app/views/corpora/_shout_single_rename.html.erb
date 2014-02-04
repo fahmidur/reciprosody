@@ -1,0 +1,10 @@
+<a href='<%= mainUrl %>/corpora/<%= @corpus.id %>' target='_blank'>View Corpus</a> &nbsp;
+<a href='<%= mainUrl %>/corpora/<%= @corpus.id %>/browse' target='_blank'>Browse Corpus</a>
+<h4>Renamed file</h4>
+<p>
+	Original File:
+	<b><%= original_filepath %></b>
+<p>
+<p> Renamed To: 
+	<a href='<%= mainUrl %>/corpora/<%= @corpus.id %>/single_download?path=<%= new_filepath %>' target='_blank'><%= new_filepath %></a>
+</p>

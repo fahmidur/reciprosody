@@ -766,6 +766,18 @@ class CorporaController < ApplicationController
 		`svn update`
 		Dir.chdir Rails.root
 
+		messager = make_messager
+		current_user.shout(
+			@corpus.associated_users,
+			"#{current_user.name} has renamed a file",
+			render_to_string(:partial => 'shout_single_rename', :locals => {
+				:original_filepath => fullpath,
+				:new_filepath => renamepath,
+				:directory => directory
+			}),
+			messager
+		);
+
 		redirect_to "/corpora/#{@corpus.id}/browse?path=#{directory}"
 	end
 
