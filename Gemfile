@@ -53,7 +53,8 @@ gem 'waveinfo'
 # Rails 4 fix for this as of 13 days ago
 # The downside to being too bleeding edge
 # https://github.com/LTe/acts-as-messageable/issues/57
-gem 'acts-as-messageable', :git => 'git://github.com/hoczaj/acts-as-messageable.git'
+# gem 'acts-as-messageable', :git => 'git://github.com/hoczaj/acts-as-messageable.git'
+gem 'acts-as-messageable', :git => 'https://github.com/fahmidur/acts-as-messageable'
 
 gem 'bibtex-ruby', :require => 'bibtex'
 gem 'citeproc-ruby', :require => 'citeproc'

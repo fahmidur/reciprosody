@@ -530,8 +530,19 @@ class CorporaController < ApplicationController
 		elsif invalid_filename?(@filename) || !File.file?(archive_path)
 			redirect_to '/perm'
 		else
+			messager = make_messager
+			current_user.shout(
+				@corpus.associated_users,
+				"#{current_user.name} has downloaded #{@corpus.name}",
+				render_to_string(:partial => 'shout_download', :locals => {
+					:user => current_user
+				}),
+				messager
+			)
 			send_file archive_path
 		end
+
+
 	end
 
 	def browse

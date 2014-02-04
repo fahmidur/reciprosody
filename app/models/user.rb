@@ -75,11 +75,13 @@ class User < ActiveRecord::Base
 	end
 
 	# messages a group of users
+	# "this user is shouting at a set
+	# of users"
 	def shout(users, topic, body, fayeproc)
 		users -= [self] if users
 
 		if !users || users.size <= 0
-			logger.into "***USER@SHOUT ! users empty"
+			logger.info "***USER@SHOUT ! users empty"
 			return
 		end
 
