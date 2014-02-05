@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/hoczaj/acts-as-messageable.git
-  revision: 809868fe66d53202b00a22029bf1d5ed73b9e061
+  remote: https://github.com/fahmidur/acts-as-messageable
+  revision: 61365e9c4de1e18680312b71616ae29be6dfc6e5
   specs:
     acts-as-messageable (0.4.9)
       activerecord (>= 3.0.0)
