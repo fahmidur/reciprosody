@@ -15,7 +15,7 @@ $(function() {
 
 	UIHelper.handleToggleableBoxheaders();
 
-	if($(window).width() < 1000) {
-		$('.boxheader.toggleable').click();
-	}
+	// if($(window).width() < 1000) {
+	// 	$('.boxheader.toggleable').click();
+	// }
 });
