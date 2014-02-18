@@ -10,177 +10,186 @@
 
 <%= render :partial => 'tabs', :locals => {:tab => 'browse'} %>
 
-
-<% if @file %>
-<div class='row-fluid content'>
-	<div class='box borderfree span12'>
-		<div class='boxheader toggleable'>
-			<%= File.basename(@file) %> <a class='badge badge-info' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true'><i class='icon-download'></i></a>
-		</div>
-
-		<div class='boxcontent'>
-			<%if File.extname(@file) == ".md"  %>
-				<%=raw markdown(@content)%>
-			<%elsif @ext == ".wav" %>
-				<div class='waveform'>
-					<canvas style="height:200px;"></canvas>
+<div class='row-fluid'>
+	<div class='span6'>
+		<% if @file %>
+		<br><br>
+		<div class='row-fluid content'>
+			<div class='box borderfree span12'>
+				<div class='boxheader toggleable'>
+					<%= File.basename(@file) %> <a class='badge badge-info' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true'><i class='icon-download'></i></a>
 				</div>
-				<div class="controls">
-		                <button class="btn" data-action="back">
-		                    <i class="icon icon-step-backward"></i>
-		                    Seek Backward
-		                </button>
 
-		                <button class="btn" data-action="play">
-		                    <i class="icon icon-play"></i>
-		                    Play
-		                    /
-		                    <i class="icon icon-pause"></i>
-		                    Pause
-		                </button>
+				<div class='boxcontent padfree'>
+					<%if File.extname(@file) == ".md"  %>
+						<%=raw markdown(@content)%>
+					<%elsif [".png", ".jpg", ".jpeg", ".gif"].include?(@ext) %>
+						<img src="<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true">
+					<%elsif @ext == ".wav" %>
+						<div class='waveform'>
+							<canvas style="height:200px;"></canvas>
+						</div>
+						<div class="controls">
+				                <button class="btn btn-mini" data-action="back">
+				                    <i class="icon icon-step-backward"></i>
+				                    Seek Backward
+				                </button>
 
-		                <button class="btn" data-action="forth">
-		                    <i class="icon icon-step-forward"></i>
-		                    Seek Forward
-		                </button>
+				                <button class="btn btn-mini" data-action="play">
+				                    <i class="icon icon-play"></i>
+				                    Play
+				                    /
+				                    <i class="icon icon-pause"></i>
+				                    Pause
+				                </button>
 
-		                <button class="btn btn-success" data-action="green-mark">
-		                    <i class="icon icon-flag"></i>
-		                    Set green mark
-		                </button>
+				                <button class="btn btn-mini" data-action="forth">
+				                    <i class="icon icon-step-forward"></i>
+				                    Seek Forward
+				                </button>
 
-		                <button class="btn btn-danger" data-action="red-mark">
-		                    <i class="icon icon-flag"></i>
-		                    Set red mark
-		                </button>
-		            </div>
+				                <button class="btn btn-mini btn-success" data-action="green-mark">
+				                    <i class="icon icon-flag"></i>
+				                    Set green mark
+				                </button>
 
-			<% else %>
-				<pre><%= @content %></pre>
-			<% end %>
-		</div> <!-- end of box content -->
-	</div> <!-- end of box -->
-</div>
-<% end %>
+				                <button class="btn btn-mini btn-danger" data-action="red-mark">
+				                    <i class="icon icon-flag"></i>
+				                    Set red mark
+				                </button>
+				            </div>
 
-<h4 class=''>
-<% if @rpath != "/" %>
-	<a href='<%= browse_corpus_path(@corpus) %>?path=<%= File.dirname(@rpath) %>'>..</a>
-<% end %>
-<%= @rpath %><% if @file %><%= "/" if @rpath != "/"%><%=File.basename(@file)%><% end %>
-</h4>
+					<% else %>
+						<pre><%= @content %></pre>
+					<% end %>
+				</div> <!-- end of box content -->
+			</div> <!-- end of box -->
+		</div>
+		<% end %>
+	</div> <!-- end of second major column -->
+	<div class='span6'>
+		<h4 class=''>
+		<% if @rpath != "/" %>
+			<a href='<%= browse_corpus_path(@corpus) %>?path=<%= File.dirname(@rpath) %>'>..</a>
+		<% end %>
+		<%= @rpath %><% if @file %><%= "/" if @rpath != "/"%><%=File.basename(@file)%><% end %>
+		</h4>
 
-<div class='dir_browser'>
-	<% @files.each do |file| %>
-	
-			<% if File.directory?(file) %>
-					<div class='corpi_item_small file' onclick="browse('<%= File.basename(file) %>')">
-						<i class='icon-folder-close'></i>
-						<%= File.basename(file) %>
-						<span class='file-controls pull-right'>
-							<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal">
-								<i class='icon-remove'></i>
-							</a>
+		<div class='dir_browser'>
+			<% @files.each do |file| %>
+			
+					<% if File.directory?(file) %>
+							<div class='corpi_item_small file' onclick="browse('<%= File.basename(file) %>')">
+								<i class='icon-folder-close'></i>
+								<%= File.basename(file) %>
+								<span class='file-controls pull-right'>
+									<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal">
+										<i class='icon-remove'></i>
+									</a>
 
-							<span class='pull-right'>&nbsp;</span>
+									<span class='pull-right'>&nbsp;</span>
 
-							<a href='#rfc-<%= file.hash %>' role="button" class='pull-right rename-confirm badge badge-info' data-toggle="modal">
-								<i class='icon-edit'></i>
-							</a>
+									<a href='#rfc-<%= file.hash %>' role="button" class='pull-right rename-confirm badge badge-info' data-toggle="modal">
+										<i class='icon-edit'></i>
+									</a>
 
-							<span class='pull-right'>&nbsp;</span>
+									<span class='pull-right'>&nbsp;</span>
 
-							<a href='#' class='pull-right badge badge-info' style="visibility:hidden"><i class='icon-download'></i></a>
+									<a href='#' class='pull-right badge badge-info' style="visibility:hidden"><i class='icon-download'></i></a>
 
-							<span class='pull-right'>&nbsp;</span>
-						</span>
+									<span class='pull-right'>&nbsp;</span>
+								</span>
+							</div>
+
+					<% else %>
+						<div class='corpi_item_small file' onclick="download('<%= File.basename(file) %>')">
+							<i class='icon-file'></i>
+							<%= File.basename(file) %>
+							
+							<span class='file-controls pull-right'>
+
+								<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal">
+									<i class='icon-remove'></i>
+								</a>
+
+								<span class='pull-right'>&nbsp;</span>
+
+								<a href='#rfc-<%= file.hash %>' role="button" class='pull-right rename-confirm badge badge-info' data-toggle="modal">
+									<i class='icon-edit'></i>
+								</a>
+
+								<span class='pull-right'>&nbsp;</span>
+
+								<a href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(file) if file %>&noview=true' class='pull-right badge badge-inverse download'><i class='icon-download'></i></a>
+
+								<span class='pull-right'>&nbsp;</span>
+
+								<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
+
+							</span>
+						</div>
+
+					<% end %>
+					<div class="modal hide fade" id="dfc-<%= file.hash %>" style="display:none">
+						<div class="modal-header">
+							<a class="close" data-dismiss="modal">×</a>
+							<h3>Are you sure you want to delete <%= File.basename(file) %>?</h3>
+						</div>
+						<div class="modal-body">
+							<p>Just checking.</p>
+						</div>
+						<div class="modal-footer">
+							<%= link_to 'Destroy', '/corpora/'+@corpus.id.to_s+"/single_delete?rpath=#{@rpath}#{'/' if @rpath != '/'}#{File.basename(file)}", :method => :delete, :class => 'btn' %>
+							<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+						</div>
 					</div>
 
-			<% else %>
-				<div class='corpi_item_small file' onclick="download('<%= File.basename(file) %>')">
-					<i class='icon-file'></i>
-					<%= File.basename(file) %>
-					
-					<span class='file-controls pull-right'>
+					<div class="modal hide fade" id="rfc-<%= file.hash %>" style="display:none">
+						<div class="modal-header">
+							<a class="close" data-dismiss="modal">×</a>
+							<h3>Are you sure you want to Rename <%= File.basename(file) %>?</h3>
+						</div>
 
-						<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal">
-							<i class='icon-remove'></i>
-						</a>
+						<%= form_tag single_rename_corpus_path(@corpus), :method => 'post' do %>
+						<div class="modal-body">
+							<input type='hidden' name="rpath" value="<%= @rpath %><%= '/' if @rpath != '/' %><%= File.basename(file) %>"/>
+							<input type='text' name="newname" value='<%= File.basename(file) %>'/>
+						</div>
+						<div class="modal-footer">
+							<input type="submit" value='Rename' class='btn'/>
 
-						<span class='pull-right'>&nbsp;</span>
+							<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+						</div>
+						<% end %>
+					</div>
+				
+			<% end %>
 
-						<a href='#rfc-<%= file.hash %>' role="button" class='pull-right rename-confirm badge badge-info' data-toggle="modal">
-							<i class='icon-edit'></i>
-						</a>
-
-						<span class='pull-right'>&nbsp;</span>
-
-						<a href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(file) if file %>&noview=true' class='pull-right badge badge-inverse download'><i class='icon-download'></i></a>
-
-						<span class='pull-right'>&nbsp;</span>
-
-						<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
-
-					</span>
-				</div>
+			<% if current_user() && @corpus.canEdit?(current_user()) %>
+			<div class='corpi_item_small' style="border-left:2px solid orange;" onclick="$('#single_file_uploader').toggle()">
+				<i class='icon-plus'></i> Upload New Files
+			</div>
 
 			<% end %>
-			<div class="modal hide fade" id="dfc-<%= file.hash %>" style="display:none">
-				<div class="modal-header">
-					<a class="close" data-dismiss="modal">×</a>
-					<h3>Are you sure you want to delete <%= File.basename(file) %>?</h3>
-				</div>
-				<div class="modal-body">
-					<p>Just checking.</p>
-				</div>
-				<div class="modal-footer">
-					<%= link_to 'Destroy', '/corpora/'+@corpus.id.to_s+"/single_delete?rpath=#{@rpath}#{'/' if @rpath != '/'}#{File.basename(file)}", :method => :delete, :class => 'btn' %>
-					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-				</div>
-			</div>
+		</div>
 
-			<div class="modal hide fade" id="rfc-<%= file.hash %>" style="display:none">
-				<div class="modal-header">
-					<a class="close" data-dismiss="modal">×</a>
-					<h3>Are you sure you want to Rename <%= File.basename(file) %>?</h3>
-				</div>
+		<% if current_user() && @corpus.canEdit?(current_user()) %>
+		<div id='single_file_uploader' class='box borderfree row-fluid' style="display:none;box-sizing:border-box;">
+			<br/>
+			<%= form_tag single_upload_corpus_path(@corpus) do %>
+			<%= render :partial => 'shared/resumable_stuff' %>
+			<br/>
+			<textarea class='big_desc span12' style="resize:none" placeholder="Commit Message" name="msg"></textarea>
+			<input type="hidden" name="rpath" value="<%=@rpath%>"/>
+			<input type='submit' class='btn span12'/>
+			<% end %>
+			<br/>
+		</div>
+		<% end %>
+	</div> <!-- end of first major column -->
+</div> <!-- end of main row -->
 
-				<%= form_tag single_rename_corpus_path(@corpus), :method => 'post' do %>
-				<div class="modal-body">
-					<input type='hidden' name="rpath" value="<%= @rpath %><%= '/' if @rpath != '/' %><%= File.basename(file) %>"/>
-					<input type='text' name="newname" value='<%= File.basename(file) %>'/>
-				</div>
-				<div class="modal-footer">
-					<input type="submit" value='Rename' class='btn'/>
 
-					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-				</div>
-				<% end %>
-			</div>
-		
-	<% end %>
-
-	<% if current_user() && @corpus.canEdit?(current_user()) %>
-	<div class='corpi_item_small' style="border-left:2px solid orange;" onclick="$('#single_file_uploader').toggle()">
-		<i class='icon-plus'></i> Upload New Files
-	</div>
-
-	<% end %>
-</div>
-
-<% if current_user() && @corpus.canEdit?(current_user()) %>
-<div id='single_file_uploader' class='box row-fluid' style="display:none;box-sizing:border-box;">
-	<br/>
-	<%= form_tag single_upload_corpus_path(@corpus) do %>
-	<%= render :partial => 'shared/resumable_stuff' %>
-	<br/>
-	<textarea class='big_desc span12' style="resize:none" placeholder="Commit Message" name="msg"></textarea>
-	<input type="hidden" name="rpath" value="<%=@rpath%>"/>
-	<input type='submit' class='btn span12'/>
-	<% end %>
-	<br/>
-</div>
-<% end %>
 <script type='text/javascript'>
 	var _resumableAllowMultifile = true;
 </script>
