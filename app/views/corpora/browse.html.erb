@@ -10,13 +10,66 @@
 
 <%= render :partial => 'tabs', :locals => {:tab => 'browse'} %>
 
+
+<% if @file %>
+<div class='row-fluid content'>
+	<div class='box borderfree span12'>
+		<div class='boxheader toggleable'>
+			<%= File.basename(@file) %> <a class='badge badge-info' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true'><i class='icon-download'></i></a>
+		</div>
+
+		<div class='boxcontent'>
+			<%if File.extname(@file) == ".md"  %>
+				<%=raw markdown(@content)%>
+			<%elsif @ext == ".wav" %>
+				<div class='waveform'>
+					<canvas style="height:200px;"></canvas>
+				</div>
+				<div class="controls">
+		                <button class="btn" data-action="back">
+		                    <i class="icon icon-step-backward"></i>
+		                    Seek Backward
+		                </button>
+
+		                <button class="btn" data-action="play">
+		                    <i class="icon icon-play"></i>
+		                    Play
+		                    /
+		                    <i class="icon icon-pause"></i>
+		                    Pause
+		                </button>
+
+		                <button class="btn" data-action="forth">
+		                    <i class="icon icon-step-forward"></i>
+		                    Seek Forward
+		                </button>
+
+		                <button class="btn btn-success" data-action="green-mark">
+		                    <i class="icon icon-flag"></i>
+		                    Set green mark
+		                </button>
+
+		                <button class="btn btn-danger" data-action="red-mark">
+		                    <i class="icon icon-flag"></i>
+		                    Set red mark
+		                </button>
+		            </div>
+
+			<% else %>
+				<pre><%= @content %></pre>
+			<% end %>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
+</div>
+<% end %>
+
 <h4 class=''>
 <% if @rpath != "/" %>
 	<a href='<%= browse_corpus_path(@corpus) %>?path=<%= File.dirname(@rpath) %>'>..</a>
 <% end %>
 <%= @rpath %><% if @file %><%= "/" if @rpath != "/"%><%=File.basename(@file)%><% end %>
-
 </h4>
+
 <div class='dir_browser'>
 	<% @files.each do |file| %>
 	
@@ -40,8 +93,6 @@
 							<a href='#' class='pull-right badge badge-info' style="visibility:hidden"><i class='icon-download'></i></a>
 
 							<span class='pull-right'>&nbsp;</span>
-
-							<span class='badge pull-right'><%= number_to_human_size(File.size(file)) %></span>
 						</span>
 					</div>
 
@@ -128,55 +179,6 @@
 	<input type='submit' class='btn span12'/>
 	<% end %>
 	<br/>
-</div>
-<% end %>
-
-
-<% if @file %>
-<div class='row-fluid content'>
-	<div class='box span12'>
-		<h5 class='boxheader'><%= File.basename(@file) %> <a class='badge badge-info' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true'><i class='icon-download'></i></a></h5>
-
-	<%if File.extname(@file) == ".md"  %>
-		<%=raw markdown(@content)%>
-	<%elsif @ext == ".wav" %>
-		<div class='waveform'>
-			<canvas style="height:200px;"></canvas>
-		</div>
-		<div class="controls">
-                <button class="btn" data-action="back">
-                    <i class="icon icon-step-backward"></i>
-                    Seek Backward
-                </button>
-
-                <button class="btn" data-action="play">
-                    <i class="icon icon-play"></i>
-                    Play
-                    /
-                    <i class="icon icon-pause"></i>
-                    Pause
-                </button>
-
-                <button class="btn" data-action="forth">
-                    <i class="icon icon-step-forward"></i>
-                    Seek Forward
-                </button>
-
-                <button class="btn btn-success" data-action="green-mark">
-                    <i class="icon icon-flag"></i>
-                    Set green mark
-                </button>
-
-                <button class="btn btn-danger" data-action="red-mark">
-                    <i class="icon icon-flag"></i>
-                    Set red mark
-                </button>
-            </div>
-
-	<% else %>
-		<pre><%= @content %></pre>
-	<% end %>
-	</div>
 </div>
 <% end %>
 <script type='text/javascript'>
@@ -310,3 +312,4 @@
 </script>
 <br/>
 <%= render :partial => 'footer' %>
+<%= javascript_include_tag "handle_box_toggleable.js" %>

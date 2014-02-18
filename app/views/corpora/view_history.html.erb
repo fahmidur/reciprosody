@@ -16,7 +16,8 @@
 <h3><%= pluralize(@revisions, "Version")%></h3>
 <% @commits.each do |c| %>
 	<div class="logEntry box">
-		<div class='boxheader small left'>
+		<div class='boxheader small left toggleable'>
+			&nbsp;
 			Version <%= c[:version] %> <span class='pull-right'> <%= time_ago_in_words(c[:dateString]) %> ago</span>
 		</div>
 
@@ -81,6 +82,7 @@
 </script>
 
 <%= render :partial => 'footer' %>
+<%= javascript_include_tag "handle_box_toggleable.js" %>
 
 
 

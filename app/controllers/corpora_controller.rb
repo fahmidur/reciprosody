@@ -605,7 +605,8 @@ class CorporaController < ApplicationController
 
 		dir = "#{@corpus.head_path}#{@rpath}"
 
-		@files = Dir.glob("#{dir}/*")
+		@files = Dir.glob("#{dir}/*").sort {|a,b| a.downcase <=> b.downcase}.partition{|f|File.directory?(f)}.flatten
+		
 		@file = file
 		@ext = File.extname(@file)
 		@ext = ".txt" if `file #{File.expand_path(@file)}` =~ /ASCII/
