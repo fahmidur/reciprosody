@@ -7,9 +7,11 @@
 <br/>
 
 <%if flash[:notice] %>
+<!--
 <div class='alert alert-info'>
 	<h5 id="notice"><%= notice %></h5>
 </div>
+-->
 <% end %>
 
 <div class='row-fluid'>
@@ -91,6 +93,7 @@
 		</div> <!-- end of row -->
 		<div class='row-fluid'>
 			<div class='box borderfree span12'>
+				<div class='boxheader small toggleable'>Extra</div>
 				<div class='boxcontent'>
 					<% unless @corpus.speaker_desc.blank? %>
 						<span class='corpus_show_name'>Speaker Description:</span>
@@ -183,7 +186,7 @@
 
 
 
-	<div class='span6'>
+	<div class='span7'>
 		<div class='row-fluid'>
 			<h4><i class='icon-comment'></i> Comments</h4>
 		</div>

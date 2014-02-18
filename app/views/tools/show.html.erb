@@ -74,7 +74,7 @@
 
 <!-- memberships row -->
 <div class='row-fluid'>
-	<div class='box span4 r2-box'>
+	<div class='box borderfree span4 r2-box'>
 		<div id='owners_hd' class='boxheader'>
 			<%= pluralize(@tool.owners.size, 'Owner', 'Owners') %>
 		</div>
@@ -85,7 +85,7 @@
 		</div> <!-- end of box content -->
 	</div> <!-- end of box -->
 
-	<div class='box span4 r2-box'>
+	<div class='box borderfree span4 r2-box'>
 		<div class='boxheader' id='owners_hd'><%= pluralize(@tool.reviewers.size, 'Reviewer', 'Reviewers') %></div>
 		<div class='boxcontent padfree'>
 			<% @tool.reviewers.each do |m| %>
@@ -94,7 +94,7 @@
 		</div>
 	</div>
 
-	<div class='box span4 r2-box'>
+	<div class='box borderfree span4 r2-box'>
 		<div class='boxheader' id='owners_hd'><%= pluralize(@tool.members.size, 'Member', 'Members') %></div>
 		<div class='boxcontent padfree'>
 			<% @tool.members.each do |m| %>

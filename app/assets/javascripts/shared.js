@@ -1,3 +1,12 @@
+(function($) {
+    $.fn.goTo = function() {
+        $('html, body').animate({
+            scrollTop: $(this).offset().top + 'px'
+        }, 'fast');
+        return this;
+    }
+})(jQuery);
+
 function uri_to_obj($form) {
 	if(typeof $form === 'string') {
 		return strUri_to_obj($form);

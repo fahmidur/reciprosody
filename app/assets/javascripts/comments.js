@@ -149,6 +149,9 @@ $(function() {
 		console.log(replyParentID);
 		parentComment.find('.commentBody:first').after(replyNode);
 		replyArea.focus();
+		if($(window).width() < 1000) {
+			parentComment.goTo();
+		}
 	}
 	function replyCancel() {
 		replyParentID = null;
