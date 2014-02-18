@@ -44,9 +44,10 @@
 						<input id='inst_search' type='text' class='span12' placeholder='Add Institution' data-autocomplete="/institutions/autocomplete_institution_name"/>
 					</div>
 					<br/>
+
 					<span class='email'>
 						<% current_user.email.split(/(\W)/).each do |part| %>
-							<span class='email-dec' style='color:rgba(0,0,0,<%= rand(20..45)/100.0 %>);font-weight:bolder;font-size:large'><%= part %></span>
+							<span class='email-dec'><%= part %></span>
 						<% end %>
 					</span>
 

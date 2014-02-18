@@ -15,7 +15,17 @@ $(function() {
 
 	UIHelper.handleToggleableBoxheaders();
 
-	// if($(window).width() < 1000) {
-	// 	$('.boxheader.toggleable').click();
-	// }
+	var toggleForced = false;
+	toggleSmartDW();
+	$(window).on('resize', toggleSmartDW);
+	function toggleSmartDW() {
+		if($(window).width() < 760) {
+			$('.boxheader.toggleable').click();
+		} else if(toggleForced){
+			$('.boxheader.toggleable').click();
+		}	
+	}
+
+	
+	
 });
