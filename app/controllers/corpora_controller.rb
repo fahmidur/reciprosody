@@ -1,6 +1,7 @@
 class CorporaController < ApplicationController	
 	require 'fileutils'
 	
+	before_filter :get_faye_url	
 	before_filter :user_filter, :except => [:index, :show, :tools, :publications, :comments]
 	before_filter :existence_filter, :only => 
 		[:show, :publications,
@@ -87,11 +88,13 @@ class CorporaController < ApplicationController
 			y <=> x 
 		end
 
+		@comments = @corpus.root_comments.order("created_at DESC");
+
 		respond_to do |format|
 	  		format.html # show.html.erb
 	  		format.json { render json: @corpus }
-	
 		end
+
 	end
 	
 	# GET /corpora/1/publications

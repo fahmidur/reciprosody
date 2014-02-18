@@ -1,4 +1,4 @@
-<h1>New Publication</h1>
+<h1 id='publication_header'>New Publication</h1>
 
 <%= render :partial => 'form' %>
 
@@ -9,3 +9,5 @@
 		add_to_corpora('<%= @corpus.name %>', '<%= @corpus.id %>');
 	<% end %>
 </script>
+
+<%= render :partial => 'shared/topnav_select_active', :locals => {:select => 'pubs'} %>

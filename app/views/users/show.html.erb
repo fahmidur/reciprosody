@@ -1,5 +1,5 @@
 <% content_for :javascript_includes do %>
-	<%= javascript_include_tag "corpus_index.js" %>
+	<%= javascript_include_tag "resource_index.js" %>
 	<%= javascript_include_tag "user_home.js" %>
 <% end %>
 
@@ -9,42 +9,50 @@
 
 <div class='row-fluid'>
 	<div class="span3">
-		<div class='box' style='word-wrap: break-word'> 
-			
-				<h5 class='boxheader'><%= current_user().name%></h5>
-
-				<center>
-					<a href='http://gravatar.com' title='Change Gravatar' target='_blank'>
-						<%= image_tag current_user.gravatar_url(:png)%>
-					</a>
-				</center>
-
-			
-
-				<hr/>
-				<center>
-				<div id='inst_holder'>
-					<% inst_flag = false %>
-					<% current_user.insts.each do |inst| %>
-						<span class='badge badge-info inst' style='cursor:pointer' id='inst-<%= inst.id %>'><%= inst.name %><span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>
-						<% inst_flag = true %>
-					<% end %>
-					<span id='add-inst' class='badge badge' style='cursor:pointer' title="Add Institution"><%=raw 'Add Institution &nbsp;' unless inst_flag %><i class='icon-plus-sign'></i></span>
+		<div class='box borderfree' style='word-wrap: break-word'>
+				<div class='boxheader small toggleable'>
+					<%= current_user().name%>
 				</div>
 
-				<div id='inst_search_wrapper' style='display:none'>
+				<div class='boxcontent'>
+					<center>
+						<a href='http://gravatar.com' title='Change Gravatar' target='_blank' id='avatar'>
+							<%= image_tag current_user.gravatar_url(:png)%>
+						</a>
+					</center>
+
+					<hr/>
+					<center>
+					<div id='inst_holder'>
+						<% inst_flag = false %>
+						<% current_user.insts.each do |inst| %>
+							<span class='badge badge-info inst' id='inst-<%= inst.id %>'><%= inst.name %>
+								<span class='x'>&nbsp;
+									<i class='icon-remove-sign'></i>
+								</span>
+							</span>
+							<% inst_flag = true %>
+						<% end %>
+						<span id='add-inst' class='badge badge' title="Add Institution">
+							<%=raw 'Add Institution &nbsp;' unless inst_flag %>
+							<i class='icon-plus-sign'></i>
+						</span>
+					</div>
+
+					<div id='inst_search_wrapper' style='display:none'>
+						<br/>
+						<input id='inst_search' type='text' class='span12' placeholder='Add Institution' data-autocomplete="/institutions/autocomplete_institution_name"/>
+					</div>
 					<br/>
-					<input id='inst_search' type='text' class='span12' placeholder='Add Institution' data-autocomplete="/institutions/autocomplete_institution_name"/>
-				</div>
-				<br/>
-				<span class='email'>
-					<% current_user.email.split(/(\W)/).each do |part| %>
-						<span class='email-dec' style='color:rgba(0,0,0,<%= rand(20..45)/100.0 %>);font-weight:bolder;font-size:large'><%= part %></span>
-					<% end %>
-				</span>
+					<span class='email'>
+						<% current_user.email.split(/(\W)/).each do |part| %>
+							<span class='email-dec' style='color:rgba(0,0,0,<%= rand(20..45)/100.0 %>);font-weight:bolder;font-size:large'><%= part %></span>
+						<% end %>
+					</span>
 
-				<br/>
-			</center>
+					<br/>
+				</center>
+			</div>
 
 		</div>
 
@@ -71,51 +79,76 @@
 		</ul>
 	</div>
 
-	<div class='span4'>
-
+	<div class='span5'>
+		<div class='row-fluid'>
+			<strong>Event Feed</strong>
+		</div>
 	</div>
 	
-	<div class='span5'>
+	<div class='span4'>
 		<% if my_corpora.size > 0 %>
-			<div class='row-fluid'>
-				<div class='span2'>
-					<span class='badge badge-info'><%= my_corpora.size%></span>
+			<div class='box borderfree'>
+				<div class='boxheader small toggleable'>
+					My <%= "Corpus".pluralize(my_corpora.size) %>
+					<span class='pull-right resource-count'><%= my_corpora.size%></span>
 				</div>
-				<div class='span10'><strong>My Corpora</strong></div>
-			</div>
-			<% my_corpora.each do |corpus| %>
-				<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => corpus} %>
-			<% end %>
-			<div><a href='/corpora/new' class='pull-right'>New Corpus</a></div><br/>
+				<div class='boxcontent padfree'>
+					<% my_corpora.each do |corpus| %>
+						<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => corpus} %>
+					<% end %>
+					<div>
+						<a href='/corpora/new' class='pull-right'>New Corpus</a>
+					</div>
+					<br/>
+				</div> <!-- end of box content -->
+			</div> <!-- end of box -->
 		<% end %>
 		
 
 		<% if my_pubs.size > 0 %>
-			<div class='row-fluid'>
-				<div class='span2'>
-					<span class='badge badge-info'><%= my_pubs.size%></span>
+			<div class='box borderfree'>
+
+				<div class='boxheader small toggleable'>
+					My <%= "Publication".pluralize(my_pubs.size) %>
+					<span class='pull-right resource-count'><%= my_pubs.size %></span>
 				</div>
-				<div class='span10'><strong>My Publications</strong></div>
-			</div>
-			<% my_pubs.each do |pub| %>
-				<%= render :partial => 'shared/publication_index_small.html.erb', 
-				:locals => {:p => pub} %>
-			<% end %>
-			<div><a href='/publications/new' class='pull-right'>New Publication</a></div></br/>
+
+				<div class='boxcontent padfree'>
+
+					<% my_pubs.each do |pub| %>
+						<%= render :partial => 'shared/publication_index_small.html.erb', 
+						:locals => {:p => pub} %>
+					<% end %>
+					<div>
+						<a href='/publications/new' class='pull-right'>New Publication</a>
+					</div>
+					</br/>
+
+				</div> <!-- end of boxcontent -->
+			</div> <!-- end of box -->
 		<% end %>
 
 
 		<% if my_tools.size > 0 %>
-			<div class='row-fluid'>
-				<div class='span2'>
-					<span class='badge badge-info'><%= my_tools.size%></span>
+			<div class='box borderfree'>
+
+				<div class='boxheader small toggleable'>
+					My <%= "Tool".pluralize(my_tools.size) %>
+					<span class='pull-right resource-count'><%= my_tools.size %></span>
 				</div>
-				<div class='span10'><strong>My Tools</strong></div>
-			</div>
-			<% my_tools.each do |tool| %>
-				<%= render :partial => 'shared/tool_index_small', :locals => {:tool => tool} %>
-			<% end %>
-			<div><a href='/tools/new' class='pull-right'>New Tool</a></div><br/>
+
+				<div class='boxcontent padfree'>
+
+					<% my_tools.each do |tool| %>
+						<%= render :partial => 'shared/tool_index_small', :locals => {:tool => tool} %>
+					<% end %>
+
+					<div>
+						<a href='/tools/new' class='pull-right'>New Tool</a>
+					</div>
+					<br/>
+				</div> <!-- end of box content -->
+			</div> <!-- end of box -->
 		<% end %>
 
 		
@@ -207,10 +240,12 @@ $('.presult').live('click', function() {
 });
 
 $('.inst').live('mouseenter', function() {
-	$(this).find('.x').show().animate({'width': '15px'}, 200);
+	// $(this).find('.x').show().animate({'width': '15px'}, 200);
+	$(this).find('.x').show().animate({'opacity': '1'}, 200);
 });
 $('.inst').live('mouseleave', function() {
-	$(this).find('.x').animate({'width': '0px'}, 200, function() {$(this).hide();});
+	// $(this).find('.x').animate({'width': '0px'}, 200, function() {$(this).hide();});
+	$(this).find('.x').animate({'opacity': '0'}, 200, function() {$(this).hide("fast");});
 });
 $('.inst').live('click', function() {
 	$(this).animate({'width':'0px'}, 300, function() {

@@ -12,4 +12,10 @@ $(function() {
 		$('#pubi-' + id).remove();
 		$('#delete-confirm-pub-' + id).modal('hide');
 	});
+
+	UIHelper.handleToggleableBoxheaders();
+
+	if($(window).width() < 1000) {
+		$('.boxheader.toggleable').click();
+	}
 });

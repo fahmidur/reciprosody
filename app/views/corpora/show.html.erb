@@ -2,10 +2,6 @@
 	<%= javascript_include_tag 'show_fix.js' %>
 <% end %>
 
-<!--<%= setup_upload %>-->
-
-<!--<span class='corpus_header'><%= @corpus.name %><span class='corpus_icon pull-right'></span></span>-->
-
 <%= render :partial => 'tabs', :locals => {:tab => 'details'} %>
 
 <br/>
@@ -16,168 +12,223 @@
 </div>
 <% end %>
 
-<div class='tab-content'>
-	<div class='tab-pane active' id='details'>
-		
+<div class='row-fluid'>
+	<div class='span5'>
 		<div class='row-fluid'>
-			<div class='box span12'>
-				<span class='corpus_show_name'>Language:</span> 
-				<span class='corpus_show_value'><%= @corpus.language %></span>
+			<div class='box rounded span12'>
+				<div class='boxcontent'>
+					<span class='corpus_show_name'>Language:</span> 
+					<span class='corpus_show_value'><%= @corpus.language %></span>
 
-				<span class='pull-right'>
-					<span class='corpus_show_name'>Duration:</span>
-					<span class='corpus_show_value'><%= @corpus.human_duration %></span>
-				</span>
+					<span class='pull-right'>
+						<span class='corpus_show_name'>Duration:</span>
+						<span class='corpus_show_value'><%= @corpus.human_duration %></span>
+					</span>
+				</div>
 			</div>
 		</div>
 
 		<% unless @corpus.description.blank? %>
 		<div class='row-fluid'>
-			<div class='box span12'>
-				<h5 class='boxheader'>
-					Description</h5>
-					
-				<%=raw markdown(@corpus.description) %>
+			<div class='box borderfree span12'>
+				<div class='boxheader small toggleable'>
+					Description
+				</div>
+				<div class='boxcontent'>					
+					<%=raw markdown(@corpus.description) %>
+				</div>
 			</div>
 		</div>
 		<% end %>
 
-		<% unless @corpus.citation.blank? %>
 		<div class='row-fluid'>
-			<div class='box span12'>
-				<h5 class='boxheader'>Citation</h5>
-				<div class='btn-group' id='citation-style-select'>
-					<button class='btn btn-mini active'>Raw</button>
-					<button class='btn btn-mini'>MLA</button>
-					<button class='btn btn-mini'>APA</button>
-					<button class='btn btn-mini'>Chicago</button>
-				</div>
-
-				<br/><br/>
-
-				<div class='citation-style' id='citation-style-raw'>
-					<%=raw markdown(@corpus.citation) %>
-				</div>
-
-				<div class='citation-style' id='citation-style-mla'>
-					<%=raw html_from_citation(@corpus.citation, :mla) %>
-				</div>
-
-				<div class='citation-style' id='citation-style-apa'>
-					<%=raw html_from_citation(@corpus.citation, :apa) %>
-				</div>
-
-				<div class='citation-style' id='citation-style-chicago'>
-					<%=raw html_from_citation(@corpus.citation, 'chicago-author-date') %>
-				</div>
-
-			</div>
-		</div>
-		<% end %>
-
-
+			<div class='box borderfree span12 row-fluid'>
+				<div class='boxcontent'>
+					<%= form_tag("/corpora/#{@corpus.id}/download", :method => :get) do%>
+						<div class='row-fluid'>
+							<%= select_tag(:name, options_for_select(@archives), :class=>'span6 vSelect') %>
+							<input type='submit' class='btn btn-primary cdownload span6' value="Download" <%= "disabled" unless current_user()%> title="<%= 'Please Sign In' unless current_user() %>">
+							<span class='corpus_show_name'>Last Modified:</span> 
+							<span class='corpus_show_value badge'><%= time_ago_in_words(@last_modified) %> ago</span>
+							<br/>
+							<span class='corpus_show_name'><%= pluralize(@revisions, "Revision")%></span> 
+						</div>
+					<% end %>
+				</div> <!-- end of box content -->
+			</div> <!-- end of box -->
+		</div> <!-- end of row -->
+		
 		<div class='row-fluid'>
-			<div class='box span4 r1-box'>
-				<% unless @corpus.speaker_desc.blank? %>
-					<span class='corpus_show_name'>Speaker Description:</span>
-					<span class='corpus_show_value'><%= @corpus.speaker_desc %></span>
-					<br/>
-				<% end %>
-
-				<% unless @corpus.num_speakers.blank? %>
-					<span class='corpus_show_name'>Number of Speakers:</span>
-					<span class='corpus_show_value'><%= @corpus.num_speakers %></span>
-					<br/>
-				<% end %>
-
-				<% unless @corpus.genre.blank? %>
-				<span class='corpus_show_name'>Genre:</span>
-				<span class='corpus_show_value'><%= @corpus.genre %></span>
-				<br/>
-				<% end %>
-
-				<% unless @corpus.annotation %>
-				<span class='corpus_show_name'>Annotation:</span>
-				<span class='corpus_show_value'><%= @corpus.annotation %></span>
-				<br/>
-				<% end %>
-
-				<% unless @corpus.license.blank? %>
-				<span class='corpus_show_name'>License:</span>
-				<span class='corpus_show_value'><%= @corpus.license %></span>
-				<% end %>
-				
-			</div>
-
-			<div class='box span4 r1-box'>
-				<!--<%= render :partial => 'shared/dropbox' %>-->
-			</div>
-	
-			<div class='box span4 row-fluid r1-box'>
-				<%= form_tag("/corpora/#{@corpus.id}/download", :method => :get) do%>
-					<div class='row-fluid'>
-						<%= select_tag(:name, options_for_select(@archives), :class=>'span6 vSelect') %>
-						<input type='submit' class='btn btn-primary cdownload span6' value="Download" <%= "disabled" unless current_user()%> title="<%= 'Please Sign In' unless current_user() %>">
-						<span class='corpus_show_name'>Last Modified:</span> 
-						<span class='corpus_show_value badge'><%= time_ago_in_words(@last_modified) %> ago</span>
-						<br/>
-						<span class='corpus_show_name'><%= pluralize(@revisions, "Revision")%></span> 
+			<div class='box borderfree span12'>
+				<div class='boxheader small toggleable'>Citation</div>
+				<div class='boxcontent'>
+					<div class='btn-group' id='citation-style-select'>
+						<button class='btn btn-mini active'>Raw</button>
+						<button class='btn btn-mini'>MLA</button>
+						<button class='btn btn-mini'>APA</button>
+						<button class='btn btn-mini'>Chicago</button>
 					</div>
-				<% end %>
+
+					<br/><br/>
+
+					<div class='citation-style' id='citation-style-raw'>
+						<%=raw markdown(@corpus.citation) %>
+					</div>
+
+					<div class='citation-style' id='citation-style-mla'>
+						<%=raw html_from_citation(@corpus.citation, :mla) %>
+					</div>
+
+					<div class='citation-style' id='citation-style-apa'>
+						<%=raw html_from_citation(@corpus.citation, :apa) %>
+					</div>
+
+					<div class='citation-style' id='citation-style-chicago'>
+						<%=raw html_from_citation(@corpus.citation, 'chicago-author-date') %>
+					</div>
+				</div> <!-- End of BoxContent -->
+			</div> <!-- End of Box -->
+		</div> <!-- end of row -->
+		<div class='row-fluid'>
+			<div class='box borderfree span12'>
+				<div class='boxcontent'>
+					<% unless @corpus.speaker_desc.blank? %>
+						<span class='corpus_show_name'>Speaker Description:</span>
+						<span class='corpus_show_value'><%= @corpus.speaker_desc %></span>
+						<br/>
+					<% end %>
+
+					<% unless @corpus.num_speakers.blank? %>
+						<span class='corpus_show_name'>Number of Speakers:</span>
+						<span class='corpus_show_value'><%= @corpus.num_speakers %></span>
+						<br/>
+					<% end %>
+
+					<% unless @corpus.genre.blank? %>
+					<span class='corpus_show_name'>Genre:</span>
+					<span class='corpus_show_value'><%= @corpus.genre %></span>
+					<br/>
+					<% end %>
+
+					<% unless @corpus.annotation %>
+					<span class='corpus_show_name'>Annotation:</span>
+					<span class='corpus_show_value'><%= @corpus.annotation %></span>
+					<br/>
+					<% end %>
+
+					<% unless @corpus.license.blank? %>
+					<span class='corpus_show_name'>License:</span>
+					<span class='corpus_show_value'><%= @corpus.license %></span>
+					<% end %>
+				</div>
 			</div>
-		</div>
+
+		</div> <!-- End of row-fluid-->
 		
 		<div class='row-fluid'>
 			<% if current_user && current_user().super_key %>
 				<div class='box span12'>
-					<h5 class='boxheader'>Root Only Info</h5>
-					<span class='corpus_show_name'>UUID:</span>
-					<span class='corpus_show_value'><%= @corpus.utoken %></span> &nbsp;
-					<i class='icon-eye-open'></i>
+					<div class='boxheader small toggleable'>
+						Root Only Info
+					</div>
+					<div class='boxcontent'>
+						<span class='corpus_show_name'>UUID:</span>
+						<span class='corpus_show_value'><%= @corpus.utoken %></span> &nbsp;
+					</div>
 				</div>
 			<% end %>
-	
 		</div>
 
 		<!---Memberships row-->
-
 		<% if @corpus.memberships.size > 0 %>
 		<div class='row-fluid'>
-			<div class='box span4 r2-box'>
-				<h5 id='owners_hd'><%= pluralize(@corpus.owners.size, 'Owner', 'Owners') %></h5>
-
+			<div class='box borderfree span4 r2-box'>
+				<div id='owners_hd' class='boxheader'>
+					<%= pluralize(@corpus.owners.size, 'Owner', 'Owners') %>
+				</div>
+				<div class='boxcontent padfree'>
 					<% @corpus.owners.each do |owner| %>
-						<%= render :partial => 's.member', :locals => {:mem => owner} %>
+						<%= render :partial => 'shared/s.member', :locals => {:mem => owner} %>
 					<% end %>
+				</div>
+			</div>
+			
+			<div class='box borderfree span4 r2-box'>
+				<div id='approvers_hd' class='boxheader'>
+					<%= pluralize(@corpus.approvers.size, 'Approver', 'Approvers') %>
+				</div>
+				<div class='boxcontent padfree'>
+					<% @corpus.approvers.each do |approver| %>
+						<%= render :partial => 'shared/s.member', :locals => {:mem => approver } %>
+					<% end %>
+				</div>
+			</div>
+			
+			<div class='box borderfree span4 r2-box'>
+				<div id='members_hd' class='boxheader'>
+					<%= pluralize(@corpus.members.size, 'Member', 'Members') %>
+				</div>
 
-			</div>
-			
-			<div class='box span4 r2-box'>
-				<h5 id='approvers_hd'><%= pluralize(@corpus.approvers.size, 'Approver', 'Approvers') %> </h5>
-								
-				<% @corpus.approvers.each do |approver| %>
-					<%= render :partial => 's.member', :locals => {:mem => approver } %>
-				<% end %>								
-				
-			</div>
-			
-			<div class='box span4 r2-box'>
-				<h5 id='members_hd'><%= pluralize(@corpus.members.size, 'Member', 'Members') %> </h5>
-				<% @corpus.members.each do |member| %>
-					<%= render :partial => 's.member', :locals => {:mem =>  member} %>
-				<% end %>
+				<div class='boxcontent padfree'>
+					<% @corpus.members.each do |member| %>
+						<%= render :partial => 'shared/s.member', :locals => {:mem =>  member} %>
+					<% end %>
+				</div>
 			</div>
 			
 		</div> <!--End of row-fluid for Memberships-->
 		<% end %>
-		
-		
-	</div> <!--End of Details -->
-		
 	
-</div> <!--End of Tab Content-->
+	</div> <!-- End of first major column -->
+
+
+
+	<div class='span6'>
+		<div class='row-fluid'>
+			<h4><i class='icon-comment'></i> Comments</h4>
+		</div>
+
+		<input type='hidden' id='cid' data-cid='<%= @corpus.id %>'/>
+
+		<% if current_user() && current_user().corpora.to_a.include?(@corpus) #association filter %>
+
+			<%= form_tag add_comment_corpus_path(@corpus), :remote => true, :method => 'get', 'data-type' => :json, :id => 'newComment_form' do%>
+
+				<div class='row-fluid'>
+					<div class='span12'>
+						<textarea class='autosize newCommentBox span12' name="msg" id='input' placeholder="New Comment" data-cid="<%= @corpus.id %>"></textarea>
+						<center>
+							<input type='submit' class='btn btn-small btn-primary span12' id='submit' value='Post!'/>
+						</center>
+					</div>
+				</div>
+
+			<% end %>
+		<% end %>
+
+		<div class='replyCommentWrapper row-fluid' id='replyNode'>
+			<textarea class='autosize span12 replyCommentBox' placeholder='Reply'></textarea><br/>
+			<button class='btn btn-mini' id='replyPost_bt'>Post</button>
+			<button class='btn btn-mini' id='replyCancel_bt'>Cancel</button>
+		</div>
+
+		<div id="comments_holder">
+			<% @comments.each do |comment| %>
+				<%= render :partial => 'comment', :locals => {:comment => comment} %>
+			<% end %>
+		</div>
+
+	</div> <!-- End of second major column -->
+</div> <!-- End of outer most row-fluid -->
 
 <br/>
 <%= render :partial => 'footer' %>
 
+<script type='text/javascript'>
+	var _faye_url = '<%= @faye_url %>';
+</script>
+<script type='text/javascript' src='<%= @faye_url %>/faye.js'></script>
+
 <%= javascript_include_tag 'citations_in_show.js' %>
+<%= javascript_include_tag 'comments.js' %>
+<%= javascript_include_tag 'handle_box_toggleable.js' %>

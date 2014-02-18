@@ -2,40 +2,49 @@
 <%= content_for :javascript_includes do%>
 <% end %>
 
-<h2 class'corpus_name'><%= @corpus.name %></h2>
+<div class='row-fluid'>
 
-<ul class="nav nav-tabs row-fluid">
-	<li class='pull-right <%= "active" if tab=="details"%> '>
-		<a href="<%=corpus_path(@corpus)%>">Details</a>
-	</li>
+	<div class='span6'>
+		<h3 class'corpus_name'><i class='icon-book'></i> <%= @corpus.name %></h3>
+	</div>
 
+	<div class='span6'>
+
+		<ul class="nav nav-pills">
+			<li class='pull-right <%= "active" if tab=="details"%>'>
+				<a href="<%=corpus_path(@corpus)%>">Details</a>
+			</li>
+			
+			<li class='pull-right <%= "active" if tab=="comments" %>'>
+				<a href="<%= comments_corpus_path(@corpus)%>">Comments</a>
+			</li>
+
+			<li class='pull-right <%= "active" if tab=="publications" %>'>
+				<a href="<%= publications_corpus_path(@corpus)%>">Publications</a>
+			</li>
+
+			<li class='pull-right <%= "active" if tab=="tools" %>'>
+				<a href="<%= tools_corpus_path(@corpus)%>">Tools</a>
+			</li>
+			<% if current_user() %>
+				<li class='pull-right <%= "active" if tab=="browse"%> '>
+					<a href="<%=browse_corpus_path(@corpus)%>">Browse</a>
+				</li>
+				
+				<% if @corpus.canEdit?(current_user())%>
+					<li class='pull-right <%= "active" if tab=="members"%> '>
+						<a href="<%=manage_members_corpus_path(@corpus)%>">Manage Members</a>
+					</li>
+
+					<li class='pull-right <%= "active" if tab=="history"%> '>
+						<a href="<%=view_history_corpus_path(@corpus)%>">History</a>
+					</li>
+
+				<% end %>
+			<% end %>
+		</ul>
 	
+	</div>
+</div>
 
-	<li class='pull-right <%= "active" if tab=="comments" %>'>
-		<a href="<%= comments_corpus_path(@corpus)%>">Comments</a>
-	</li>
-
-	<li class='pull-right <%= "active" if tab=="publications" %>'>
-		<a href="<%= publications_corpus_path(@corpus)%>">Publications</a>
-	</li>
-
-	<li class='pull-right <%= "active" if tab=="tools" %>'>
-		<a href="<%= tools_corpus_path(@corpus)%>">Tools</a>
-	</li>
-	<% if current_user() %>
-		<li class='pull-right <%= "active" if tab=="browse"%> '>
-			<a href="<%=browse_corpus_path(@corpus)%>">Browse</a>
-		</li>
-		
-		<% if @corpus.canEdit?(current_user())%>
-			<li class='pull-right <%= "active" if tab=="members"%> '>
-				<a href="<%=manage_members_corpus_path(@corpus)%>">Manage Members</a>
-			</li>
-
-			<li class='pull-right <%= "active" if tab=="history"%> '>
-				<a href="<%=view_history_corpus_path(@corpus)%>">History</a>
-			</li>
-
-		<% end %>
-	<% end %>
-</ul>
+<%= render :partial => 'shared/topnav_select_active', :locals => {:select => 'corpora'} %>

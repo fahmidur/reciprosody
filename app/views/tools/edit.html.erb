@@ -1,4 +1,5 @@
-<h1>Edit Tool</h1>
+<h1 id='tool_header'>Edit Tool</h1>
+
 <%= render :partial =>'form' %>
 <br/>
 <%= render :partial => 'footer' %>
@@ -18,3 +19,5 @@
 		<% end %>
 	});
 </script>
+
+<%= render :partial => 'shared/topnav_select_active', :locals => {:select => 'tools'} %>

@@ -9,6 +9,7 @@ $(function() {
 		$(this).hide();
 	});
 
+	UIHelper.halfwayBind($('#tool_name'), $('#tool_header'), "New Tool");
 
 	$('#new_tool').on('ajax:beforeSend', function(e, xhr, settings) {
 		console.log("ORIGINAL = " + settings.data);

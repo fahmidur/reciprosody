@@ -156,12 +156,7 @@ $(function() {
 			$('#tool--'+id).remove();
 		}
 	});
-
-	$('#publication_name').change(function() {
-		var val = $('#publication_citation').val();
-		console.log(val);
-	});
-
+	UIHelper.halfwayBind($('#publication_name'), $('#publication_header'), "New Publication");
 });
 function dw() {
 	$('#help_sticker').width($('#primaryOwner').width()-10);

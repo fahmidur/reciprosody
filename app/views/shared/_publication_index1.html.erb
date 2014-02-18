@@ -17,47 +17,49 @@
 		<br/>
 	<% end %>
 
-	<br/>
-	<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
-	<a href='<%= corpora_publication_path(p)%>' class='btn btn-mini'>Corpora</a>
-	<a href='<%= tools_publication_path(p)%>' class='btn btn-mini'>Tools</a>
-	
-	<% if p.url && !p.url.blank? %>
-		<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
-	<% end %>
-	<% if p.local && !p.local.blank? %>
-		<%= form_tag("/publications/#{p.id}/download", :method => :get, :class => 'f-inline-block') do%>
-			<input type='submit' class='btn btn-mini cdownlaod' value="Download">
-		<% end %>
-	<% end %>
-	<% if user_signed_in? %>
-		<% if p.canEdit?(current_user) %>
-			<a href='<%= manage_members_publication_path(p) %>' class='btn btn-mini'>Manage Members</a>
-			<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'>Edit</a>
-			<a href="#delete-confirm-pub-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %></a>
-
-			<div class="modal fade" id="delete-confirm-pub-<%= p.id %>" style="display:none">
-				<div class="modal-header">
-					<a class="close" data-dismiss="modal">×</a>
-					<h3>Are you sure?</h3>
-				</div>
-				<div class="modal-body">
-					<p>Just checking.</p>
-				</div>
-				<div class="modal-footer">
-					<%= link_to 'Destroy', '/publications/'+ p.id.to_s, :method => :delete, 
-						:class => 'btn' %>
-					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-				</div>
-			</div>
-
-		<% end %>
-	<% end %>
 	<% if p.description && !p.description.blank? %>
-		<br/>
 		<%=raw snippet(markdown(p.description)) %>
 	<% end %>
-	<br/>
+	
+	<div class='index-item-option-bar'>
+		<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
+		<a href='<%= corpora_publication_path(p)%>' class='btn btn-mini'>Corpora</a>
+		<a href='<%= tools_publication_path(p)%>' class='btn btn-mini'>Tools</a>
+		
+		<% if p.url && !p.url.blank? %>
+			<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
+		<% end %>
+		<% if p.local && !p.local.blank? %>
+			<%= form_tag("/publications/#{p.id}/download", :method => :get, :class => 'f-inline-block') do%>
+				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
+			<% end %>
+		<% end %>
+		<% if user_signed_in? %>
+			<% if p.canEdit?(current_user) %>
+				<a href='<%= manage_members_publication_path(p) %>' class='btn btn-mini'>Manage Members</a>
+				<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'>Edit</a>
+				<a href="#delete-confirm-pub-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
+					<i class='icon-remove'></i> Delete</i>
+				</a>
+
+				<div class="modal fade" id="delete-confirm-pub-<%= p.id %>" style="display:none">
+					<div class="modal-header">
+						<a class="close" data-dismiss="modal">×</a>
+						<h3>Are you sure?</h3>
+					</div>
+					<div class="modal-body">
+						<p>Just checking.</p>
+					</div>
+					<div class="modal-footer">
+						<%= link_to 'Destroy', '/publications/'+ p.id.to_s, :method => :delete, 
+							:class => 'btn' %>
+						<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+					</div>
+				</div>
+
+			<% end %>
+		<% end %>
+	</div> <!--end of index item option bar-->
 </div>
 
 <div class="modal fade" id="delete-confirm-pub-<%= p.id %>" style="display:none">

@@ -49,8 +49,9 @@ class UsersController < ApplicationController
 		redirect_to "/users/#{current_user.id}"
 	end
 
-	#GET /users/mixed_search
-	#params[:q] = query
+	# GET /users/mixed_search
+	# params[:q] = query
+	# this is the search in user#home
 	def mixed_search
 		q = params[:q]
 		unless q && q.length > 2

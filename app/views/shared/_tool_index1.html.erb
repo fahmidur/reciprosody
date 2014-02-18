@@ -1,11 +1,12 @@
 <div class='corpi_item'>
-
 	<h4><%= tool.name %></h4>
 	<% if tool.authors && !tool.authors.blank?%>
 		<span class='corpi_l'><%= tool.authors.split("\n").join(", " )%></span>
 		<br/> 
 	<% end %>
-
+	<% if tool.description && !tool.description.blank? %>
+		<%=raw snippet(markdown(tool.description)) %>
+	<% end %>
 	<% if tool.keywords && !tool.keywords.blank? %>
 		<% tool.keywords_array.each do |kw| %>
 			<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
@@ -13,49 +14,47 @@
 		<br/>
 	<% end %>
 	
-	<br/>
-	<a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a>
-	<a href='<%= publications_tool_path(tool)%>' class='btn btn-mini'>Publications</a>
-	<a href='<%= corpora_tool_path(tool)%>' class='btn btn-mini'>Corpora</a>
+	<div class='index-item-option-bar'>
 
-	<% if tool.url && !tool.url.blank? %>
-		<a href='<%= tool.url %>' target='_blank' class='btn btn-mini'>URL</a>
-	<% end %>
-	<% if tool.local && !tool.local.blank? %>
-		<%= form_tag("/tools/#{tool.id}/download", :method => :get, :class => 'f-inline-block') do%>
-			<input type='submit' class='btn btn-mini cdownlaod' value="Download">
+		<a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a>
+		<a href='<%= publications_tool_path(tool)%>' class='btn btn-mini'>Publications</a>
+		<a href='<%= corpora_tool_path(tool)%>' class='btn btn-mini'>Corpora</a>
+
+		<% if tool.url && !tool.url.blank? %>
+			<a href='<%= tool.url %>' target='_blank' class='btn btn-mini'>URL</a>
 		<% end %>
-	<% end %>
-
-	<% if user_signed_in? %>
-		<% if tool.canEdit?(current_user) %>
-			<a href='<%= edit_tool_path(tool)%>' class='btn btn-mini'>Edit</a>
-			<a href='<%= manage_members_tool_path(tool)%>' class='btn btn-mini'>Manage Members</a>
-
-			<a href="#delete-confirm-tool-<%=tool.id%>" data-id="<%= tool.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal"><%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %></a>
-
-			<div class="modal fade" id="delete-confirm-tool-<%= tool.id %>" style="display:none">
-				<div class="modal-header">
-					<a class="close" data-dismiss="modal">×</a>
-					<h3>Are you sure?</h3>
-				</div>
-				<div class="modal-body">
-					<p>Just checking.</p>
-				</div>
-				<div class="modal-footer">
-					<%= link_to 'Destroy', '/tools/'+ tool.id.to_s, :method => :delete, 
-						:class => 'btn' %>
-					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-				</div>
-			</div>
+		<% if tool.local && !tool.local.blank? %>
+			<%= form_tag("/tools/#{tool.id}/download", :method => :get, :class => 'f-inline-block') do%>
+				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
+			<% end %>
 		<% end %>
-	<% end %>
 
-	<% if tool.description && !tool.description.blank? %>
-		<br/><br/>
-		<%=raw snippet(markdown(tool.description)) %>
-	<% end %>
+		<% if user_signed_in? %>
+			<% if tool.canEdit?(current_user) %>
+				<a href='<%= edit_tool_path(tool)%>' class='btn btn-mini'>Edit</a>
+				<a href='<%= manage_members_tool_path(tool)%>' class='btn btn-mini'>Manage Members</a>
 
+				<a href="#delete-confirm-tool-<%=tool.id%>" data-id="<%= tool.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
+					<i class='icon-remove'></i> Delete
+				</a>
+
+				<div class="modal fade" id="delete-confirm-tool-<%= tool.id %>" style="display:none">
+					<div class="modal-header">
+						<a class="close" data-dismiss="modal">×</a>
+						<h3>Are you sure?</h3>
+					</div>
+					<div class="modal-body">
+						<p>Just checking.</p>
+					</div>
+					<div class="modal-footer">
+						<%= link_to 'Destroy', '/tools/'+ tool.id.to_s, :method => :delete, 
+							:class => 'btn' %>
+						<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+					</div>
+				</div>
+			<% end %>
+		<% end %>
+	</div> <!-- end of option bar -->
 
 </div>
 

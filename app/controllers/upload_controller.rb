@@ -9,7 +9,7 @@ class UploadController < ApplicationController
 		# Renders upload_test.html.erb
 	end
 
-	# OLD UPLOADER
+	# OLD UPLOADER (NO LONGER USED)
 	# Returns JSON
 	def ajx_upload
 		uid = session[:upload_token]

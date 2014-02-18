@@ -3,23 +3,23 @@
 <% end %>
 
 <%= render :partial => 'tabs', :locals => {:tab => 'details'} %>
-<br/>
 
 <% unless @tool.description.blank? %>
 	<div class='row-fluid'>
 		<div class='box span12'>
-			<h5 class='boxheader'>Description</h5>
-				
-			<%=raw markdown(@tool.description) %>
+			<div class='boxheader'>Description</div>
 
-			<% if @tool.keywords && !@tool.keywords.blank? %>
-			<br/>
-				<% @tool.keywords_array.each do |kw| %>
-					<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
+			<div class='boxcontent'>
+				<%=raw markdown(@tool.description) %>
+
+				<% if @tool.keywords && !@tool.keywords.blank? %>
+					<br/>
+					<% @tool.keywords_array.each do |kw| %>
+						<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
+					<% end %>
 				<% end %>
-			<% end %>
-
-		</div>
+			</div> <!-- end of box content -->
+		</div> <!-- end of box -->
 	</div>
 <% end %>
 
@@ -27,93 +27,122 @@
 
 <div class='row-fluid'>
 	<div class='box span4 r1-box'>
-		<h5 class='boxheader'>Authors</h5>
-		<ul>
-		<% @tool.authors.split("\n").each do  |author|%>
-			<li><%= author %></li>
-		<% end %>
-		</ul>
-	</div>
+		<div class='boxheader'>Authors</div>
+		<div class'boxcontent'> 
+			<ul>
+			<% @tool.authors.split("\n").each do  |author|%>
+				<li><%= author %></li>
+			<% end %>
+			</ul>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
 
 	
 	<div class='box span4 r1-box' style='word-wrap: break-word'>
-		<h5 class='boxheader'>External Link</h5>
-		<% if @tool.url && !@tool.url.blank? %>
-		<center>
+		<div class='boxheader'>External Link</div>
 
-		<!--<span class='label label-default' style='word-wrap: break-word'><%= @tool.url %></span><br/><br/>-->
-		<div style="font-weight:bold;color:#6d6d6d;font-size:x-small"><%= @tool.url %></div>
-		<br/>
+		<div class='boxcontent'>
+			<% if @tool.url && !@tool.url.blank? %>
+			<center>
+			<!--<span class='label label-default' style='word-wrap: break-word'><%= @tool.url %></span><br/><br/>-->
+			<div style="font-weight:bold;color:#6d6d6d;font-size:x-small"><%= @tool.url %></div>
+			<br/>
 
-		<a href='<%= @tool.url %>' target='_blank' class='btn btn-small btn-primary'>Follow Link</a>
-		<br/>
-		</center>
-		<% end %>
-	</div>
+			<a href='<%= @tool.url %>' target='_blank' class='btn btn-small btn-primary'>Follow Link</a>
+			<br/>
+			</center>
+			<% end %>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
 	
 
 	<div class='box span4 r1-box'>
-		<h5 class='boxheader'>Our Copy</h5>
-		<% if @tool.local %>
-			<center class='row-fluid'>
-			<%= form_tag("/tools/#{@tool.id}/download", :method => :get) do%>
-					<input type='submit' class='btn btn-primary cdownload span6' value="Download">
+		<div class='boxheader'>Our Copy</div>
+		<div class='boxcontent'>
+			<% if @tool.local %>
+				<center class='row-fluid'>
+				<br>
+				<%= form_tag("/tools/#{@tool.id}/download", :method => :get) do%>
+						<input type='submit' class='btn btn-primary cdownload span6' value="Download">
+				<% end %>
+				</center>
 			<% end %>
-			</center>
-		<% end %>
-	</div>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
 </div>
 
 
-
+<!-- memberships row -->
 <div class='row-fluid'>
 	<div class='box span4 r2-box'>
-		<h5 id='owners_hd'><%= pluralize(@tool.owners.size, 'Owner', 'Owners') %></h5>
-		<% @tool.owners.each do |m| %>
-			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
-		<% end %>
+		<div id='owners_hd' class='boxheader'>
+			<%= pluralize(@tool.owners.size, 'Owner', 'Owners') %>
+		</div>
+		<div class='boxcontent padfree'>
+			<% @tool.owners.each do |m| %>
+				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
+			<% end %>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
+
+	<div class='box span4 r2-box'>
+		<div class='boxheader' id='owners_hd'><%= pluralize(@tool.reviewers.size, 'Reviewer', 'Reviewers') %></div>
+		<div class='boxcontent padfree'>
+			<% @tool.reviewers.each do |m| %>
+				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
+			<% end %>
+		</div>
 	</div>
 
 	<div class='box span4 r2-box'>
-		<h5 id='owners_hd'><%= pluralize(@tool.reviewers.size, 'Reviewer', 'Reviewers') %></h5>
-		<% @tool.reviewers.each do |m| %>
-			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
-		<% end %>
-	</div>
-
-	<div class='box span4 r2-box'>
-		<h5 id='owners_hd'><%= pluralize(@tool.members.size, 'Member', 'Members') %></h5>
-		<% @tool.members.each do |m| %>
-			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
-		<% end %>
-	</div>
+		<div class='boxheader' id='owners_hd'><%= pluralize(@tool.members.size, 'Member', 'Members') %></div>
+		<div class='boxcontent padfree'>
+			<% @tool.members.each do |m| %>
+				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
+			<% end %>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
 </div>
 
 <div class='row-fluid'>
 	
-	<div class='box span4 r3-box'>
-		<h5 class='boxheader'><%= pluralize(@tool.corpora.length, "Corpus",
-		"Corpora") %></h5>
-		<% @tool.corpora.each do |c|%>
-			<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
-		<% end %>
+	<div class='box borderfree span4 r3-box'>
+		<div class='boxheader'>
+			<%= pluralize(@tool.corpora.length, "Corpus",
+		"Corpora") %>
+		</div>
+		<div class='boxcontent padfree'>
+			<% @tool.corpora.limit(2).each do |c|%>
+				<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
+			<% end %>
+		</div>
 
-		<% if @tool.corpora && @tool.corpora.size > 0%>
-			<a href='<%= corpora_tool_path %>' class='pull-right'>See All</a>
-		<% end %>
+		<div class='boxcontent'>
+			<% if @tool.corpora && @tool.corpora.size > 2%>
+				<a href='<%= corpora_tool_path %>' class='pull-right'>See All</a>
+				<br/>
+			<% end %>
+		</div>
 	</div>
 	
 
-	<div class='box span4 r3-box'>
-		<h5 class='boxheader'><%= pluralize(@tool.publications.length, "Publication",
-		"Publications") %></h5>
-		<%@tool.publications.each do |p|%>
-			<%= render :partial => 'shared/publication_index_small', :locals => {:p => p} %>
-		<% end %>
+	<div class='box borderfree span4 r3-box'>
+		<div class='boxheader'>
+			<%= pluralize(@tool.publications.length, "Publication",
+		"Publications") %>
+		</div>
+		<div class='boxcontent padfree'>
+			<%@tool.publications.limit(2).each do |p|%>
+				<%= render :partial => 'shared/publication_index_small', :locals => {:p => p} %>
+			<% end %>
+		</div>
+		<div class='boxcontent'>
+			<% if @tool.publications && @tool.publications.size > 2 %>
+				<a href='<%= publications_tool_path %>' class='pull-right'>See All</a>
+				<br/>
+			<% end %>
+		</div>
 
-		<% if @tool.publications && @tool.publications.size > 0 %>
-			<a href='<%= publications_tool_path %>' class='pull-right'>See All</a>
-		<% end %>
 	</div>
 	
 </div>

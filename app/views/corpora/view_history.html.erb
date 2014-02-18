@@ -16,35 +16,36 @@
 <h3><%= pluralize(@revisions, "Version")%></h3>
 <% @commits.each do |c| %>
 	<div class="logEntry box">
-		<h6>Version <%= c[:version] %> <span class='pull-right'> <%= time_ago_in_words(c[:dateString]) %> ago</span></h6>
-		<%=raw c[:msg] %>
-		<br/>
-		<br/>
-
-		<% if c[:status_changes] && c[:status_changes].size > 0 %>
-		<div class='svn_status_toggle btn btn-mini'>Pre-Commit Status</div>
-		<div class='svn_status monospace'>
-		<% c[:status_changes].each do |change| %>
-			<div class='svn_file_status'>
-				<span class='label label-inverse'><%= change.status %></span>
-				&nbsp;
-				<a href='/corpora/<%= @corpus.id %>/browse?path=/<%= change.file %>'><%= change.file %></a>
-			</div>
-		<% end %>
+		<div class='boxheader small left'>
+			Version <%= c[:version] %> <span class='pull-right'> <%= time_ago_in_words(c[:dateString]) %> ago</span>
 		</div>
-		<% end %>
-		
 
-		<span class="member_email pull-right" title="<%= c[:name] %>">
-			<a href="/users/<%= c[:user_id] %>" class="btn btn-mini" target="_BLANK">
-			<i class="icon-user"></i>&nbsp;<%= c[:name]%></a>
-		</span> 
-		<span class='pull-right'>&nbsp;</span>
-		<a class='btn btn-mini btn-primary pull-right' href='/corpora/<%=@corpus.id%>/download?name=utf8=%E2%9C%93&name=%2B<%=c[:version]%>'>
-			Download
-		</a>
+		<div class='boxcontent'>
+			<%=raw c[:msg] %>
+			<% if c[:status_changes] && c[:status_changes].size > 0 %>
+			<div class='svn_status_toggle btn btn-mini'>Pre-Commit Status</div>
+			<div class='svn_status monospace'>
+			<% c[:status_changes].each do |change| %>
+				<div class='svn_file_status'>
+					<span class='label label-inverse'><%= change.status %></span>
+					&nbsp;
+					<a href='/corpora/<%= @corpus.id %>/browse?path=/<%= change.file %>'><%= change.file %></a>
+				</div>
+			<% end %>
+			</div>
+			<% end %>
+			
 
-		<br/>
+			<span class="member_email pull-right" title="<%= c[:name] %>">
+				<a href="/users/<%= c[:user_id] %>" class="btn btn-mini" target="_BLANK">
+				<i class="icon-user"></i>&nbsp;<%= c[:name]%></a>
+			</span> 
+			<span class='pull-right'>&nbsp;</span>
+			<a class='btn btn-mini btn-primary pull-right' href='/corpora/<%=@corpus.id%>/download?name=utf8=%E2%9C%93&name=%2B<%=c[:version]%>'>
+				Download
+			</a><br/>
+
+		</div>
 	</div>
 <% end %>
 </div>

@@ -1,5 +1,5 @@
 <% content_for :javascript_includes do %>
-	<%= javascript_include_tag "corpus_index.js" %>
+	<%= javascript_include_tag "resource_index.js" %>
 <% end %>
 
 <h1>Corpora</h1>
@@ -12,7 +12,6 @@
 		 
 <% @corpora.each do |corpus| %>
 	<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => corpus} %>
-  
 <% end %>
 
 <br />
@@ -22,3 +21,5 @@
 		<%= link_to 'New Corpus', new_corpus_path, :class => 'btn span12' %>
 	</div>
 <% end %>
+
+<%= render :partial => 'shared/topnav_select_active', :locals => {:select => 'corpora'} %>

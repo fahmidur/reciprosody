@@ -42,13 +42,10 @@
 			
 			<div class='nav-collapse collapse'>
 				<ul class='nav'>
-					<li><a href='/'>Home</a></li>
-
-					<li><a href='/corpora'>Corpora</a></li>
-					<li><a href='/publications'>Publications</a></li>
-					<li><a href='/tools'>Tools</a></li>
-					
-					
+					<!-- <li><a href='/'>Home</a></li> -->
+					<li id='topnavi-corpora' class='topnavi'><a href='/corpora'>Corpora</a></li>
+					<li id='topnavi-pubs' class='topnavi'><a href='/publications'>Publications</a></li>
+					<li id='topnavi-tools' class='topnavi'><a href='/tools'>Tools &amp; Resources</a></li>
 
 					<% if user_signed_in? && (current_user.resumables.size > 0) %>
 						<li class='dropdown'><a href='/resumable_list' class='invert'>Resumables 

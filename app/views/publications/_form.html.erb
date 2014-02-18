@@ -3,9 +3,6 @@
 	<%= javascript_include_tag 'publications_form.js' %>
 
 <% end %>
-
-<!--<%= setup_upload %>-->
-
 <%= form_for(@pub, :remote => true, :html => {'data-type' => 'json', :id => 'new_publication'}) do |f|%>
 	<div class='row-fluid'>
 

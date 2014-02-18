@@ -213,9 +213,11 @@ function resumableBeforeUnload(formID) {
 }
 
 function loadFormData() {
+  console.log('Loading Form DATA');
   var url = document.URL;
   var m;
   if((m = url.match(/formdata\=(.+)$/))) {
+    console.log("match = ", m[1]);
     var formdata = uri_to_obj(decodeURIComponent(m[1]));
     if(formdata['filename'] !== "") {
       $('body').prepend('<div class="modal fade" id="upload-filename">'+
@@ -235,7 +237,7 @@ function loadFormData() {
 
       $('#upload-filename').modal('show');  
     }
-    console.log(formdata);
+    console.log('formdata = ', formdata);
     var obj;
     for(name in formdata) {
       obj = $("[name='"+name+"']");
@@ -245,5 +247,4 @@ function loadFormData() {
     }
   }
 }
-
 loadFormData();

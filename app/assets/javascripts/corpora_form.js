@@ -8,13 +8,7 @@ var _save_state = true;
 
 $(function() {
 	dw();
-	
-	$('#corpus_name').live('keyup', function(e) {
-		var val = $(this).val();
-		if(val == "" || val.match(/^\s+$/))
-			val = "New Corpus";
-		$('#corpus_header').html(val);	
-	});
+	UIHelper.halfwayBind($('#corpus_name'), $('#corpus_header'), "New Corpus");
 	
 	$(window).resize(dw);
 	

@@ -6,35 +6,36 @@
     <br/>
     <p><%=raw snippet(markdown(corpus.description)) %></p>
 
-    <%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
-    <%= link_to 'Publications', publications_corpus_path(corpus), :class => 'btn btn-mini' %>
-    <%= link_to 'Tools', tools_corpus_path(corpus), :class => 'btn btn-mini' %>
-    <%= link_to 'Comments', comments_corpus_path(corpus), :class => 'btn btn-mini' %>
-    
-	<% if user_signed_in? %>
-		<%= link_to 'Browse', browse_corpus_path(corpus), :class => 'btn btn-mini' %>
-	  	<% if corpus.canEdit?(current_user())%>
-	    	<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
-	    	<%= link_to 'Manage Members', manage_members_corpus_path(corpus), :class => 'btn btn-mini' %>
+    <div class='index-item-option-bar'>
+	    <%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
+	    <%= link_to 'Publications', publications_corpus_path(corpus), :class => 'btn btn-mini' %>
+	    <%= link_to 'Tools', tools_corpus_path(corpus), :class => 'btn btn-mini' %>
+	    <%= link_to 'Comments', comments_corpus_path(corpus), :class => 'btn btn-mini' %>
+	    
+		<% if user_signed_in? %>
+			<%= link_to 'Browse', browse_corpus_path(corpus), :class => 'btn btn-mini' %>
+		  	<% if corpus.canEdit?(current_user())%>
+		    	<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
+		    	<%= link_to 'Manage Members', manage_members_corpus_path(corpus), :class => 'btn btn-mini' %>
 
-	    	<a href="#delete-confirm-corp-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
-				<%= render :partial => 'shared/icon', :locals => {:icon => 'remove'} %>
-			</a>
+		    	<a href="#delete-confirm-corp-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
+		    		<i class='icon-remove'> Delete</i>
+				</a>
 
-			<div class="modal hide fade" id="delete-confirm-corp-<%= corpus.id %>" style="display:none">
-				<div class="modal-header">
-					<a class="close" data-dismiss="modal">×</a>
-					<h3>Are you sure you want to delete this Corpus?</h3>
+				<div class="modal hide fade" id="delete-confirm-corp-<%= corpus.id %>" style="display:none">
+					<div class="modal-header">
+						<a class="close" data-dismiss="modal">×</a>
+						<h3>Are you sure you want to delete this Corpus?</h3>
+					</div>
+					<div class="modal-body">
+						<p>You're about to delete an entire Corpus and all of its relationships. Just checking.</p>
+					</div>
+					<div class="modal-footer">
+						<%= link_to 'Destroy', '/corpora/'+corpus.id.to_s, :method => :delete, :class => 'btn' %>
+						<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+					</div>
 				</div>
-				<div class="modal-body">
-					<p>You're about to delete an entire Corpus and all of its relationships. Just checking.</p>
-				</div>
-				<div class="modal-footer">
-					<%= link_to 'Destroy', '/corpora/'+corpus.id.to_s, :method => :delete, :class => 'btn' %>
-					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-				</div>
-			</div>
-	  	<% end %>
-	  
-	 <% end %>
+		  	<% end %> <!-- end of canEdit -->
+		<% end %> <!-- end of user_signed_in -->
+	</div> <!--end of index-item-option-bar -->
 </div>

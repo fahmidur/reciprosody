@@ -1,5 +1,5 @@
 <% content_for :javascript_includes do %>
-	<%= javascript_include_tag "corpus_index.js" %>
+	<%= javascript_include_tag "resource_index.js" %>
 <% end %>
 
 <h1>Publications</h1>
@@ -11,8 +11,11 @@
 <% end %>
 
 <% @pubs.each do |p| %>
-	<%= render :partial => 'shared/publication_index1.html.erb', 
-			:locals => {:p => p} %>
+	<%= render(
+			:partial => 'shared/publication_index1.html.erb',
+			:locals => {:p => p} 
+		)
+	%>
 <% end %>
 
 <% if user_signed_in? %>
@@ -20,6 +23,8 @@
 		<a class='btn span12' href='/publications/new'>New Publication</a>
 	</div>
 <% end %>
+
+<%= render :partial => 'shared/topnav_select_active', :locals => {:select => 'pubs'} %>
 
 
 

@@ -8,140 +8,162 @@
 <% unless @pub.description.blank? %>
 	<div class='row-fluid'>
 		<div class='box span12'>
-			<h5 class='boxheader'>Description</h5>
+			<div class='boxheader'>Description</div>
 
-			<%=raw markdown(@pub.description) %>
+			<div class='boxcontent'>
+				<%=raw markdown(@pub.description) %>
 
-			<% if @pub.keywords && !@pub.keywords.blank? %>
-				<br/>
-				<% @pub.keywords_array.each do |kw| %>
-					<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+				<% if @pub.keywords && !@pub.keywords.blank? %>
+					<br/>
+					<% @pub.keywords_array.each do |kw| %>
+						<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+					<% end %>
 				<% end %>
-			<% end %>
-		</div>
+			</div> <!-- end of box content -->
+
+		</div> <!-- end of box -->
 	</div>
 <% end %>
 
 <div class='row-fluid'>
 	<div class='box span4 r1-box'>
-		<h5 class='boxheader'>Authors</h5>
-		<ul>
-		<% @pub.authors.split("\n").each do  |author|%>
-			<li><%= author %></li>
-		<% end %>
-		</ul>
-	</div>
-
-	
-	<div class='box span4 r1-box'>
-		<h5 class='boxheader'>External Link</h5>
-		<% if @pub.url && !@pub.url.blank? %>
-
-		<center>
-
-		<!--<p class='label label-default' href='<%= @pub.url %>'><%= @pub.url %></p><br/>-->
-
-		<div style="font-weight:bold;color:#6d6d6d;font-size:x-small"><%= @pub.url %></div>
-		<br/>
-		
-		<a href='<%= @pub.url %>' target='_blank' class='btn btn-small btn-primary'>Follow Link</a>
-
-		<br/>
-
-		</center>
-
-		<% end %>
-	</div>
-	
-
-	<div class='box span4 r1-box'>
-		<h5 class='boxheader'>Our Copy</h5>
-		<% if @pub.local %>
-			<center class='row-fluid'>
-			<%= form_tag("/publications/#{@pub.id}/download", :method => :get) do%>
-					<input type='submit' class='btn btn-primary cdownload span6' value="Download">
+		<div class='boxheader'>Authors</div>
+		<div class='boxcontent'>
+			<ul>
+			<% @pub.authors.split("\n").each do  |author|%>
+				<li><%= author %></li>
 			<% end %>
+			</ul>
+		</div>
+	</div>
+
+	
+	<div class='box span4 r1-box'>
+		<div class='boxheader'>External Link</div>
+
+		<div class='boxcontent'>
+			<% if @pub.url && !@pub.url.blank? %>
+			<center>
+
+			<!--<p class='label label-default' href='<%= @pub.url %>'><%= @pub.url %></p><br/>-->
+
+			<div style="font-weight:bold;color:#6d6d6d;font-size:x-small"><%= @pub.url %></div>
+			<br/>
+			
+			<a href='<%= @pub.url %>' target='_blank' class='btn btn-small btn-primary'>Follow Link</a>
+
+			<br/>
+
 			</center>
-		<% end %>
-	</div>
+			<% end %>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
+	
+
+	<div class='box span4 r1-box'>
+		<div class='boxheader'>Our Copy</div>
+		<div class='boxcontent'>
+			<% if @pub.local %>
+				<center class='row-fluid'>
+				<br/>
+				<%= form_tag("/publications/#{@pub.id}/download", :method => :get) do%>
+						<input type='submit' class='btn btn-primary cdownload span6' value="Download">
+				<% end %>
+				</center>
+			<% end %>
+		</div> <!-- end of box content  -->
+	</div> <!-- end of box -->
 </div>
 
 <div class='row-fluid'>
 
 	<div class='box span4 r3-box'>
-		<h5 class='boxheader'>BibTex Citation</h5>
-		<div class='btn-group' id='citation-style-select'>
-			<button class='btn btn-mini active'>Raw</button>
-			<button class='btn btn-mini'>MLA</button>
-			<button class='btn btn-mini'>APA</button>
-			<button class='btn btn-mini'>Chicago</button>
-		</div>
-		<br/><br/>
+		<div class='boxheader'>BibTex Citation</div>
 
-		<div class='citation-style' id='citation-style-raw'>
-			<%=raw markdown(@pub.citation) %>
-		</div>
+		<div class='boxcontent'>
+			<div class='btn-group' id='citation-style-select'>
+				<button class='btn btn-mini active'>Raw</button>
+				<button class='btn btn-mini'>MLA</button>
+				<button class='btn btn-mini'>APA</button>
+				<button class='btn btn-mini'>Chicago</button>
+			</div>
+			<br/><br/>
+			<div class='citation-style' id='citation-style-raw'>
+				<%=raw markdown(@pub.citation) %>
+			</div>
+			<div class='citation-style' id='citation-style-mla'>
+				<%=raw html_from_citation(@pub.citation, :mla) %>
+			</div>
+			<div class='citation-style' id='citation-style-apa'>
+				<%=raw html_from_citation(@pub.citation, :apa) %>
+			</div>
+			<div class='citation-style' id='citation-style-chicago'>
+				<%=raw html_from_citation(@pub.citation, 'chicago-author-date') %>
+			</div>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
 
-		<div class='citation-style' id='citation-style-mla'>
-			<%=raw html_from_citation(@pub.citation, :mla) %>
+	<div class='box span4 r3-box'>
+		<div class='boxheader'>
+			<%= pluralize(@pub.corpora.length, "Corpus", "Corpora") %>
 		</div>
-
-		<div class='citation-style' id='citation-style-apa'>
-			<%=raw html_from_citation(@pub.citation, :apa) %>
+		<div class='boxcontent padfree'>
+			<% @pub.corpora.each do |c|%>
+				<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
+			<% end %>
 		</div>
-
-		<div class='citation-style' id='citation-style-chicago'>
-			<%=raw html_from_citation(@pub.citation, 'chicago-author-date') %>
+		<div class='boxcontent'> 
+			<% if @pub.corpora && @pub.corpora.size > 0%>
+				<a href='<%= corpora_publication_path %>' class='pull-right'>See All</a><br/>
+			<% end %>
 		</div>
-
 	</div>
 
 	<div class='box span4 r3-box'>
-		<h5 class='boxheader'><%= pluralize(@pub.corpora.length, "Corpus",
-		"Corpora") %></h5>
-		<% @pub.corpora.each do |c|%>
-			<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
-		<% end %>
-		<% if @pub.corpora && @pub.corpora.size > 0%>
-			<a href='<%= corpora_publication_path %>' class=' btn btn-mini pull-right'>See All</a><br/>
-		<% end %>
-	</div>
-
-	<div class='box span4 r3-box'>
-		<h5 class='boxheader'><%= pluralize(@pub.tools.length, "Tool","Tools") %></h5>
-		<%@pub.tools.each do |t|%>
-			<%= render :partial => 'shared/tool_index_small', :locals => {:tool => t} %>
-		<% end %>
-		<% if @pub.tools && @pub.tools.size > 0%>
-			<a href='<%= tools_publication_path %>' class='btn btn-mini pull-right'>See All</a><br/>
-		<% end %>
+		<div class='boxheader'><%= pluralize(@pub.tools.length, "Tool","Tools") %></div>
+		<div class='boxcontent padfree'>
+			<%@pub.tools.each do |t|%>
+				<%= render :partial => 'shared/tool_index_small', :locals => {:tool => t} %>
+			<% end %>
+		</div>
+		<div class='boxcontent'>
+			<% if @pub.tools && @pub.tools.size > 0%>
+				<a href='<%= tools_publication_path %>' class='pull-right'>See All</a><br/>
+			<% end %>
+		</div>
 	</div>
 
 </div>
 
 <div class='row-fluid'>
 	<div class='box span4 r2-box'>
-		<h5 id='owners_hd'><%= pluralize(@pub.owners.size, 'Owner', 'Owners') %></h5>
-		<% @pub.owners.each do |m| %>
-			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
-		<% end %>
-	</div>
+		<div class='boxheader' id='owners_hd'><%= pluralize(@pub.owners.size, 'Owner', 'Owners') %></div>
+
+		<div class='boxcontent padfree'>
+			<% @pub.owners.each do |m| %>
+				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
+			<% end %>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
 
 	<div class='box span4 r2-box'>
-		<h5 id='owners_hd'><%= pluralize(@pub.reviewers.size, 'Reviewer', 'Reviewers') %></h5>
-		<% @pub.reviewers.each do |m| %>
-			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
-		<% end %>
-	</div>
+		<div class='boxheader' id='owners_hd'><%= pluralize(@pub.reviewers.size, 'Reviewer', 'Reviewers') %></div>
+		<div class='boxcontent padfree'>
+			<% @pub.reviewers.each do |m| %>
+				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
+			<% end %>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
 
 	<div class='box span4 r2-box'>
-		<h5 id='owners_hd'><%= pluralize(@pub.members.size, 'Member', 'Members') %></h5>
-		<% @pub.members.each do |m| %>
-			<%= render :partial => 'shared/member_small', :locals => {:mem => m} %>
-		<% end %>
-	</div>
+		<div class='boxheader' id='owners_hd'><%= pluralize(@pub.members.size, 'Member', 'Members') %></div>
+		<div class='boxcontent padfree'>
+			<% @pub.members.each do |m| %>
+				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
+			<% end %>
+		</div> <!-- end of box content -->
+	</div> <!-- end of box -->
 </div>
-
 
 <%= render :partial => 'footer' %>
 
