@@ -7,8 +7,8 @@
 
 <% unless @pub.description.blank? %>
 	<div class='row-fluid'>
-		<div class='box span12'>
-			<div class='boxheader'>Description</div>
+		<div class='box borderfree span12'>
+			<div class='boxheader small toggleable'>Description</div>
 
 			<div class='boxcontent'>
 				<%=raw markdown(@pub.description) %>
@@ -27,7 +27,7 @@
 
 <div class='row-fluid'>
 	<div class='box span4 r1-box'>
-		<div class='boxheader'>Authors</div>
+		<div class='boxheader small'>Authors</div>
 		<div class='boxcontent'>
 			<ul>
 			<% @pub.authors.split("\n").each do  |author|%>
@@ -39,7 +39,7 @@
 
 	
 	<div class='box span4 r1-box'>
-		<div class='boxheader'>External Link</div>
+		<div class='boxheader small'>External Link</div>
 
 		<div class='boxcontent'>
 			<% if @pub.url && !@pub.url.blank? %>
@@ -61,7 +61,7 @@
 	
 
 	<div class='box span4 r1-box'>
-		<div class='boxheader'>Our Copy</div>
+		<div class='boxheader small'>Our Copy</div>
 		<div class='boxcontent'>
 			<% if @pub.local %>
 				<center class='row-fluid'>
@@ -78,7 +78,7 @@
 <div class='row-fluid'>
 
 	<div class='box span4 r3-box'>
-		<div class='boxheader'>BibTex Citation</div>
+		<div class='boxheader small'>BibTex Citation</div>
 
 		<div class='boxcontent'>
 			<div class='btn-group' id='citation-style-select'>
@@ -104,7 +104,7 @@
 	</div> <!-- end of box -->
 
 	<div class='box borderfree span4 r3-box'>
-		<div class='boxheader'>
+		<div class='boxheader small'>
 			<%= pluralize(@pub.corpora.length, "Corpus", "Corpora") %>
 		</div>
 		<div class='boxcontent padfree'>
@@ -120,7 +120,7 @@
 	</div>
 
 	<div class='box borderfree span4 r3-box'>
-		<div class='boxheader'><%= pluralize(@pub.tools.length, "Tool","Tools") %></div>
+		<div class='boxheader small'><%= pluralize(@pub.tools.length, "Tool","Tools") %></div>
 		<div class='boxcontent padfree'>
 			<%@pub.tools.each do |t|%>
 				<%= render :partial => 'shared/tool_index_small', :locals => {:tool => t} %>
@@ -137,7 +137,7 @@
 
 <div class='row-fluid'>
 	<div class='box borderfree span4 r2-box'>
-		<div class='boxheader' id='owners_hd'><%= pluralize(@pub.owners.size, 'Owner', 'Owners') %></div>
+		<div class='boxheader small' id='owners_hd'><%= pluralize(@pub.owners.size, 'Owner', 'Owners') %></div>
 
 		<div class='boxcontent padfree'>
 			<% @pub.owners.each do |m| %>
@@ -147,7 +147,7 @@
 	</div> <!-- end of box -->
 
 	<div class='box borderfree span4 r2-box'>
-		<div class='boxheader' id='owners_hd'><%= pluralize(@pub.reviewers.size, 'Reviewer', 'Reviewers') %></div>
+		<div class='boxheader small' id='owners_hd'><%= pluralize(@pub.reviewers.size, 'Reviewer', 'Reviewers') %></div>
 		<div class='boxcontent padfree'>
 			<% @pub.reviewers.each do |m| %>
 				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
@@ -156,7 +156,7 @@
 	</div> <!-- end of box -->
 
 	<div class='box borderfree span4 r2-box'>
-		<div class='boxheader' id='owners_hd'><%= pluralize(@pub.members.size, 'Member', 'Members') %></div>
+		<div class='boxheader small' id='owners_hd'><%= pluralize(@pub.members.size, 'Member', 'Members') %></div>
 		<div class='boxcontent padfree'>
 			<% @pub.members.each do |m| %>
 				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
@@ -168,3 +168,4 @@
 <%= render :partial => 'footer' %>
 
 <%= javascript_include_tag 'citations_in_show.js' %>
+<%= javascript_include_tag 'handle_box_toggleable.js' %>

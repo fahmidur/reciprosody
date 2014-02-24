@@ -1,1 +1,2 @@
 UIHelper.handleToggleableBoxheaders();
+UIHelper.autoCollapseToggleableBoxes();

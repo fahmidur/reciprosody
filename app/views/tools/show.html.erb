@@ -6,8 +6,8 @@
 
 <% unless @tool.description.blank? %>
 	<div class='row-fluid'>
-		<div class='box span12'>
-			<div class='boxheader'>Description</div>
+		<div class='box borderfree span12'>
+			<div class='boxheader small toggleable'>Description</div>
 
 			<div class='boxcontent'>
 				<%=raw markdown(@tool.description) %>
@@ -27,7 +27,7 @@
 
 <div class='row-fluid'>
 	<div class='box span4 r1-box'>
-		<div class='boxheader'>Authors</div>
+		<div class='boxheader small'>Authors</div>
 		<div class'boxcontent'> 
 			<ul>
 			<% @tool.authors.split("\n").each do  |author|%>
@@ -39,7 +39,7 @@
 
 	
 	<div class='box span4 r1-box' style='word-wrap: break-word'>
-		<div class='boxheader'>External Link</div>
+		<div class='boxheader small'>External Link</div>
 
 		<div class='boxcontent'>
 			<% if @tool.url && !@tool.url.blank? %>
@@ -57,7 +57,7 @@
 	
 
 	<div class='box span4 r1-box'>
-		<div class='boxheader'>Our Copy</div>
+		<div class='boxheader small'>Our Copy</div>
 		<div class='boxcontent'>
 			<% if @tool.local %>
 				<center class='row-fluid'>
@@ -75,7 +75,7 @@
 <!-- memberships row -->
 <div class='row-fluid'>
 	<div class='box borderfree span4 r2-box'>
-		<div id='owners_hd' class='boxheader'>
+		<div id='owners_hd' class='boxheader small'>
 			<%= pluralize(@tool.owners.size, 'Owner', 'Owners') %>
 		</div>
 		<div class='boxcontent padfree'>
@@ -86,7 +86,7 @@
 	</div> <!-- end of box -->
 
 	<div class='box borderfree span4 r2-box'>
-		<div class='boxheader' id='owners_hd'><%= pluralize(@tool.reviewers.size, 'Reviewer', 'Reviewers') %></div>
+		<div class='boxheader small' id='owners_hd'><%= pluralize(@tool.reviewers.size, 'Reviewer', 'Reviewers') %></div>
 		<div class='boxcontent padfree'>
 			<% @tool.reviewers.each do |m| %>
 				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
@@ -95,7 +95,7 @@
 	</div>
 
 	<div class='box borderfree span4 r2-box'>
-		<div class='boxheader' id='owners_hd'><%= pluralize(@tool.members.size, 'Member', 'Members') %></div>
+		<div class='boxheader small' id='owners_hd'><%= pluralize(@tool.members.size, 'Member', 'Members') %></div>
 		<div class='boxcontent padfree'>
 			<% @tool.members.each do |m| %>
 				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
@@ -107,7 +107,7 @@
 <div class='row-fluid'>
 	
 	<div class='box borderfree span4 r3-box'>
-		<div class='boxheader'>
+		<div class='boxheader small'>
 			<%= pluralize(@tool.corpora.length, "Corpus",
 		"Corpora") %>
 		</div>
@@ -127,7 +127,7 @@
 	
 
 	<div class='box borderfree span4 r3-box'>
-		<div class='boxheader'>
+		<div class='boxheader small'>
 			<%= pluralize(@tool.publications.length, "Publication",
 		"Publications") %>
 		</div>
@@ -151,3 +151,4 @@
 
 
 <%= render :partial => 'footer' %>
+<%= javascript_include_tag 'handle_box_toggleable.js' %>

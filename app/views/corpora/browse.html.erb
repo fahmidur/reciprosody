@@ -11,7 +11,7 @@
 <%= render :partial => 'tabs', :locals => {:tab => 'browse'} %>
 
 <div class='row-fluid'>
-	<div class='span6'>
+	<div class='span7'>
 		<% if @file %>
 		<br><br>
 		<div class='row-fluid content'>
@@ -67,7 +67,7 @@
 		</div>
 		<% end %>
 	</div> <!-- end of second major column -->
-	<div class='span6'>
+	<div class='span5'>
 		<h4 class=''>
 		<% if @rpath != "/" %>
 			<a href='<%= browse_corpus_path(@corpus) %>?path=<%= File.dirname(@rpath) %>'>..</a>

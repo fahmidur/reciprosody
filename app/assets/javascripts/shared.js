@@ -89,12 +89,34 @@ var UIHelper = {
 				contents.slideDown();
 				self.data('collapsed', false);
 				self.find('.toggleable-icon i').attr('class', 'icon-chevron-up');
+				self.find('.toggleable-icon').removeClass('collapsed');
+
 			} else {
 				contents.slideUp();
 				console.log('setting data-collapsed to true');
 				self.data('collapsed', true);
-				self.find('.toggleable-icon i').attr('class', 'icon-chevron-down');
+				self.find('.toggleable-icon i').attr('class', 'icon-chevron-down')
+				self.find('.toggleable-icon').addClass('collapsed');
 			}
 		});
+	},
+	autoCollapseToggleableBoxes: function() {
+		toggleSmartDW();
+		$(window).on('resize', toggleSmartDW);
+		function toggleSmartDW() {
+			if($(window).width() < 760) {
+				$('.boxheader.toggleable').each(function() {
+					if(!$(this).data('collapsed')) {
+						$(this).click();
+					}
+				});
+			} else {
+				$('.boxheader.toggleable').each(function() {
+					if($(this).data('collapsed')) {
+						$(this).click();
+					}
+				});
+			}
+		}
 	},
 };

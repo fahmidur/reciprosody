@@ -46,6 +46,10 @@ body {
 //
 // Example:
 // @linkColor: #ff0000;
+
+@navbarCollapseWidth: 772px;
+@navbarUncollapseWidth: 772px;
+
 #logo {
 	font-size: 1.7em;
 	padding-top:9px;
@@ -230,6 +234,12 @@ body {
 .iconfix {
 	margin-right:3px;margin-top:3px;
 }
+#inst_holder {
+	text-align:center;
+}
+.inst {
+
+}
 .inst, #add-inst {
 	cursor: pointer;
 	height:14px;
@@ -238,13 +248,28 @@ body {
 	opacity: 0.0;
 	display: none;
 }
+.avatar-wrapper {
+	display: block;
+	/*background-color: rgba(255,0,0,0.2);*/
+	text-align: center;
+	padding-bottom:5px;
+	margin-bottom:5px;
+	border-bottom:1px solid #eee;
+}
+#profile_avatar {
+	/*border-radius:11px;*/
+}
+
 pre {
 	border-radius: 0px;
 	margin: 0px;
 }
+.email-dec-wrapper {
+	display: none;
+}
 .email-dec {
 	color:rgba(0,0,0,0.5);
-	font-weight:bolder;
+	font-weight:normal;
 	font-size:small;
 }
 .box {
@@ -321,6 +346,9 @@ pre {
 .toggleable-icon.active {
 	color: #3a87ad;
 }
+.toggleable-icon.collapsed {
+	color: orange;
+}
 .boxheader.left {
 	text-align: left;
 }
@@ -379,7 +407,7 @@ pre {
 .l-nav {
 	display:block;
 	width:auto;
-	margin-bottom:1em;
+	/*margin-bottom:1em;*/
 }
 .grad1 {
 	background: rgb(255,255,255);

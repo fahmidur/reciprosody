@@ -12,20 +12,4 @@ $(function() {
 		$('#pubi-' + id).remove();
 		$('#delete-confirm-pub-' + id).modal('hide');
 	});
-
-	UIHelper.handleToggleableBoxheaders();
-
-	var toggleForced = false;
-	toggleSmartDW();
-	$(window).on('resize', toggleSmartDW);
-	function toggleSmartDW() {
-		if($(window).width() < 760) {
-			$('.boxheader.toggleable').click();
-		} else if(toggleForced){
-			$('.boxheader.toggleable').click();
-		}	
-	}
-
-	
-	
 });
