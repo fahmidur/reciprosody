@@ -11,6 +11,11 @@
 	</div>
 <% end %>
 
+<div class='indexTop'>
+	<%= paginate @tools %>
+	<br/>
+</div>
+
 <% @tools.each do |t| %>
 	<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>
 <% end %>

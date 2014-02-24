@@ -1,7 +1,6 @@
 <% content_for :javascript_includes do %>
 	<%= javascript_include_tag "resource_index.js" %>
 <% end %>
-
 <h1 class='resourceIndexHeader'>Publications</h1>
 
 <% unless user_signed_in? %>
@@ -11,6 +10,11 @@
 	</div>
 <% end %>
 
+<div class='indexTop'>
+	<%= paginate @pubs %>
+	<br/>
+</div>
+
 <% @pubs.each do |p| %>
 	<%= render(
 			:partial => 'shared/publication_index1.html.erb',
@@ -19,7 +23,13 @@
 	%>
 <% end %>
 
+<div class='indexBottom'>
+	<%= paginate @pubs %>
+	<br/>
+</div>
+
 <% if user_signed_in? %>
+	<br>
 	<div class='row-fluid'>
 		<a class='btn span12' href='/publications/new'>New Publication</a>
 	</div>

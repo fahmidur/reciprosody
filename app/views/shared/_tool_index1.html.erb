@@ -4,18 +4,18 @@
 		<span class='corpi_l'><%= tool.authors.split("\n").join(", " )%></span>
 		<br/> 
 	<% end %>
-	<% if tool.description && !tool.description.blank? %>
-		<%=raw snippet(markdown(tool.description)) %>
-	<% end %>
 	<% if tool.keywords && !tool.keywords.blank? %>
 		<% tool.keywords_array.each do |kw| %>
 			<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
 		<% end %>
-		<br/>
+	<% end %>
+	<p>
+	<% if tool.description && !tool.description.blank? %>
+		<%=raw snippet(markdown(tool.description)) %>
 	<% end %>
 	
+	</p>
 	<div class='index-item-option-bar'>
-
 		<a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a>
 		<a href='<%= publications_tool_path(tool)%>' class='btn btn-mini'>Publications</a>
 		<a href='<%= corpora_tool_path(tool)%>' class='btn btn-mini'>Corpora</a>

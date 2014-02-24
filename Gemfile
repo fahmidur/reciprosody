@@ -11,6 +11,7 @@ gem 'thin'
 gem 'faye' #sfr
 gem 'passenger'
 gem 'eventmachine' #sfr
+gem 'kaminari'
 
 
 # Gems used only for assets and not required

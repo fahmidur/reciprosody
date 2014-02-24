@@ -2,6 +2,7 @@ class Tool < ActiveRecord::Base
   include ActiveModel::Validations
 
   attr_accessible :authors, :description, :keywords, :license, :local, :name, :programming_language, :url
+  paginates_per 3
 
   has_many :users, :through => :tool_memberships
   has_many :tool_memberships                                        

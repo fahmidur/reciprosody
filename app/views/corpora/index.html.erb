@@ -10,14 +10,23 @@
 		<h5>Please Sign-in or Register to download, view, edit, and upload Corpora.</h5>
 	</div>
 <% end %>
+
+<div class='indexTop'>
+	<%= paginate @corpora %>
+	<br/>
+</div>
 		 
 <% @corpora.each do |corpus| %>
 	<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => corpus} %>
 <% end %>
 
-<br />
+<div class='indexBottom'>
+	<%= paginate @corpora %>
+	<br/>
+</div>
 
 <%if user_signed_in? %>
+	<br/>
 	<div class='row-fluid'>
 		<%= link_to 'New Corpus', new_corpus_path, :class => 'btn span12' %>
 	</div>

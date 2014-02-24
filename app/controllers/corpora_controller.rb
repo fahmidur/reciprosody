@@ -39,8 +39,11 @@ class CorporaController < ApplicationController
 	#
 	# FILTERED_BY: nothing
 	#
+	# paginated
+	# params[:page]
+	#
 	def index
-		@corpora = Corpus.all
+		@corpora = Corpus.order(:created_at).reverse_order.page(params[:page])
 
 		respond_to do |format|
 			format.html # index.html.erb

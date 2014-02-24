@@ -115,9 +115,11 @@ class PublicationsController < ApplicationController
 		redirect_to "/publications/#{@pub.id}/corpora"
 	end
 
+	# paginated
+	# params[:page] page number
 	def index
 		#renders view/publications/index.html.erb
-		@pubs = Publication.all
+		@pubs = Publication.order(:created_at).reverse_order.page(params[:page])
 	end
 
 	# GET /publications/new

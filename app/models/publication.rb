@@ -1,5 +1,6 @@
 class Publication < ActiveRecord::Base
 	attr_accessible :description, :keywords, :local, :name, :url, :authors, :citation, :pubdate, :venue
+	paginates_per 3
 
 	has_many :corpora, :through => :publication_corpus_relationships
 	has_many :publication_corpus_relationships, :dependent => :delete_all #delete *pub-corp relationships

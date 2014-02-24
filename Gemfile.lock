@@ -151,6 +151,9 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.1)
+    kaminari (0.14.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     latex-decode (0.1.1)
       unicode (~> 0.4)
     less (2.3.3)
@@ -305,6 +308,7 @@ DEPENDENCIES
   fog
   font-awesome-rails
   jquery-rails (= 2.1.4)
+  kaminari
   less-rails (= 2.3.3)
   mail_view (~> 1.0.3)
   mysql

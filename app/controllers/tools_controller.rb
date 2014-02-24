@@ -102,8 +102,10 @@ class ToolsController < ApplicationController
 		redirect_to "/tools/#{@tool.id}/corpora"
 	end
 
+	# paginated
+	# params[:page]
 	def index
-		@tools = Tool.all
+		@tools = Tool.order(:created_at).reverse_order.page(params[:page])
 	end
 
 	def corpora

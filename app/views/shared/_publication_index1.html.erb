@@ -17,9 +17,11 @@
 		<br/>
 	<% end %>
 
+	<p>
 	<% if p.description && !p.description.blank? %>
 		<%=raw snippet(markdown(p.description)) %>
 	<% end %>
+	</p>
 	
 	<div class='index-item-option-bar'>
 		<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>

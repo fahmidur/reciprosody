@@ -4,7 +4,8 @@ class Corpus < ActiveRecord::Base
 	acts_as_commentable
 
 	attr_accessible :description, :language, :name, :upload, :duration, :num_speakers, :speaker_desc, :genre, :annotation, :license, :citation, :hours, :minutes, :seconds
-
+	paginates_per 3
+	
 	has_many :users, :through => :memberships
 	has_many :memberships, :dependent => :delete_all								#delete *corpus-user relationships
 
