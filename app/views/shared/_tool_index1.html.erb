@@ -1,4 +1,4 @@
-<div class='corpi_item'>
+<div class='corpi_item' data-show="<%= tool_path(tool) %>">
 	<h4><%= tool.name %></h4>
 	<% if tool.authors && !tool.authors.blank?%>
 		<span class='corpi_l'><%= tool.authors.split("\n").join(", " )%></span>
@@ -16,7 +16,7 @@
 	
 	</p>
 	<div class='index-item-option-bar'>
-		<a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a>
+		<!-- <a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a> -->
 		<a href='<%= publications_tool_path(tool)%>' class='btn btn-mini'>Publications</a>
 		<a href='<%= corpora_tool_path(tool)%>' class='btn btn-mini'>Corpora</a>
 

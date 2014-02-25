@@ -1,4 +1,4 @@
-<div class='corpi_item'>	
+<div class='corpi_item' data-show="<%=corpus_path(corpus)%>">	
     <h4><%= corpus.name %></h4>
     
     <span class='corpi_l'><%= corpus.language %></span>
@@ -7,7 +7,7 @@
     <p><%=raw snippet(markdown(corpus.description)) %></p>
 
     <div class='index-item-option-bar'>
-	    <%= link_to 'Show', corpus, :class => 'btn btn-mini' %>
+	    <!-- <%= link_to 'Show', corpus, :class => 'btn btn-mini' %> -->
 	    <%= link_to 'Publications', publications_corpus_path(corpus), :class => 'btn btn-mini' %>
 	    <%= link_to 'Tools', tools_corpus_path(corpus), :class => 'btn btn-mini' %>
 	    <%= link_to 'Comments', comments_corpus_path(corpus), :class => 'btn btn-mini' %>

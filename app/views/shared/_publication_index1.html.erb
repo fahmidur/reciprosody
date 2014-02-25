@@ -1,4 +1,4 @@
-<div class='corpi_item'>
+<div class='corpi_item' data-show="<%= publication_path(p)%>">
 
 	<h4><%= p.name %>
 		<% if p.pubdate && p.pubdate.year != 0%>
@@ -24,7 +24,7 @@
 	</p>
 	
 	<div class='index-item-option-bar'>
-		<a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a>
+		<!-- <a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a> -->
 		<a href='<%= corpora_publication_path(p)%>' class='btn btn-mini'>Corpora</a>
 		<a href='<%= tools_publication_path(p)%>' class='btn btn-mini'>Tools</a>
 		
