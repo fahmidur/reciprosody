@@ -43,7 +43,7 @@ function setMaxHeight(set) {
 		}
 	});
 	set.each(function(el) {
-		console.log($(this));
+		// console.log($(this));
 		$(this).height(max);
 	});
 }

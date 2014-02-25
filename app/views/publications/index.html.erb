@@ -10,9 +10,13 @@
 	</div>
 <% end %>
 
-<div class='indexTop'>
-	<%= paginate @pubs %>
-	<br/>
+<div class='indexTop row-fluid'>
+	<div class='resourceSearchBar span6'>
+	</div>
+	
+	<div class='span6 paginationWrapper'>
+		<%= paginate @pubs %>
+	</div>
 </div>
 
 <% @pubs.each do |p| %>

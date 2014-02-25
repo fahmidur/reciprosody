@@ -11,9 +11,14 @@
 	</div>
 <% end %>
 
-<div class='indexTop'>
-	<%= paginate @tools %>
-	<br/>
+<div class='indexTop row-fluid'>
+	<div class='resourceSearchBar span6'>
+
+	</div>
+	
+	<div class='span6 paginationWrapper'>
+		<%= paginate @tools %>
+	</div>
 </div>
 
 <% @tools.each do |t| %>

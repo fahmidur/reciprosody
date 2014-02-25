@@ -1,35 +1,43 @@
 <%= content_for :javascript_includes do%>
 <% end %>
 
-<h2><%= @tool.name %> 
-	<% if @tool.programming_language && @tool.programming_language.present? %>
-		<span class='badge'><%= @tool.programming_language %></span>
-	<% end %>
+<div class='row-fluid'>
+	<div class='span6'>
+		<h3 class='tool_name'>
+			<i class='icon-wrench'></i>
+			<%= @tool.name %> 
+			<% if @tool.programming_language && @tool.programming_language.present? %>
+				<span class='badge'><%= @tool.programming_language %></span>
+			<% end %>
 
-	<span class='badge'>
-		<%= @tool.to_timestring %>
-	</span>
+			<span class='badge'>
+				<%= @tool.to_timestring %>
+			</span>
+		</h3>
+	</div>
 
-</h2>
+	<div class='span6'>
+		<ul class="nav nav-pills">
+			<li class='pull-right <%= "active" if tab=="details"%> '>
+				<a href="<%=tool_path(@tool)%>">Details</a>
+			</li>
+			
+			<li class='pull-right <%= "active" if tab=="corpora"%>'>
+				<a href="<%= corpora_tool_path(@tool)%>">Corpora</a>
+			</li>
+			<li class='pull-right <%= "active" if tab=="publications"%>'>
+				<a href="<%= publications_tool_path(@tool)%>">Publications</a>
+			</li>
 
-<ul class="nav nav-tabs">
-	<li class='pull-right <%= "active" if tab=="details"%> '>
-		<a href="<%=tool_path(@tool)%>">Details</a>
-	</li>
-	
-	<li class='pull-right <%= "active" if tab=="corpora"%>'>
-		<a href="<%= corpora_tool_path(@tool)%>">Corpora</a>
-	</li>
-	<li class='pull-right <%= "active" if tab=="publications"%>'>
-		<a href="<%= publications_tool_path(@tool)%>">Publications</a>
-	</li>
+			
+			<% if @tool.canEdit?(current_user) %>
+			<li class='pull-right <%= "active" if tab=="members"%> '>
+				<a href="<%= manage_members_tool_path(@tool)%>">Manage Members</a>
+			</li>
+			
+			<% end %>
+		</ul>
+	</div>
 
-	
-	<% if @tool.canEdit?(current_user) %>
-	<li class='pull-right <%= "active" if tab=="members"%> '>
-		<a href="<%= manage_members_tool_path(@tool)%>">Manage Members</a>
-	</li>
-	
-	<% end %>
-</ul>
+</div>
 <%= render :partial => 'shared/topnav_select_active', :locals => {:select => 'tools'} %>

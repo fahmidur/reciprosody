@@ -41,10 +41,41 @@ class CorporaController < ApplicationController
 	#
 	# paginated
 	# params[:page]
+	# params[:order]
 	#
 	def index
-		@corpora = Corpus.order(:created_at).reverse_order.page(params[:page])
+		page = params[:page]
+		query = params[:query]
+		order = params[:order] || :created_at
+		unless ["created_at", "updated_at", "name", "language", "num_speakers"].include?(order)
+			order = :created_at
+		end
+		roles = params[:roles]
 
+		if(roles && roles.length > 0)
+			roles = roles.split(",") 
+			uniqRoles = {}
+			roles.each { |r| uniqRoles[r] = true }
+			corpArray = []
+			uniqRoles.each do |name,v|
+				case name
+				when "owner"
+					corpArray += current_user.owner_of
+				when "member"
+					corpArray += current_user.member_of
+				when "approver"
+					corpArray += current_user.approver_of
+				end
+			end
+			corpArray.map! {|e| e.id }
+			@corpora = Corpus.order(order).reverse_order.where(:id => corpArray)
+		else
+			@corpora = Corpus.order(order).reverse_order
+		end
+
+		@corpora = @corpora.where("name LIKE ? OR description LIKE ?", "%#{query}%", "%#{query}%").page(page)
+		
+		
 		respond_to do |format|
 			format.html # index.html.erb
 			format.json { render json: @corpora }
@@ -102,13 +133,14 @@ class CorporaController < ApplicationController
 	
 	# GET /corpora/1/publications
 	# See all publications using this Corpus
+	#
 	def publications
 		@corpus = Corpus.find_by_id(params[:id])
 		@publicationCorpusRelationships = PublicationCorpusRelationship.where(:corpus_id => @corpus.id).includes(:publication)
 	end
 
 	# DELETE /corpora/:id/delete_publication_rel
-	# rid
+	# params[:rid] = relationship id
 	def delete_publication_rel
 		@corpus = Corpus.find_by_id(params[:id])
 		
@@ -159,13 +191,15 @@ class CorporaController < ApplicationController
 
 	# GET /corpora/1/tools
 	# See all Tools using this Corpus
+	#
 	def tools
 		@corpus = Corpus.find_by_id(params[:id])
 		@toolCorpusRelationships = ToolCorpusRelationship.where(:corpus_id => @corpus.id).includes(:tool)
 	end
 
 	# DELETE /corpora/:id/delete_tool_rel
-	# rid
+	# params[:rid] = relationship id
+	#
 	def delete_tool_rel
 		@corpus = Corpus.find_by_id(params[:id])
 		
@@ -180,7 +214,8 @@ class CorporaController < ApplicationController
 
 	# GET /corpora/:id/add_tool_rel
 	# params[:name] = AutoBI<38>
-	# params[:relationship] = for
+	# params[:relationship] = name of relationship
+	#
 	def add_tool_rel
 		@corpus = Corpus.find_by_id(params[:id])
 		
@@ -201,8 +236,8 @@ class CorporaController < ApplicationController
 	end
 
 	# GET /corpora/:id/update_tool_rel
-	# rid
-	# relationship: for
+	# params[:rid] = relationship id
+	#
 	def update_tool_rel
 		@corpus = Corpus.find_by_id(params[:id])
 		
@@ -221,7 +256,6 @@ class CorporaController < ApplicationController
 	end
 
 	# GET /corpora/1/manage_members
-	#
 	# FILTERED_BY: owner_filter
 	# ACTS_AS: get_members
 	#
@@ -239,6 +273,7 @@ class CorporaController < ApplicationController
 
 	# GET /corpora/1/comments
 	# Just the comments page
+	#
 	def comments
 		@corpus = Corpus.find_by_id(params[:id])
 		get_faye_url
@@ -248,6 +283,7 @@ class CorporaController < ApplicationController
 	# GET /corpora/1/add_comment
 	# params[:msg] = comment message
 	# params[:parentid] = id of the parent comment
+	# FILTERED_BY: existence_filter
 	# FILTERED_BY: assoc_filter
 	#
 	def add_comment
@@ -295,9 +331,8 @@ class CorporaController < ApplicationController
 	end
 	
 	# GET /corpora/1/remove_comment
-	# FILTERED_BY assoc_filter
+	# FILTERED_BY: assoc_filter
 	# Internally allows only comment owners
-	#
 	# comment_id = params[:comment_id]
 	#
 	def remove_comment
@@ -309,7 +344,22 @@ class CorporaController < ApplicationController
 		respond_to do |format|
 			format.json do
 				if comment && comment.user_id == user.id
+					# actually destroy comment
+					# comment.destroy
+
+					# move children up
+					parent = comment.parent
+					children = comment.children
+					children.each do |c|
+						c.parent = parent
+						c.save
+					end
 					comment.destroy
+
+					# replace comment body
+					# comment.body = "<div class='commentBodyDeleted'>Comment Deleted</div>"
+					# comment.save
+
 					@faye_client = get_faye_client
 					@faye_client.publish("/corpora/#{@corpus.id}/comments/delete", {
 						:user_id => comment.user_id,
@@ -327,6 +377,7 @@ class CorporaController < ApplicationController
 	# GET /corpora/1/refresh_comments
 	# FILTERED_BY assoc_filter
 	# params[:num_comments]
+	#
 	def refresh_comments
 		@corpus = Corpus.find_by_id(params[:id])
 		num_comments_on_page = params[:num_comments].to_i

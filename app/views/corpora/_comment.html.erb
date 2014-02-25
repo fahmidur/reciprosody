@@ -30,17 +30,13 @@
 		<p><%=raw comment.body %></p>
 		</div>
 
-		<% if comment.has_children? %>
 		<div class='children'>
-			<!-- <div class='row-fluid comment'>
-				<div class='span12 inner'>
-				</div>
-			</div> -->
+		<% if comment.has_children? %>
 			<% comment.children.reverse.each do |child| %>
 				<%= render :partial => 'comment', :locals => {:comment => child} %>
 			<% end %>
-		</div>	
 		<% end %>
+		</div>
 	</div>
 
 	

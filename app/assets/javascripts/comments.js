@@ -52,16 +52,28 @@ $(function() {
 		console.log("delete success");
 		console.log(data);
 		if(data != "ERROR") {
-			$('#comment-'+data.comment_id).slideUp(300, function() {
+			deleteComment($(this).parents('.comment:first'));
+		}
+	});
+
+
+	function deleteComment($comment) {
+		console.log("Delete Comment Called");
+		var children = $comment.find('.children:first').children();
+		// children.css('border', '1px solid red');
+		children.remove();
+		$comment.before(children);
+		setTimeout( function() {
+			$comment.slideUp(300, function() {
 				$(this).remove();
 				numComments--;
 			});
-		}
-	});
-	
-	// if(cid) {
-	// 	window.setInterval(refreshComments, 500);
-	// }
+		}, 200);
+
+		// $(this).parents('.comment:first').find('.commentBody')
+		// .html("<p></p><div class='commentBodyDeleted'>Comment Deleted</div><p></p>");
+	}
+
 	setupFayeClient();
 
 	function setupFayeClient() {
@@ -111,10 +123,7 @@ $(function() {
 				console.log('comment not found');
 				return;
 			}
-			comment.slideUp(300, function() {
-				$(this).remove();
-				numComments--;
-			});
+			deleteComment(comment);
 		});
 	}
 	
@@ -137,19 +146,18 @@ $(function() {
 	}
 	function replyInject(html, parentID) {
 		var parentComment = $('#comment-'+parentID);
-		parentComment.find('.commentBody:first').after(html);
+		// parentComment.find('.commentBody:first').after(html);
+		parentComment.find('.children:first').prepend(html);
 	}
 	function replyShow() {
 		replyNode.remove();
 		replyArea.val('');
-
 		var parentComment = $(this).parents('.comment').first();
-
 		replyParentID = parentComment.data('id');
 		console.log(replyParentID);
 		parentComment.find('.commentBody:first').after(replyNode);
 		replyArea.focus();
-		if($(window).width() < 1000) {
+		if($(window).width() < 760) {
 			parentComment.goTo();
 		}
 	}
@@ -165,25 +173,6 @@ $(function() {
 		var rows = container.val().split("\n").length+1;
 		// console.log("rows = " + rows);
 		container.attr('rows', rows);
-	}
-	function refreshComments() {
-		var cid = $('#input').attr('data-cid');
-		// console.log("polling..."+numComments);
-		$.getJSON("/corpora/"+cid+"/refresh_comments", {num_comments: numComments, data_type: 'json' }, 
-			function(data) {
-				// console.log(data);
-				if(data && data.ok) {
-					if(data.add) {
-						for(var i = 0; i < data.comms.length; i++) {
-							addComment(data.comms[i]);
-						}
-					} else {
-
-					}
-
-				}
-			}
-		);
 	}
 
 });
