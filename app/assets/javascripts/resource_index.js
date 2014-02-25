@@ -8,11 +8,9 @@ $(function() {
   var _over_option_item = false;
   $('.corpi_item .index-item-option-bar a').mouseenter(function() {
   	_over_option_item = true;
-  	// console.log(_over_option_item);
   })
   .mouseleave(function() {
   	_over_option_item = false;
-  	// console.log(_over_option_item);
   });
 
   $('.corpi_item').click(function(e) {
@@ -34,7 +32,7 @@ $(function() {
     $('#roleToggleGroup .btn').each(function() {
       roleFilter[$(this).data('name')] = $(this).is('.active')? true : false;
     });
-    console.log(roleFilter);
+    // console.log(roleFilter);
   });
   $('#resourceSearchForm .orderButton').click(function() {
     var $selectedOrder = $('#selectedOrder');
@@ -44,7 +42,7 @@ $(function() {
 
   updateRoleFilter();
   updateOrder();
-  
+  updateQuery();
   function submitSearchForm(e) {
     e.preventDefault();
     var query = $(this).find('input[name=query]').val();
@@ -56,11 +54,7 @@ $(function() {
         roles.push(i);
       }
     }
-
     q +="&roles="+roles.join(",")+"&order="+order;
-    // console.log(query);
-    // console.log(roleFilter);
-    console.log(q);
     window.location = q;
     e.preventDefault();
     return false;
@@ -78,7 +72,6 @@ $(function() {
     for(var i in roles) {
       $('#role-'+roles[i]).click();
     }
-    console.log(url);
   }
   function updateOrder() {
     var url = document.URL;
@@ -88,6 +81,15 @@ $(function() {
       return;
     }
     $('#order-'+orderString).click();
+  }
+  function updateQuery() {
+    var url = document.URL;
+    var match = url.match(/query\=([^\&]*)/);
+    var queryString = match[1];
+    if(!queryString) {
+      return;
+    }
+    $('#resourceSearchQuery').val(queryString);
   }
 
 });
