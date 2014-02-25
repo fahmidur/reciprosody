@@ -10,14 +10,7 @@
 	</div>
 <% end %>
 
-<div class='indexTop row-fluid'>
-	<div class='resourceSearchBar span6'>
-	</div>
-	
-	<div class='span6 paginationWrapper'>
-		<%= paginate @pubs %>
-	</div>
-</div>
+<%= render :partial => 'shared/resourceIndex_top', :locals => {:collection => @pubs}%>
 
 <% @pubs.each do |p| %>
 	<%= render(

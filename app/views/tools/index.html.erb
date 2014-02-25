@@ -11,15 +11,7 @@
 	</div>
 <% end %>
 
-<div class='indexTop row-fluid'>
-	<div class='resourceSearchBar span6'>
-
-	</div>
-	
-	<div class='span6 paginationWrapper'>
-		<%= paginate @tools %>
-	</div>
-</div>
+<%= render :partial => 'shared/resourceIndex_top', :locals => {:collection => @tools}%>
 
 <% @tools.each do |t| %>
 	<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>

@@ -14,6 +14,8 @@ class Publication < ActiveRecord::Base
 	accepts_nested_attributes_for :publication_memberships, :users
 
 	scope :publication_owner_of, -> { where publication_memberships: {role: 'owner'} }
+	scope :publication_member_of, -> { where publication_memberships: {role: 'member'} }
+	scope :publication_approver_of, -> { where publication_memberships: {role: 'approver'} }
 
 	accepts_nested_attributes_for :publication_memberships, :users
 

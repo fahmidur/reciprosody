@@ -124,10 +124,29 @@ class User < ActiveRecord::Base
 		self.tools.tool_owner_of
 	end
 
+	def tool_approver_of
+		self.tools.tool_approver_of
+	end
+
+	def tool_member_of
+		self.tools.tool_member_of
+	end
+
 	#--Memberships to Publications--
 	def publication_owner_of
 		self.publications.publication_owner_of
 	end
+
+	def publication_approver_of
+		self.publications.publication_approver_of
+	end
+	
+	def publication_member_of
+		self.publications.publication_member_of
+	end
+
+	
+
 	#--Memberships to Corpora--
 	def owner_of
 		self.corpora.owner_of.all

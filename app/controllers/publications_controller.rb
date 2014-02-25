@@ -116,10 +116,42 @@ class PublicationsController < ApplicationController
 	end
 
 	# paginated
-	# params[:page] page number
+	# params[:page]
+	# params[:order]
+	# params[:query]
+	# params[:roles]
+	#
 	def index
-		#renders view/publications/index.html.erb
-		@pubs = Publication.order(:created_at).reverse_order.page(params[:page])
+		page = params[:page]
+		query = params[:query]
+		order = params[:order] || :created_at
+		unless ["created_at", "updated_at", "name"].include?(order)
+			order = :created_at
+		end
+		roles = params[:roles]
+		if(roles && roles.length > 0)
+			roles = roles.split(",") 
+			uniqRoles = {}
+			roles.each { |r| uniqRoles[r] = true }
+			idArray = []
+			uniqRoles.each do |name,v|
+				case name
+				when "owner"
+					idArray += current_user.publication_owner_of
+				when "member"
+					idArray += current_user.publication_member_of
+				when "approver"
+					idArray += current_user.publication_approver_of
+				end
+			end
+			idArray.map! {|e| e.id }
+			@pubs = Publication.order(order).reverse_order.where(:id => idArray)
+		else
+			@pubs = Publication.order(:created_at).reverse_order
+		end
+		qs = "%#{query}%"
+		@pubs = @pubs.where("name LIKE ? OR description LIKE ? OR authors LIKE ?", qs, qs, qs).page(page)
+		@pubs = @pubs.page(page)
 	end
 
 	# GET /publications/new

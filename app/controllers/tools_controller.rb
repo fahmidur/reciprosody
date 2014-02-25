@@ -104,8 +104,41 @@ class ToolsController < ApplicationController
 
 	# paginated
 	# params[:page]
+	# params[:order]
+	# params[:query]
+	# params[:roles]
+	#
 	def index
-		@tools = Tool.order(:created_at).reverse_order.page(params[:page])
+		page = params[:page]
+		query = params[:query]
+		order = params[:order] || :created_at
+		unless ["created_at", "updated_at", "name"].include?(order)
+			order = :created_at
+		end
+		roles = params[:roles]
+		if(roles && roles.length > 0)
+			roles = roles.split(",") 
+			uniqRoles = {}
+			roles.each { |r| uniqRoles[r] = true }
+			idArray = []
+			uniqRoles.each do |name,v|
+				case name
+				when "owner"
+					idArray += current_user.tool_owner_of
+				when "member"
+					idArray += current_user.tool_member_of
+				when "approver"
+					idArray += current_user.tool_approver_of
+				end
+			end
+			idArray.map! {|e| e.id }
+			@tools = Tool.order(order).reverse_order.where(:id => idArray)
+		else
+			@tools = Tool.order(:created_at).reverse_order
+		end
+		qs = "%#{query}%"
+		@tools = @tools.where("name LIKE ? OR description LIKE ? OR authors LIKE ?", qs, qs, qs).page(page)
+		@tools = @tools.page(page)
 	end
 
 	def corpora

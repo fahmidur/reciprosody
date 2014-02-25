@@ -42,6 +42,8 @@ class CorporaController < ApplicationController
 	# paginated
 	# params[:page]
 	# params[:order]
+	# params[:query]
+	# params[:roles]
 	#
 	def index
 		page = params[:page]
@@ -72,8 +74,8 @@ class CorporaController < ApplicationController
 		else
 			@corpora = Corpus.order(order).reverse_order
 		end
-
-		@corpora = @corpora.where("name LIKE ? OR description LIKE ?", "%#{query}%", "%#{query}%").page(page)
+		qs = "%#{query}%"
+		@corpora = @corpora.where("name LIKE ? OR description LIKE ? OR citation LIKE ?", qs, qs, qs).page(page)
 		
 		
 		respond_to do |format|

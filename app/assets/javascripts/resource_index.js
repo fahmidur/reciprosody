@@ -89,7 +89,7 @@ $(function() {
     if(!queryString) {
       return;
     }
-    $('#resourceSearchQuery').val(queryString);
+    $('#resourceSearchQuery').val(decodeURIComponent(queryString));
   }
 
 });

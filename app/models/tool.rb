@@ -15,6 +15,8 @@ class Tool < ActiveRecord::Base
   has_many :tool_publication_relationships, :dependent => :delete_all   #delete *tool-publication relationships
 
   scope :tool_owner_of, -> { where tool_memberships: {role: 'owner'} }
+  scope :tool_approver_of, -> { where tool_memberships: {role: 'approver'} }
+  scope :tool_member_of, -> { where tool_memberships: {role: 'member'} }
 
   before_destroy :remove_dirs
 

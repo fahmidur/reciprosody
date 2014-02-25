@@ -11,40 +11,7 @@
 	</div>
 <% end %>
 
-<div class='indexTop row-fluid'>
-	<div class='resourceSearchBar span6'>
-		<form class='form-horizontal' id='resourceSearchForm'>
-			<input type='text' placeholder='Search' class='resourceSearch input' name='query' id='resourceSearchQuery'/>
-			<button class='btn btn-small btn-primary'><i class='icon-search'></i></button>
-			&nbsp;
-			<!-- <span class='badge'><i class='icon-filter'></i></span> -->
-			<span class='btn-group' id='roleToggleGroup'>
-				<a class='btn btn-small' data-name='member' id='role-member'>Member</a>
-				<a class='btn btn-small' data-name='owner' id='role-owner'>Owner</a>
-				<a class='btn btn-small' data-name='approver' id='role-approver'>Approver</a>
-			</span>
-			<span class='btn-group'>
-				
-				<a class='btn btn-small' id='selectedOrder' data-name='created_at' disabled>Created</a>
-				<a class="btn btn-small dropdown-toggle" data-toggle="dropdown">
-					<span class="caret"></span>
-				</a>
-
-				<ul class="dropdown-menu">
-					<li><a href='#' class='orderButton' data-name='created_at' id='order-created_at'>Created</a></li>
-					<li><a href='#' class='orderButton' data-name='updated_at' id='order-updated_at'>Updated</a></li>
-					<li><a href='#' class='orderButton' data-name='name' id='order-name'>Name</a></li>
-				</ul>
-
-			</span>
-			
-		</form>
-	</div>
-	
-	<div class='span6 paginationWrapper'>
-		<%= paginate @corpora %>
-	</div>
-</div>
+<%= render :partial => 'shared/resourceIndex_top', :locals => {:collection => @corpora}%>
 		 
 <% @corpora.each do |corpus| %>
 	<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => corpus} %>
