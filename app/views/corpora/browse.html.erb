@@ -16,7 +16,7 @@
 		<br><br>
 		<div class='row-fluid content'>
 			<div class='box borderfree span12'>
-				<div class='boxheader toggleable'>
+				<div class='boxheader'>
 					<%= File.basename(@file) %> <a class='badge badge-info' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&noview=true'><i class='icon-download'></i></a>
 				</div>
 
