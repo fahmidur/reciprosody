@@ -34,7 +34,7 @@ $(function() {
     });
     // console.log(roleFilter);
   });
-  $('#resourceSearchForm .orderButton').click(function() {
+  $('#resourceSearchForm .orderButton').click(function(e) {
     var $selectedOrder = $('#selectedOrder');
     $selectedOrder.text($(this).text());
     $selectedOrder.attr('data-name', $(this).data('name'));

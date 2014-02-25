@@ -147,7 +147,7 @@ class PublicationsController < ApplicationController
 			idArray.map! {|e| e.id }
 			@pubs = Publication.order(order).reverse_order.where(:id => idArray)
 		else
-			@pubs = Publication.order(:created_at).reverse_order
+			@pubs = Publication.order(order).reverse_order
 		end
 		qs = "%#{query}%"
 		@pubs = @pubs.where("name LIKE ? OR description LIKE ? OR authors LIKE ?", qs, qs, qs).page(page)

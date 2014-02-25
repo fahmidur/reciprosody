@@ -134,7 +134,7 @@ class ToolsController < ApplicationController
 			idArray.map! {|e| e.id }
 			@tools = Tool.order(order).reverse_order.where(:id => idArray)
 		else
-			@tools = Tool.order(:created_at).reverse_order
+			@tools = Tool.order(order).reverse_order
 		end
 		qs = "%#{query}%"
 		@tools = @tools.where("name LIKE ? OR description LIKE ? OR authors LIKE ?", qs, qs, qs).page(page)
