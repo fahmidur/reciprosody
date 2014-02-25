@@ -1,44 +1,56 @@
 <ul class="nav nav-tabs" id="tab_bar">
-	<li class="active"><a href="#upload" data-toggle='tab'>Upload</a></li>
-	<li><a href="#download" data-toggle='tab'>Download</a></li>
-	<li><a href="#manage_users" data-toggle='tab'>Manage Users</a></li>
+	<li class="active pull-right"><a href="#upload" data-toggle='tab'>Corpora</a></li>
+	<li class='pull-right'><a href="#download" data-toggle='tab'>Download</a></li>
+	<li class='pull-right'><a href="#manage_users" data-toggle='tab'>Manage Users</a></li>
 </ul>
 
 <div class="tab-content">
 
 	<div class="tab-pane active" id="upload">
+		<h2>How Do I Upload a New Corpus?</h2>
+		
 		<h4>Getting to the New Corpus page</h4>
 		<p>
-		To upload with Reciprosody navigate to the Corpora tab on the main top most panel
-		and click on the <strong>New Corpus</strong> button. 
-		<br/>
-		You will also find a link to
-		the <strong>New Corpus</strong> page on your home page</p>
+			To upload with Reciprosody navigate to the Corpora tab on the main menu
+			and click on the <strong>New Corpus</strong> button. 
+			<br/>
+			You will also find a link to
+			the <strong>New Corpus</strong> page on your home page</p>
 		</p>
-		
-		<br/>
-		
-		<h4>Required Fields</h4>
+
+		<h4>The New Corpus Form</h4>
 		<p>
-		You are required to fill in the <strong>Name</strong>, <strong>Language</strong>, and approximate <strong>Time Length</strong> of
-		the Corpus.<br/>
-		
-		You are asked to enter the <strong>Time Length</strong> in Hours, Minutes, and Seconds.
-		The sum of these units cannot be equal to zero and is considered invalid input.<br/>
-		The format of these units must be correct. For example, to
-		say the corpus is 1 hour, 2 minutes, and 900 seconds long is considered invalid input.
+			You are required to fill in the <strong>Name</strong>, <strong>Language</strong>, and approximate <strong>Time Length</strong> of
+			the Corpus.<br/>
+			
+			You are asked to enter the <strong>Time Length</strong> in Hours, Minutes, and Seconds.
+			The total time length must be greater than zero.<br/>
+			The format of these units must be correct. For example, to
+			say the corpus is 1 hour, 2 minutes, and 900 seconds long is considered invalid input.
 		</p>
-		
+
+		<p>
+			The <strong>description</strong> and <strong>citation</strong> fields support
+			Markdown notation. These fields are not required. 
+			The <strong>citation</strong> field expects the input to be BibTex.
+		</p>
+
+		<h4>Uploading Your Archive*</h4>
+		<p>
+			At the center of the form you will find a box with the words <i><strong>Drop files here to upload or select from your computer</strong></i>. <br/>
+			In this box you may drag &amp; drop or select a <strong>ZIP archive</strong> containing your Corpus. <br/>
+			Your corpus is not immediately uploaded. You should now see an <strong>upload button</strong> next to an empty progress bar. <br/>
+			You must now press the <strong>upload button</strong> and wait for your upload to complete. <br/>
+			Now you may submit your form.
+		</p>
 		<br/>
-		
-		<h4>Other Fields</h4>
-		<p>The <strong>description</strong> and <strong>citation</strong> fields support
-		Markdown notation. These fields are not required to be filled.</p>
-		
-		<br/>
-		
-		<h4>For More Help</h4>
-		<a href='/contact' class='btn'>Contact Us</a>
+		<h2>How do I browse a Corpus?</h2>
+		<p>
+			When viewing a corpus you will find a <strong>Browse button</strong>. <br/>
+			The browser supports viewing text files, wav files, and images. <br/>
+			All other file types can be downloaded but cannot be viewed on the browser.
+		</p>
+
 	</div>
 	
 	<div class="tab-pane" id="download">
@@ -53,3 +65,12 @@
 		
 	</script>
 </div>
+<div class='row-fluid'>
+	<div class='span12'>
+		<hr>
+		<h2>For More Help</h2>
+		<a href='/contact' class='btn'>Contact Us</a>
+	</div>
+</div>
+
+<%= javascript_include_tag "handle_box_toggleable.js"%>
