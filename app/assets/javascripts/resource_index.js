@@ -21,9 +21,9 @@ $(function() {
 
 
   var roleFilter = {member: false, owner: false, approver: false};
-  $('#resourceSearchForm').on('submit', submitSearchForm);
 
-  $('#roleToggleGroup .btn').click(function() {
+  $('#resourceSearchForm').on('submit', submitSearchForm);
+  $('#roleToggleGroup .btn').click(function(e) {
     if($(this).is(".active")) {
       $(this).removeClass('active');
     } else {
@@ -32,20 +32,20 @@ $(function() {
     $('#roleToggleGroup .btn').each(function() {
       roleFilter[$(this).data('name')] = $(this).is('.active')? true : false;
     });
-    // console.log(roleFilter);
+    submitSearchForm(e);
   });
   $('#resourceSearchForm .orderButton').click(function(e) {
-    var $selectedOrder = $('#selectedOrder');
-    $selectedOrder.text($(this).text());
-    $selectedOrder.attr('data-name', $(this).data('name'));
+    updateSelectedOrder($(this));
+    submitSearchForm(e);
   });
 
   updateRoleFilter();
   updateOrder();
   updateQuery();
+
   function submitSearchForm(e) {
     e.preventDefault();
-    var query = $(this).find('input[name=query]').val();
+    var query = $('#resourceSearchQuery').val();
     var order = $('#selectedOrder').data('name');
     var q="?query="+query;
     var roles = [];
@@ -70,8 +70,14 @@ $(function() {
     }
     var roles = rolesString.split(',');
     for(var i in roles) {
-      $('#role-'+roles[i]).click();
+      $('#role-'+roles[i]).addClass('active');
+      roleFilter[roles[i]] = true;
     }
+  }
+  function updateSelectedOrder($order) {
+    var $selectedOrder = $('#selectedOrder');
+    $selectedOrder.text($order.text());
+    $selectedOrder.attr('data-name', $order.data('name'));
   }
   function updateOrder() {
     var url = document.URL;
@@ -80,7 +86,7 @@ $(function() {
     if(!orderString) {
       return;
     }
-    $('#order-'+orderString).click();
+    updateSelectedOrder($('#order-'+orderString));
   }
   function updateQuery() {
     var url = document.URL;
