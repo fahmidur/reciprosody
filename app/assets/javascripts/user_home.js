@@ -12,7 +12,7 @@ __app.modules.userhome = function() {
 	var _fayeSub = null;
 
 	$profileAvatar.click(click_profileAvatar);
-	$gravatarEmail.blur(blur_gravatarEmail);
+	$gravatarEmail.blur(statechange_gravatar_normal);
 
 	connectFaye();
 
@@ -36,23 +36,20 @@ __app.modules.userhome = function() {
 		$inboxCount.html( parseInt($inboxCount.text()) + 1 );
 		$inboxCount.css("background-color", "orange");
 	}
-	function blur_gravatarEmail() {
-		$gravatarEmailWrapper.slideUp();
-	}
 	function click_profileAvatar() {
 		if($gravatarEmailWrapper.is(":visible")) {
-			statechange_normal_gravatar();		
-		} else {
 			statechange_gravatar_normal();
+		} else {
+			statechange_normal_gravatar();
 		}
 	}
-	function statechange_normal_gravatar() {
+	function statechange_gravatar_normal() {
 		$gravatarEmailWrapper.slideUp();
 		$sidemenu.slideDown();
 		$peopleSearch.slideDown();
 		$peopleResult.slideDown();
 	}
-	function statechange_gravatar_normal() {
+	function statechange_normal_gravatar() {
 		$gravatarEmailWrapper.slideDown(function() {
 			$gravatarEmailWrapper.find('input:first').focus();
 		});
