@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 	# Part of Devise 3.0 + Rails 4 fix
 	# before_filter :configure_devise_permitted_parameters, if: :devise_controller?
 
+	before_filter :get_faye_url
+	
 	protect_from_forgery
 	
 	def help

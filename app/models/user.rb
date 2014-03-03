@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
 	 :recoverable, :rememberable, :trackable, :validatable, :confirmable
 
 	# Setup accessible (or protected) attributes for your model
-	attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :avatar
+	attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :avatar, :gravatar_email
 
 	has_attached_file :avatar, :styles => { :medium => "200x200>", :thumb => "100x100>" }, 
 		:default_url => ActionController::Base.helpers.asset_path('missing_:style.png')
@@ -18,7 +18,6 @@ class User < ActiveRecord::Base
 						:class_name => "ActsAsMessageable::Message",
 						:dependent => :destroy,
 						:group_messages => true
-
 
 	#----------------------------------------
 

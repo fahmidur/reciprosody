@@ -63,6 +63,7 @@ $(function() {
   function updateRoleFilter() {
     var url = document.URL;
     var match = url.match(/\&roles\=([^\&]*)/);
+    if(!match) { return; }
     var rolesString = match[1];
 
     if(!rolesString) {
@@ -82,6 +83,7 @@ $(function() {
   function updateOrder() {
     var url = document.URL;
     var match = url.match(/\&order\=([^\&]*)/);
+    if(!match) { return; }
     var orderString = match[1];
     if(!orderString) {
       return;
@@ -91,6 +93,7 @@ $(function() {
   function updateQuery() {
     var url = document.URL;
     var match = url.match(/query\=([^\&]*)/);
+    if(!match) { return; }
     var queryString = match[1];
     if(!queryString) {
       return;

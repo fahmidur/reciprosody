@@ -16,4 +16,3 @@
 //= require jquery-ui
 //= require autocomplete-rails
 //= require shared
-

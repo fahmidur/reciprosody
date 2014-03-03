@@ -165,8 +165,6 @@
 </script>
 
 <script type='text/javascript'>
-	
-
 	var _view = "";
 	var _state = "";
 	var _overMessageSelect = false;
@@ -390,12 +388,17 @@
 		$('#user-search').live('keydown', function(e) {
 			if(e.keyCode == 9) {
 				//console.log("Tab event!");
-				addSelectedUser();
+				var v = $('#user-search').val();
+				if(v.length > 0) {
+					addSelectedUser();
+					e.preventDefault();
+					e.stopPropagation();
+				}
 				return;
 			}
 		});
 		$('#user-search').live('keyup', function(e) {
-			if(e.keyCode == 13) {
+			if(e.keyCode == 13 || e.keyCode == 9) {
 				/*console.log("Enter event!");*/
 				addSelectedUser();
 				return;
@@ -649,6 +652,7 @@
 			'id': id
 		};
 
+		// $('#user-search-result').hide();
 		/*console.log(_selectedUsers);*/
 
 		$('#message-recipients').append('<span class="label user-label" data-id="'+id+'"><i class="icon-user"></i>&nbsp; '+name+'&nbsp;<i class="icon-remove"></i></span>');

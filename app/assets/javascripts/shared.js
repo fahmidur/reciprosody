@@ -47,10 +47,13 @@ function obj_to_uri(obj) {
 }
 var UIHelper = {
 	// onewayBind expects source to be a form element
-	// or else it will crash without warning! SFR
 	halfwayBind: function($source, $target, defaultStr) {
-		var blankregex = /^\s*$/; //arguably more efficient to store this
-		var tagregex = /\s*\<.*\>\s*/g; //no tags
+		if(! ($source instanceof jQuery && $target instanceof jQuery)) {
+			console.log("ERROR: halfwayBind, $source and $target must be instanceof jQuery");
+			return;
+		}
+		var blankregex = /^\s*$/;
+		var tagregex = /\s*\<.*\>\s*/g;
 		var v;
 		if($target.text() !== $source.val()) {
 			$target.text($source.val());

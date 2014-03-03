@@ -1,6 +1,5 @@
 <% content_for :javascript_includes do %>
-	<%= javascript_include_tag "resource_index.js" %>
-	<%= javascript_include_tag "user_home.js" %>
+<%= javascript_include_tag "resource_index.js" %>
 <% end %>
 
 <% my_corpora = current_user.owner_of %>
@@ -15,11 +14,19 @@
 				</div>
 
 				<div class='boxcontent'>
+
 					<div class='avatar-wrapper'>
-						<a href='http://gravatar.com' title='Change Gravatar' target='_blank' id='avatar'>
-							<%= image_tag current_user.gravatar_url(:png), :id => :profile_avatar%>
-						</a>
+						<div class='profile-avatar-wrapper'>
+							<!-- <a href='http://gravatar.com' title='Change Gravatar' target='_blank' id='avatar'> -->
+								<%= image_tag current_user.gravatar_url(:png), :id => :profile_avatar%>
+							<!-- </a> --> 
+						</div>
+						<div id='gravatar-email-wrapper'>
+							<input type='email' placeholder='Gravatar Email' id='gravatar-email' value="<%= current_user.gravatar_email || current_user.email %>"/>
+						</div>	
 					</div>
+
+
 
 					<div id='inst_holder'>
 						<% inst_flag = false %>
@@ -50,9 +57,9 @@
 
 		</div>
 
-		<input id='people_search' type='text' class='span12' placeholder='Search People'>
+		<input id='people-search' type='text' class='span12' placeholder='Search People'>
 		
-		<div id='people_result' style="margin-bottom:5px">
+		<div id='people-result' style="margin-bottom:5px">
 		</div>
 
 		<ul class="nav nav-tabs nav-stacked" id='side_menu'>
@@ -152,47 +159,18 @@
 
 </div>
 <script type='text/javascript' src='<%= @faye_url %>.js'></script>
-
-<script type="text/javascript" src="/assets/jquery.qrcode.min.js"></script>
-
-<script type='text/javascript'>
-	var _faye_url = "<%= @faye_url %>";
-	var _myid = '<%= current_user.id %>';
-</script>
-
 <script type='text/javascript'>
 var _people_result = new Array();
-var _people_result_div = $('#people_result');
-var _people_search_div = $('#people_search');
+var _people_result_div = $('#people-result');
+var _people_search_div = $('#people-search');
 var _side_menu_div = $('#side_menu');
 var _inst_search_wrapper = $('#inst_search_wrapper');
 var _inst_search = $('#inst_search');
-var _fclient = null;
-var _fsub = null;
 
 var _previous_search = "";
 updateResult();
 
-try {
-	_fclient = new Faye.Client(_faye_url);
-} catch(err) {
-	console.log("FAYE NOT FOuND");
-	console.log(err);
-	_fclient = null;
-}
-if(_fclient) {
-	_fsub = _fclient.subscribe('/messages/'+_myid, function(data) {
-		// console.log(data);
-		var target = $('#inbox-count');
-		target.html(parseInt(target.html())+1);
-		target.css("background-color", "orange");
-	});
-}
-
-$('#qr').qrcode({width: 100,height: 100,text: "http://reciprosody.org/users/"+_myid});
-
 _people_search_div.keydown(function(e) {
-	//console.log(e.keyCode);
 	if(e.keyCode == 40) {
 		var next = $('.presult.selected').next(".presult");
 		$('.presult').removeClass('selected');
@@ -302,4 +280,7 @@ function updateResult() {
 	}
 }
 </script>
+
+
 <%= javascript_include_tag "handle_box_toggleable.js" %>
+<%= javascript_include_tag "user_home.js" %>
