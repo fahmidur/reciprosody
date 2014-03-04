@@ -5,7 +5,7 @@ var __app = {
 	init: function () {
 		console.log("__Main Loaded__");
 		__app.sharedFunctions.extractSharedVariables();
-		// __app.sharedFunctions.printSharedVariables();
+		__app.sharedFunctions.printSharedVariables();
 	},
 };
 

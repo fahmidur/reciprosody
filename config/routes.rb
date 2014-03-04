@@ -101,14 +101,11 @@ Reciprosody2::Application.routes.draw do
 	
 	#----authenticaton-----------------------
   devise_for :users, :controllers => {:registrations => "registrations"}
-  
-
-	#match 'users'	=> 'users#index'
 
 	resources :users, :constraints => {:id => /\d+|.+\@.+/} do
     collection do
-      get :index #user home page
-      get :mixed_search
+      get :index              #user home page
+      get :mixed_search       #search users
     end
     
     member do
@@ -121,21 +118,23 @@ Reciprosody2::Application.routes.draw do
 			get :invite
 
 
-      get :inbox        #users_controller#inbox
-      get :inbox_delete #users_controller#inbox_delete
-      get :send_message #users_controller#send_message
-      get :inbox_get    #users_controller#inbox_get
-      get :inbox_mark_read #users_controller#inbox_mark_read
-      get :inbox_mark_unread #users_controller#inbox_mark_unread
-      get :inbox_restore #users_controller#inbox_restore
+      get :inbox                    #users_controller#inbox
+      get :inbox_delete             #users_controller#inbox_delete
+      get :send_message             #users_controller#send_message
+      get :inbox_get                #users_controller#inbox_get
+      get :inbox_mark_read          #users_controller#inbox_mark_read
+      get :inbox_mark_unread        #users_controller#inbox_mark_unread
+      get :inbox_restore            #users_controller#inbox_restore
 
-      get :set_prop #users_controller#set_prop
-      get :add_inst_rel #users_controller#add_inst_rel
-      get :remove_inst_rel #users_controller#remove_inst_rel
+      get :set_prop                 #users_controller#set_prop
+      get :add_inst_rel             #users_controller#add_inst_rel
+      get :remove_inst_rel          #users_controller#remove_inst_rel
+
+      get :update_gravatar_email    #users_controller#update_gravatar_email
       
 			post :invite_user
 
-      get :edit_avatar
+      # get :edit_avatar # no longer used and does not work
 		end
 	end
 

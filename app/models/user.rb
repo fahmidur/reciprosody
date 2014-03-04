@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
 	# Setup accessible (or protected) attributes for your model
 	attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :avatar, :gravatar_email
 
+	validates_format_of :gravatar_email, :with => Devise.email_regexp
+
 	has_attached_file :avatar, :styles => { :medium => "200x200>", :thumb => "100x100>" }, 
 		:default_url => ActionController::Base.helpers.asset_path('missing_:style.png')
 
@@ -164,7 +166,7 @@ class User < ActiveRecord::Base
 	end
 
 	def gravatar_url(type)
-		gravatar_id = Digest::MD5.hexdigest(self.email.downcase)
+		gravatar_id = Digest::MD5.hexdigest(self.gravatar_email.downcase)
 		return "http://gravatar.com/avatar/#{gravatar_id}.#{type}?s=200"
 	end
 

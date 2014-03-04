@@ -4,6 +4,24 @@ class UsersController < ApplicationController
 	protect_from_forgery
 	before_filter :auth_filter
 
+	#
+	# GET /user/update_gravatar_email 
+	# updates teh gravatar email field
+	#
+	# params[:email] = new gravatar email
+	def update_gravatar_email
+		@user = current_user
+		@user.gravatar_email = params[:email]
+
+		if @user.valid? && @user.save
+			render :json => { :ok => true, :gravatar_email => params[:email] }
+		else
+			@user.gravatar_email = @user.email
+			@user.save
+			render :json => { :ok => false, :errors => @user.errors.to_a, :gravatar_email => @user.email}
+		end
+	end
+
 	def edit_avatar
 		@user = current_user
 	end
