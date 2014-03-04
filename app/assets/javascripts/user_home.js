@@ -2,22 +2,141 @@ __app.modules.userhome = function() {
 	var $profileAvatar = $('#profile_avatar');
 	var $gravatarEmailWrapper = $('#gravatar-email-wrapper');
 	var $gravatarEmail = $('#gravatar-email');
-	var $sidemenu = $('#side_menu');
 	var $inboxCount = $('#inbox-count');
 	var $peopleSearch = $('#people-search');
 	var $peopleResult = $('#people-result');
 	var $profileAvatar = $('#profile_avatar');
 
+	var $sideMenuDiv = $('#side_menu');
+	var $instSearchWrapper = $('#inst_search_wrapper');
+	var $instSearch = $('#inst_search');
+
 	var _userID = __app.sharedVariables.userID;
 	var _fayeClient = null;
 	var _fayeSub = null;
+
+	var _people_result = new Array();
+	var _previous_search = "";
+
 
 	$profileAvatar.on('click', click_profileAvatar);
 	$gravatarEmail.on('blur', statechange_gravatar_normal);
 	$gravatarEmail.on('change', change_gravatarEmail);
 	$gravatarEmail.on('keyup', keyup_gravatarEmail);
 
+	$peopleSearch.on('keydown', keydown_peopleSearch);
+	$peopleSearch.on('keyup', keyup_peopleSearch);
+	$peopleSearch.on('blur', blur_peopleSearch);
+	updatePeopleSearchResult();
+
 	connectFaye();
+
+	$('.presult').live('click', function(e) {
+		var id = $(this).attr('data-id');
+		window.location = "/users/"+id;
+	});
+	$('.presult').live('mouseenter', function() {
+		$('.presult').removeClass('selected');
+		$(this).addClass('selected');
+	});
+	$('.inst').live('mouseenter', function() {
+		$(this).find('.x').show().animate({'opacity': '1'}, 200);
+	});
+	$('.inst').live('mouseleave', function() {
+		$(this).find('.x').animate({'opacity': '0'}, 200, function() {$(this).hide("fast");});
+	});
+	$('.inst').live('click', function() {
+		$(this).animate({'width':'0px'}, 300, function() {
+			$(this).remove();
+		});
+		$.getJSON('/user/remove_inst_rel', {'inst_id': ($(this).attr('id').split("-")[1])}, function(data) {
+			console.log(data);
+		});
+	});
+	$('#add-inst').click(function() {
+		$instSearchWrapper.show();
+		$instSearch.show().focus();
+		$(this).hide();
+		$peopleSearch.hide();
+		$sideMenuDiv.hide();
+	});
+
+	$instSearch.on('keyup', function(e) {
+		if(e.keyCode != 13) {return;}
+		$.getJSON('/user/add_inst_rel', {'name':$(this).val()}, function(data) {
+			console.log(data);
+			if(data.ok) {
+				if($('#inst-'+data.inst_id).length === 0) {
+					$('#inst_holder').prepend("&nbsp; <span class='badge badge-info inst' style='cursor:pointer' id='inst-"+data.inst_id+"'>"+data.inst_name+"<span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>");
+					$('#add-inst').html("<i class='icon-plus-sign'></i>");
+				}
+			}
+			hideInstSearch();
+		});
+
+	});
+	$instSearch.on('keydown', function(e) {
+		if(($(this).val() == "" && e.keyCode == 8)|| e.keyCode == 27) {
+			hideInstSearch();	
+		}
+	});
+
+	function hideInstSearch() {
+		$instSearch.val("");
+		$instSearch.blur();
+		$instSearchWrapper.slideUp();
+		$('#add-inst').show();
+		$peopleSearch.show();
+		$sideMenuDiv.show();
+	}
+	function hide_peopleSearch(e) {
+		$peopleResult.hide();
+		$sideMenuDiv.slideDown();
+	}
+	function blur_peopleSearch(e) {
+		$peopleSearch.val("");
+		setTimeout(hide_peopleSearch, 200);
+	}
+	function keydown_peopleSearch(e) {
+		if(e.keyCode === 40) {
+			var next = $('.presult.selected').next(".presult");
+			$('.presult').removeClass('selected');
+			if(next.length > 0) {
+				next.addClass('selected');
+			} else {
+				$('.presult:first').addClass('selected');
+			}
+		}
+		else
+		if(e.keyCode === 38) {
+			var prev = $('.presult.selected').prev(".presult");
+			$('.presult').removeClass('selected');
+			if(prev.length > 0) {
+				prev.addClass('selected');
+			} else {
+				$('.presult:last').addClass('selected');
+			}
+		}
+		else
+		if(e.keyCode === 13) {
+			$(".presult.selected").click();
+		}
+		else
+		if(e.keyCode === 27) {
+			blur_peopleSearch();
+		}
+	}
+
+	function keyup_peopleSearch(e) {
+		var v=$(this).val();
+		if(v !== _previous_search) {
+			$.getJSON("/users/mixed_search", {q:v}, function(data) {
+				_people_result = data;
+				updatePeopleSearchResult();
+			});
+			_previous_search = v;
+		}
+	}
 
 	function connectFaye() {
 		if(typeof Faye === 'undefined') {
@@ -57,7 +176,6 @@ __app.modules.userhome = function() {
 		$profileAvatar.attr('src', "http://gravatar.com/avatar/"+md5($gravatarEmail.val())+"?s=200");
 	}
 	function change_gravatarEmail(e) {
-		console.log('--gravatarEmailChanged--');
 		$.get('/user/update_gravatar_email', {'email': $gravatarEmail.val()}, function(data) {
 			// console.log(data);
 		});
@@ -65,7 +183,7 @@ __app.modules.userhome = function() {
 
 	function statechange_gravatar_normal() {
 		$gravatarEmailWrapper.slideUp();
-		$sidemenu.slideDown();
+		$sideMenuDiv.slideDown();
 		$peopleSearch.slideDown();
 		$peopleResult.slideDown();
 	}
@@ -73,9 +191,24 @@ __app.modules.userhome = function() {
 		$gravatarEmailWrapper.slideDown(function() {
 			$gravatarEmailWrapper.find('input:first').focus();
 		});
-		$sidemenu.slideUp();
+		$sideMenuDiv.slideUp();
 		$peopleSearch.slideUp();
 		$peopleResult.slideUp();
+	}
+	function updatePeopleSearchResult() {
+		if(_people_result.length == 0) {
+			hide_peopleSearch();
+		} else {
+			var html = "";
+			var onclick = "";
+			for(var i in _people_result) {
+				html += "<div class='corpi_item_small presult' data-id='"+_people_result[i]['id']+"'>"+_people_result[i].name+"</div>";
+			}
+			$peopleResult.html(html);
+			$('.presult:first').addClass("selected");
+			$peopleResult.slideDown();
+			$sideMenuDiv.slideUp();
+		}
 	}
 };
 

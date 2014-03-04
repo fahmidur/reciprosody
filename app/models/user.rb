@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 	# Setup accessible (or protected) attributes for your model
 	attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :avatar, :gravatar_email
 
-	validates_format_of :gravatar_email, :with => Devise.email_regexp
+	validates_format_of :gravatar_email, :with => Devise.email_regexp, :allow_blank => true
 
 	has_attached_file :avatar, :styles => { :medium => "200x200>", :thumb => "100x100>" }, 
 		:default_url => ActionController::Base.helpers.asset_path('missing_:style.png')
