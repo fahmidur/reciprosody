@@ -73,10 +73,11 @@ group :production do
 end
 
 group :development, :test do
-  gem 'sqlite3'
-  gem "mysql"
-  gem "activerecord-mysql-adapter"
-  gem "activerecord-mysql2-adapter"
+  # gem 'sqlite3'
+  # gem "mysql"
+  # gem "activerecord-mysql-adapter"
+  # gem "activerecord-mysql2-adapter"
+  gem 'capistrano'
 
   gem 'rspec-rails', ">= 2.0"
   gem "factory_girl_rails", "~> 4.0"
