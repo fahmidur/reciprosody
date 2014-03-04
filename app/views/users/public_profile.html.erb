@@ -14,9 +14,7 @@
 				<% insts = @user.insts %>
 
 				<div class='avatar-wrapper'>
-					<a href='http://gravatar.com' title='Change Gravatar' target='_blank' id='avatar'>
-						<%= image_tag @user.gravatar_url(:png), :id => :profile_avatar%>
-					</a>
+					<%= image_tag @user.gravatar_url(:png), :id => :profile_avatar, :class => "public"%>
 				</div>
 
 				<center>
