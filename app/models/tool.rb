@@ -1,5 +1,6 @@
 class Tool < ActiveRecord::Base
   include ActiveModel::Validations
+  require 'uri'
 
   attr_accessible :authors, :description, :keywords, :license, :local, :name, :programming_language, :url
   paginates_per 3
@@ -30,10 +31,17 @@ class Tool < ActiveRecord::Base
   end
 
   def to_short_description_string
-    if(url =~ /\/([^\/]+)\/?$/)
-      return $1
+    uri = URI.parse(url)
+    host = uri.host
+
+    if host == "github.com"
+      if(url =~ /\/([^\/]+)\/?$/)
+        return $1
+      else
+        return host
+      end
     else
-      return url
+      return host
     end
   end
 

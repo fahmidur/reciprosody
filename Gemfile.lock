@@ -29,12 +29,6 @@ GEM
       activesupport (= 4.0.2)
       arel (~> 4.0.0)
     activerecord-deprecated_finders (1.0.3)
-    activerecord-mysql-adapter (0.0.1)
-      activerecord (>= 3.2.9)
-      activesupport (>= 3.2.9)
-      mysql (>= 2.9.0)
-    activerecord-mysql2-adapter (0.0.3)
-      mysql2
     activerecord-session_store (0.1.0)
       actionpack (>= 4.0.0, < 5)
       activerecord (>= 4.0.0, < 5)
@@ -60,6 +54,10 @@ GEM
     bibtex-ruby (3.1.1)
       latex-decode (>= 0.0.6)
     builder (3.1.4)
+    capistrano (3.1.0)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (~> 1.3)
     capybara (2.2.1)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -176,7 +174,6 @@ GEM
     minitest (4.7.5)
     multi_json (1.8.4)
     multi_test (0.0.3)
-    mysql (2.9.1)
     mysql2 (0.3.15)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
@@ -255,6 +252,12 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     sqlite3 (1.3.8)
+    sshkit (1.3.0)
+      net-scp (>= 1.1.2)
+      net-ssh
+      term-ansicolor
+    term-ansicolor (1.3.0)
+      tins (~> 1.0)
     therubyracer (0.12.0)
       libv8 (~> 3.16.14.0)
       ref
@@ -266,6 +269,7 @@ GEM
     thread_safe (0.1.3)
       atomic
     tilt (1.4.1)
+    tins (1.0.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -290,12 +294,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-mysql-adapter
-  activerecord-mysql2-adapter
   activerecord-session_store
   acts-as-messageable!
   acts_as_commentable_with_threading
   bibtex-ruby
+  capistrano
   capybara
   carrierwave
   citeproc-ruby
@@ -311,7 +314,6 @@ DEPENDENCIES
   kaminari
   less-rails (= 2.3.3)
   mail_view (~> 1.0.3)
-  mysql
   mysql2
   nifty-generators
   nokogiri
