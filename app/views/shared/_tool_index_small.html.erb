@@ -1,6 +1,16 @@
 <div class='corpi_item_small' onclick="window.location = '<%= tool_path(tool)%>'">
-	<i class="icon-wrench"></i>
-	<%= tool.name %>
-	<span class='badge pull-right'><%= tool.to_short_description_string%></span>
+	<table class='item-small-element'>
+		<tr>
+			<td class='item-icon-cell'>
+				<i class="icon-wrench"></i>
+			</td>
+			<td>
+				<%= tool.name %>
+			</td>
+			<td>
+				<span class='badge pull-right'><%= tool.to_short_description_string%></span>
+			</td>
+		</tr>
+	</table>
 </div>
 

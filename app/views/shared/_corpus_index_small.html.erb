@@ -1,7 +1,17 @@
 <div class='corpi_item_small' onclick="window.location='<%= corpus_path(corpus) %>'">
-	<i class="icon-book"></i>
-    <%= corpus.name %>
+	<table class='item-small-element'>
+	<tr>
+		<td class='item-icon-cell'>
+			<i class="icon-book"></i>
+		</td>
 
-    <span class='corpi_l pull-right'><%= corpus.human_duration %> </span>
+		<td>
+	    	<%= corpus.name %>
+		</td>
 
+		<td>
+	    	<span class='corpi_l pull-right'><%= corpus.human_duration %> </span>
+	    </td>
+	</tr>
+	</table>
 </div>
