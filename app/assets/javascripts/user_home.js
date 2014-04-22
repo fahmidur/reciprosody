@@ -6,6 +6,7 @@ __app.modules.userhome = function() {
 	var $peopleSearch = $('#people-search');
 	var $peopleResult = $('#people-result');
 	var $profileAvatar = $('#profile_avatar');
+	var $gravatarInfobox = $('#gravatar-infobox');
 
 	var $sideMenuDiv = $('#side_menu');
 	var $instSearchWrapper = $('#inst_search_wrapper');
@@ -195,6 +196,7 @@ __app.modules.userhome = function() {
 		$sideMenuDiv.slideDown();
 		$peopleSearch.slideDown();
 		$peopleResult.slideDown();
+		$gravatarInfobox.slideUp();
 	}
 	function statechange_normal_gravatar() {
 		$gravatarEmailWrapper.slideDown(function() {
@@ -203,6 +205,7 @@ __app.modules.userhome = function() {
 		$sideMenuDiv.slideUp();
 		$peopleSearch.slideUp();
 		$peopleResult.slideUp();
+		$gravatarInfobox.slideDown();
 	}
 	function updatePeopleSearchResult() {
 		if(_people_result.length == 0) {
