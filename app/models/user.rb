@@ -145,20 +145,19 @@ class User < ActiveRecord::Base
 	def publication_member_of
 		self.publications.publication_member_of
 	end
-
 	
 
 	#--Memberships to Corpora--
 	def owner_of
-		self.corpora.owner_of.all
+		self.corpora.owner_of
 	end
 	
 	def approver_of
-		self.corpora.approver_of.all
+		self.corpora.approver_of
 	end
 	
 	def member_of
-		self.corpora.member_of.all
+		self.corpora.member_of
 	end
 	
 	def email_format

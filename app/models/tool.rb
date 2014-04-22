@@ -15,9 +15,9 @@ class Tool < ActiveRecord::Base
   has_many :publications, :through => :tool_publication_relationships
   has_many :tool_publication_relationships, :dependent => :delete_all   #delete *tool-publication relationships
 
-  scope :tool_owner_of, -> { where tool_memberships: {role: 'owner'} }
-  scope :tool_approver_of, -> { where tool_memberships: {role: 'approver'} }
-  scope :tool_member_of, -> { where tool_memberships: {role: 'member'} }
+  scope :tool_owner_of,     -> { (where tool_memberships: {role: 'owner'}).order(:updated_at => :desc) }
+  scope :tool_approver_of,  -> { (where tool_memberships: {role: 'approver'}).order(:updated_at => :desc) }
+  scope :tool_member_of,    -> { (where tool_memberships: {role: 'member'}).order(:updated_at => :desc) }
 
   before_destroy :remove_dirs
 
@@ -26,23 +26,44 @@ class Tool < ActiveRecord::Base
   validates :url, :url => true, :allow_blank => true
   #--------------------------------------
 
+  def self.valid_orders()
+    ["created_at", "updated_at", "name"]
+  end
+
+  # returns an array
+  def self.wsearch(q)
+    if(q !~ /^\%.+\%$/)
+      q = "%#{q}%"
+    end
+
+    chosen =  where('name LIKE ? AND description LIKE ?', q, q)
+    chosen += where('name LIKE ?', q)
+    chosen += where('authors LIKE ?', q)
+    chosen += where('description LIKE ?', q)
+
+    chosen = chosen.to_a.uniq
+    chosen.map! {|e| e.id }
+
+    where(:id => chosen).index_by(&:id).slice(*chosen).values
+  end
+
   def to_timestring
     self.updated_at.strftime("%m-%d-%Y")
   end
 
   def to_short_description_string
-    uri = URI.parse(url)
-    host = uri.host
-
-    if host == "github.com"
+    host = URI.parse(url).host
+    host.gsub!(/^www\./, "")
+    
+    short = nil
+    
+    if host == "github.com" || host == "code.google.com"
       if(url =~ /\/([^\/]+)\/?$/)
-        return $1
-      else
-        return host
+        short = $1
       end
-    else
-      return host
     end
+
+    return [short, host]
   end
 
   def canEdit?(user)

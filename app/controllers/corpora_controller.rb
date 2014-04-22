@@ -49,7 +49,9 @@ class CorporaController < ApplicationController
 		page = params[:page]
 		query = params[:query]
 		order = params[:order] || :created_at
-		unless ["created_at", "updated_at", "name", "language", "num_speakers"].include?(order)
+
+		valid_orders = Corpus.valid_orders
+		unless valid_orders.include?(order)
 			order = :created_at
 		end
 		roles = params[:roles]
@@ -70,12 +72,25 @@ class CorporaController < ApplicationController
 				end
 			end
 			corpArray.map! {|e| e.id }
-			@corpora = Corpus.order(order).reverse_order.where(:id => corpArray)
+			@corpora = Corpus.where(:id => corpArray)#.order(order)
 		else
-			@corpora = Corpus.order(order).reverse_order
+			@corpora = Corpus.all #order(order)
 		end
-		qs = "%#{query}%"
-		@corpora = @corpora.where("name LIKE ? OR description LIKE ? OR citation LIKE ?", qs, qs, qs).page(page)
+
+		if valid_orders[0..1].include?(order)
+			@corpora = @corpora.reverse_order
+		end
+
+		# qs = "%#{query}%"
+		# @corpora = @corpora.where("name LIKE ? OR description LIKE ? OR citation LIKE ?", qs, qs, qs).page(page)
+
+		# @corpora = @corpora.wsearch(query).page(page)
+
+		if query && query.present?
+			@corpora = Kaminari.paginate_array(@corpora.wsearch(query)).page(page)
+		else
+			@corpora = @corpora.page(page)
+		end
 		
 		
 		respond_to do |format|

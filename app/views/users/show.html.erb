@@ -8,12 +8,12 @@
 
 <div class='row-fluid'>
 	<div class="span3">
-		<div class='box borderfree' style='word-wrap: break-word'>
+		<div class='box' style='word-wrap: break-word'>
 				<div class='boxheader small toggleable'>
 					<%= current_user().name%>
 				</div>
 
-				<div class='boxcontent'>
+				<div class='boxcontent padfree'>
 
 					<div class='avatar-wrapper'>
 						<div class='profile-avatar-wrapper'>
@@ -24,10 +24,8 @@
 						</div>	
 					</div>
 
-
-
 					<div id='inst_holder'>
-						<% inst_flag = false %>
+						<% inst_flag = false # more efficient this way - SFR %>
 						<% current_user.insts.each do |inst| %>
 							<span class='badge badge-info inst' id='inst-<%= inst.id %>'><%= inst.name %>
 								<span class='x'>&nbsp;
@@ -36,7 +34,7 @@
 							</span>
 							<% inst_flag = true %>
 						<% end %>
-						<span id='add-inst' class='badge badge' title="Add Institution">
+						<span id='add-inst' class='badge badge-info' title="Add Institution">
 							<%=raw 'Add Institution &nbsp;' unless inst_flag %>
 							<i class='icon-plus-sign'></i>
 						</span>
@@ -46,11 +44,12 @@
 						<br/>
 						<input id='inst_search' type='text' class='span12' placeholder='Add Institution' data-autocomplete="/institutions/autocomplete_institution_name"/>
 					</div>
-				<span class='email-dec-wrapper'>
-					<% current_user.email.split(/(\W)/).each do |part| %>
-						<span class='email-dec'><%= part %></span>
-					<% end %>
-				</span>
+
+					<span class='email-dec-wrapper'>
+						<% current_user.email.split(/(\W)/).each do |part| %>
+							<span class='email-dec'><%= part %></span>
+						<% end %>
+					</span>
 			</div>
 
 		</div>
@@ -93,11 +92,21 @@
 					<span class='pull-right resource-count'><%= my_corpora.size%></span>
 				</div>
 				<div class='boxcontent padfree'>
-					<% my_corpora.each do |corpus| %>
+					<% my_corpora[0...5].each do |corpus| %>
 						<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => corpus} %>
 					<% end %>
 					<div>
-						<a href='/corpora/new' class='pull-right'>New Corpus</a>
+						<!-- corpora -->
+						<div class='btn-group pull-right'>
+							<a href='/corpora/new' class='btn btn-mini'>
+								<i class='icon-plus'></i>&nbsp;New
+							</a>
+							<% if my_corpora.size > 5 %>
+								<a href="corpora?query=&roles=owner&order=created_at" class='btn btn-mini'>
+									<i class='icon-list'></i>&nbsp;List All
+								</a>
+							<% end %>
+						</div>
 					</div>
 					<br/>
 				</div> <!-- end of box content -->
@@ -115,12 +124,22 @@
 
 				<div class='boxcontent padfree'>
 
-					<% my_pubs.each do |pub| %>
+					<% my_pubs[0...5].each do |pub| %>
 						<%= render :partial => 'shared/publication_index_small.html.erb', 
 						:locals => {:p => pub} %>
 					<% end %>
 					<div>
-						<a href='/publications/new' class='pull-right'>New Publication</a>
+						<!-- publications -->
+						<div class='btn-group pull-right'>
+							<a href='/publications/new' class='btn btn-mini'>
+								<i class='icon-plus'></i>&nbsp;New
+							</a>
+							<% if my_pubs.size > 5 %>
+								<a href='publications?query=&roles=owner&order=created_at' class='btn btn-mini'>
+									<i class='icon-list'></i>&nbsp;List All
+								</a>
+							<% end %>
+						</div>
 					</div>
 					</br/>
 
@@ -139,12 +158,21 @@
 
 				<div class='boxcontent padfree'>
 
-					<% my_tools.each do |tool| %>
+					<% my_tools[0...5].each do |tool| %>
 						<%= render :partial => 'shared/tool_index_small', :locals => {:tool => tool} %>
 					<% end %>
 
 					<div>
-						<a href='/tools/new' class='pull-right'>New Tool</a>
+						<div class='btn-group pull-right'>
+							<a href='/tools/new' class='btn btn-mini'>
+								<i class='icon-plus'></i>&nbsp;New
+							</a>
+							<% if my_tools.size > 5 %>
+								<a href='tools?query=&roles=owner&order=created_at' class='btn btn-mini'>
+									<i class='icon-list'>&nbsp;List All</i>
+								</a>
+							<% end %>
+						</div>
 					</div>
 					<br/>
 				</div> <!-- end of box content -->

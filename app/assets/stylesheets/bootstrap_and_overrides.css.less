@@ -280,11 +280,17 @@ body::-webkit-scrollbar-thumb {
 }
 #inst_holder {
 	text-align:center;
+	margin: 0px;
 }
 .inst {
-
+	border-radius: 0px;
+	background-color: black;
+	color: white;
+	cursor: pointer;
 }
-.inst, #add-inst {
+#add-inst {
+	border-radius: 0px;
+	background-color: #2d2d2d;
 	cursor: pointer;
 	height:14px;
 }
@@ -370,14 +376,23 @@ pre {
 	padding-bottom: 0.2em;
 	/*background-color:#dfdfdf;*/
 	background-color: #f5f5f5;
+	border-bottom: 1px solid #efefef;
+	/*background-color: black;*/
+	/*color: white;*/
+	/*border-radius: 3px;*/
 	/*border-bottom-left-radius:5px;*/
 	/*border-bottom-right-radius:5px;*/
-	text-align:center;
+	/*text-align:center;*/
 	font-weight: bold;
 	margin-bottom:5px;
 
 	/*background-color: black;*/
 	/*color: white;*/
+}
+.boxheader.toggleable:hover {
+	background-color:#2d2d2d;
+	border-bottom: 1px solid #4d4d4d;
+	color: white;
 }
 .boxheader.small {
 	font-size: 10px;
@@ -398,6 +413,7 @@ pre {
 .toggleable-icon {
 	float:left;
 	color: transparent;
+	margin-right:1em;
 }
 .toggleable-icon.active {
 	color: #3a87ad;

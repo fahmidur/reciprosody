@@ -287,11 +287,32 @@ class Corpus < ActiveRecord::Base
 	#-------------------memberships-------------------------
 	accepts_nested_attributes_for :memberships, :users
 
-	# scope :owner_of,	where(memberships: {role: 'owner'})
-	scope :owner_of,	-> { where :memberships => {role: 'owner'}		}
-	scope :approver_of,	-> { where :memberships => {role: 'approver'}	}
-	scope :member_of, 	-> { where :memberships => {role: 'member'}		}
+	scope :owner_of,	-> { (where :memberships => {role: 'owner'}).order(:updated_at => :desc)		}
+	scope :approver_of,	-> { (where :memberships => {role: 'approver'}).order(:updated_at => :desc)		}
+	scope :member_of, 	-> { (where :memberships => {role: 'member'}).order(:updated_at => :desc)		}
 
+
+	def self.valid_orders()
+		["created_at", "updated_at", "name", "language", "num_speakers"]
+	end
+
+	# example: Corpus.search('somestring')
+	# returns an array
+	def self.wsearch(q)
+		if(q !~ /^\%.+\%$/)
+			q = "%#{q}%"
+		end
+
+		chosen = 	where('name LIKE ? AND description LIKE ?', q, q)
+		chosen += 	where('name LIKE ?', q)
+		chosen +=	where('description LIKE ?', q)
+		chosen +=	where('citation LIKE ?', q)
+
+		chosen = chosen.to_a.uniq
+		chosen.map! {|e| e.id }
+
+		where(:id => chosen).index_by(&:id).slice(*chosen).values
+	end
 
 	def associated_users
 		owners + approvers + members

@@ -8,7 +8,20 @@
 				<%= tool.name %>
 			</td>
 			<td>
-				<span class='badge pull-right'><%= tool.to_short_description_string%></span>
+				<% short, host = tool.to_short_description_string %>
+
+				<% if short %>
+				<span class='badge pull-right'>
+
+					<% if host == "github.com"%>
+						<i class='icon-github' title='hosted on github.com'></i>
+					<% elsif host == "code.google.com" %>
+						<i class='icon-home' title='hosted on code.google.com'><b>{}</b></i>
+					<% end %>
+
+					<%= short %>
+				</span>
+				<% end %>
 			</td>
 		</tr>
 	</table>

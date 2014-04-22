@@ -10,6 +10,8 @@ __app.modules.userhome = function() {
 	var $sideMenuDiv = $('#side_menu');
 	var $instSearchWrapper = $('#inst_search_wrapper');
 	var $instSearch = $('#inst_search');
+	var $instHolder = $('#inst_holder');
+	var $instAddButton = $('#add-inst');
 
 	var _userID = __app.sharedVariables.userID;
 	var _fayeClient = null;
@@ -27,6 +29,10 @@ __app.modules.userhome = function() {
 	$peopleSearch.on('keydown', keydown_peopleSearch);
 	$peopleSearch.on('keyup', keyup_peopleSearch);
 	$peopleSearch.on('blur', blur_peopleSearch);
+
+	$instSearch.on('keyup', keyup_instSearch);
+	$instSearch.on('keydown', keydown_instSearch);
+
 	updatePeopleSearchResult();
 
 	connectFaye();
@@ -53,42 +59,45 @@ __app.modules.userhome = function() {
 			console.log(data);
 		});
 	});
-	$('#add-inst').click(function() {
+
+	$instAddButton.click(show_instSearch);
+	$instSearch.blur(hide_instSearch);
+
+	function show_instSearch(e) {
 		$instSearchWrapper.show();
 		$instSearch.show().focus();
-		$(this).hide();
+		$instAddButton.hide();
 		$peopleSearch.hide();
 		$sideMenuDiv.hide();
-	});
+	}
 
-	$instSearch.on('keyup', function(e) {
+	function hide_instSearch(e) {
+		$instSearch.val("");
+		$instSearchWrapper.slideUp();
+		$instAddButton.show();
+		$peopleSearch.show();
+		$sideMenuDiv.show();
+	}
+
+	function keydown_instSearch(e) {
+		if(($(this).val() == "" && e.keyCode == 8)|| e.keyCode == 27) {
+			hide_instSearch();	
+		}
+	}
+	function keyup_instSearch(e) {
 		if(e.keyCode != 13) {return;}
 		$.getJSON('/user/add_inst_rel', {'name':$(this).val()}, function(data) {
 			console.log(data);
 			if(data.ok) {
 				if($('#inst-'+data.inst_id).length === 0) {
-					$('#inst_holder').prepend("&nbsp; <span class='badge badge-info inst' style='cursor:pointer' id='inst-"+data.inst_id+"'>"+data.inst_name+"<span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>");
-					$('#add-inst').html("<i class='icon-plus-sign'></i>");
+					$instHolder.prepend("&nbsp; <span class='badge badge-info inst' style='cursor:pointer' id='inst-"+data.inst_id+"'>"+data.inst_name+"<span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>");
+					// $instAddButton.html("<i class='icon-plus-sign'></i>");
 				}
 			}
-			hideInstSearch();
+			hide_instSearch();
 		});
-
-	});
-	$instSearch.on('keydown', function(e) {
-		if(($(this).val() == "" && e.keyCode == 8)|| e.keyCode == 27) {
-			hideInstSearch();	
-		}
-	});
-
-	function hideInstSearch() {
-		$instSearch.val("");
-		$instSearch.blur();
-		$instSearchWrapper.slideUp();
-		$('#add-inst').show();
-		$peopleSearch.show();
-		$sideMenuDiv.show();
 	}
+
 	function hide_peopleSearch(e) {
 		$peopleResult.hide();
 		$sideMenuDiv.slideDown();

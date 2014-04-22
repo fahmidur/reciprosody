@@ -125,7 +125,9 @@ class PublicationsController < ApplicationController
 		page = params[:page]
 		query = params[:query]
 		order = params[:order] || :created_at
-		unless ["created_at", "updated_at", "name"].include?(order)
+
+		valid_orders = Publication.valid_orders
+		unless valid_orders.include?(order)
 			order = :created_at
 		end
 		roles = params[:roles]
@@ -145,13 +147,24 @@ class PublicationsController < ApplicationController
 				end
 			end
 			idArray.map! {|e| e.id }
-			@pubs = Publication.order(order).reverse_order.where(:id => idArray)
+			@pubs = Publication.where(:id => idArray).order(order)
 		else
-			@pubs = Publication.order(order).reverse_order
+			@pubs = Publication.order(order)
 		end
-		qs = "%#{query}%"
-		@pubs = @pubs.where("name LIKE ? OR description LIKE ? OR authors LIKE ?", qs, qs, qs).page(page)
-		@pubs = @pubs.page(page)
+
+		if valid_orders[0..1].include?(order)
+			@pubs = @pubs.reverse_order
+		end
+
+		# qs = "%#{query}%"
+		# @pubs = @pubs.where("name LIKE ? OR description LIKE ? OR authors LIKE ?", qs, qs, qs).page(page)
+		# @pubs = @pubs.page(page)
+
+		if query && query.present?
+			@pubs = Kaminari.paginate_array(Publication.wsearch(query)).page(page)
+		else
+			@pubs = @pubs.page(page)
+		end
 	end
 
 	# GET /publications/new

@@ -59,10 +59,13 @@
 				</div> <!-- end of box content -->
 			</div> <!-- end of box -->
 		</div> <!-- end of row -->
+
 		
+		<% if @corpus.citation && @corpus.citation.present? %>		
 		<div class='row-fluid'>
+
 			<div class='box borderfree span12'>
-				<div class='boxheader small toggleable'>Citation</div>
+				<div class='boxheader small toggleable'>BibTex Citation</div>
 				<div class='boxcontent'>
 					<div class='btn-group' id='citation-style-select'>
 						<button class='btn btn-mini active'>Raw</button>
@@ -89,8 +92,10 @@
 						<%=raw html_from_citation(@corpus.citation, 'chicago-author-date') %>
 					</div>
 				</div> <!-- End of BoxContent -->
-			</div> <!-- End of Box -->
+			</div> <!-- End of Box Citation -->
 		</div> <!-- end of row -->
+		<% end %>
+
 		<div class='row-fluid'>
 			<div class='box borderfree span12'>
 				<div class='boxheader small toggleable'>Extra</div>

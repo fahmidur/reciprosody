@@ -13,9 +13,9 @@ class Publication < ActiveRecord::Base
 
 	accepts_nested_attributes_for :publication_memberships, :users
 
-	scope :publication_owner_of, -> { where publication_memberships: {role: 'owner'} }
-	scope :publication_member_of, -> { where publication_memberships: {role: 'member'} }
-	scope :publication_approver_of, -> { where publication_memberships: {role: 'approver'} }
+	scope :publication_owner_of,	-> { (where publication_memberships: {role: 'owner'}).order(:updated_at => :desc) 	}
+	scope :publication_member_of,	-> { (where publication_memberships: {role: 'member'}).order(:updated_at => :desc) 	}
+	scope :publication_approver_of,	-> { (where publication_memberships: {role: 'approver'}).order(:updated_at => :desc)}
 
 	accepts_nested_attributes_for :publication_memberships, :users
 
@@ -36,6 +36,28 @@ class Publication < ActiveRecord::Base
 		return false
 	end
 	#-------------------
+
+	def self.valid_orders()
+		["created_at", "updated_at", "name"]
+	end
+
+	# returns an array
+	def self.wsearch(q)
+		if(q !~ /^\%.+\%$/)
+			q = "%#{q}%"
+		end
+
+		chosen = 	where('name LIKE ? AND description LIKE ?', q, q)
+		chosen += 	where('name LIKE ?', q)
+		chosen +=	where('authors LIKE ?', q)
+		chosen +=	where('description LIKE ?', q)
+		chosen +=	where('citation LIKE ?', q)
+
+		chosen = chosen.to_a.uniq
+		chosen.map! {|e| e.id }
+
+		where(:id => chosen).index_by(&:id).slice(*chosen).values
+	end
 
 	def ac_small_format
 		"#{self.name}<#{self.id}>"

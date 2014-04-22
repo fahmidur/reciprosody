@@ -112,7 +112,9 @@ class ToolsController < ApplicationController
 		page = params[:page]
 		query = params[:query]
 		order = params[:order] || :created_at
-		unless ["created_at", "updated_at", "name"].include?(order)
+
+		valid_orders = Tool.valid_orders
+		unless valid_orders.include?(order)
 			order = :created_at
 		end
 		roles = params[:roles]
@@ -132,13 +134,24 @@ class ToolsController < ApplicationController
 				end
 			end
 			idArray.map! {|e| e.id }
-			@tools = Tool.order(order).reverse_order.where(:id => idArray)
+			@tools = Tool.where(:id => idArray).order(order)
 		else
-			@tools = Tool.order(order).reverse_order
+			@tools = Tool.order(order)
 		end
-		qs = "%#{query}%"
-		@tools = @tools.where("name LIKE ? OR description LIKE ? OR authors LIKE ?", qs, qs, qs).page(page)
-		@tools = @tools.page(page)
+
+		if valid_orders[0..1].include?(order)
+			@tools = @tools.reverse_order
+		end
+
+		# qs = "%#{query}%"
+		# @tools = @tools.where("name LIKE ? OR description LIKE ? OR authors LIKE ?", qs, qs, qs).page(page)
+		# @tools = @tools.page(page)
+
+		if query && query.present?
+			@tools = Kaminari.paginate_array(@tools.wsearch(query)).page(page)
+		else
+			@tools = @tools.page(page)
+		end
 	end
 
 	def corpora
@@ -346,7 +359,7 @@ class ToolsController < ApplicationController
 			if @tool.errors.none? && @tool.save && create_tool
 
 				ToolMembership.create(
-					:tool_id	=> @tool.id, 
+					:tool_id		=> @tool.id, 
 					:user_id		=> current_user().id,
 					:role			=> 'owner')
 
