@@ -14,6 +14,7 @@ class ToolsController < ApplicationController
 
 	autocomplete :tool, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id]
 	autocomplete :programming_language, :name, :full => false, :limit => 20, :extra_data => [:id]
+	autocomplete :tool_keyword, :name, :full => true
 
 	def add_publication_rel
 		@tool = Tool.find_by_id(params[:id])
@@ -410,6 +411,10 @@ class ToolsController < ApplicationController
 				);
 			end
 		end
+		@tool.keywords_array.each do |kw|
+			ToolKeyword.create(:name => kw) unless ToolKeyword.find_by_name(kw)
+		end
+
 		rfname = session[:resumable_filename]
 		@file = rfname ? File.new(rfname) : nil
 		return true unless @file

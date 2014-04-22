@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140303012801) do
+ActiveRecord::Schema.define(version: 20140422195026) do
 
   create_table "comments", force: true do |t|
     t.integer  "commentable_id",   default: 0
@@ -187,6 +187,10 @@ ActiveRecord::Schema.define(version: 20140303012801) do
 
   add_index "tool_corpora_relationship", ["corpus_id"], name: "index_tool_corpora_relationship_on_corpus_id"
   add_index "tool_corpora_relationship", ["tool_id"], name: "index_tool_corpora_relationship_on_tool_id"
+
+  create_table "tool_keywords", force: true do |t|
+    t.string "name"
+  end
 
   create_table "tool_memberships", force: true do |t|
     t.integer  "tool_id"
