@@ -50,6 +50,7 @@ class Publication < ActiveRecord::Base
 		chosen = 	where('name LIKE ? AND description LIKE ?', q, q)
 		chosen += 	where('name LIKE ?', q)
 		chosen +=	where('authors LIKE ?', q)
+		chosen +=	where('keywords LIKE ?', q)
 		chosen +=	where('description LIKE ?', q)
 		chosen +=	where('citation LIKE ?', q)
 
