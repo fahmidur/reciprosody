@@ -1,26 +1,36 @@
 <div class='corpi_item' data-show="<%=corpus_path(corpus)%>">	
-    <h4><%= corpus.name %></h4>
+    <h4 class='index-header1'><%= corpus.name %></h4>
     
     <span class='corpi_l'><%= corpus.language %></span>
     <span class='corpi_l pull-right'>Duration: <%= corpus.human_duration %> </span>
     <br/>
     <p><%=raw snippet(markdown(corpus.description)) %></p>
-
+    <div class='index-item-info-bar'>
+		Created <%= time_ago_in_words(corpus.created_at) %> ago, 
+		Updated <%= time_ago_in_words(corpus.updated_at) %> ago
+	</div>
     <div class='index-item-option-bar'>
-	    <!-- <%= link_to 'Show', corpus, :class => 'btn btn-mini' %> -->
-	    <%= link_to 'Publications', publications_corpus_path(corpus), :class => 'btn btn-mini' %>
-	    <%= link_to 'Tools', tools_corpus_path(corpus), :class => 'btn btn-mini' %>
-	    <%= link_to 'Comments', comments_corpus_path(corpus), :class => 'btn btn-mini' %>
+    	<div class='btn-group'>
+
+		    <a href='<%= publications_corpus_path(corpus)%>' class='btn btn-mini'><i class='icon-file'></i>&nbsp;Publications</a>
+		    <a href='<%= tools_corpus_path(corpus)%>' class='btn btn-mini'><i class='icon-wrench'></i>&nbsp;Tools</a>
+		    <a href='<%= comments_corpus_path(corpus)%>' class='btn btn-mini'><i class='icon-comment'></i>&nbsp;Comments</a>
+
+		</div>
 	    
 		<% if user_signed_in? %>
-			<%= link_to 'Browse', browse_corpus_path(corpus), :class => 'btn btn-mini' %>
-		  	<% if corpus.canEdit?(current_user())%>
-		    	<%= link_to 'Edit', edit_corpus_path(corpus), :class => 'btn btn-mini' %>
-		    	<%= link_to 'Manage Members', manage_members_corpus_path(corpus), :class => 'btn btn-mini' %>
+			<a href='<%= browse_corpus_path(corpus)%>' class='btn btn-mini'><i class='icon-tasks'></i>&nbsp;Browse</a>
 
-		    	<a href="#delete-confirm-corp-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
-		    		<i class='icon-remove'> Delete</i>
-				</a>
+		  	<% if corpus.canEdit?(current_user())%>
+		  		<div class='btn-group pull-right'>
+					<a href='<%= edit_corpus_path(corpus)%>' class='btn btn-mini'><i class='icon-edit'></i>&nbsp;Edit</a>
+
+			    	<a href='<%= manage_members_corpus_path(corpus) %>' class='btn btn-mini'><i class='icon-user'></i>&nbsp;Manage Members</a>
+
+			    	<a href="#delete-confirm-corp-<%=corpus.id%>" data-id="<%= corpus.id %>" class="delete-confirm btn btn-mini btn-danger pull-right" data-toggle="modal">
+			    		<i class='icon-remove-sign'> Delete</i>
+					</a>
+				</div>
 
 				<div class="modal hide fade" id="delete-confirm-corp-<%= corpus.id %>" style="display:none">
 					<div class="modal-header">

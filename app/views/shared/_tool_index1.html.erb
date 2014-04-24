@@ -1,5 +1,5 @@
 <div class='corpi_item' data-show="<%= tool_path(tool) %>">
-	<h4><%= tool.name %></h4>
+	<h4 class='index-header1'><%= tool.name %></h4>
 	<% if tool.authors && !tool.authors.blank?%>
 		<span class='corpi_l'><%= tool.authors.split("\n").join(", " )%></span>
 		<br/> 
@@ -9,34 +9,50 @@
 			<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
 		<% end %>
 	<% end %>
+
 	<p>
 	<% if tool.description && !tool.description.blank? %>
 		<%=raw snippet(markdown(tool.description)) %>
 	<% end %>
-	
 	</p>
-	<div class='index-item-option-bar'>
-		<!-- <a href='<%= tool_path(tool)%>' class='btn btn-mini'>Show</a> -->
-		<a href='<%= publications_tool_path(tool)%>' class='btn btn-mini'>Publications</a>
-		<a href='<%= corpora_tool_path(tool)%>' class='btn btn-mini'>Corpora</a>
 
-		<% if tool.url && !tool.url.blank? %>
-			<a href='<%= tool.url %>' target='_blank' class='btn btn-mini'>URL</a>
-		<% end %>
-		<% if tool.local && !tool.local.blank? %>
-			<%= form_tag("/tools/#{tool.id}/download", :method => :get, :class => 'f-inline-block') do%>
-				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
+	<div class='index-item-info-bar'>
+		Created <%= time_ago_in_words(tool.created_at) %> ago, 
+		Updated <%= time_ago_in_words(tool.updated_at) %> ago
+	</div>
+
+	<div class='index-item-option-bar'>
+
+		<div class='btn-group'>
+
+			<a href='<%= publications_tool_path(tool)%>' class='btn btn-mini'><i class='icon-file'></i>&nbsp;Publications</a>
+			<a href='<%= corpora_tool_path(tool)%>' class='btn btn-mini'><i class='icon-book'></i>&nbsp;Corpora</a>
+
+			<% if tool.url && !tool.url.blank? %>
+				<a href='<%= tool.url %>' target='_blank' class='btn btn-mini'><i class='icon-share-alt'></i>&nbsp; URL</a>
 			<% end %>
-		<% end %>
+
+			<% if tool.local && !tool.local.blank? %>
+				<a href='/tools/<%= tool.id %>/download' class='btn btn-mini'><i class='icon-download'></i>&nbsp; Download</a>
+			<% end %>
+
+		</div>
+
+		
 
 		<% if user_signed_in? %>
 			<% if tool.canEdit?(current_user) %>
-				<a href='<%= edit_tool_path(tool)%>' class='btn btn-mini'>Edit</a>
-				<a href='<%= manage_members_tool_path(tool)%>' class='btn btn-mini'>Manage Members</a>
 
-				<a href="#delete-confirm-tool-<%=tool.id%>" data-id="<%= tool.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
-					<i class='icon-remove'></i> Delete
-				</a>
+				<div class='btn-group pull-right'>
+
+					<a href='<%= edit_tool_path(tool)%>' class='btn btn-mini'><i class='icon-edit'></i>&nbsp;Edit</a>
+					<a href='<%= manage_members_tool_path(tool)%>' class='btn btn-mini'><i class='icon-user'></i>&nbsp;Manage Members</a>
+
+					<a href="#delete-confirm-tool-<%=tool.id%>" data-id="<%= tool.id %>" class="delete-confirm btn btn-mini btn-danger" data-toggle="modal">
+						<i class='icon-remove-sign'></i>&nbsp;Delete
+					</a>
+
+				</div>
 
 				<div class="modal fade" id="delete-confirm-tool-<%= tool.id %>" style="display:none">
 					<div class="modal-header">
@@ -52,6 +68,7 @@
 						<a href="#" data-dismiss="modal" class="btn">Cancel</a>
 					</div>
 				</div>
+
 			<% end %>
 		<% end %>
 	</div> <!-- end of option bar -->

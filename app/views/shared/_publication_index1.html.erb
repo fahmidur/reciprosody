@@ -1,10 +1,11 @@
 <div class='corpi_item' data-show="<%= publication_path(p)%>">
 
-	<h4><%= p.name %>
+	<h4 class='index-header1'><%= p.name %>
 		<% if p.pubdate && p.pubdate.year != 0%>
 			<span class='badge'><%= p.pubdate.year %> </span>
 		<% end %>
 	</h4>
+
 	<% if p.authors && !p.authors.blank?%>
 		<span class='corpi_l'><%= p.authors.split("\n").join(", " )%></span>
 		<br/>
@@ -22,27 +23,39 @@
 		<%=raw snippet(markdown(p.description)) %>
 	<% end %>
 	</p>
-	
+
+	<div class='index-item-info-bar'>
+		Created <%= time_ago_in_words(p.created_at) %> ago, 
+		Updated <%= time_ago_in_words(p.updated_at) %> ago
+	</div>
+
 	<div class='index-item-option-bar'>
-		<!-- <a href='<%= publication_path(p)%>' class='btn btn-mini'>Show</a> -->
-		<a href='<%= corpora_publication_path(p)%>' class='btn btn-mini'>Corpora</a>
-		<a href='<%= tools_publication_path(p)%>' class='btn btn-mini'>Tools</a>
-		
-		<% if p.url && !p.url.blank? %>
-			<a href='<%= p.url %>' target='_blank' class='btn btn-mini'>URL</a>
-		<% end %>
-		<% if p.local && !p.local.blank? %>
-			<%= form_tag("/publications/#{p.id}/download", :method => :get, :class => 'f-inline-block') do%>
-				<input type='submit' class='btn btn-mini cdownlaod' value="Download">
+		<div class='btn-group'>
+
+			<a href='<%= corpora_publication_path(p)%>' class='btn btn-mini'><i class='icon-book'></i>&nbsp;Corpora</a>
+			<a href='<%= tools_publication_path(p)%>' class='btn btn-mini'><i class='icon-wrench'></i>&nbsp;Tools</a>
+			
+			<% if p.url && !p.url.blank? %>
+				<a href='<%= p.url %>' target='_blank' class='btn btn-mini'><i class='icon-share-alt'></i>&nbsp;URL</a>
 			<% end %>
-		<% end %>
+			<% if p.local && !p.local.blank? %>
+				<a href='/publications/<%= p.id %>/download' class='btn btn-mini'><i class='icon-download'></i>&nbsp;Download</a>
+			<% end %>
+
+		</div>
+
 		<% if user_signed_in? %>
 			<% if p.canEdit?(current_user) %>
-				<a href='<%= manage_members_publication_path(p) %>' class='btn btn-mini'>Manage Members</a>
-				<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'>Edit</a>
-				<a href="#delete-confirm-pub-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger pull-right hButton" data-toggle="modal">
-					<i class='icon-remove'></i> Delete</i>
-				</a>
+				<div class='btn-group pull-right'>
+					<a href='<%= edit_publication_path(p)%>' class='btn btn-mini'><i class='icon-edit'></i>&nbsp;Edit</a>
+
+					<a href='<%= manage_members_publication_path(p) %>' class='btn btn-mini'><i class='icon-user'></i>&nbsp;Manage Members</a>
+
+					<a href="#delete-confirm-pub-<%=p.id%>" data-id="<%= p.id %>" class="delete-confirm btn btn-mini btn-danger" data-toggle="modal">
+						<i class='icon-remove-sign'></i>&nbsp;Delete</i>
+					</a>
+
+				</div>
 
 				<div class="modal fade" id="delete-confirm-pub-<%= p.id %>" style="display:none">
 					<div class="modal-header">
@@ -61,6 +74,7 @@
 
 			<% end %>
 		<% end %>
+
 	</div> <!--end of index item option bar-->
 </div>
 

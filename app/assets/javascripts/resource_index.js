@@ -1,8 +1,19 @@
 $(function() {
+
   $(".corpi_item").hover(function() {
-    $(this).find('.hButton').animate({opacity:1.0}, 200);
+    if($('.modal').is(':visible')) { return; }
+    // $(this).find('.hButton').animate({opacity:1.0}, 200);
+    $(this).find('.index-item-option-bar').animate({opacity:1.0}, 200);
+
+    // $(this).find('.index-item-option-bar').slideDown("fast");
+    // $(this).find('.index-item-info-bar').slideUp("fast");
   }, function() {
-    $(this).find('.hButton').animate({opacity:0.3}, 200);
+    if($('.modal').is(':visible')) { return; }
+    // $(this).find('.hButton').animate({opacity:0.3}, 200);
+    $(this).find('.index-item-option-bar').animate({opacity:0.1}, 200);
+
+    // $(this).find('.index-item-option-bar').slideUp("fast");
+    // $(this).find('.index-item-info-bar').slideDown("fast");
   });
 
   var _over_option_item = false;
