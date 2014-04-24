@@ -43,9 +43,8 @@ class Tool < ActiveRecord::Base
     chosen += where('description LIKE ?', q)
 
     chosen = chosen.to_a.uniq
-    chosen.map! {|e| e.id }
 
-    where(:id => chosen).index_by(&:id).slice(*chosen).values
+    return chosen
   end
 
   def to_timestring

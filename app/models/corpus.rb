@@ -309,9 +309,8 @@ class Corpus < ActiveRecord::Base
 		chosen +=	where('citation LIKE ?', q)
 
 		chosen = chosen.to_a.uniq
-		chosen.map! {|e| e.id }
 
-		where(:id => chosen).index_by(&:id).slice(*chosen).values
+		return chosen
 	end
 
 	def associated_users

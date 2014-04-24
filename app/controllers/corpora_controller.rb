@@ -72,9 +72,9 @@ class CorporaController < ApplicationController
 				end
 			end
 			corpArray.map! {|e| e.id }
-			@corpora = Corpus.where(:id => corpArray)#.order(order)
+			@corpora = Corpus.where(:id => corpArray).order(order)
 		else
-			@corpora = Corpus.all #order(order)
+			@corpora = Corpus.all.order(order)
 		end
 
 		if valid_orders[0..1].include?(order)
