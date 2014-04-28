@@ -766,6 +766,17 @@
 		$('#ibar').slideUp();
 		$('#compose_panel').slideDown();
 
+
+		var url = document.URL;
+		var match = null;
+		if( (match=url.match(/compose\:(.+)/)) ) {
+			$('#user-search').val(match[1]);
+			$('#user-search').trigger('keyup');
+			setTimeout(function() {
+				$('#user-search').trigger('keyup');
+			},400);
+		}
+
 		$('#user-search').focus();
 		setTimeout(function() {
 			$('#user-search').focus();

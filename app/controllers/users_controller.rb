@@ -77,8 +77,7 @@ class UsersController < ApplicationController
 			return
 		end
 
-		q = "%#{q}%"
-		result = User.where("name LIKE ? OR email LIKE ?", q, q) -[current_user()]
+		result = User.wsearch(q) - [current_user()]
 
 		insts_string = ""
 		result.each do |r|

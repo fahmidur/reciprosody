@@ -56,6 +56,18 @@ class User < ActiveRecord::Base
 	scope :tool_reviewers, -> { where :tool_memberships => {:role => 'reviewer'} }
 	scope :tool_members, -> { where :tool_memberships => {:role => 'member'} }
 
+	def self.wsearch(q)
+		if(q !~ /^\%.+\%$/)
+			q = "%#{q}%"
+		end
+		q = "%#{q}%"
+		result = User.where("email = ?", q).to_a
+		result += User.where("email LIKE ?", q).to_a
+		result += User.where("name LIKE ?", q).to_a
+		result += User.includes(:institutions).where("institutions.name LIKE ?", q).references(:institutions).to_a
+		return result
+	end
+
 	def insts
 		UserInstitutionRelationship.where(:user_id => self.id).map{|rel| Institution.find_by_id(rel.institution_id)}
 	end
