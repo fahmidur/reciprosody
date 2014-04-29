@@ -118,7 +118,6 @@ Reciprosody2::Application.routes.draw do
 		member do
 			get :invite
 
-
       get :inbox                    #users_controller#inbox
       get :inbox_delete             #users_controller#inbox_delete
       get :send_message             #users_controller#send_message
@@ -141,10 +140,15 @@ Reciprosody2::Application.routes.draw do
 
   #---maps to admin controller---
   resources :admins do
-    collection do
+    member do
+      get :show
+    end
+  end
+  resource :admin do
+    member do
       get :request_a_key
       post :process_request_form
-      get :wait
+      get :usersearch_logs
     end
   end
 

@@ -161,6 +161,8 @@ __app.modules.userhome = function() {
 		}
 		if(_fayeClient) {
 			_fayeSub = _fayeClient.subscribe('/messages/'+_userID, fayeMessageHandler_messages);
+		} else {
+			
 		}
 	}
 

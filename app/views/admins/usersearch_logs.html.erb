@@ -1,0 +1,45 @@
+
+<table class='propertyTable'>
+	<tr>
+		<th>
+			Timestamp
+		</th>
+		<th>
+			User ID
+		</th>
+		<th>
+			User Name
+		</th>
+		<th>
+			Resource Type ID
+		</th>
+		<th>
+			Input
+		</th>
+		<th>
+			Output
+		</th>
+	</tr>
+	<% @items.each do |e| %>
+	<tr>
+		<td>
+			<%= time_ago_in_words(e.created_at) %>
+		</td>
+		<td>
+			<%= e.user_id %>
+		</td>
+		<td>
+			<%= e.user.name %>
+		</td>
+		<td>
+			<%= e.resource_type.name %>
+		</td>
+		<td>
+			<%= e.input %>
+		</td>
+		<td>
+			<%= e.output %>
+		</td>
+	</tr>
+	<% end %>
+</table>

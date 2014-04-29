@@ -88,10 +88,10 @@ class CorporaController < ApplicationController
 
 		if query && query.present?
 			@corpora = Kaminari.paginate_array(@corpora.wsearch(query)).page(page)
+			SearchLogEntry.make(current_user(), :corpus, query, @corpora.map{|e| e.id }.inspect)
 		else
 			@corpora = @corpora.page(page)
 		end
-		
 		
 		respond_to do |format|
 			format.html # index.html.erb

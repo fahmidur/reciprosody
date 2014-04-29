@@ -162,6 +162,7 @@ class PublicationsController < ApplicationController
 
 		if query && query.present?
 			@pubs = Kaminari.paginate_array(Publication.wsearch(query)).page(page)
+			SearchLogEntry.make(current_user(), :publication, query, @pubs.map{|e| e.id }.inspect)
 		else
 			@pubs = @pubs.page(page)
 		end

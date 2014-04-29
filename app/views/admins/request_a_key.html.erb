@@ -7,12 +7,11 @@
 	</div>
 <% end %>
 
-<%= form_tag '/admins/process_request_form', :method => :post do %>
+<%= form_tag '/admin/process_request_form', :method => :post do %>
 	<div class='row-fluid'>
 		<div class='span4'>
 			<%= render :partial => 'shared/member_small.html.erb', :locals => {:mem => current_user()} %>
 		</div>
-
 	</div>
 
 	<br/>

@@ -150,6 +150,7 @@ class ToolsController < ApplicationController
 
 		if query && query.present?
 			@tools = Kaminari.paginate_array(@tools.wsearch(query)).page(page)
+			SearchLogEntry.make(current_user(), :tool, query, @tools.map{|e| e.id }.inspect)
 		else
 			@tools = @tools.page(page)
 		end

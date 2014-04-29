@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140422195026) do
+ActiveRecord::Schema.define(version: 20140429053005) do
 
   create_table "comments", force: true do |t|
     t.integer  "commentable_id",   default: 0
@@ -138,6 +138,10 @@ ActiveRecord::Schema.define(version: 20140422195026) do
     t.datetime "pubdate"
   end
 
+  create_table "resource_types", force: true do |t|
+    t.string "name"
+  end
+
   create_table "resumable_incomplete_uploads", force: true do |t|
     t.string   "filename"
     t.string   "identifier"
@@ -149,6 +153,18 @@ ActiveRecord::Schema.define(version: 20140422195026) do
   end
 
   add_index "resumable_incomplete_uploads", ["user_id"], name: "index_resumable_incomplete_uploads_on_user_id"
+
+  create_table "search_log_entries", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "resource_type_id"
+    t.string   "input"
+    t.text     "output"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "search_log_entries", ["resource_type_id"], name: "index_search_log_entries_on_resource_type_id"
+  add_index "search_log_entries", ["user_id"], name: "index_search_log_entries_on_user_id"
 
   create_table "sessions", force: true do |t|
     t.string   "session_id", null: false
