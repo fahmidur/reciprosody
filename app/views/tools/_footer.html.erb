@@ -3,7 +3,10 @@
 <% if @tool.canEdit?(current_user) %> 
 	<a href='<%= edit_tool_path(@tool)%>' class='btn'>Edit</a>
 
-	<a href="#delete-confirm-tool-<%=@tool.id%>" data-id="<%= @tool.id %>" class="delete-confirm btn btn-danger pull-right" data-toggle="modal">Delete</a>
+	<a href="#delete-confirm-tool-<%=@tool.id%>" data-id="<%= @tool.id %>" class="delete-confirm btn btn-danger pull-right" data-toggle="modal">
+		<i class='icon-trash'></i>&nbsp;
+		Delete
+	</a>
 
 	<div class="modal fade" id="delete-confirm-tool-<%= @tool.id %>" style="display:none">
 		<div class="modal-header">
