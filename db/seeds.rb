@@ -8,27 +8,27 @@
 
 # Populate Languages from the file langs.txt
 
-seedFiles = {
-	:languages => 'langs.txt'
+seedFilesByClass = {
+	Language => 'langs.txt',
+	License => 'licenses.txt',
+	ProgrammingLanguage => 'programming_languages.txt'
 }
 
-if seedFiles[:languages]
+seedFilesByClass.each do |klass, filename|
 	count = 0
-	puts "* SEEDING Languages TABLES FROM FILE: #{seedFiles[:languages]}"
-	File.open(seedFiles[:languages], 'r').each_line do |lang|
-		lang.chomp!
-		next if Language.find_by_name(lang)
-		Language.create(:name => lang)
-		puts "\t|#{lang}|"
+	puts "* SEEDING CLASS #{klass} FROM #{filename}"
+	File.open(seedFilesByClass[klass]).each_line do |name|
+		name.chomp!
+		next if klass.find_by_name(name)
+		klass.create(:name => name)
 		count += 1
+		puts "\t|#{name}|"
 	end
-	puts "* #{count} Languages SEEDED"
+	puts "* #{count} #{klass} INSTANCES MADE"
+	puts
 end
-
-
-
-# STATIC SEEDS
 puts
+# STATIC SEEDS
 puts "* SEEDING ResourceTypes Table"
 resourceTypes = ['user', 'corpus', 'publication', 'tool']
 resourceTypes.each do |type|
