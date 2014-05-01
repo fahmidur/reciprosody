@@ -13,6 +13,7 @@ __app.modules.userhome = function() {
 	var $instSearch = $('#inst_search');
 	var $instHolder = $('#inst_holder');
 	var $instAddButton = $('#add-inst');
+	var $fayeConnectionIndicator = $('#faye-connection-indicator');
 
 	var _userID = __app.sharedVariables.userID;
 	var _fayeClient = null;
@@ -20,6 +21,7 @@ __app.modules.userhome = function() {
 
 	var _people_result = new Array();
 	var _previous_search = "";
+
 
 
 	$profileAvatar.on('click', click_profileAvatar);
@@ -149,7 +151,12 @@ __app.modules.userhome = function() {
 	}
 
 	function connectFaye() {
+		// console.log('Trying to connect...');
 		if(typeof Faye === 'undefined') {
+			return;
+		}
+		if(_fayeClient) {
+			// console.log('Already connected [done]');
 			return;
 		}
 		try {
@@ -159,10 +166,12 @@ __app.modules.userhome = function() {
 			console.log(err);
 			_fayeClient = null;
 		}
+
 		if(_fayeClient) {
+			// console.log('Connected!');
 			_fayeSub = _fayeClient.subscribe('/messages/'+_userID, fayeMessageHandler_messages);
+			$fayeConnectionIndicator.addClass('active');
 		} else {
-			
 		}
 	}
 
