@@ -2,13 +2,13 @@
 <table class='propertyTable'>
 	<tr>
 		<th>
+			Ago
+		</th>
+		<th>
 			Timestamp
 		</th>
 		<th>
-			User ID
-		</th>
-		<th>
-			User Name
+			User
 		</th>
 		<th>
 			Resource Type
@@ -26,10 +26,10 @@
 			<%= time_ago_in_words(e.created_at) %>
 		</td>
 		<td>
-			<%= e.user_id %>
+			<%= e.created_at %>
 		</td>
 		<td>
-			<%= e.user.name %>
+			<a href='/users/<%= e.user_id %>'><%= e.user.name %></a>
 		</td>
 		<td>
 			<%= e.resource_type.name %>
@@ -38,7 +38,12 @@
 			<%= e.input %>
 		</td>
 		<td>
-			<%= e.output %>
+			<% output = eval(e.output) %>
+			<% pluralResource = e.resource_type.name.pluralize(2) %>
+			<% output.each do |id| %>
+				<a href='/<%= pluralResource %>/<%= id %>'><%= id %></a>
+				&nbsp;
+			<% end %>
 		</td>
 	</tr>
 	<% end %>
