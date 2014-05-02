@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
 
 	#----------------------------------------
 
-	
+	has_many :actions, :foreign_key => 'user_id', :class_name => 'UserAction'
 
 	has_many :corpora, :through => :memberships
 

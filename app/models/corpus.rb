@@ -15,8 +15,9 @@ class Corpus < ActiveRecord::Base
 	has_many :tools, :through => :tool_corpus_relationships
 	has_many :tool_corpus_relationships, :dependent => :delete_all					#delete tool-*corp relationships
 
-	has_many :comments, :as => :commentable, :order => 'updated_at DESC'
+	has_many :comments,-> { order('updated_at DESC') }, :as => :commentable
 
+	has_many :user_actions, :as => :user_actionable
 	
 	before_validation :set_duration
 	before_create :assign_unique_token
@@ -34,6 +35,14 @@ class Corpus < ActiveRecord::Base
 
 
 	after_find :set_times
+
+	def user_action_from(user, action_sym)
+		action = self.user_actions.build
+		action.user_id = user.id
+
+		user_action_type = UserActionType.find_by_name(action_sym)
+		action.user_action_type_id = user_action_type.id
+	end
 
 	def calc_wav_times
 		Dir.chdir Rails.root

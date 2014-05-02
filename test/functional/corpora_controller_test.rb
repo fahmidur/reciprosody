@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class CorporaControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
   setup do
     @user = users(:syed)
 

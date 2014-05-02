@@ -15,6 +15,7 @@ seedFilesByClass = {
 }
 
 seedFilesByClass.each do |klass, filename|
+	break if Rails.env == 'test'
 	count = 0
 	puts "* SEEDING CLASS #{klass} FROM #{filename}"
 	File.open(seedFilesByClass[klass]).each_line do |name|
@@ -28,7 +29,9 @@ seedFilesByClass.each do |klass, filename|
 	puts
 end
 puts
+
 # STATIC SEEDS
+
 puts "* SEEDING ResourceTypes Table"
 resourceTypes = ['user', 'corpus', 'publication', 'tool']
 resourceTypes.each do |type|
@@ -36,3 +39,16 @@ resourceTypes.each do |type|
 	puts "\t|#{type}|"
 end
 puts "* #{resourceTypes.length} ResourceTypes Seeded"
+
+
+puts "* SEEDING ActionType Table"
+userActionTypes = [
+	'download', 
+	'registered_view',
+	'public_view'
+	];
+userActionTypes.each do |type|
+	UserActionType.fetch(type)
+	puts "\t|#{type}|"
+end
+puts "* #{userActionTypes.length} ActionTypes Seeded"

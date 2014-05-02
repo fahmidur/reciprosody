@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140429053005) do
+ActiveRecord::Schema.define(version: 20140502070908) do
 
   create_table "comments", force: true do |t|
     t.integer  "commentable_id",   default: 0
@@ -23,8 +23,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "comments", ["commentable_id"], name: "index_comments_on_commentable_id"
@@ -34,8 +34,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.string   "name"
     t.string   "language"
     t.text     "description"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "utoken"
     t.integer  "duration"
     t.integer  "num_speakers"
@@ -48,14 +48,14 @@ ActiveRecord::Schema.define(version: 20140429053005) do
 
   create_table "faq_questions", force: true do |t|
     t.text     "question"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "institutions", force: true do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "languages", force: true do |t|
@@ -70,8 +70,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.integer  "user_id"
     t.integer  "corpus_id"
     t.string   "role"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "messages", force: true do |t|
@@ -84,8 +84,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.boolean  "opened",                     default: false
     t.boolean  "recipient_delete",           default: false
     t.boolean  "sender_delete",              default: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "ancestry"
     t.boolean  "recipient_permanent_delete", default: false
     t.boolean  "sender_permanent_delete",    default: false
@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.integer  "publication_id"
     t.integer  "corpus_id"
     t.string   "name"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "publication_corpora_relationship", ["corpus_id"], name: "index_publication_corpora_relationship_on_corpus_id"
@@ -117,8 +117,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.string   "role"
     t.integer  "user_id"
     t.integer  "publication_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "publication_memberships", ["publication_id"], name: "index_publication_memberships_on_publication_id"
@@ -131,8 +131,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.text     "authors"
     t.string   "url"
     t.string   "local"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "citation"
     t.text     "venue"
     t.datetime "pubdate"
@@ -148,8 +148,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.integer  "user_id"
     t.string   "url"
     t.text     "formdata"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "resumable_incomplete_uploads", ["user_id"], name: "index_resumable_incomplete_uploads_on_user_id"
@@ -169,8 +169,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
   create_table "sessions", force: true do |t|
     t.string   "session_id", null: false
     t.text     "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id"
@@ -179,16 +179,16 @@ ActiveRecord::Schema.define(version: 20140429053005) do
   create_table "super_key_requests", force: true do |t|
     t.string   "token"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "super_key_requests", ["user_id"], name: "index_super_key_requests_on_user_id"
 
   create_table "super_keys", force: true do |t|
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "super_keys", ["user_id"], name: "index_super_keys_on_user_id"
@@ -197,8 +197,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.integer  "tool_id"
     t.integer  "corpus_id"
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "tool_corpora_relationship", ["corpus_id"], name: "index_tool_corpora_relationship_on_corpus_id"
@@ -212,8 +212,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.integer  "tool_id"
     t.integer  "user_id"
     t.string   "role"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "tool_memberships", ["tool_id"], name: "index_tool_memberships_on_tool_id"
@@ -223,8 +223,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.integer  "tool_id"
     t.integer  "publication_id"
     t.string   "name"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "tool_publication_relationships", ["publication_id"], name: "index_tool_publication_relationships_on_publication_id"
@@ -239,15 +239,33 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.text     "description"
     t.text     "keywords"
     t.string   "local"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_action_types", force: true do |t|
+    t.string "name"
+    t.text   "desc"
+  end
+
+  create_table "user_actions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "user_action_type_id"
+    t.integer  "user_actionable_id"
+    t.string   "user_actionable_type"
+    t.string   "ip_address"
+    t.float    "lat"
+    t.float    "lon"
+    t.string   "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "user_institution_relationships", force: true do |t|
     t.integer  "user_id"
     t.integer  "institution_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_institution_relationships", ["institution_id"], name: "index_user_institution_relationships_on_institution_id"
@@ -257,8 +275,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.integer  "user_id"
     t.string   "name"
     t.string   "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_properties", ["user_id"], name: "index_user_properties_on_user_id"
@@ -278,8 +296,8 @@ ActiveRecord::Schema.define(version: 20140429053005) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "name",                   limit: 100
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
