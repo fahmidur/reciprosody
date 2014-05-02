@@ -348,6 +348,7 @@ pre {
 }
 .member-link {
 	color: #2d2d2d;
+	text-decoration: none;
 }
 /*--INBOX STYLES--*/
 #replyAll_bt {
@@ -848,7 +849,7 @@ body .modal {
 h1 {
 	word-wrap:break-word;
 }
-table.inbox_table tr {
+table.inbox_table tr.message-row {
 	margin-bottom:15px;
 	font-weight: bold;
 	margin-bottom:0.2em;
@@ -868,13 +869,13 @@ table.inbox_table tr {
 	-moz-transition-duration:1s, 1s, 1s;
 	-moz-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
 }
-table.inbox_table tr:hover {
+table.inbox_table tr.message-row:hover {
 	color:#2d2d2d;
 	background-color:#fafaff;
 	border:1px solid #adadad;
 	border-left:2px solid #4FD5D6;	
 }
-table.inbox_table tr.selected {
+table.inbox_table tr.message-row.selected {
 	color:#2d2d2d;
 	background-color:#fafaff;
 	border:1px solid #adadad;

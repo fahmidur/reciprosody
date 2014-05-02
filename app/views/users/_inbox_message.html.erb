@@ -11,16 +11,17 @@
 	</td>
 
 	<td>
-		<small class='label pull-right message-row-ago'>
+		<small class='label message-row-ago'>
 			<%= time_ago_in_words(m.updated_at) %> ago
 		</small>
 	</td>
 
 
 	<td>
-		<span class="member_email pull-right" title="<%= m.from.name %>">
-		<a href="/users/<%= m.from.id %>" class="member-link" target="_BLANK">
-		<i class="icon-user"></i>&nbsp;<%= m.from.name %></a>
+		<span class="member_email" title="<%= m.from.name %>">
+			<a href="/users/<%= m.from.id %>" class="member-link" target="_BLANK">
+				<%= m.from.name %>
+			</a>
 		</span>
 	</td>
 	
@@ -28,9 +29,10 @@
 		<i class='icon-arrow-right'></i>
 	</td>
 	<td>
-		<span class="member_email pull-right" title="<%= m.to.name %>">
-		<a href="/users/<%= m.to.id %>" class="member-link" target="_BLANK">
-		<i class="icon-user"></i>&nbsp;<%= m.to.name %></a>
+		<span class="member_email" title="<%= m.to.name %>">
+			<a href="/users/<%= m.to.id %>" class="member-link" target="_BLANK">
+				<%= m.to.name %>
+			</a>
 		</span>
 	</td>
 	
