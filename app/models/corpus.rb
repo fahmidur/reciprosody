@@ -228,7 +228,7 @@ class Corpus < ActiveRecord::Base
 		Dir.mkdir(self.download_stage_path) unless Dir.exists?(self.download_stage_path)
 
 		uuid = SecureRandom.uuid
-		tmp_dir = self.download_stage_path + "/" + uuid
+		tmp_dir = self.download_stage_path + uuid
 
 		Dir.mkdir(tmp_dir)
 
