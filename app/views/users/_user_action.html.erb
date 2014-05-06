@@ -1,7 +1,7 @@
 <div class='user-action row-fluid'>
 	<table>
 		<tr>
-			<td width="20px" rowspan='10'>
+			<td class='fixedwidth20' rowspan='2'>
 				<% case ua.user_action_type.name %>
 				<% when 'download' %>
 				<i class='icon-download user-action-icon'></i>
@@ -14,11 +14,11 @@
 			<td class='top'>
 				<span class='ago'>
 					<%= time_ago_in_words(ua.created_at)%> ago from <a href='<%= polymorphic_url(ua.user) %>'><%= ua.user.name %></a>
-				<span>
+				</span>
 			</td>
-			<td rowspan='10' width="50px">
+			<td rowspan='2' class='fixedwidth50'>
 				<a href='<%= polymorphic_url(ua.user) %>'>
-					<img class='user-avatar-small pull-right' src='<%= ua.user.gravatar_url(:png, 50) %>' title="<%= ua.user.name %>"/>
+					<img class='user-avatar-small pull-right' src='<%= ua.user.gravatar_url(:png, 50) %>' title="<%= ua.user.name %>" alt="<%= ua.user.name %>"/>
 				</a>
 			</td>
 		</tr>
