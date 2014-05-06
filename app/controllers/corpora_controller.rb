@@ -591,26 +591,30 @@ class CorporaController < ApplicationController
 		#To-Do: Error/Evil checking
 		archive_path = "#{@corpus.archives_path}/#{@filename}"
 
-		# logger.info "** FILENAME = #{@filename}"
-		# logger.info "** ARCHIVE_PATH = #{archive_path}"
+		logger.info "** FILENAME = #{@filename}"
+		logger.info "** ARCHIVE_PATH = #{archive_path}"
 
-		# check if version number is included
-		if @filename =~ /\.(\d+)\.[a-z]+$/
+		# check for version number
+		if @filename =~ /\+(\d+)/
+			# example: +8 meaning version 8
+			# version 8 requested
 			version = $1.to_i
+			@corpus.svn_prepare_version_for_download(version)
+		elsif @filename =~ /\.(\d+)\.[a-z]+$/
+			version = $1.to_i
+			# example: corpname.8.zip
+			# version 8 requested
+			# check if filename is valid
+			if invalid_filename?(@filename)
+				redirect_to '/perm'
+				return
+			end
 		else
 			logger.info "*** VERSION NOT INCLUDED ***"
 			redirect_to '/perm'
 			return
 		end
-
-		@corpus.svn_prepare_version_for_download(version)
 		archive_path = @corpus.get_archive(version)
-
-		# check if file is valid
-		if invalid_filename?(@filename)
-			redirect_to '/perm'
-			return
-		end
 
 		if(archive_path)
 			@corpus.user_action_from(current_user, :download, {
@@ -1012,7 +1016,6 @@ class CorporaController < ApplicationController
 		@corpus.valid?
 
 		if @corpus.update_attributes(params[:corpus]) && create_corpus(msg) && @corpus.save
-			#format.html { redirect_to @corpus, notice: 'Corpus was successfully updated.' }
 			#If the License does not exist add the License
 			license = License.find_by_name(@corpus.license)
 			License.create(:name => @corpus.license) unless license

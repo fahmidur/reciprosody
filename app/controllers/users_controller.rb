@@ -407,7 +407,7 @@ class UsersController < ApplicationController
 		@corpora_owned = @user.owner_of
 		@actions = []
 		@corpora_owned.each do |r|
-			@actions += r.user_actions.order('created_at DESC')#.where(:user_id != @user.id)
+			@actions += r.user_actions.order('created_at DESC')
 		end
 
 

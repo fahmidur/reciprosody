@@ -24,6 +24,8 @@ class Corpus < ActiveRecord::Base
 	after_create :create_dirs
 	before_destroy :remove_dirs
 
+	after_save :rename_all_archived
+
 	#-----Validations--------------------------------------
 	validates :name, :presence => true
 	validates :language, :presence => true
@@ -35,6 +37,22 @@ class Corpus < ActiveRecord::Base
 
 
 	after_find :set_times
+
+	# return
+	# array of archived
+	# zip paths
+	def archived
+		archive_fnames = Dir.entries(self.archives_path).select {|n| n != ".." && n != "." }
+	end
+
+	def rename_all_archived()
+		fnames = archived
+		fnames.each do |fname|
+			if fname =~ /(\d+)\.([a-z]+)$/
+				FileUtils.mv("#{self.archives_path}/#{fname}", "#{self.archives_path}/#{self.name}.#{$1}.#{$2}")
+			end
+		end
+	end
 
 	def user_action_from(user, action_sym, extra={})
 		action = self.user_actions.build
