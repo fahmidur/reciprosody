@@ -575,10 +575,14 @@ h4.index-header1 {
 	border-left: 1px solid transparent;
 	padding-left: 5px;
 	margin-top:5px;
+	transition-property:opacity, border, color, padding;
+	transition-duration:1s, 1s, 1s, 0.8s;
+	transition-timing-function:cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
 }
 .user-action a.dark:hover {
 	color: black;
-	border-left: 1px solid #5d5d5d;
+	padding-left:10px;
+	border-left: 1px solid #555;
 }
 .user-action table {
 	width: 100%;

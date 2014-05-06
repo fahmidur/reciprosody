@@ -404,12 +404,11 @@ class UsersController < ApplicationController
 
 		@user = @user || current_user()
 
-		@corpora_owned = @user.owner_of
-		@actions = []
-		@corpora_owned.each do |r|
-			@actions += r.user_actions.order('created_at DESC')
-		end
-
+		@associated_corpora = @user.associated_corpora.map{|e| e.id }
+		@actions = UserAction.where(
+			:user_actionable_type => 'Corpus',
+			:user_actionable_id => @associated_corpora
+		).order(:created_at).reverse_order
 
 		get_faye_url
 

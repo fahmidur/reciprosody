@@ -133,6 +133,10 @@ class User < ActiveRecord::Base
 	end
 
 	#--Memberships to Tools--
+	def associated_tools
+		tool_owner_of + tool_approver_of + tool_member_of
+	end
+
 	def tool_owner_of
 		self.tools.tool_owner_of
 	end
@@ -146,6 +150,10 @@ class User < ActiveRecord::Base
 	end
 
 	#--Memberships to Publications--
+	def associated_publications
+		publication_owner_of + publication_approver_of + publication_member_of
+	end
+
 	def publication_owner_of
 		self.publications.publication_owner_of
 	end
@@ -160,6 +168,10 @@ class User < ActiveRecord::Base
 	
 
 	#--Memberships to Corpora--
+	def associated_corpora
+		self.owner_of + self.approver_of + self.member_of
+	end
+
 	def owner_of
 		self.corpora.owner_of
 	end

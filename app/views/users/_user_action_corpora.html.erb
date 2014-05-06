@@ -1,15 +1,25 @@
 <tr>
-	<td>&nbsp;</td>
 	<td>
-		&nbsp;&nbsp;&nbsp;
-		&nbsp;
-		<span class=''>
-			<small class='corpus_show_name'>
-				Version:
-			</small>
-			<small class='corpus_show_value'>
-				<%= ua.version %>
-			</small>
-		</span>
+		<a href='<%= polymorphic_url(ua.user_actionable) %>' class='dark'>
+			<% case ua.user_actionable.class.table_name %>
+			<% when 'corpora' %>
+			<i class='icon-book'></i>
+			<% when 'publications' %>
+			<i class='icon-file'></i>
+			<% else %>
+			<% end %>
+
+			<%= ua.user_actionable.name %>
+			<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<span class=''>
+				<small class='corpus_show_name'>
+					Version:
+				</small>
+				<small class='corpus_show_value'>
+					<%= ua.version %>
+				</small>
+			</span>
+		</a>
 	</td>
 </tr>

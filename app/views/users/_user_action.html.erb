@@ -1,7 +1,7 @@
 <div class='user-action row-fluid'>
 	<table>
 		<tr>
-			<td width="20px">
+			<td width="20px" rowspan='10'>
 				<% case ua.user_action_type.name %>
 				<% when 'download' %>
 				<i class='icon-download user-action-icon'></i>
@@ -16,31 +16,13 @@
 					<%= time_ago_in_words(ua.created_at)%> ago from <a href='<%= polymorphic_url(ua.user) %>'><%= ua.user.name %></a>
 				<span>
 			</td>
-			<td rowspan='3' width="50px">
+			<td rowspan='10' width="50px">
 				<a href='<%= polymorphic_url(ua.user) %>'>
 					<img class='user-avatar-small pull-right' src='<%= ua.user.gravatar_url(:png, 50) %>' title="<%= ua.user.name %>"/>
 				</a>
 			</td>
 		</tr>
 
-		<tr>
-			<td>
-				&nbsp;
-			</td>
-			<td>
-				<a href='<%= polymorphic_url(ua.user_actionable) %>' class='dark'>
-					<% case ua.user_actionable.class.table_name %>
-					<% when 'corpora' %>
-					<i class='icon-book'></i>
-					<% when 'publications' %>
-					<i class='icon-file'></i>
-					<% else %>
-					<% end %>
-
-					<%= ua.user_actionable.name %>
-				</a>
-			</td>
-		</tr>
 		<%= render :partial => "user_action_#{ua.user_actionable.class.table_name}", :locals => {:ua => ua } %>
 
 	</table>
