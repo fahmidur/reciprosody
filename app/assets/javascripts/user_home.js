@@ -22,14 +22,15 @@ __app.modules.userhome = function() {
 	var _people_result = new Array();
 	var _previous_search = "";
 
+	var _snd = new Audio("/assets/sound1.mp3");
+
 	var _userAction = function() {
 		var actions = {};
 		var $actionsHolder = $('#actionsHolder');
 
 		var fayeMessageHandler = function(data) {
 			console.log("FayeMessageHandler::Data::UserAction", data);
-
-			// $('.user-action:first').before(data.html).hide();
+			_snd.play();
 			$(data.html).prependTo($actionsHolder).hide().slideDown();
 			actions[data.id] = $('#user-action-'+data.id);
 		};
@@ -44,6 +45,7 @@ __app.modules.userhome = function() {
 		};
 
 	}();
+
 
 
 
@@ -202,6 +204,7 @@ __app.modules.userhome = function() {
 	function fayeMessageHandler_messages(data) {
 		console.log("FayeMessageHandler::Data::Message ", data);
 		$inboxCount.html( parseInt($inboxCount.text()) + 1 );
+		_snd.play();
 		$inboxCount.css("background-color", "orange");
 	}
 
