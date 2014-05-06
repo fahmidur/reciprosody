@@ -79,6 +79,10 @@ class Publication < ActiveRecord::Base
 		"#{self.name}<#{self.id}>"
 	end
 
+	def associated_users
+		owners + reviewers + members
+	end
+
 	def owners
 		self.users.publication_owners.all
 	end

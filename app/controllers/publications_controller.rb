@@ -457,7 +457,9 @@ class PublicationsController < ApplicationController
 		unless local
 			redirect_to '/perm'
 		end
-		@pub.user_action_from(current_user, :download)
+		action = @pub.user_action_from(current_user, :download)
+		action_notify(action)
+		
 		send_file local
 	end
 

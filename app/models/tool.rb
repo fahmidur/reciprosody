@@ -89,6 +89,10 @@ class Tool < ActiveRecord::Base
   	return false
   end
 
+  def associated_users
+    owners + reviewers + members
+  end
+
   def owners
   	self.users.tool_owners.all
   end
