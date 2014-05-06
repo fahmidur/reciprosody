@@ -43,7 +43,8 @@ puts "* #{resourceTypes.length} ResourceTypes Seeded"
 
 puts "* SEEDING ActionType Table"
 userActionTypes = [
-	'download', 
+	'download',
+	'upload',
 	'registered_view',
 	'public_view'
 	];

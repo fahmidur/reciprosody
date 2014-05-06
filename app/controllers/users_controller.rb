@@ -402,6 +402,15 @@ class UsersController < ApplicationController
 			return
 		end
 
+		@user = @user || current_user()
+
+		@corpora_owned = @user.owner_of
+		@actions = []
+		@corpora_owned.each do |r|
+			@actions += r.user_actions.order('created_at DESC')#.where(:user_id != @user.id)
+		end
+
+
 		get_faye_url
 
 		render :show

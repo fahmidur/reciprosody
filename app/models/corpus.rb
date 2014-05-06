@@ -36,12 +36,17 @@ class Corpus < ActiveRecord::Base
 
 	after_find :set_times
 
-	def user_action_from(user, action_sym)
+	def user_action_from(user, action_sym, extra={})
 		action = self.user_actions.build
 		action.user_id = user.id
 
 		user_action_type = UserActionType.find_by_name(action_sym)
 		action.user_action_type_id = user_action_type.id
+		extra.each do |k,v|
+			action.update(k => v)
+		end
+
+		action.save!
 	end
 
 	def calc_wav_times

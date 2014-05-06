@@ -98,6 +98,11 @@
 				Activity
 			</strong>
 		</div>
+		<div>
+			<% @actions.each do |a| %>
+				<%= render :partial => 'user_action', :locals => {:ua => a} %>
+			<% end %>
+		</div>
 	</div>
 	
 	<div class='span4'>

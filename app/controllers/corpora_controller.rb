@@ -586,36 +586,60 @@ class CorporaController < ApplicationController
 		@corpus = Corpus.find(params[:id])
 
 		@filename = params[:name]
-		#To-Do: Error/Evil checking
+		version = nil
 
+		#To-Do: Error/Evil checking
 		archive_path = "#{@corpus.archives_path}/#{@filename}"
 
-		if @filename =~ /^\+(\d+)/
-			version = $1.to_i
-			@corpus.svn_prepare_version_for_download(version)
-			archive_path = @corpus.get_archive(version)
-			if(archive_path)
-				send_file archive_path
-			else
-				flash[:notice] = "Your archive is being prepared. Please check back in a few minutes."
-				redirect_to @corpus
-			end
+		# logger.info "** FILENAME = #{@filename}"
+		# logger.info "** ARCHIVE_PATH = #{archive_path}"
 
-		elsif invalid_filename?(@filename) || !File.file?(archive_path)
-			redirect_to '/perm'
+		# check if version number is included
+		if @filename =~ /\.(\d+)\.[a-z]+$/
+			version = $1.to_i
 		else
-			messager = make_messager
-			current_user.shout(
-				@corpus.associated_users,
-				"#{current_user.name} has downloaded #{@corpus.name}",
-				render_to_string(:partial => 'shout_download', :locals => {
-					:user => current_user
-				}),
-				messager
-			)
-			send_file archive_path
+			logger.info "*** VERSION NOT INCLUDED ***"
+			redirect_to '/perm'
+			return
 		end
 
+		@corpus.svn_prepare_version_for_download(version)
+		archive_path = @corpus.get_archive(version)
+
+		# check if file is valid
+		if invalid_filename?(@filename)
+			redirect_to '/perm'
+			return
+		end
+
+		if(archive_path)
+			@corpus.user_action_from(current_user, :download, {
+				:version => version,
+			})
+			send_file archive_path
+		else
+			flash[:notice] = "Your archive is being prepared. Please check back in a few minutes."
+			redirect_to @corpus
+		end
+
+		# elsif invalid_filename?(@filename) || !File.file?(archive_path)
+		# 	redirect_to '/perm'
+		# else
+		# 	# shout to all associated users
+		# 	# messager = make_messager
+		# 	# current_user.shout(
+		# 	# 	@corpus.associated_users,
+		# 	# 	"#{current_user.name} has downloaded #{@corpus.name}",
+		# 	# 	render_to_string(:partial => 'shout_download', :locals => {
+		# 	# 		:user => current_user
+		# 	# 	}),
+		# 	# 	messager
+		# 	# )
+		# 	@corpus.user_action_from(current_user, :download, {
+		# 		:version => 0,
+		# 	})
+		# 	send_file archive_path
+		# end
 
 	end
 

@@ -176,10 +176,10 @@ class User < ActiveRecord::Base
 		"#{self.name}<#{self.email}>"
 	end
 
-	def gravatar_url(type)
+	def gravatar_url(type, size=200)
 		gravatar_email = self.gravatar_email || self.email
 		gravatar_id = Digest::MD5.hexdigest(gravatar_email.downcase)
-		return "http://gravatar.com/avatar/#{gravatar_id}.#{type}?s=200"
+		return "http://gravatar.com/avatar/#{gravatar_id}.#{type}?s=#{size}"
 	end
 
 end

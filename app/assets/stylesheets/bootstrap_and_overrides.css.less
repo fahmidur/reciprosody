@@ -538,6 +538,68 @@ h4.index-header1 {
 .signal.active {
 	opacity: 1.0;
 }
+.user-action {
+	border: 1px solid #ddd;
+	margin-bottom:5px;
+	padding: 10px;
+	border-left: 2px solid #ddd;
+	background-color: #fefefe;
+	opacity: 0.92;
+	overflow: auto;
+
+	-webkit-transition-property:background, border, color;
+	-webkit-transition-duration:1s, 1s, 1s;
+	-webkit-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
+	
+	-moz-transition-property:background, border, color, opacity;
+	-moz-transition-duration:1s, 1s, 1s, 1s;
+	-moz-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
+	
+	box-sizing: border-box;
+}
+.user-action:hover {
+	color:#2d2d2d;
+	background-color:#fafaff;
+	border:1px solid #adadad;
+	opacity: 1.0;
+	/*border-left:2px solid #4FD5D6;*/
+	border-left:2px solid #777;
+}
+.user-action .top {
+	/*border-bottom: 1px solid #eee;*/
+}
+.user-action a.dark {
+	color: #2d2d2d;
+	text-decoration: none;
+	display: block;
+	border-left: 1px solid transparent;
+	padding-left: 5px;
+	margin-top:5px;
+}
+.user-action a.dark:hover {
+	color: black;
+	border-left: 1px solid #5d5d5d;
+}
+.user-action table {
+	width: 100%;
+
+	tr {
+		vertical-align: top;
+	}
+
+	td {
+		/*border: 1px solid #eee;*/
+	}
+}
+.user-avatar-small {
+	border-radius:50%;
+}
+.user-action-icon {
+}
+.ago {
+	font-size: small;
+	font-weight: bold;
+}
 .box {
 	/*border:1px solid #eaeaea;*/
 	border: 1px solid #fafafa;
