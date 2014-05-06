@@ -12,7 +12,6 @@ class PublicationsController < ApplicationController
 
 	# GET /publications/5/add_tool_rel
 	def add_tool_rel
-		logger.info("********************************GOT HERE******************")
 		@pub = Publication.find_by_id(params[:id])
 		name = params[:name]
 		name[/<(\d+)>/]
@@ -24,7 +23,6 @@ class PublicationsController < ApplicationController
 		relationship = "uses" if !relationship || relationship.blank?
 
 		if @tool && ToolPublicationRelationship.where(:publication_id => @pub.id, :tool_id => @tool.id).empty?
-			logger.info("********************************GOT HERE******MAKING RELATIONSHIP************")
 			ToolPublicationRelationship.create(:publication_id => @pub.id, :tool_id => @tool.id, :name => relationship)
 		end
 
