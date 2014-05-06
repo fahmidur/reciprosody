@@ -300,8 +300,7 @@ class PublicationsController < ApplicationController
 
 		return true unless @file
 
-		Dir.chdir Rails.root
-		path = "publications/#{@pub.id}"
+		path = "#{Rails.root}/publications/#{@pub.id}"
 
 		`mkdir -p #{path}`
 		`rm #{path}/*`
@@ -312,7 +311,7 @@ class PublicationsController < ApplicationController
 		#name = @pub.name.underscore
 		name = session[:resumable_original_filename]
 
-		path += "/#{name}#{extname}"
+		path += "/#{name}"
 		File.open(path, "wb") {|f| f.write(@file.read)}
 
 		@pub.local = path
