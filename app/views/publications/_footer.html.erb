@@ -1,26 +1,29 @@
-<br/>
-<a href='javascript:history.go(-1)' class='btn'>Back</a>
-<% if @pub.canEdit?(current_user) %> 
-	<a href='<%= edit_publication_path(@pub)%>' class='btn'>Edit</a> 
+<div class='row-fluid'>
+	<div class='span12'>
+	<a href='javascript:history.go(-1)' class='btn'>Back</a>
+	<% if @pub.canEdit?(current_user) %> 
+		<a href='<%= edit_publication_path(@pub)%>' class='btn'>Edit</a> 
 
-	<a href="#delete-confirm-pub-<%=@pub.id%>" data-id="<%= @pub.id %>" class="delete-confirm btn btn-danger pull-right" data-toggle="modal">
-		<i class='icon-trash'></i>&nbsp;
-		Delete
-	</a>
+		<a href="#delete-confirm-pub-<%=@pub.id%>" data-id="<%= @pub.id %>" class="delete-confirm btn btn-danger pull-right" data-toggle="modal">
+			<i class='icon-trash'></i>&nbsp;
+			Delete
+		</a>
 
-	<div class="modal fade" id="delete-confirm-pub-<%= @pub.id %>" style="display:none">
-		<div class="modal-header">
-			<a class="close" data-dismiss="modal">×</a>
-			<h3>Are you sure?</h3>
+		<div class="modal fade" id="delete-confirm-pub-<%= @pub.id %>" style="display:none">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3>Are you sure?</h3>
+			</div>
+			<div class="modal-body">
+				<p>Just checking.</p>
+			</div>
+			<div class="modal-footer">
+				<%= link_to 'Destroy', '/publications/'+ @pub.id.to_s, :method => :delete, 
+					:class => 'btn' %>
+				<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+			</div>
 		</div>
-		<div class="modal-body">
-			<p>Just checking.</p>
-		</div>
-		<div class="modal-footer">
-			<%= link_to 'Destroy', '/publications/'+ @pub.id.to_s, :method => :delete, 
-				:class => 'btn' %>
-			<a href="#" data-dismiss="modal" class="btn">Cancel</a>
-		</div>
+
+	<% end %>
 	</div>
-
-<% end %>
+</div>
