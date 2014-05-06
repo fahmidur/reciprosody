@@ -67,6 +67,7 @@ class Corpus < ActiveRecord::Base
 		end
 
 		action.save!
+		return action
 	end
 
 	def calc_wav_times

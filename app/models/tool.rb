@@ -39,6 +39,7 @@ class Tool < ActiveRecord::Base
     end
     
     action.save!
+    return action
   end
 
   def self.valid_orders()

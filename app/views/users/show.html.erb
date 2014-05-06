@@ -98,7 +98,7 @@
 				Activity
 			</strong>
 		</div>
-		<div>
+		<div id='actionsHolder'>
 			<% @actions.each do |a| %>
 				<%= render :partial => 'user_action', :locals => {:ua => a} %>
 			<% end %>

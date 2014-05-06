@@ -39,6 +39,7 @@ class Publication < ActiveRecord::Base
 		end
 		
 		action.save!
+		return action
 	end
 
 	#---Permissions-----

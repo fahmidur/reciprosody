@@ -72,6 +72,21 @@ class ApplicationController < ActionController::Base
 		return messager
 	end
 
+	# notify all users of a UserAction
+	def action_notify(ua)
+		associated_users = ua.user_actionable.associated_users
+		get_faye_client
+		associated_users.each do |u|
+			@faye_client.publish("/useraction/#{u.id}", {
+				:html => render_to_string(
+					:partial => 'users/user_action',
+					:locals => {:ua => ua}
+				),
+				:id => ua.id
+			});
+		end
+	end
+
 	def get_faye_client
 		logger.info "GET FAYE CLIENT"
 		return @faye_client if @faye_client

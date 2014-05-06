@@ -617,33 +617,28 @@ class CorporaController < ApplicationController
 		archive_path = @corpus.get_archive(version)
 
 		if(archive_path)
-			@corpus.user_action_from(current_user, :download, {
+			action = @corpus.user_action_from(current_user, :download, {
 				:version => version,
 			})
+			action_notify(action)
+			
 			send_file archive_path
 		else
 			flash[:notice] = "Your archive is being prepared. Please check back in a few minutes."
 			redirect_to @corpus
 		end
 
-		# elsif invalid_filename?(@filename) || !File.file?(archive_path)
-		# 	redirect_to '/perm'
-		# else
-		# 	# shout to all associated users
-		# 	# messager = make_messager
-		# 	# current_user.shout(
-		# 	# 	@corpus.associated_users,
-		# 	# 	"#{current_user.name} has downloaded #{@corpus.name}",
-		# 	# 	render_to_string(:partial => 'shout_download', :locals => {
-		# 	# 		:user => current_user
-		# 	# 	}),
-		# 	# 	messager
-		# 	# )
-		# 	@corpus.user_action_from(current_user, :download, {
-		# 		:version => 0,
-		# 	})
-		# 	send_file archive_path
-		# end
+
+		# shout to all associated users
+		# messager = make_messager
+		# current_user.shout(
+		# 	@corpus.associated_users,
+		# 	"#{current_user.name} has downloaded #{@corpus.name}",
+		# 	render_to_string(:partial => 'shout_download', :locals => {
+		# 		:user => current_user
+		# 	}),
+		# 	messager
+		# )
 
 	end
 

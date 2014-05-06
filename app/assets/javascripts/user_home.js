@@ -22,6 +22,29 @@ __app.modules.userhome = function() {
 	var _people_result = new Array();
 	var _previous_search = "";
 
+	var _userAction = function() {
+		var actions = {};
+		var $actionsHolder = $('#actionsHolder');
+
+		var fayeMessageHandler = function(data) {
+			console.log("FayeMessageHandler::Data::UserAction", data);
+
+			// $('.user-action:first').before(data.html).hide();
+			$(data.html).prependTo($actionsHolder).hide().slideDown();
+			actions[data.id] = $('#user-action-'+data.id);
+		};
+
+		$('.user-action').each(function() {
+			var id = $(this).data('id');
+			actions[id] = $(this);
+		});
+
+		return {
+			'fayeMessageHandler': fayeMessageHandler
+		};
+
+	}();
+
 
 
 	$profileAvatar.on('click', click_profileAvatar);
@@ -169,14 +192,15 @@ __app.modules.userhome = function() {
 
 		if(_fayeClient) {
 			// console.log('Connected!');
-			_fayeSub = _fayeClient.subscribe('/messages/'+_userID, fayeMessageHandler_messages);
+			_fayeSub_messages = _fayeClient.subscribe('/messages/'+_userID, fayeMessageHandler_messages);
+			_fayeSub_userAction = _fayeClient.subscribe('/useraction/'+_userID, _userAction.fayeMessageHandler)
 			$fayeConnectionIndicator.addClass('active');
 		} else {
 		}
 	}
 
 	function fayeMessageHandler_messages(data) {
-		console.log("FayeMessageHandler::Data: ", data);
+		console.log("FayeMessageHandler::Data::Message ", data);
 		$inboxCount.html( parseInt($inboxCount.text()) + 1 );
 		$inboxCount.css("background-color", "orange");
 	}

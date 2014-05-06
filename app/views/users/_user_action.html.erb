@@ -1,7 +1,4 @@
-<script type='text/javascript'>
-// registerAction({id: <%= ua.id %>});
-</script>
-<div class='user-action row-fluid'>
+<div class='user-action row-fluid' data-id='<%= ua.id %>' id='user-action-<%= ua.id %>'>
 	<table>
 		<tr>
 			<td class='fixedwidth20' rowspan='2'>
@@ -16,17 +13,17 @@
 			</td>
 			<td class='top'>
 				<span class='ago'>
-					<%= time_ago_in_words(ua.created_at)%> ago from <a href='<%= polymorphic_url(ua.user) %>'><%= ua.user.name %></a>
+					<%= time_ago_in_words(ua.created_at)%> ago from <a href='<%= url_for(ua.user) %>'><%= ua.user.name %></a>
 				</span>
 			</td>
 			<td rowspan='2' class='fixedwidth50'>
-				<a href='<%= polymorphic_url(ua.user) %>'>
+				<a href='<%= url_for(ua.user) %>'>
 					<img class='user-avatar-small pull-right' src='<%= ua.user.gravatar_url(:png, 50) %>' title="<%= ua.user.name %>" alt="<%= ua.user.name %>"/>
 				</a>
 			</td>
 		</tr>
 
-		<%= render :partial => "user_#{ua.user_action_type.name}_action_#{ua.user_actionable.class.table_name}", :locals => {:ua => ua } %>
+		<%= render :partial => "users/user_#{ua.user_action_type.name}_action_#{ua.user_actionable.class.table_name}", :locals => {:ua => ua } %>
 
 	</table>
 </div>
