@@ -241,6 +241,7 @@ class Corpus < ActiveRecord::Base
 		FileUtils.rm_rf(tmp_dir)
 	end
 
+	# Get a particular archived version
 	def get_archive(version)
 		archive = nil
 		Dir.glob(self.archives_path + "*").each do |file|
