@@ -65,7 +65,7 @@
 					<% if user_signed_in? %>
 						<li>
 							<a href='#' class='dropdown-toggle' data-toggle='dropdown'>
-								<img src='/assets/settings.png' width=20 height=20 />
+								<img src='/assets/settings.png' width=20 height=20 alt="gear"/>
 								<%= current_user.name %>
 								<b class='caret'></b>
 							</a>
@@ -98,7 +98,7 @@
 		</div><br/>
 	</div>
 
-	<div class='row-fluid' id>
+	<div class='row-fluid'>
 		<div class='span4 pull-right'>
 			<span class='pull-right padleft'>
 			<%= render :partial => 'shared/browser_icon', :locals => {:browser => 'firefox'} %>
