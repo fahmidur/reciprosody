@@ -384,6 +384,7 @@ class UsersController < ApplicationController
 	end
 
 	# GET /users/:id
+	# params[:page] = page number
 	def show # show current user home page
 		logger.info "**USER SHOW**"
 		@user = nil
@@ -402,26 +403,7 @@ class UsersController < ApplicationController
 			return
 		end
 
-		@user = @user || current_user()
-
-		@actions = UserAction.where(
-			:user_actionable_type => 'Corpus',
-			:user_actionable_id => @user.associated_corpora.map{|e| e.id }
-		)
-
-		@actions += UserAction.where(
-			:user_actionable_type => 'Publication',
-			:user_actionable_id => @user.associated_publications.map{|e| e.id }
-		)
-
-		@actions += UserAction.where(
-			:user_actionable_type => 'Tool',
-			:user_actionable_id => @user.associated_tools.map{|e| e.id }
-		)
-
-		@actions.sort!{|a,b| a.created_at <=> b.created_at }.reverse!
-		@actions = Kaminari.paginate_array(@actions).page(1).per(7)
-
+		get_actions(params[:page])
 		get_faye_url
 
 		render :show
@@ -466,6 +448,31 @@ class UsersController < ApplicationController
 	end
 	
 	private
+
+	# returns an array of
+	# actions paginated
+	# with Kaminari
+	def get_actions(page)
+		@user = @user || current_user()
+
+		@actions = UserAction.where(
+			:user_actionable_type => 'Corpus',
+			:user_actionable_id => @user.associated_corpora.map{|e| e.id }
+		)
+
+		@actions += UserAction.where(
+			:user_actionable_type => 'Publication',
+			:user_actionable_id => @user.associated_publications.map{|e| e.id }
+		)
+
+		@actions += UserAction.where(
+			:user_actionable_type => 'Tool',
+			:user_actionable_id => @user.associated_tools.map{|e| e.id }
+		)
+
+		@actions.sort!{|a,b| a.created_at <=> b.created_at }.reverse!
+		@actions = Kaminari.paginate_array(@actions).page(page).per(5)
+	end
 	
 	def auth_filter
 		if !user_signed_in?
