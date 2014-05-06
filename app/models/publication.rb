@@ -28,7 +28,8 @@ class Publication < ActiveRecord::Base
 	validates :url, :url => true, :allow_blank => true
 	#--------------------------------------
 
-	def user_action_from(user, action_sym, extra={})
+	def user_action_from(user, action_sym, extra={}, notifier)
+		return unless user	
 		action = self.user_actions.build
 		action.user_id = user.id
 
@@ -39,6 +40,8 @@ class Publication < ActiveRecord::Base
 		end
 		
 		action.save!
+		notifier.call(action) if notifier
+
 		return action
 	end
 

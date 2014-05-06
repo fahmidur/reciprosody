@@ -617,10 +617,11 @@ class CorporaController < ApplicationController
 		archive_path = @corpus.get_archive(version)
 
 		if(archive_path)
-			action = @corpus.user_action_from(current_user, :download, {
-				:version => version,
-			})
-			action_notify(action)
+			action = @corpus.user_action_from(current_user, 
+				:download, 
+				{:version => version}, 
+				method(:action_notify)
+			)
 			
 			send_file archive_path
 		else

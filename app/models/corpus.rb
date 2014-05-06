@@ -56,7 +56,8 @@ class Corpus < ActiveRecord::Base
 		end
 	end
 
-	def user_action_from(user, action_sym, extra={})
+	def user_action_from(user, action_sym, extra={}, notifier)
+		return unless user	
 		action = self.user_actions.build
 		action.user_id = user.id
 
@@ -65,8 +66,10 @@ class Corpus < ActiveRecord::Base
 		extra.each do |k,v|
 			action.update(k => v)
 		end
-
+		
 		action.save!
+		notifier.call(action) if notifier
+
 		return action
 	end
 
