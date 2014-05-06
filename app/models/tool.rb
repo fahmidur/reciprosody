@@ -15,6 +15,8 @@ class Tool < ActiveRecord::Base
   has_many :publications, :through => :tool_publication_relationships
   has_many :tool_publication_relationships, :dependent => :delete_all   #delete *tool-publication relationships
 
+  has_many :user_actions, :as => :user_actionable
+
   scope :tool_owner_of,     -> { (where tool_memberships: {role: 'owner'}).order(:updated_at => :desc) }
   scope :tool_approver_of,  -> { (where tool_memberships: {role: 'approver'}).order(:updated_at => :desc) }
   scope :tool_member_of,    -> { (where tool_memberships: {role: 'member'}).order(:updated_at => :desc) }

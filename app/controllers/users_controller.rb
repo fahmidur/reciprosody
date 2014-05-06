@@ -404,11 +404,18 @@ class UsersController < ApplicationController
 
 		@user = @user || current_user()
 
-		@associated_corpora = @user.associated_corpora.map{|e| e.id }
 		@actions = UserAction.where(
 			:user_actionable_type => 'Corpus',
-			:user_actionable_id => @associated_corpora
-		).order(:created_at).reverse_order
+			:user_actionable_id => @user.associated_corpora.map{|e| e.id }
+		)
+
+		@actions += UserAction.where(
+			:user_actionable_type => 'Publication',
+			:user_actionable_id => @user.associated_publications.map{|e| e.id }
+		)
+
+		@actions.sort!{|a,b| a.created_at <=> b.created_at }.reverse!
+		@actions = Kaminari.paginate_array(@actions).page(1).per(7)
 
 		get_faye_url
 

@@ -1,14 +1,7 @@
 <tr>
 	<td>
 		<a href='<%= polymorphic_url(ua.user_actionable) %>' class='dark'>
-			<% case ua.user_actionable.class.table_name %>
-			<% when 'corpora' %>
 			<i class='icon-book'></i>
-			<% when 'publications' %>
-			<i class='icon-file'></i>
-			<% else %>
-			<% end %>
-
 			<%= ua.user_actionable.name %>
 			<br/>
 			&nbsp;&nbsp;&nbsp;&nbsp;

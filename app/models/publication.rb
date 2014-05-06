@@ -11,6 +11,8 @@ class Publication < ActiveRecord::Base
 	has_many :tools, :through => :tool_publication_relationships
 	has_many :tool_publication_relationships, :dependent => :delete_all #delete tool-*pub relationships
 
+	has_many :user_actions, :as => :user_actionable
+
 	accepts_nested_attributes_for :publication_memberships, :users
 
 	scope :publication_owner_of,	-> { (where publication_memberships: {role: 'owner'}).order(:updated_at => :desc) 	}
@@ -25,6 +27,19 @@ class Publication < ActiveRecord::Base
 	validates :name, :presence => true
 	validates :url, :url => true, :allow_blank => true
 	#--------------------------------------
+
+	def user_action_from(user, action_sym, extra={})
+		action = self.user_actions.build
+		action.user_id = user.id
+
+		user_action_type = UserActionType.find_by_name(action_sym)
+		action.user_action_type_id = user_action_type.id
+		extra.each do |k,v|
+			action.update(k => v)
+		end
+		
+		action.save!
+	end
 
 	#---Permissions-----
 	# this should be called canBeEditedBy?

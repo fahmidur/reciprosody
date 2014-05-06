@@ -46,7 +46,9 @@ userActionTypes = [
 	'download',
 	'upload',
 	'registered_view',
-	'public_view'
+	'public_view',
+	'follow_link',
+	'update'
 	];
 userActionTypes.each do |type|
 	UserActionType.fetch(type)
