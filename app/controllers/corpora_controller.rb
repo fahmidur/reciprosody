@@ -674,7 +674,7 @@ class CorporaController < ApplicationController
 		@files = Dir.glob("#{dir}/*").sort {|a,b| a.downcase <=> b.downcase}.partition{|f|File.directory?(f)}.flatten
 
 		#---retroactive patch for old corpora---
-		if(@files.empty? && !Dir.glob(@corpus.archives_path).empty?)
+		if(@files.empty? && Dir.glob(@corpus.archives_path + "*").present?)
 			retro_browse_patch()
 			@files = Dir.glob("#{dir}/*")
 		end
@@ -1072,7 +1072,7 @@ class CorporaController < ApplicationController
 		end
 		
 		#------------Locking for Multiple Users----------------------------
-		unless Dir.glob(@corpus.tmp_path + "/*").empty?
+		unless Dir.glob(@corpus.tmp_path + "*").empty?
 			@corpus.errors[:upload_in_use] = ": Please try again in just a minute."
 			return false
 		end
@@ -1084,7 +1084,7 @@ class CorporaController < ApplicationController
 		archive_name = @corpus.safe_name
 		version = @corpus.svn_revisions + 1
 		
-		@archive = @corpus.archives_path + "/#{archive_name}.#{version}.#{archive_ext}"
+		@archive = @corpus.archives_path + "#{archive_name}.#{version}.#{archive_ext}"
 
 		# Move the file to archive folder
 		FileUtils.mv(@file.path, @archive)
@@ -1107,7 +1107,7 @@ class CorporaController < ApplicationController
 
 		msg = current_user().commit_header + msg
 
-		if Dir.glob(@corpus.svn_path + "/*").empty?
+		if Dir.glob(@corpus.svn_path + "*").empty?
 			# Initial commit
 			Dir.chdir Rails.root
 

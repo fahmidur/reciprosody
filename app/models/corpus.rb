@@ -49,7 +49,9 @@ class Corpus < ActiveRecord::Base
 		fnames = archived
 		fnames.each do |fname|
 			if fname =~ /(\d+)\.([a-z]+)$/
-				FileUtils.mv("#{self.archives_path}/#{fname}", "#{self.archives_path}/#{self.name}.#{$1}.#{$2}")
+				oldpath = self.archives_path + fname
+				newpath = self.archives_path + "#{self.safe_name}.#{$1}.#{$2}"
+				FileUtils.mv(oldpath, newpath) unless oldpath == newpath
 			end
 		end
 	end
@@ -89,7 +91,7 @@ class Corpus < ActiveRecord::Base
 
 	#---Static Methods  -----------------------------------
 	def self.corpora_folder
-		"corpora"
+		Rails.root + "corpora"
 	end
 
 	def self.tmp_subFolder
@@ -241,7 +243,7 @@ class Corpus < ActiveRecord::Base
 
 	def get_archive(version)
 		archive = nil
-		Dir.glob(self.archives_path + "/*").each do |file|
+		Dir.glob(self.archives_path + "*").each do |file|
 			if file =~ /#{version}\.\w+$/
 				archive = file
 			end
@@ -273,35 +275,35 @@ class Corpus < ActiveRecord::Base
 			assign_unique_token
 			create_dirs
 		end
-		Corpus.corpora_folder  + "/" + self.utoken
+		Corpus.corpora_folder + self.utoken
 	end
 	
 	def archives_path
-		home_path + "/" + Corpus.archives_subFolder
+		home_path + Corpus.archives_subFolder
 	end
 
 	def download_stage_path
-		home_path + "/" + Corpus.download_stage_subFolder
+		home_path + Corpus.download_stage_subFolder
 	end
 
 	def upload_stage_path
-		home_path + "/" + Corpus.upload_stage_subFolder
+		home_path + Corpus.upload_stage_subFolder
 	end
 	
 	def tmp_path
-		home_path + "/" + Corpus.tmp_subFolder
+		home_path + Corpus.tmp_subFolder
 	end
 	
 	def svn_path
-		home_path + "/" + Corpus.svn_subFolder
+		home_path + Corpus.svn_subFolder
 	end
 	
 	def head_path
-		home_path + "/" + Corpus.head_subFolder
+		home_path + Corpus.head_subFolder
 	end
 	
 	def svn_file_url
-		"file://#{Rails.root}/#{self.svn_path}"
+		"file://#{self.svn_path}"
 	end
 	
 	#-------------------------------------------------------
