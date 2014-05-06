@@ -414,6 +414,11 @@ class UsersController < ApplicationController
 			:user_actionable_id => @user.associated_publications.map{|e| e.id }
 		)
 
+		@actions += UserAction.where(
+			:user_actionable_type => 'Tool',
+			:user_actionable_id => @user.associated_tools.map{|e| e.id }
+		)
+
 		@actions.sort!{|a,b| a.created_at <=> b.created_at }.reverse!
 		@actions = Kaminari.paginate_array(@actions).page(1).per(7)
 
