@@ -619,7 +619,7 @@ class CorporaController < ApplicationController
 		if(archive_path)
 			action = @corpus.user_action_from(current_user, 
 				:download, 
-				{:version => version}, 
+				{:version => version},
 				method(:action_notify)
 			)
 			

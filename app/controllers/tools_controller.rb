@@ -387,9 +387,9 @@ class ToolsController < ApplicationController
 		unless local
 			redirect_to '/perm'
 		end
-		action = @tool.user_action_from(
-			current_user, 
+		action = @tool.user_action_from(current_user, 
 			:download,
+			{},
 			method(:action_notify)
 		)
 		

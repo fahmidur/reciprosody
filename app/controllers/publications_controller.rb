@@ -458,9 +458,9 @@ class PublicationsController < ApplicationController
 			redirect_to '/perm'
 		end
 
-		action = @pub.user_action_from(
-			current_user,
-			:download,
+		action = @pub.user_action_from(current_user,
+			:download, 
+			{},
 			method(:action_notify)
 		)
 		

@@ -342,13 +342,13 @@ class Corpus < ActiveRecord::Base
 			q = "%#{q}%"
 		end
 
-		chosen = 	where('name LIKE ? AND description LIKE ?', q, q)
-		chosen += 	where('name LIKE ?', q)
-		chosen +=	where('description LIKE ?', q)
-		chosen +=	where('citation LIKE ?', q)
+		# Not a fan of implicit Relation to Array
+		chosen = 	where('name LIKE ? AND description LIKE ?', q, q).to_a
+		chosen += 	where('name LIKE ?', q).to_a
+		chosen +=	where('description LIKE ?', q).to_a
+		chosen +=	where('citation LIKE ?', q).to_a
 
-		chosen = chosen.to_a.uniq
-
+		chosen.uniq!
 		return chosen
 	end
 

@@ -61,10 +61,11 @@ class User < ActiveRecord::Base
 			q = "%#{q}%"
 		end
 		q = "%#{q}%"
-		result = User.where("email = ?", q).to_a
+		result =  User.where("email = ?", q).to_a
 		result += User.where("email LIKE ?", q).to_a
 		result += User.where("name LIKE ?", q).to_a
 		result += User.includes(:institutions).where("institutions.name LIKE ?", q).references(:institutions).to_a
+		result.uniq!
 		return result
 	end
 
