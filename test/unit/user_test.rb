@@ -18,9 +18,9 @@ class UserTest < ActiveSupport::TestCase
 	end
 
 	#
-	# Tests the Weighted Search
-	# for the User Model
-	#
+	# Tests the Weighted Search for User
+	# this should return an empty string for
+	# such an impossible string
 	test "user.wsearch('<impossible string>') should return an empty array" do
 		impossible_string = SecureRandom.uuid * 5
 		result = User.wsearch(impossible_string)
