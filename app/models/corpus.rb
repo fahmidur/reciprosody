@@ -1,4 +1,6 @@
 class Corpus < ActiveRecord::Base
+	include UserActionable
+
 	require 'waveinfo'
 	
 	acts_as_commentable
@@ -54,23 +56,6 @@ class Corpus < ActiveRecord::Base
 				FileUtils.mv(oldpath, newpath) unless oldpath == newpath
 			end
 		end
-	end
-
-	def user_action_from(user, action_sym, extra={}, notifier)
-		return unless user	
-		action = self.user_actions.build
-		action.user_id = user.id
-
-		user_action_type = UserActionType.find_by_name(action_sym)
-		action.user_action_type_id = user_action_type.id
-		extra.each do |k,v|
-			action.update(k => v)
-		end
-		
-		action.save!
-		notifier.call(action) if notifier
-
-		return action
 	end
 
 	def calc_wav_times

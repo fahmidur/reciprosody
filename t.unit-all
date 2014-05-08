@@ -19,3 +19,8 @@ echo ""
 echo "Testing License Model"
 ruby -Itest test/unit/license_test.rb
 echo ""
+
+
+echo "Testing User Model"
+ruby -Itest test/unit/user_test.rb
+echo ""
