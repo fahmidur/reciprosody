@@ -4,10 +4,7 @@ class UserTest < ActiveSupport::TestCase
 	setup do
 		@corpus = corpora(:one)
 		@user = users(:syed)
-<<<<<<< HEAD
-=======
 		@onedoe = users(:one_doe)
->>>>>>> newfeatures
 	end
 
 	test "the truth" do
@@ -21,17 +18,6 @@ class UserTest < ActiveSupport::TestCase
 		)
 	end
 
-<<<<<<< HEAD
-	#
-	# Tests the Weighted Search for User
-	# this should return an empty string for
-	# such an impossible string (repeat for all models)
-	test "user.wsearch('<impossible string>') should return an empty array" do
-		impossible_string = SecureRandom.uuid * 5
-		result = User.wsearch(impossible_string)
-		assert result.class.to_s == 'Array'
-	end
-=======
 	# Type-strict tests
 
 	##
@@ -153,6 +139,4 @@ class UserTest < ActiveSupport::TestCase
 		ret = @user.email_format
 		assert ret.class.to_s == 'String'
 	end
-
->>>>>>> newfeatures
 end
