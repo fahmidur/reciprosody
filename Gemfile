@@ -56,6 +56,7 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.0"
   
   gem "capybara"
+  gem 'rspec' # for cucumber
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
   gem 'rails-erd'

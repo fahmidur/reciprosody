@@ -11,6 +11,7 @@ end
 
 module Reciprosody2
   require 'yaml'
+
   static_secrets = YAML.load(File.read('static_secrets.yaml'))
   FAYE_PASSWORD = static_secrets[:faye_password]
   
@@ -18,6 +19,8 @@ module Reciprosody2
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    config.secret_key_base = FAYE_PASSWORD
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
