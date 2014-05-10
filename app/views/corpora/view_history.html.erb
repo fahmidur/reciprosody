@@ -24,6 +24,7 @@
 		<div class='boxcontent'>
 			<%=raw c[:msg] %>
 			<% if c[:status_changes] && c[:status_changes].size > 0 %>
+			<br/>
 			<div class='svn_status_toggle btn btn-mini'>Pre-Commit Status</div>
 			<div class='svn_status monospace'>
 			<% c[:status_changes].each do |change| %>

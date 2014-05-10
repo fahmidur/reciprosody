@@ -629,18 +629,6 @@ class CorporaController < ApplicationController
 			redirect_to @corpus
 		end
 
-
-		# shout to all associated users
-		# messager = make_messager
-		# current_user.shout(
-		# 	@corpus.associated_users,
-		# 	"#{current_user.name} has downloaded #{@corpus.name}",
-		# 	render_to_string(:partial => 'shout_download', :locals => {
-		# 		:user => current_user
-		# 	}),
-		# 	messager
-		# )
-
 	end
 
 	def browse
@@ -798,6 +786,9 @@ class CorporaController < ApplicationController
 		baseurl = "#{@rpath if @rpath != '/' }"
 
 		# this is no longer necessary
+		# will be swapped to with new
+		# useraction feed
+
 		# messager = make_messager
 		# current_user.shout(
 		# 	@corpus.associated_users, 
@@ -837,6 +828,7 @@ class CorporaController < ApplicationController
 			redirect_to '/perm'
 			return
 		end
+		newname.gsub!(/\s+/, '_')
 
 		file = "#{@corpus.head_path}#{@rpath}"
 		file.chop! if file.length > 1 && file[-1] == "/"
