@@ -77,7 +77,22 @@ class User < ActiveRecord::Base
 		insts.map{|inst| inst.name }.join(", ")
 	end
 
+<<<<<<< HEAD
 	def setProp(name, value)
+=======
+	##
+	# setProp allows you to set
+	# a key-value pair to act
+	# as a property for the user
+	#
+	# if no value is given
+	# that property is simply
+	# removed
+	#
+	# this pertains the user_properties table
+	# or the UserProperty model
+	def setProp(name, value=nil)
+>>>>>>> newfeatures
 		prop = self.user_properties.find_by_name(name)
 		if(prop)
 			prop.destroy()
@@ -88,10 +103,36 @@ class User < ActiveRecord::Base
 		end
 	end
 
+<<<<<<< HEAD
 	# messages a group of users
 	# "this user is shouting at a set
 	# of users"
 	def shout(users, topic, body, fayeproc)
+=======
+	##
+	# getProp allows you to get
+	# a property for a certain user
+	#
+	# if a name is not supplied
+	# it returns all properties 
+	# for the user
+	#
+	# this pertains the user_properties table
+	# or the UserProperty model
+	def getProp(name = nil)
+		if(name == nil)
+			return self.user_properties
+		end
+		prop = self.user_properties.find_by_name(name)
+		return prop.value if prop
+		return nil
+	end
+
+	# messages a group of users
+	# "this user is shouting at a set
+	# of users"
+	def shout(users, topic, body, fayeproc = nil)
+>>>>>>> newfeatures
 		users -= [self] if users
 
 		if !users || users.size <= 0
@@ -99,6 +140,7 @@ class User < ActiveRecord::Base
 			return
 		end
 
+<<<<<<< HEAD
 		unless fayeproc
 			logger.info "***USER@SHOUT ! Faye client not found"
 			return
@@ -119,6 +161,19 @@ class User < ActiveRecord::Base
 		return nil
 	end
 
+=======
+		# unless fayeproc
+		# 	logger.info "***USER@SHOUT ! Faye client not found"
+		# 	return
+		# end
+		
+		users.each do |u|
+			message = self.send_message(u, {:topic => topic, :body => body})
+			fayeproc.call(message) if fayeproc
+		end
+	end
+
+>>>>>>> newfeatures
 
 	def resumables
 		ResumableIncompleteUpload.where(:user_id => self.id).order("updated_at DESC")
@@ -194,5 +249,8 @@ class User < ActiveRecord::Base
 		gravatar_id = Digest::MD5.hexdigest(gravatar_email.downcase)
 		return "http://gravatar.com/avatar/#{gravatar_id}.#{type}?s=#{size}"
 	end
+<<<<<<< HEAD
 
+=======
+>>>>>>> newfeatures
 end

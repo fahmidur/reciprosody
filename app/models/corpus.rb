@@ -113,6 +113,11 @@ class Corpus < ActiveRecord::Base
 	#------------------------------------------------------
 
 	# returns the svn revision number
+<<<<<<< HEAD
+=======
+	# or "the number of svn_revisions"
+	# SFR: yes, this is named strangely
+>>>>>>> newfeatures
 	def svn_revisions
 		infotext = `svn info #{self.svn_file_url}`
 		logger.info infotext

@@ -5,6 +5,10 @@ SimpleCov.start
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'factory_girl'
+<<<<<<< HEAD
+=======
+require 'uri'
+>>>>>>> newfeatures
 
 
 class ActiveSupport::TestCase
@@ -17,4 +21,22 @@ class ActiveSupport::TestCase
 	fixtures :all
 
 	# Add more helper methods to be used by all tests here...
+<<<<<<< HEAD
+=======
+
+	def wsearch_test(model_name, str)
+		result = model_name.constantize.wsearch(str)
+		assert result.class.to_s == 'Array'
+	end
+
+	def impossible_string
+		return SecureRandom.uuid * 5
+	end
+
+	def valid_url?(url)
+		!!URI.parse(url)
+	rescue URI::InvalidURIError
+		false
+	end
+>>>>>>> newfeatures
 end

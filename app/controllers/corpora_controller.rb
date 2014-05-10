@@ -799,6 +799,7 @@ class CorporaController < ApplicationController
 
 
 
+<<<<<<< HEAD
 		messager = make_messager
 		current_user.shout(
 			@corpus.associated_users, 
@@ -810,6 +811,23 @@ class CorporaController < ApplicationController
 				}),
 			messager
 		);
+=======
+		# this is no longer necessary
+		# messager = make_messager
+		# current_user.shout(
+		# 	@corpus.associated_users, 
+		# 	"#{current_user.name} has uploaded files to #{@corpus.name}",
+		# 	render_to_string(:partial => 'shout_single_upload', :locals => {
+		# 		:files => resumable_filename_list, 
+		# 		:rpath => baseurl,
+		# 		:message => params[:msg],
+		# 		}),
+		# 	messager
+		# );
+		# @corpus.user_action_from(current_user, 
+		# 	:upload,
+		# )
+>>>>>>> newfeatures
 
 		redirect_to "/corpora/#{@corpus.id}/browse?path=#{@rpath}"
 	end
