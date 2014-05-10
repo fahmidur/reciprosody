@@ -115,14 +115,11 @@ class CorpusTest < ActiveSupport::TestCase
   	assert !corpus.save
   end
 
-<<<<<<< HEAD
-=======
   ##
   # Test that Weighted Search on Corpus
   # does not work for an impossible string
   test "Corpus.wsearch('<impossible string>') should return an empty array" do
     wsearch_test('Corpus', impossible_string)
   end
->>>>>>> newfeatures
-
+  
 end
