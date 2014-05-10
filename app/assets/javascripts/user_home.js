@@ -233,7 +233,7 @@ __app.modules.userhome = function() {
 		$gravatarEmailWrapper.slideUp();
 		$sideMenuDiv.slideDown();
 		$peopleSearch.slideDown();
-		$peopleResult.slideDown();
+		$peopleResult.slideUp();
 		$gravatarInfobox.slideUp();
 	}
 	function statechange_normal_gravatar() {
