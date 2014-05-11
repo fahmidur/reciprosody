@@ -23,7 +23,7 @@
 			</td>
 		</tr>
 
-		<%= render :partial => "users/user_#{ua.user_action_type.name}_action_#{ua.user_actionable.class.table_name}", :locals => {:ua => ua } %>
+		<%= render :partial => "#{ua.user_actionable.class.table_name}/user_#{ua.user_action_type.name}_action", :locals => {:ua => ua } %>
 
 	</table>
 </div>

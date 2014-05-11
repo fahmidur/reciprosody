@@ -73,6 +73,10 @@ class ApplicationController < ActionController::Base
 	end
 
 	# notify all users of a UserAction
+	# through faye
+	# this method takes a useraction
+	# it is a callback for user_action_from
+	# on all user_actionable resources
 	def action_notify(ua)
 		associated_users = ua.user_actionable.associated_users
 		get_faye_client

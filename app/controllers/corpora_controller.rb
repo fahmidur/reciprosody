@@ -785,10 +785,11 @@ class CorporaController < ApplicationController
 
 		baseurl = "#{@rpath if @rpath != '/' }"
 
+		@corpus.user_action_from(current_user, :upload, {}, method(:action_notify))
+
 		# this is no longer necessary
 		# will be swapped to with new
 		# useraction feed
-
 		# messager = make_messager
 		# current_user.shout(
 		# 	@corpus.associated_users, 
