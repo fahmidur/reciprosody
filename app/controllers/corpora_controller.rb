@@ -785,7 +785,14 @@ class CorporaController < ApplicationController
 
 		baseurl = "#{@rpath if @rpath != '/' }"
 
-		@corpus.user_action_from(current_user, :upload, {}, method(:action_notify))
+		action = @corpus.user_action_from(current_user, :upload, {
+			:version => @corpus.svn_revisions,
+			:message => {
+					:files => resumable_filename_list,
+					:rpath => baseurl,
+					:message => params[:msg]
+				}.to_json
+		}, method(:action_notify))
 
 		# this is no longer necessary
 		# will be swapped to with new

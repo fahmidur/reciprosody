@@ -5,7 +5,7 @@ class UserAction < ActiveRecord::Base
 	belongs_to :user
 	belongs_to :user_action_type
 
-	attr_accessible :version
+	attr_accessible :version, :message
 
 	paginates_per 7
 
