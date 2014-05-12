@@ -1,0 +1,16 @@
+<h6>
+	<a href='<%= mainUrl %>/corpora/<%= @corpus.id %>/browse'>
+		New Files:
+	</a>
+</h6>
+<ul class='file-uploads-list'>
+<% files.each do |fname| %>
+	<li>
+		<a href='<%= mainUrl %>/corpora/<%= @corpus.id %>/single_download?path=<%= rpath %>/<%= fname %>' target='_blank'>
+			<%=rpath%>/<%= fname %>
+		</a>
+	</li> 
+<% end %>
+</ul>
+<h6>Commit Message:</h6>
+<pre><%= message %></pre>

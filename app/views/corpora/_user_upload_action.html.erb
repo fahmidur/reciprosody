@@ -23,11 +23,12 @@
 
 		<% @corpus = ua.user_actionable %>
 		<% msg = JSON.parse(ua.message) %>
-		<%= render :partial => 'corpora/shout_single_upload', :locals => {
+		<%= render :partial => 'corpora/shout_single_upload_small', :locals => {
 			:files => msg['files'], 
 			:rpath => msg['rpath'],
 			:message => msg['message'],
 		} %>
+
 		</div>
 	</td>
 </tr>

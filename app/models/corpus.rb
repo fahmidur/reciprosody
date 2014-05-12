@@ -112,6 +112,14 @@ class Corpus < ActiveRecord::Base
 	# Non-Static Helpers
 	#------------------------------------------------------
 
+	##
+	# do svn update at the head
+	# path
+	def svn_update_head
+		Dir.chdir Rails.root
+		system("svn update #{self.head_path}")
+	end
+
 	# returns the svn revision number
 	# or "the number of svn_revisions"
 	# SFR: yes, this is named strangely

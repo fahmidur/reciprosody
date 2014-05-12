@@ -759,10 +759,10 @@ class CorporaController < ApplicationController
 			@corpus.prepare_upload_stage
 
 			Dir.chdir Rails.root
-			logger.info FileUtils.mkdir_p("./#{@corpus.tmp_path}#{@rpath}")
+			logger.info FileUtils.mkdir_p("#{@corpus.tmp_path}#{@rpath}")
 
 			resumable_filename_list.each_with_index do |fname, index|
-				FileUtils.mv("./#{resumable_filepath_list[index]}", "./#{@corpus.tmp_path}#{@rpath}/#{fname}")
+				FileUtils.mv("./#{resumable_filepath_list[index]}", "#{@corpus.tmp_path}#{@rpath}/#{fname}")
 			end
 			@corpus.rsync_tmp_and_upload_stage()
 
@@ -778,10 +778,7 @@ class CorporaController < ApplicationController
 		end
 
 		logger.info "***UPDATING HEAD***"
-
-		Dir.chdir @corpus.head_path
-		`svn update`
-		Dir.chdir Rails.root
+		@corpus.svn_update_head
 
 		baseurl = "#{@rpath if @rpath != '/' }"
 
@@ -873,10 +870,7 @@ class CorporaController < ApplicationController
 
 		`svn move #{repo_target} #{rename_target} -m "#{msg}"`
 
-		Dir.chdir Rails.root
-		Dir.chdir @corpus.head_path
-		`svn update`
-		Dir.chdir Rails.root
+		@corpus.svn_update_head
 
 		messager = make_messager
 		current_user.shout(
