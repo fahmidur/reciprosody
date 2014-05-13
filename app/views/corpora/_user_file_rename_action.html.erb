@@ -1,0 +1,30 @@
+<% data = JSON.parse(ua.message) %>
+<tr>
+	<td>
+		<a href='<%= url_for(ua.user_actionable) %>' class='dark'>
+			<i class='icon-book'></i>
+			<%= ua.user_actionable.name %>
+			<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<span class=''>
+				<small class='corpus_show_name'>
+					Version:
+				</small>
+				<small class='corpus_show_value'>
+					<%= ua.version %>
+				</small>
+			</span>
+		</a>
+	</td>
+</tr>
+<tr>
+	<td></td>
+	<td>
+		<span class='label'>Renamed</span>
+		<%= data['original_filepath'] %>
+		<i class='icon-arrow-right'></i>
+		<a href='<%= url_for(ua.user_actionable)%>/browse?path=<%= data['new_filepath'] %>'>
+			<%= data['new_filepath'] %>
+		</a>
+	</td>
+</tr>

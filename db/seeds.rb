@@ -45,6 +45,7 @@ puts "* SEEDING ActionType Table"
 userActionTypes = [
 	'download',
 	'upload',
+	'file_rename',
 	'registered_view',
 	'public_view',
 	'follow_link',

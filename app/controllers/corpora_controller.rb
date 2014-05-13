@@ -871,17 +871,16 @@ class CorporaController < ApplicationController
 		`svn move #{repo_target} #{rename_target} -m "#{msg}"`
 
 		@corpus.svn_update_head
-
-		messager = make_messager
-		current_user.shout(
-			@corpus.associated_users,
-			"#{current_user.name} has renamed a file",
-			render_to_string(:partial => 'shout_single_rename', :locals => {
-				:original_filepath => fullpath,
-				:new_filepath => renamepath,
-				:directory => directory
-			}),
-			messager
+		@corpus.user_action_from(current_user,
+			:file_rename,{
+				:version => @corpus.svn_revisions,
+				:message => {
+					:original_filepath => fullpath,
+					:new_filepath => renamepath,
+					:directory => directory
+				}.to_json
+			},
+			method(:action_notify)
 		);
 
 		redirect_to "/corpora/#{@corpus.id}/browse?path=#{directory}"
