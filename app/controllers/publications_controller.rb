@@ -1,5 +1,6 @@
 class PublicationsController < ApplicationController
 	before_filter :user_filter, :except => [:index, :show, :download]
+	before_filter :existence_filter, :only => [:follow]
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy,
 				  :add_corpus_rel, :update_corpus_rel, :delete_corpus_rel,
@@ -9,6 +10,24 @@ class PublicationsController < ApplicationController
 
 	autocomplete :publication_keyword, :name, :full => true
 	autocomplete :publication, :name, :full => true, :display_value => :ac_small_format, :extra_data => [:id]
+
+
+	# GET /publications/5/follow
+	# let's do some tracking
+	def follow
+		@pub = Publication.find_by_id(params[:id])
+		if @pub.url && @pub.url.present?
+			@pub.user_action_from(current_user, 
+				:follow_link, {
+					:visible => false
+				},
+				method(:action_notify)
+			);
+			redirect_to @pub.url
+		else
+			redirect_to "/publications/#{@pub.id}"	
+		end
+	end
 
 	# GET /publications/5/add_tool_rel
 	def add_tool_rel
@@ -541,6 +560,12 @@ class PublicationsController < ApplicationController
 		return if current_user().super_key != nil
 
 		redirect_to '/perm' unless @pub && @pub.owners.include?(current_user())
+	end
+
+	# Blocks if Corpus does not exist
+	def existence_filter
+		@pub = Publication.find_by_id(params[:id])
+		redirect_to '/perm' unless @pub
 	end
 
 end

@@ -50,7 +50,10 @@
 			<div style="font-weight:bold;color:#6d6d6d;font-size:x-small"><%= @pub.url %></div>
 			<br/>
 			
-			<a href='<%= @pub.url %>' target='_blank' class='btn btn-small btn-primary'>Follow Link</a>
+			<a href='/publications/<%= @pub.id %>/follow' target='_blank' class='btn btn-small btn-primary'>
+				<i class='icon-share'></i>
+				Follow Link
+			</a>
 
 			<br/>
 

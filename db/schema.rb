@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140502070908) do
+ActiveRecord::Schema.define(version: 20140513040741) do
 
   create_table "comments", force: true do |t|
     t.integer  "commentable_id",   default: 0
@@ -260,6 +260,7 @@ ActiveRecord::Schema.define(version: 20140502070908) do
     t.text     "message"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "visible",              default: true
   end
 
   create_table "user_institution_relationships", force: true do |t|

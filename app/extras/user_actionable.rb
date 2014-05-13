@@ -10,12 +10,12 @@ module UserActionable
 		action.user_action_type_id = user_action_type.id
 
 		extra.each do |k,v|
+			logger.info "**** |#{k}|\t|#{v}|"
 			action.update(k => v)
 		end
-		
 		action.save!
+		return action unless action.visible
 		notifier.call(action) if notifier
-
 		return action
 	end
 end

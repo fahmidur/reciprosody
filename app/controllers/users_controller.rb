@@ -457,17 +457,20 @@ class UsersController < ApplicationController
 
 		@actions = UserAction.where(
 			:user_actionable_type => 'Corpus',
-			:user_actionable_id => @user.associated_corpora.map{|e| e.id }
+			:user_actionable_id => @user.associated_corpora.map{|e| e.id },
+			:visible => true
 		).order(:created_at).reverse_order.limit(10)
 
 		@actions += UserAction.where(
 			:user_actionable_type => 'Publication',
-			:user_actionable_id => @user.associated_publications.map{|e| e.id }
+			:user_actionable_id => @user.associated_publications.map{|e| e.id },
+			:visible => true
 		).order(:created_at).reverse_order.limit(10)
 
 		@actions += UserAction.where(
 			:user_actionable_type => 'Tool',
-			:user_actionable_id => @user.associated_tools.map{|e| e.id }
+			:user_actionable_id => @user.associated_tools.map{|e| e.id },
+			:visible => true
 		).order(:created_at).reverse_order.limit(10)
 
 		@actions.sort!{|a,b| a.created_at <=> b.created_at }.reverse!
