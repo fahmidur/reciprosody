@@ -102,6 +102,10 @@
 			<% @actions.each do |a| %>
 				<%= render :partial => 'user_action', :locals => {:ua => a} %>
 			<% end %>
+			<!-- <a class='btn btn-small' href='#'>
+				<i class='fa fa-bar-chart-o'></i>
+				Graph
+			</a> -->
 			<%= paginate @actions %>
 			<br/>
 		</div>

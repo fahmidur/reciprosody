@@ -1,4 +1,4 @@
-class CorporaController < ApplicationController	
+class CorporaController < ApplicationController
 	require 'fileutils'
 	
 	before_filter :get_faye_url	

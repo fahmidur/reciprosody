@@ -32,8 +32,6 @@ public/assets/**
 
 .sass-cache/**
 
-vendor/**
-
 upload/**
 
 resumable_uploads/**
