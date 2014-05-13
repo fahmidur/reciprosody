@@ -48,6 +48,7 @@ Reciprosody2::Application.routes.draw do
   resources :tools do
     member do
       get :download
+      get :follow
 
       get :corpora
         get :add_corpus_rel
@@ -60,9 +61,9 @@ Reciprosody2::Application.routes.draw do
         delete :delete_publication_rel
 
       get :manage_members
-      get :add_member
-      get :update_member
-      delete :remove_member
+        get :add_member
+        get :update_member
+        delete :remove_member
     end
 
     get :autocomplete_tool_name, :on => :collection
@@ -73,9 +74,9 @@ Reciprosody2::Application.routes.draw do
   resources :publications do
     member do
       get :manage_members
-      get :add_member
-      get :update_member
-      delete :remove_member
+        get :add_member
+        get :update_member
+        delete :remove_member
 
 
       get :corpora

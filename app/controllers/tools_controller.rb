@@ -16,6 +16,23 @@ class ToolsController < ApplicationController
 	autocomplete :programming_language, :name, :full => false, :limit => 20, :extra_data => [:id]
 	autocomplete :tool_keyword, :name, :full => true
 
+
+	# GET /tools/5/follow
+	def follow
+		@tool = Tool.find_by_id(params[:id])
+		if @tool.url && @tool.url.present?
+			@tool.user_action_from(current_user, 
+				:follow_link, {
+					:visible => false
+				},
+				method(:action_notify)
+			);
+			redirect_to @tool.url
+		else
+			redirect_to "/tool/#{@tool.id}"	
+		end
+	end
+
 	def add_publication_rel
 		@tool = Tool.find_by_id(params[:id])
 		name = params[:name]
