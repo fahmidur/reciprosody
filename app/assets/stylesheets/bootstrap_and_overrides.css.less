@@ -344,12 +344,22 @@ pre {
 	margin: 0px;
 }
 .email-dec-wrapper {
-	display: none;
+	/*display: none;*/
+	display: block;
+	text-align: center;
+	padding: 0px;
+	border-top: 1px solid #eaeaea;
+	background-color: #efefef;
+	margin: 0px;
+	margin-top: 1em;
+	line-height: 0.7em;
 }
 .email-dec {
+	display: inline-block;
 	color:rgba(0,0,0,0.5);
 	font-weight:normal;
-	font-size:small;
+	font-size:0.7em;
+	padding-bottom: 2px;
 }
 #gravatar-infobox {
 	display: none;
@@ -638,6 +648,13 @@ h4.index-header1 {
 ul.file-uploads-list {
 	list-style-type: square;
 }
+input#inst_search {
+	border-radius:0px;
+	box-shadow: none;
+	border-left: 0px solid red;
+	border-right: 0px solid red;
+	border-color: #cdcdcd;
+}
 .box {
 	/*border:1px solid #eaeaea;*/
 	border: 1px solid #fafafa;
@@ -734,6 +751,7 @@ ul.file-uploads-list {
 .boxcontent.padfree {
 	padding-left: 0px;
 	padding-right: 0px;
+	padding-bottom: 0px;
 }
 .gbox {
 	border:1px solid #eaeaea;

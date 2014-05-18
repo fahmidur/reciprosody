@@ -45,11 +45,11 @@
 						<input id='inst_search' type='text' class='span12' placeholder='Add Institution' data-autocomplete="/institutions/autocomplete_institution_name"/>
 					</div>
 
-					<span class='email-dec-wrapper'>
+					<div class='email-dec-wrapper'>
 						<% current_user.email.split(/(\W)/).each do |part| %>
 							<span class='email-dec'><%= part %></span>
 						<% end %>
-					</span>
+					</div>
 			</div>
 
 		</div>
