@@ -17,7 +17,7 @@
 
 					<div class='avatar-wrapper'>
 						<div class='profile-avatar-wrapper'>
-							<%= image_tag current_user.gravatar_url(:png), :id => :profile_avatar%>
+							<%= image_tag gravatar_user_path(:id => current_user), :id => :profile_avatar %>
 						</div>
 						<div id='gravatar-email-wrapper'>
 							<input type='email' placeholder='Gravatar Email' id='gravatar-email' value="<%= current_user.gravatar_email || current_user.email %>"/>

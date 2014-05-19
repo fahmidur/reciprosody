@@ -56,6 +56,14 @@ class User < ActiveRecord::Base
 	scope :tool_reviewers, -> { where :tool_memberships => {:role => 'reviewer'} }
 	scope :tool_members, -> { where :tool_memberships => {:role => 'member'} }
 
+	def clear_avatars_cache
+		FileUtils.rm_rf(self.avatars_folder)
+	end
+
+	def avatars_folder
+		return Rails.root + "avatars" + self.id.to_s
+	end
+
 	def self.wsearch(q)
 		if(q !~ /^\%.+\%$/)
 			q = "%#{q}%"
@@ -208,5 +216,11 @@ class User < ActiveRecord::Base
 		gravatar_email = self.gravatar_email || self.email
 		gravatar_id = Digest::MD5.hexdigest(gravatar_email.downcase)
 		return "http://gravatar.com/avatar/#{gravatar_id}.#{type}?s=#{size}"
+	end
+
+	def gravatar_url_typeless(size=200)
+		gravatar_email = self.gravatar_email || self.email
+		gravatar_id = Digest::MD5.hexdigest(gravatar_email.downcase)
+		return "http://gravatar.com/avatar/#{gravatar_id}?s=#{size}"
 	end
 end

@@ -119,7 +119,6 @@ __app.modules.userhome = function() {
 			if(data.ok) {
 				if($('#inst-'+data.inst_id).length === 0) {
 					$instHolder.prepend("&nbsp; <span class='badge badge-info inst' style='cursor:pointer' id='inst-"+data.inst_id+"'>"+data.inst_name+"<span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>");
-					// $instAddButton.html("<i class='icon-plus-sign'></i>");
 				}
 			}
 			hide_instSearch();
@@ -225,7 +224,11 @@ __app.modules.userhome = function() {
 	}
 	function change_gravatarEmail(e) {
 		$.get('/user/update_gravatar_email', {'email': $gravatarEmail.val()}, function(data) {
-			// console.log(data);
+			var path = "/users/"+_userID+"/gravatar";
+			$.get(path, function() {
+				$profileAvatar.attr('src', path);
+			});
+				
 		});
 	}
 
@@ -252,7 +255,7 @@ __app.modules.userhome = function() {
 			var html = "";
 			var onclick = "";
 			for(var i in _people_result) {
-				html += "<div class='corpi_item_small presult' data-id='"+_people_result[i]['id']+"'>"+_people_result[i].name+"</div>";
+				html += "<div class='corpi_item_small presult' data-id='"+_people_result[i]['id']+"'> <img class='user-avatar-mini' src='/users/"+ _people_result[i]['id'] +"/gravatar?size=50'/> "+_people_result[i].name+"</div>";
 			}
 			$peopleResult.html(html);
 			$('.presult:first').addClass("selected");

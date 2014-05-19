@@ -22,7 +22,7 @@
 			</td>
 			<td rowspan='2' class='fixedwidth50'>
 				<a href='<%= url_for(ua.user) %>'>
-					<img class='user-avatar-small pull-right' src='<%= ua.user.gravatar_url(:png, 50) %>' title="<%= ua.user.name %>" alt="<%= ua.user.name %>"/>
+					<img class='user-avatar-small pull-right' src='<%= gravatar_user_path(:id => ua.user.id, :size => 50)%>' title="<%= ua.user.name %>" alt="<%= ua.user.name %>"/>
 				</a>
 			</td>
 		</tr>

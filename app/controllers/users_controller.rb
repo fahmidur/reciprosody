@@ -14,12 +14,47 @@ class UsersController < ApplicationController
 		@user.gravatar_email = params[:email]
 
 		if @user.valid? && @user.save
+			@user.clear_avatars_cache
 			render :json => { :ok => true, :gravatar_email => params[:email] }
 		else
 			@user.gravatar_email = @user.email
 			@user.save
 			render :json => { :ok => false, :errors => @user.errors.to_a, :gravatar_email => @user.email}
 		end
+	end
+
+	
+	#
+	# GET /user/2/gravatar
+	# params[:id] = user id or email
+	# params[:size] = size in pixels
+	# params[:init] = false by default
+	def gravatar
+		q = params[:id]
+		size = params[:size] || 200
+		init = params[:init]
+
+		@user = User.find_by_id(q) || User.find_by_email || current_user
+		gravatar_url = @user.gravatar_url_typeless(size)
+
+		local_path = "#{@user.avatars_folder}/#{size}"
+
+		if init
+			@user.clear_avatars_cache
+		end
+
+		if !init && File.exists?(local_path)
+			logger.info "**** SENDING CACHED "
+			send_file local_path
+			return
+		end
+
+		# cache locally
+		FileUtils.mkdir_p(@user.avatars_folder)
+		system("wget -O #{local_path} #{gravatar_url}")
+
+		# send image
+		redirect_to gravatar_url
 	end
 
 	def edit_avatar

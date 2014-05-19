@@ -113,6 +113,7 @@ Reciprosody2::Application.routes.draw do
     
     member do
       get :show
+      get :gravatar #users_controller#gravatar
     end
   end
 
@@ -135,8 +136,6 @@ Reciprosody2::Application.routes.draw do
       get :update_gravatar_email    #users_controller#update_gravatar_email
       
 			post :invite_user
-
-      # get :edit_avatar # no longer used and does not work
 		end
 	end
 
