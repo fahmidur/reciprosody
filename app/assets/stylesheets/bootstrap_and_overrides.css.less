@@ -3,6 +3,13 @@
 
 body {
 	padding-top: 60px;
+	background-color: #fafafa;
+}
+#navtop-inner {
+	border: 0px solid red;
+	/*box-shadow: none;*/
+	background-image: none;
+	background-color: #fff;
 }
 // Set the correct sprite paths
 @iconSpritePath: asset-url('twitter/bootstrap/glyphicons-halflings.png');
@@ -190,14 +197,13 @@ body::-webkit-scrollbar-thumb {
 		border:1px solid #adadad;
 		border-left:2px solid #4FD5D6;
 }
-
 .corpi_item_small {
 	font-weight: bold;
 	/*margin-bottom:0.2em;*/
 	margin-bottom: 0px;
 	background-color:#fefefe;
-	border:1px solid #eee;
-	border-left:2px solid #eee;
+	/*border:1px solid #eee;*/
+	border-left:2px solid #fff;
 	padding:1em;
 	padding-top:0.3em;
 	padding-bottom:0.3em;
@@ -220,8 +226,12 @@ body::-webkit-scrollbar-thumb {
 .corpi_item_small:hover, .corpi_item_small.selected {
 	color:#2d2d2d;
 	background-color:#fafaff;
-	border:1px solid #adadad;
+	/*border:1px solid #adadad;*/
 	border-left:2px solid #4FD5D6;
+}
+.btn-group.btn-group-narrow > .btn {
+	border: 1px solid #cdcdcd;
+	border-radius: 0px;
 }
 .btn-group.btn-group-hanging > .btn {
 	border-top-left-radius: 0px;
@@ -309,10 +319,13 @@ body::-webkit-scrollbar-thumb {
 	border-radius: 0px;
 	/*position: relative;*/
 	/*left:-1px;*/
-	background-color: #eee;
-	border: 1px solid #ddd;
-	border-left: 0px solid #ddd;
-	border-right: 0px solid #ddd;
+	/*background-color: #eee;*/
+	background-color:transparent;
+	margin-top:2px;
+	/*border: 1px solid #ddd;*/
+	/*border-left: 0px solid #ddd;*/
+	/*border-right: 0px solid #ddd;*/
+	/*border-bottom: 0px solid #ddd;*/
 
 	color: #3d2d2d;
 	cursor: pointer;
@@ -334,6 +347,9 @@ body::-webkit-scrollbar-thumb {
 }
 input[type="text"], input[type="password"], input[type="email"] {
 	border-radius: 0px;
+}
+.nav-tabs.nav-stacked > li {
+	background-color: #fff;
 }
 .nav-tabs.nav-stacked > li:first-child > a {
 	border-radius: 0px;
@@ -585,7 +601,7 @@ h4.index-header1 {
 	margin-bottom:5px;
 	padding: 10px;
 	border-left: 2px solid #ddd;
-	background-color: #fefefe;
+	background-color: #fff;
 	opacity: 0.92;
 	overflow: auto;
 	margin-bottom:5px;
@@ -615,19 +631,19 @@ h4.index-header1 {
 	color: #2d2d2d;
 	text-decoration: none;
 	display: block;
-	border-left: 1px solid transparent;
+	border-left: 2px solid transparent;
 	padding-left: 5px;
 	padding-right: 8px;
 	margin-top:5px;
 	transition-property:opacity, border, color, padding;
-	transition-duration:1s, 1s, 1s, 0.8s;
+	transition-duration:1.2s, 1.2s, 1.2s, 0.8s;
 	transition-timing-function:cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
 }
 .user-action a.dark:hover {
 	color: black;
 	padding-left:8px;
 	padding-right: 5px;
-	border-left: 1px solid #555;
+	border-left: 2px solid #4FD5D6;
 }
 .user-action table {
 	width: 100%;
@@ -684,15 +700,15 @@ input#inst_search {
 	border-right: 0px solid red;
 	border-color: #cdcdcd;
 }
+.tab-content {
+	background-color: #fff;
+	margin-top:0px;
+	padding:10px;
+}
 .box {
-	/*border:1px solid #eaeaea;*/
-	border: 1px solid #fafafa;
-	/*border: 1px solid red;*/
-	/*border-radius:5px;*/
+	border: 1px solid transparent;
 	background-color:#fefefe;
-	/*padding:1em;*/
 	margin-bottom:1em;
-	/*border-radius: 3px;*/
 	word-wrap: break-word;
 	transition-property: border;
 	transition-duration: 0.5s;
@@ -700,8 +716,11 @@ input#inst_search {
 .box.borderfree {
 	border-width: 0px;
 }
+.box.marginfree {
+	margin: 0px;
+}
 .box.bordered1 {
-	border: 1px solid #dcdcdc;
+	border: 1px solid #eee;
 }
 .box.borderfree:hover {
 	border-width: 0px;
@@ -709,38 +728,20 @@ input#inst_search {
 .resource-count {
 	color: #3a87ad;
 	background-color: transparent;
-	/*padding-left:4px;
-	padding-right:4px;
-	padding-bottom:2px;*/
-	/*border-radius:5px;*/
 }
 .box.rounded {
 	border-radius:5px;
 }
 .box:hover {
 	border:1px solid #dadada;
-	/*border:1px solid #f5f5f5;*/
-	/*border:1px solid black;*/
 }
 .boxheader {
-	/*position: relative; */
-	/*top:-1.8em; */
 	padding-left:1em;
 	padding-right:1em;
-	padding-bottom: 0.2em;
-	/*background-color:#dfdfdf;*/
+	padding-bottom: 0em;
 	background-color: #f5f5f5;
 	border-bottom: 1px solid #efefef;
-	/*background-color: black;*/
-	/*color: white;*/
-	/*border-radius: 3px;*/
-	/*border-bottom-left-radius:5px;*/
-	/*border-bottom-right-radius:5px;*/
-	/*text-align:center;*/
 	font-weight: bold;
-	/*margin-bottom:5px;*/
-	/*background-color: black;*/
-	/*color: white;*/
 }
 .boxheader.toggleable:hover {
 	background-color:#2d2d2d;
@@ -860,6 +861,7 @@ input#inst_search {
 	border-left:2px solid #fff;
 	border-top:1px solid transparent;
 	border-bottom:1px solid transparent;
+	font-size: x-small;
 
 	-webkit-transition-property:background, border, color;
 	-webkit-transition-duration:1s, 1s, 1s;
@@ -1065,7 +1067,7 @@ table.inbox_table tr.message-row.selected {
 	border-left: 1px solid #eee;
 	margin: 2px;
 	margin-right:4px;
-	/*border-radius: 3px;*/
+	background-color: #fff;
 	box-sizing: border-box;
 	-webkit-transition-property:background, border, color;
 	-webkit-transition-duration:1s, 1s, 1s;
@@ -1075,7 +1077,7 @@ table.inbox_table tr.message-row.selected {
 	-moz-transition-timing-function:ease-out, cubic-bezier(.06,1.47,.29,.87), cubic-bezier(.06,1.47,.29,.87);
 }
 .comment:hover {
-	border-left: 1px solid orange;
+	border-left: 1px solid #2d2d2d;
 }
 .comment .header {
 	font-size: x-small;

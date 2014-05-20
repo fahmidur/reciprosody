@@ -133,8 +133,7 @@ class Corpus < ActiveRecord::Base
 
 	def svn_last_changed_date(version = nil)
 		infotext = `svn info #{self.svn_file_url} #{"-r " if version} #{version if version}`
-		logger.info infotext
-		logger.info infotext[/^Last Changed Date:\s*([^\n]+)/]
+		infotext[/^Last Changed Date:\s*([^\n]+)/]
 		return Time.parse($1) if $1
 		return ""
 	end

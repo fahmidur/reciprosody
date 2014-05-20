@@ -34,7 +34,10 @@ gem 'carrierwave'
 gem 'waveinfo'
 
 gem 'bibtex-ruby', :require => 'bibtex'
+gem 'csl', '1.2.1', :require => 'csl'
+gem 'csl-styles', :require => 'csl/styles'
 gem 'citeproc-ruby', :require => 'citeproc'
+
 gem 'mail_view', '~> 1.0.3'
 gem 'simplecov', :require => false, :group => :test
 

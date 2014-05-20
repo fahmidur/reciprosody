@@ -22,10 +22,11 @@ module ApplicationHelper
 
 	def html_from_citation(text, style)
 		begin
-		text = "" if !text || text.blank?
-		b = BibTeX.parse text
-		CiteProc.process b.to_citeproc, :style => style, :format => :html
-		rescue
+			text = "" if !text || text.blank?
+			b = BibTeX.parse text
+			return CiteProc.process b.to_citeproc, :style => style, :format => :html
+		rescue => exception
+			logger.info "*******ERROR*****\n\n#{exception}\n\n"
 			return ""
 		end
 	end

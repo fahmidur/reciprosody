@@ -591,8 +591,8 @@ class CorporaController < ApplicationController
 		#To-Do: Error/Evil checking
 		archive_path = "#{@corpus.archives_path}/#{@filename}"
 
-		logger.info "** FILENAME = #{@filename}"
-		logger.info "** ARCHIVE_PATH = #{archive_path}"
+		# logger.info "** FILENAME = #{@filename}"
+		# logger.info "** ARCHIVE_PATH = #{archive_path}"
 
 		# check for version number
 		if @filename =~ /\+(\d+)/
@@ -610,7 +610,7 @@ class CorporaController < ApplicationController
 				return
 			end
 		else
-			logger.info "*** VERSION NOT INCLUDED ***"
+			# logger.info "*** VERSION NOT INCLUDED ***"
 			redirect_to '/perm'
 			return
 		end
@@ -731,8 +731,8 @@ class CorporaController < ApplicationController
 		resumable_filename_list = session[:resumable_filenames]
 		resumable_filepath_list = session[:resumable_filepaths]
 
-		logger.info "***RESUMABLE FILES COUNT: #{resumable_filename_list.length}"
-		logger.info "***RESUMABLE FILES: #{resumable_filename_list}"
+		# logger.info "***RESUMABLE FILES COUNT: #{resumable_filename_list.length}"
+		# logger.info "***RESUMABLE FILES: #{resumable_filename_list}"
 
 
 		msg = params[:msg]

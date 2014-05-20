@@ -11,6 +11,9 @@
 		<div class='box bordered1' id='profile-box'>
 				<div class='boxheader small toggleable'>
 					<%= current_user().name%>
+					<strong class='pull-right'>
+						<i class='icon-signal signal' id='faye-connection-indicator'></i>
+					</strong>
 				</div>
 
 				<div class='boxcontent padfree'>
@@ -91,12 +94,12 @@
 	</div>
 
 	<div class='span5'>
-		<div class='row-fluid'>
+		<!-- <div class='row-fluid'>
 			<strong>
 				<i class='icon-signal signal' id='faye-connection-indicator'></i>
 				Activity
 			</strong>
-		</div>
+		</div> -->
 		<div id='actionsHolder'>
 			<% @actions.each do |a| %>
 				<%= render :partial => 'user_action', :locals => {:ua => a} %>
@@ -124,7 +127,7 @@
 					<% end %>
 					<div>
 						<!-- corpora -->
-						<div class='btn-group pull-right btn-group-hanging'>
+						<div class='btn-group pull-right btn-group-narrow'>
 							<a href='/corpora/new' class='btn btn-mini'>
 								<i class='icon-plus'></i>&nbsp;New
 							</a>
@@ -157,7 +160,7 @@
 					<% end %>
 					<div>
 						<!-- publications -->
-						<div class='btn-group pull-right btn-group-hanging'>
+						<div class='btn-group pull-right btn-group-narrow'>
 							<a href='/publications/new' class='btn btn-mini'>
 								<i class='icon-plus'></i>&nbsp;New
 							</a>
@@ -190,7 +193,7 @@
 					<% end %>
 
 					<div>
-						<div class='btn-group pull-right btn-group-hanging'>
+						<div class='btn-group pull-right btn-group-narrow'>
 							<a href='/tools/new' class='btn btn-mini'>
 								<i class='icon-plus'></i>&nbsp;New
 							</a>
