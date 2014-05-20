@@ -4,12 +4,12 @@
 
 <div class='row-fluid'>
 	<div class="span3">
-		<div class='box'> 
+		<div class='box bordered1'> 
 			<div class='boxheader toggleable small'>
 				<%= @user.name%>
 			</div>
 			
-			<div class='boxcontent'>
+			<div class='boxcontent padfree'>
 				
 				<% insts = @user.insts %>
 
@@ -20,7 +20,10 @@
 				<center>
 				<div id='inst_holder'>
 					<% insts.each do |inst| %>
-					<span class='badge badge-info inst'><%= inst.name %></span>
+					<span class='badge badge-info inst'>
+						<i class='fa fa-fw fa-university inst-icon'></i>
+						<%= inst.name %>
+					</span>
 					<% end %>
 
 					<% if insts.size == 0 %>
@@ -28,9 +31,11 @@
 					<% end %>
 
 					<% if current_user && current_user.super_key != nil %>
-						<br/><br/>
-						<small><%= @user.email%></small>&nbsp;
-						<br/>
+						<div class='email-dec-wrapper'>
+						<% @user.email.split(/(\W)/).each do |part| %>
+							<span class='email-dec'><%= part %></span>
+						<% end %>
+					</div>
 					<% end %>
 				</div>
 				</center>

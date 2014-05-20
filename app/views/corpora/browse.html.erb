@@ -13,14 +13,13 @@
 <div class='row-fluid'>
 	<div class='span7'>
 		<% if @file %>
-		<br><br>
 		<div class='row-fluid content'>
 			<div class='box borderfree span12'>
 				<div class='boxheader'>
 					<%= File.basename(@file) %> <a class='badge badge-info' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&amp;noview=true'><i class='icon-download'></i></a>
 				</div>
 
-				<div class='boxcontent padfree'>
+				<div class='boxcontent'>
 					<%if File.extname(@file) == ".md"  %>
 						<%=raw markdown(@content)%>
 					<%elsif [".png", ".jpg", ".jpeg", ".gif"].include?(@ext) %>
@@ -80,7 +79,7 @@
 			
 					<% if File.directory?(file) %>
 							<div class='corpi_item_small file' onclick="browse('<%= File.basename(file) %>')">
-								<i class='icon-folder-close'></i>
+								<i class='fa fa-fw fa-folder'></i>
 								<%= File.basename(file) %>
 								<span class='file-controls pull-right'>
 									<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal">
@@ -103,7 +102,20 @@
 
 					<% else %>
 						<div class='corpi_item_small file' onclick="download('<%= File.basename(file) %>')">
-							<i class='icon-file'></i>
+							<% ext = File.extname(file) %>
+							<% case ext %>
+							<% when ".wav" %>
+							<i class='fa fa-fw fa-file-audio-o'></i>
+							<% when ".pdf" %>
+							<i class='fa fa-fw fa-file-pdf-o'></i>
+							<% when ".jpg", ".gif", ".jpeg", ".png" %>
+							<i class='fa fa-fw fa-file-image-o'></i>
+							<% when ".md", ".txt" %>
+							<i class='fa fa-fw fa-file-text-o'></i>
+							<% else %>
+							<i class='fa fa-fw fa-file-o'></i>
+							<% end %>
+
 							<%= File.basename(file) %>
 							
 							<span class='file-controls pull-right'>
@@ -167,7 +179,7 @@
 
 			<% if current_user() && @corpus.canEdit?(current_user()) %>
 			<div class='corpi_item_small' style="border-left:2px solid orange;" onclick="$('#single_file_uploader').toggle()">
-				<i class='icon-plus'></i> Upload New Files
+				<i class='fa fa-fw fa-plus'></i> Upload New Files
 			</div>
 
 			<% end %>
