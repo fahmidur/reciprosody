@@ -33,9 +33,6 @@ body {
 
 
 
-
-
-
 // Your custom LESS stylesheets goes here
 //
 // Since bootstrap was imported above you have access to its mixins which
@@ -69,6 +66,9 @@ body {
 		border: 1px solid #dfdfdf;
 	}
 }
+#people-search {
+	border-radius: 0px;
+}
 body::-webkit-scrollbar {
 	background-color: #ddd;
 	border-left:1px solid #ccc;
@@ -82,17 +82,15 @@ body::-webkit-scrollbar-thumb {
 	display: none;
 }
 .resourceSearchBar {
-	/*border: 1px solid red;*/
 	padding: 0px;
 }
+#resourceSearchButton {
+	border-radius: 0px;
+	margin-left: 0px;
+}
 .resourceSearchBar .resourceSearch, .resourceSearchBar .resourceSearch:focus {
-	/*width:100%;*/
-	/*border: 0px solid black;*/
-	/*outline: none;*/
-	/*box-shadow: none;*/
 	font-size: small;
 	height:16px;
-	/*border-radius:0px;*/
 }
 .pagination {
 	/*border: 1px solid red;*/
@@ -216,6 +214,9 @@ body::-webkit-scrollbar-thumb {
 
 	box-sizing: border-box;
 }
+.corpi_item_small.presult {
+	font-size: x-small;
+}
 .corpi_item_small:hover, .corpi_item_small.selected {
 	color:#2d2d2d;
 	background-color:#fafaff;
@@ -295,19 +296,35 @@ body::-webkit-scrollbar-thumb {
 .iconfix {
 	margin-right:3px;margin-top:3px;
 }
+#inst_search_wrapper {
+	display: none;
+}
 #inst_holder {
-	text-align:center;
+	/*text-align:center;*/
 	margin: 0px;
 }
 .inst {
+	/*display: inline-block;*/
+	display: block;
 	border-radius: 0px;
-	background-color: black;
-	color: white;
+	/*position: relative;*/
+	/*left:-1px;*/
+	background-color: #eee;
+	border: 1px solid #ddd;
+	border-left: 0px solid #ddd;
+	border-right: 0px solid #ddd;
+
+	color: #3d2d2d;
 	cursor: pointer;
+	word-wrap: break-word;
+	white-space: normal;
+}
+.opt {
+	opacity: 0.1;
 }
 #add-inst {
 	border-radius: 0px;
-	background-color: #2d2d2d;
+	background-color: #adb8ad;
 	cursor: pointer;
 	height:14px;
 }
@@ -315,13 +332,22 @@ body::-webkit-scrollbar-thumb {
 	opacity: 0.0;
 	display: none;
 }
+input[type="text"], input[type="password"], input[type="email"] {
+	border-radius: 0px;
+}
+.nav-tabs.nav-stacked > li:first-child > a {
+	border-radius: 0px;
+}
+.nav-tabs.nav-stacked > li:last-child > a {
+	border-radius: 0px;
+}
 .avatar-wrapper {
 	display: block;
 	/*background-color: rgba(255,0,0,0.2);*/
 	text-align: center;
 	padding-bottom:5px;
 	margin-bottom:5px;
-	border-bottom:1px solid #eee;
+	/*border-bottom:1px solid #eee;*/
 }
 #gravatar-email-wrapper {
 	display: none;
@@ -333,7 +359,6 @@ body::-webkit-scrollbar-thumb {
 }
 
 #profile_avatar {
-	/*border-radius:11px;*/
 	cursor: pointer;
 }
 #profile_avatar.public {
@@ -344,14 +369,13 @@ pre {
 	margin: 0px;
 }
 .email-dec-wrapper {
-	/*display: none;*/
 	display: block;
 	text-align: center;
 	padding: 0px;
 	border-top: 1px solid #eaeaea;
 	background-color: #efefef;
 	margin: 0px;
-	margin-top: 1em;
+	margin-top: 0.2em;
 	line-height: 0.7em;
 }
 .email-dec {
@@ -669,11 +693,15 @@ input#inst_search {
 	/*padding:1em;*/
 	margin-bottom:1em;
 	/*border-radius: 3px;*/
+	word-wrap: break-word;
 	transition-property: border;
 	transition-duration: 0.5s;
 }
 .box.borderfree {
 	border-width: 0px;
+}
+.box.bordered1 {
+	border: 1px solid #dcdcdc;
 }
 .box.borderfree:hover {
 	border-width: 0px;

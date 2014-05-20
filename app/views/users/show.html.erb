@@ -8,7 +8,7 @@
 
 <div class='row-fluid'>
 	<div class="span3">
-		<div class='box' style='word-wrap: break-word'>
+		<div class='box bordered1' id='profile-box'>
 				<div class='boxheader small toggleable'>
 					<%= current_user().name%>
 				</div>
@@ -27,20 +27,19 @@
 					<div id='inst_holder'>
 						<% inst_flag = false # more efficient this way - SFR %>
 						<% current_user.insts.each do |inst| %>
-							<span class='badge badge-info inst' id='inst-<%= inst.id %>'><%= inst.name %>
-								<span class='x'>&nbsp;
-									<i class='icon-remove-sign'></i>
-								</span>
+							<span class='label label-info inst' id='inst-<%= inst.id %>' title='Remove'>
+								<i class='fa fa-fw fa-university inst-icon'></i>
+								<%= inst.name %>
 							</span>
 							<% inst_flag = true %>
 						<% end %>
-						<span id='add-inst' class='badge badge-info' title="Add Institution">
+						<span id='add-inst' class='label label-info opt' title="Add Institution">
 							<%=raw 'Add Institution &nbsp;' unless inst_flag %>
 							<i class='icon-plus-sign'></i>
 						</span>
 					</div>
 
-					<div id='inst_search_wrapper' style='display:none'>
+					<div id='inst_search_wrapper'>
 						<br/>
 						<input id='inst_search' type='text' class='span12' placeholder='Add Institution' data-autocomplete="/institutions/autocomplete_institution_name"/>
 					</div>

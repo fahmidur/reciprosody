@@ -6,6 +6,7 @@ __app.modules.userhome = function() {
 	var $peopleSearch = $('#people-search');
 	var $peopleResult = $('#people-result');
 	var $profileAvatar = $('#profile_avatar');
+	var $profileBox = $('#profile-box');
 	var $gravatarInfobox = $('#gravatar-infobox');
 
 	var $sideMenuDiv = $('#side_menu');
@@ -73,20 +74,29 @@ __app.modules.userhome = function() {
 		$('.presult').removeClass('selected');
 		$(this).addClass('selected');
 	});
-	$('.inst').live('mouseenter', function() {
-		$(this).find('.x').show().animate({'opacity': '1'}, 200);
-	});
-	$('.inst').live('mouseleave', function() {
-		$(this).find('.x').animate({'opacity': '0'}, 200, function() {$(this).hide("fast");});
-	});
+
 	$('.inst').live('click', function() {
-		$(this).animate({'width':'0px'}, 300, function() {
-			$(this).remove();
-		});
+		$(this).remove();
 		$.getJSON('/user/remove_inst_rel', {'inst_id': ($(this).attr('id').split("-")[1])}, function(data) {
 			console.log(data);
 		});
 	});
+
+	$('.inst').live('mouseenter', function() {
+		$(this).find('.inst-icon').removeClass('fa-university');
+		$(this).find('.inst-icon').addClass('fa-times');
+	});
+	$('.inst').live('mouseleave', function() {
+		$(this).find('.inst-icon').removeClass('fa-times');
+		$(this).find('.inst-icon').addClass('fa-university');
+	});
+
+	$profileBox.hover(function() {
+		$(this).find('.opt').animate({opacity: 1.0}, 200);
+	}, function() {
+		$(this).find('.opt').animate({opacity: 0.1}, 200);
+	});
+
 
 	$instAddButton.click(show_instSearch);
 	$instSearch.blur(hide_instSearch);
@@ -118,7 +128,7 @@ __app.modules.userhome = function() {
 			console.log(data);
 			if(data.ok) {
 				if($('#inst-'+data.inst_id).length === 0) {
-					$instHolder.prepend("&nbsp; <span class='badge badge-info inst' style='cursor:pointer' id='inst-"+data.inst_id+"'>"+data.inst_name+"<span class='x' style='display:none'>&nbsp;<i class='icon-remove-sign'></i></span></span>");
+					$instHolder.prepend("<span class='label label-info inst' id='inst-"+data.inst_id+"' title='Remove'><i class='fa fa-university inst-icon'></i> "+data.inst_name+"</span>");
 				}
 			}
 			hide_instSearch();
@@ -263,6 +273,27 @@ __app.modules.userhome = function() {
 			$sideMenuDiv.slideUp();
 		}
 	}
+
+	// function dwInstFix() {
+	// 	var w = $profileBox.width();
+	// 	var c = 0;
+	// 	var f = false;
+	// 	$('.inst').each(function() {
+	// 		c = $(this).width() + 10;
+	// 		console.log(c + ' => ' + w)
+	// 		if(c >= w) {
+	// 			f = true;
+	// 		}
+	// 	});
+	// 	console.log('f = ', f);
+	// 	if(f) {
+	// 		$('.inst').css('display', 'block');
+	// 	} else {
+	// 		$('.inst').css('display', 'inline-block');
+	// 	}
+	// }
+	// dwInstFix();
+	// $(window).on('resize', dwInstFix);
 };
 
 $(function() {

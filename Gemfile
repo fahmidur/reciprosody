@@ -14,7 +14,6 @@ gem 'kaminari'
 # in production environments by default.
 group :assets do
   gem 'uglifier', '>= 1.0.3'
-  gem 'font-awesome-rails'
   gem 'less-rails', '2.3.3'
   gem 'therubyracer'
 end
