@@ -91,19 +91,20 @@ $(function() {
 
 	});
 
-	window.onbeforeunload = function() {
-		console.log("Corpus Form Unloading...");
-		var progress = (r.files[0] !== undefined && r.files[0].progress() > 0 && r.files[0].progress() < 1);
-		var completed_not_sent = (!_resumable_upload_ready && _resumable_upload_used);
+	// disable resumable forms
+	// window.onbeforeunload = function() {
+	// 	console.log("Corpus Form Unloading...");
+	// 	var progress = (r.files[0] !== undefined && r.files[0].progress() > 0 && r.files[0].progress() < 1);
+	// 	var completed_not_sent = (!_resumable_upload_ready && _resumable_upload_used);
 
-		if($("#new_corpus").serialize() !== _original_formdata || progress || completed_not_sent) {
-			console.log("SAVE_STATE = " + _save_state);
-			if(_save_state === true) {
-				resumableBeforeUnload('new_corpus');
-				return "Your form will be here for you when you get back.";
-			}
-		}
-	}
+	// 	if($("#new_corpus").serialize() !== _original_formdata || progress || completed_not_sent) {
+	// 		console.log("SAVE_STATE = " + _save_state);
+	// 		if(_save_state === true) {
+	// 			resumableBeforeUnload('new_corpus');
+	// 			return "Your form will be here for you when you get back.";
+	// 		}
+	// 	}
+	// }
 
 	_original_formdata = $('#new_corpus').serialize();
 	console.log(_original_formdata);
