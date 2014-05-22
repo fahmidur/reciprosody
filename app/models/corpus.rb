@@ -40,6 +40,10 @@ class Corpus < ActiveRecord::Base
 
 	after_find :set_times
 
+	def self.membership_class
+		Membership
+	end
+
 	# return
 	# array of archived
 	# zip paths

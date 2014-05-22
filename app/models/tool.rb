@@ -19,7 +19,7 @@ class Tool < ActiveRecord::Base
   has_many :user_actions, :as => :user_actionable
 
   scope :tool_owner_of,     -> { (where tool_memberships: {role: 'owner'}).order(:updated_at => :desc) }
-  scope :tool_approver_of,  -> { (where tool_memberships: {role: 'approver'}).order(:updated_at => :desc) }
+  scope :tool_reviewer_of,  -> { (where tool_memberships: {role: 'reviewer'}).order(:updated_at => :desc) }
   scope :tool_member_of,    -> { (where tool_memberships: {role: 'member'}).order(:updated_at => :desc) }
 
   before_destroy :remove_dirs
@@ -28,6 +28,10 @@ class Tool < ActiveRecord::Base
   validates :name, :presence => true
   validates :url, :url => true, :allow_blank => true
   #--------------------------------------
+
+  def self.membership_class
+    ToolMembership
+  end
 
   def self.valid_orders()
     ["created_at", "updated_at", "name"]

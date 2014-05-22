@@ -11,7 +11,7 @@
 	</div>
 <% end %>
 
-<%= render :partial => 'shared/resourceIndex_top', :locals => {:collection => @tools}%>
+<%= render :partial => 'shared/resourceIndex_top', :locals => {:collection => @tools, :collection_class => Tool}%>
 
 <% @tools.each do |t| %>
 	<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>

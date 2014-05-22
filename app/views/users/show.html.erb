@@ -2,9 +2,9 @@
 <%= javascript_include_tag "resource_index.js" %>
 <% end %>
 
-<% my_corpora = current_user.owner_of %>
-<% my_pubs = current_user.publication_owner_of %>
-<% my_tools = current_user.tool_owner_of %>
+<% my_corpora = current_user.associated_corpora %>
+<% my_pubs = current_user.associated_publications %>
+<% my_tools = current_user.associated_tools %>
 
 <div class='row-fluid'>
 	<div class="span3">
@@ -38,7 +38,7 @@
 						<% end %>
 						<span id='add-inst' class='label label-info opt' title="Add Institution">
 							<%=raw 'Add Institution &nbsp;' unless inst_flag %>
-							<i class='icon-plus-sign'></i>
+							<i class='fa fa-fw fa-plus'></i>
 						</span>
 					</div>
 
@@ -132,7 +132,7 @@
 								<i class='icon-plus'></i>&nbsp;New
 							</a>
 							<% if my_corpora.size > 5 %>
-								<a href="corpora?query=&amp;roles=owner&amp;order=created_at" class='btn btn-mini'>
+								<a href="corpora?query=&amp;roles=member,owner,approver&amp;order=created_at" class='btn btn-mini'>
 									<i class='icon-list'></i>&nbsp;List All
 								</a>
 							<% end %>
@@ -165,7 +165,7 @@
 								<i class='icon-plus'></i>&nbsp;New
 							</a>
 							<% if my_pubs.size > 5 %>
-								<a href='publications?query=&amp;roles=owner&amp;order=created_at' class='btn btn-mini'>
+								<a href='publications?query=&amp;roles=owner,reviewer,member&amp;order=created_at' class='btn btn-mini'>
 									<i class='icon-list'></i>&nbsp;List All
 								</a>
 							<% end %>

@@ -19,7 +19,7 @@ class Publication < ActiveRecord::Base
 
 	scope :publication_owner_of,	-> { (where publication_memberships: {role: 'owner'}).order(:updated_at => :desc) 	}
 	scope :publication_member_of,	-> { (where publication_memberships: {role: 'member'}).order(:updated_at => :desc) 	}
-	scope :publication_approver_of,	-> { (where publication_memberships: {role: 'approver'}).order(:updated_at => :desc)}
+	scope :publication_reviewer_of,	-> { (where publication_memberships: {role: 'reviewer'}).order(:updated_at => :desc)}
 
 	accepts_nested_attributes_for :publication_memberships, :users
 
@@ -29,6 +29,10 @@ class Publication < ActiveRecord::Base
 	validates :name, :presence => true
 	validates :url, :url => true, :allow_blank => true
 	#--------------------------------------
+
+	def self.membership_class
+		PublicationMembership
+	end
 
 	#---Permissions-----
 	# this should be called canBeEditedBy?

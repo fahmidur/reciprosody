@@ -158,15 +158,15 @@ class User < ActiveRecord::Base
 
 	#--Memberships to Tools--
 	def associated_tools
-		tool_owner_of + tool_approver_of + tool_member_of
+		tool_owner_of + tool_reviewer_of + tool_member_of
 	end
 
 	def tool_owner_of
 		self.tools.tool_owner_of
 	end
 
-	def tool_approver_of
-		self.tools.tool_approver_of
+	def tool_reviewer_of
+		self.tools.tool_reviewer_of
 	end
 
 	def tool_member_of
@@ -175,15 +175,15 @@ class User < ActiveRecord::Base
 
 	#--Memberships to Publications--
 	def associated_publications
-		publication_owner_of + publication_approver_of + publication_member_of
+		publication_owner_of + publication_reviewer_of + publication_member_of
 	end
 
 	def publication_owner_of
 		self.publications.publication_owner_of
 	end
 
-	def publication_approver_of
-		self.publications.publication_approver_of
+	def publication_reviewer_of
+		self.publications.publication_reviewer_of
 	end
 	
 	def publication_member_of

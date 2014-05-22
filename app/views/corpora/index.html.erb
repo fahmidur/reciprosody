@@ -11,7 +11,7 @@
 	</div>
 <% end %>
 
-<%= render :partial => 'shared/resourceIndex_top', :locals => {:collection => @corpora}%>
+<%= render :partial => 'shared/resourceIndex_top', :locals => {:collection => @corpora, :collection_class => Corpus}%>
 		 
 <% @corpora.each do |corpus| %>
 	<%= render :partial => 'shared/corpus_index1', :locals => {:corpus => corpus} %>

@@ -10,12 +10,14 @@
 	</div>
 <% end %>
 
-<%= render :partial => 'shared/resourceIndex_top', :locals => {:collection => @pubs}%>
+<%= render :partial => 'shared/resourceIndex_top', :locals => {:collection => @pubs, :collection_class => Publication}%>
 
 <% @pubs.each do |p| %>
 	<%= render(
 			:partial => 'shared/publication_index1.html.erb',
-			:locals => {:p => p} 
+			:locals => {
+				:p => p
+			} 
 		)
 	%>
 <% end %>

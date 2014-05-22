@@ -1,13 +1,13 @@
 <div class='indexTop row-fluid'>
 	<div class='resourceSearchBar span8'>
 		<form class='form-horizontal' id='resourceSearchForm'>
-			<input type='text' placeholder='Search' class='resourceSearch input' name='query' id='resourceSearchQuery'/><button class='btn btn-small btn-primary' id='resourceSearchButton'><i class='icon-search'></i></button>
+			<input type='text' placeholder='Search' class='resourceSearch input' name='query' id='resourceSearchQuery'/><button class='btn btn-small btn-primary' id='resourceSearchButton'><i class='fa fa-fw fa-search'></i></button>
 			&nbsp;
-			<!-- <span class='badge'><i class='icon-filter'></i></span> -->
+			
 			<span class='btn-group' id='roleToggleGroup'>
-				<a class='btn btn-small' data-name='member' id='role-member'>Member</a>
-				<a class='btn btn-small' data-name='owner' id='role-owner'>Owner</a>
-				<a class='btn btn-small' data-name='approver' id='role-approver'>Approver</a>
+				<% collection_class.membership_class.roles.each do |role| %>
+				<a class='btn btn-small' data-name='<%= role %>' id='role-<%= role %>'><%= role.capitalize %></a>
+				<% end %>
 			</span>
 			<span class='btn-group'>
 				

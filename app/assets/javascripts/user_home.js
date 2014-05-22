@@ -48,8 +48,6 @@ __app.modules.userhome = function() {
 	}();
 
 
-
-
 	$profileAvatar.on('click', click_profileAvatar);
 	$gravatarEmail.on('blur', statechange_gravatar_normal);
 	$gravatarEmail.on('change', change_gravatarEmail);
@@ -128,7 +126,7 @@ __app.modules.userhome = function() {
 			console.log(data);
 			if(data.ok) {
 				if($('#inst-'+data.inst_id).length === 0) {
-					$instHolder.prepend("<span class='label label-info inst' id='inst-"+data.inst_id+"' title='Remove'><i class='fa fa-university inst-icon'></i> "+data.inst_name+"</span>");
+					$instHolder.prepend("<span class='label label-info inst' id='inst-"+data.inst_id+"' title='Remove'><i class='fa fa-fw fa-university inst-icon'></i> "+data.inst_name+"</span>");
 				}
 			}
 			hide_instSearch();

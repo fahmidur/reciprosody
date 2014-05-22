@@ -159,8 +159,8 @@ class PublicationsController < ApplicationController
 					idArray += current_user.publication_owner_of
 				when "member"
 					idArray += current_user.publication_member_of
-				when "approver"
-					idArray += current_user.publication_approver_of
+				when "reviewer"
+					idArray += current_user.publication_reviewer_of
 				end
 			end
 			idArray.map! {|e| e.id }
