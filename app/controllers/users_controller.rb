@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 	require 'eventmachine'
 
 	protect_from_forgery
-	before_filter :auth_filter
+	before_filter :auth_filter, :except => [:gravatar]
 
 	#
 	# GET /user/update_gravatar_email 

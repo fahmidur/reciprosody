@@ -1,9 +1,9 @@
 $(function() {
 	//$('#sug_wrapper').hide();
 	
-	$('#sug_toggle').click(function() {
-		$('#sug_wrapper').toggle("fast");
-	});
+	// $('#sug_toggle').click(function() {
+	// 	$('#sug_wrapper').toggle("fast");
+	// });
 	//----Handle beforSend for client-side validation---
 	$('#sug_form').on('ajax:beforeSend', function(xhr, opts) {
 		var name = $('#sug_name').val();
@@ -67,6 +67,6 @@ $(function() {
 	});
 });
 	
-	function flash(item) {
-		item.animate({opacity: 0.2}, 200).delay(100).animate({opacity: 1.0}, 200).delay(100).animate({opacity: 0.2}, 200).delay(100).animate({opacity: 1.0}, 200);
-	}
+function flash(item) {
+	item.animate({opacity: 0.2}, 200).delay(100).animate({opacity: 1.0}, 200).delay(100).animate({opacity: 0.2}, 200).delay(100).animate({opacity: 1.0}, 200);
+}
