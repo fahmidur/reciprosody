@@ -75,7 +75,11 @@ $(function() {
 	$('#keyword_in').keyup(function(e) {
 		if(e.keyCode == 13) {
 			e.stopPropagation(); e.preventDefault();
-			var kw = $(this).val().replace(/\s+/g, "-");
+			var v = $(this).val();
+			if(v.match(/^\s*$/)) {
+				return;
+			}
+			var kw = v.replace(/\s+/g, "-");
 			$(this).val("");
 
 			add_to_keywords(kw);
@@ -130,7 +134,7 @@ $(function() {
 	$('#pub_in').keyup(function(e) {
 		if(e.keyCode == 13) {
 			e.stopPropagation(); e.preventDefault();
-			var v = $(this).val();
+			var v = $(this).data('value'); //$(this).val();
 			$(this).val("");
 			console.log(v);
 			var regex = /(.+)\<(\d+)\>/;
@@ -158,19 +162,19 @@ $(function() {
 function add_to_keywords(kw) {
 	kw = kw.toLowerCase();
 	if(!_keywords[kw]) {
-		$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"'>"+kw+"</span> &nbsp;");
+		$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"' data-value='"+kw+"'><i class='fa fa-fw fa-tag'></i>"+kw+"</span> &nbsp;");
 		_keywords[kw] = kw;
 	}
 }
 function add_to_corpora(cname, cid) {
 	if(!_corpora[cid]) {
-		$('#corpora_holder').prepend("<div class='corpi_item_small corp' id='corp--"+cid+"'>"+cname+"</div>");
+		$('#corpora_holder').prepend("<div class='corpi_item_small corp' id='corp--"+cid+"'><i class='fa fa-fw fa-book'></i>"+cname+"</div>");
 		_corpora[cid] = cname;
 	}
 }
 function add_to_publications(name, id) {
 	if(!_publications[id]) {
-		$('#publications_holder').prepend("<div class='corpi_item_small pub' id='pub--"+id+"'>"+name+"</div>");
+		$('#publications_holder').prepend("<div class='corpi_item_small pub' id='pub--"+id+"'><i class='fa fa-fw fa-file'></i>"+name+"</div>");
 		_publications[id] = name;
 	}
 }

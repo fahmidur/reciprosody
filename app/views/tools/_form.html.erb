@@ -45,13 +45,13 @@
 
 	<div class='row-fluid'>
 		<div class="field span4">
-			<label for="tool_keywords">Keywords</label>
-			<div class="input-prepend">
-				<span class="add-on"><i class="icon-tags"></i></span>
-				<input class="span11 ui-autocomplete-input" data-autocomplete="/tools/autocomplete_tool_keyword_name" id="keyword_in" name="tool[keyword]" size="30" type="text" value="" autocomplete="off"><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
-			</div>
-			<br>
-			<div class="span12" id="keywords_holder">
+			<label for="tool_keywords"><i class='fa fa-fw fa-tags'></i> Keywords</label>
+
+			<input class="span12 ui-autocomplete-input" data-autocomplete="/tools/autocomplete_tool_keyword_name" id="keyword_in" name="tool[keyword]" type="text" value="" autocomplete="off" placeholder="Enter Keyword">
+			<span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+
+
+			<div class="holder nobgborder" id="keywords_holder">
 			</div>
 		</div>
 
@@ -60,15 +60,14 @@
 		</div>
 
 		<div class="field span4">
-			<label for="corpus">For Corpus</label>
+			<label for="uses_corpus_in">
+				<i class='fa fa-fw fa-book'></i>
+				For Corpora
+			</label>
 
-			<div class="input-prepend">
-				<span class="add-on"><i class="icon-book"></i></span>
-				<input class="memberInput span11 ui-autocomplete-input" data-autocomplete="/corpora/autocomplete_corpus_name" id="uses_corpus_in" name="tool[corpus]" size="30" type="text" value="" autocomplete="off"><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
-			</div>
-
-			<br>
-			<div id="corpora_holder">
+			<input class="memberInput span12 ui-autocomplete-input" data-autocomplete="/corpora/autocomplete_corpus_name" id="uses_corpus_in" name="tool[corpus]" type="text" value="" autocomplete="off" placeholder="Search Corpora">
+			<span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+			<div id="corpora_holder" class='holder'>
 			</div>
 			<br>
 			
@@ -89,20 +88,22 @@
 		</div>
 
 		<div class='field span4'>
-			<label for='publications'>Associated Publications</label>
-			<div class="input-prepend">
-				<span class="add-on"><i class="icon-file"></i></span>
-				<%= f.autocomplete_field :publication, '/publications/autocomplete_publication_name', :value => "", :class => 'memberInput span11', :id => 'pub_in' %> 
-			</div>
-			<div class="span12" id="publications_holder">
+			<label for='pub_in'>
+				<i class='fa fa-fw fa-file-text'></i>
+				Associated Publications
+			</label>
+
+			<input class="span12 ui-autocomplete-input" data-autocomplete="/publications/autocomplete_publication_name" id="pub_in" name="tool[publication]" type="text" value="" autocomplete="off" placeholder="Search Publication">
+
+			<div class="holder" id="publications_holder">
 			</div>
 
-			<br/>
-			<label for='owners'>Primary Owner</label>
-			<div class="input-prepend">
-				<span class="add-on"><i class="icon-user"></i></span>
-				<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user().email_format, :class => 'memberInput span11', :id => 'primaryOwner' %> 
-			</div>
+			<label for='owners'>
+				<i class='fa fa-fw fa-user'></i> 
+				Primary Owner
+			</label>
+
+			<%= f.autocomplete_field :owner, '/corpora/autocomplete_user_name', :value => current_user().email_format, :class => 'memberInput span12', :id => 'primaryOwner' %> 
 
 		</div>
 	</div>

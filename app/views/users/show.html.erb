@@ -75,7 +75,7 @@
 			<li class='l-nav'><a href='/user/inbox?v=unread' class=''>Inbox <span class='badge pull-right' id='inbox-count'><%= current_user.received_messages.unreaded.size %></span></a></li>
 			<li class='l-nav'><a href='/users' class=''>Show All Users</a></li>
 			<li class='l-nav'><a href='/user/invite' class=''>Invite a Friend</a></li>
-			<li class='l-nav'><a href='/how-to' class=''>How-To <i class='icon-question-sign'></i></a></li>
+			<li class='l-nav'><a href='/how-to' class=''>How-To <i class='fa fa-fw fa-question-circle'></i></a></li>
 			<% if current_user.super_key %>
 			<li class='l-nav'><a href='/admin' class=''>Admin Panel <i class='icon-off'></i></a></li>
 			<% end %>

@@ -9,6 +9,9 @@ var _save_state = true;
 $(function() {
 	dw();
 	UIHelper.halfwayBind($('#corpus_name'), $('#corpus_header'), "New Corpus");
+	$('.help_sticker').animate({opacity: 0}, 90000, function() {
+		$(this).remove();
+	});
 	
 	$(window).resize(dw);
 	
@@ -113,12 +116,8 @@ $(function() {
 
 
 
-function dw() {
-	$('#help_sticker').width($('#primaryOwner').width()-10);
-	$('#dropbox').width($('input').width()-16);
-	
+function dw() {	
 	if(isMobile() && popOversEnabled) {
-	
 		$('input, textarea').popover('destroy');
 		popOversEnabled = false;
 		return;
@@ -133,7 +132,7 @@ function dw() {
 }
 
 function isMobile() {
-	if($('div.btn.btn-navbar').is(":visible") && $(window).width() < 520) {
+	if($('div.btn.btn-navbar').is(":visible") || $(window).width() < 520) {
 		return true;
 	}
 	return false;

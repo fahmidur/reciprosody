@@ -6,23 +6,32 @@
 		<%= notice %>
 	</div>
 <%end%>
-<div class='row-fluid'>
-	<div class='field span4'>
-		<label for='name'>Name</label>
-		<input type='text' class='cap' name='name' title='Reminder' data-content="They can change their names later." required/>
-	</div>
-</div>
 
 <div class='row-fluid'>
-	<div class='field span4'>
-		<label for='email'>Email</label>
-		<input type='email' name='email' title='Reminder' data-content="You can't invite someone already registered." required/>
-	</div>
-</div>
-	
-<div class='row-fluid'>
-	<div class='field span4'>
-		<input type='submit' value="Invite Friend" class='btn'/>
+	<div class='span4'>
+		<h1>
+			<i class='fa fa-fw fa-ticket'></i>
+			Invite A Friend
+		</h1>
+		<div class='row-fluid'>
+			<label for='name'>Name</label>
+			<input id='name' type='text' class='cap span12' name='name' title='Reminder' data-content="They can change their names later." required/>
+		</div>
+
+		<div class='row-fluid'>
+				<label for='email'>Email</label>
+				<input id='email' type='email' class='span12' name='email' title='Reminder' data-content="You can't invite someone already registered." required/>
+		</div>
+			
+		<div class='row-fluid'>
+			<div class='field span12'>
+				<input type='submit' value="Invite Friend" class='btn'/>
+			</div>
+		</div>
+
+	</div> <!-- end of first column -->
+	<div class='span8'>
+		
 	</div>
 </div>
 

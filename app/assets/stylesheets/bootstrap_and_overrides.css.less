@@ -5,6 +5,24 @@ body {
 	padding-top: 60px;
 	background-color: #fafafa;
 }
+.holder {
+	margin-bottom:1em;
+	border: 1px solid #eee;
+	background-color: #fff;
+}
+.holder.nobgborder {
+	background-color: transparent;
+	border-color: transparent;
+}
+.nav-collapse .nav > li > a {
+	border-radius: 0px;
+}
+.input-prepend {
+	width: 80%;
+}
+button.force-square {
+	border-radius: 0px;
+}
 #navtop-inner {
 	border: 0px solid red;
 	/*box-shadow: none;*/
@@ -962,8 +980,17 @@ body .modal {
 .required {
 	background-color:red;
 }
-#help_sticker {
+.help_sticker {
 	margin:0px;
+	padding: 1em;
+	/*background-color: #d0f86f;*/
+	/*background-color: #c2f83e;*/
+	background-color: #ffbf40;
+	
+	/*background-color: rgba(194, 248, 62, 0.3);*/
+	background-color: rgba(255,191,64, 0.3);
+	border:1px solid rgba(255,191,64, 0.9);
+	border-radius:3px;
 }
 .vSelect {
 	border-top-right-radius: 0px;
@@ -1098,8 +1125,10 @@ table.inbox_table tr.message-row.selected {
 }
 .comment {
 	padding:3px; 
+	/*border: 1px solid #eee;*/
 	border-top: 1px solid #eee;
 	border-left: 1px solid #eee;
+	border-bottom: 1px solid #eee;
 	margin: 2px;
 	margin-right:4px;
 	background-color: #fff;
