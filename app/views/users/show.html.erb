@@ -72,12 +72,30 @@
 		</div>
 
 		<ul class="nav nav-tabs nav-stacked" id='side_menu'>
-			<li class='l-nav'><a href='/user/inbox?v=unread' class=''>Inbox <span class='badge pull-right' id='inbox-count'><%= current_user.received_messages.unreaded.size %></span></a></li>
-			<li class='l-nav'><a href='/users' class=''>Show All Users</a></li>
-			<li class='l-nav'><a href='/user/invite' class=''>Invite a Friend</a></li>
-			<li class='l-nav'><a href='/how-to' class=''>How-To <i class='fa fa-fw fa-question-circle'></i></a></li>
+			<li class='l-nav'><a href='/user/inbox?v=unread' class=''>
+				<i class='fa fa-fw fa-inbox'></i>
+				Inbox 
+				<span class='badge pull-right' id='inbox-count'>
+					<%= current_user.received_messages.unreaded.size %>
+				</span>
+			</a></li>
+			<li class='l-nav'><a href='/users' class=''>
+				<i class='fa fa-fw fa-users'></i>
+				Show All Users
+			</a></li>
+			<li class='l-nav'><a href='/user/invite' class=''>
+				<i class='fa fa-fw fa-ticket'></i>
+				Invite a Friend
+			</a></li>
+			<li class='l-nav'><a href='/how-to' class=''>
+				<i class='fa fa-fw fa-question-circle'></i>
+				How-To
+			</a></li>
 			<% if current_user.super_key %>
-			<li class='l-nav'><a href='/admin' class=''>Admin Panel <i class='icon-off'></i></a></li>
+			<li class='l-nav'><a href='/admin' class=''>
+				<i class='fa fa-fw fa-power-off'></i>
+				Admin Panel
+			</a></li>
 			<% end %>
 			<!-- <li class='l-nav'><a href='/graphics/one' class=''>Graph View</a></li> -->
 
@@ -212,8 +230,19 @@
 		
 
 	</div>
-
 </div>
 <script type='text/javascript' src='<%= @faye_url %>.js'></script>
 <%= javascript_include_tag "handle_box_toggleable.js" %>
 <%= javascript_include_tag "user_home.js" %>
+
+
+<!--
+<% if flash[:error] || flash[:notice] || flash[:alert] %>
+  	<div class='alert alert-error'>
+  		<button type="button" class="close" data-dismiss="alert">×</button>
+  		<%= content_tag(:div, flash[:error], :id => "flash_error") if flash[:error] %>
+  		<%= content_tag(:div, flash[:notice], :id => "flash_notice") if flash[:notice] %>
+  		<%= content_tag(:div, flash[:alert], :id => "flash_alert") if flash[:alert] %>
+  	</div>
+  <% end %>
+-->

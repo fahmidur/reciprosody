@@ -11,7 +11,8 @@
 
 
   <%= stylesheet_link_tag "application", :media => "all" %>
-  <!-- <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"> -->
+
+  <%= csrf_meta_tags %>
 
   <% if Rails.env.development? %>
   	<%= javascript_include_tag 'jquery' %>
@@ -32,7 +33,7 @@
   
   <%= yield :javascript_includes %>
   
-  <%= csrf_meta_tags %>
+  
   
 </head>
 <body>

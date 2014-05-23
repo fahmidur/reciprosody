@@ -19,3 +19,13 @@
 		<%= link_to "Sign up today", new_user_registration_path, class: "btn btn-large btn-primary" %>
 	<%end%>
 </div>
+<!--
+<% if flash[:error] || flash[:notice] || flash[:alert] %>
+  	<div class='alert alert-error'>
+  		<button type="button" class="close" data-dismiss="alert">×</button>
+  		<%= content_tag(:div, flash[:error], :id => "flash_error") if flash[:error] %>
+  		<%= content_tag(:div, flash[:notice], :id => "flash_notice") if flash[:notice] %>
+  		<%= content_tag(:div, flash[:alert], :id => "flash_alert") if flash[:alert] %>
+  	</div>
+  <% end %>
+-->

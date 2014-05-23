@@ -1,50 +1,62 @@
 <h2>Sign In</h2>
-<br/>
-<div class='row-fluid'>
-  <% if flash[:error] || flash[:notice] || flash[:alert] %>
-  	<div class='alert alert-error'>
-  		<button type="button" class="close" data-dismiss="alert">×</button>
-  		<%= content_tag(:div, flash[:error], :id => "flash_error") if flash[:error] %>
-  		<%= content_tag(:div, flash[:notice], :id => "flash_notice") if flash[:notice] %>
-  		<%= content_tag(:div, flash[:alert], :id => "flash_alert") if flash[:alert] %>
-  	</div>
-  <% end %>
-</div>
-
-
-<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <div class='row-fluid'>
-    <%= f.label :email, :class => 'span2' %>
-    <%= f.email_field :email, :class => 'span3' %>
-  </div>
-
-  <div class='row-fluid'>
-    <%= f.label :password, :class => 'span2' %>
-    <%= f.password_field :password, :class => 'span3' %>
-  </div>
-
-  <% if devise_mapping.rememberable? -%>
-    <div class='row-fluid'>
-      <span class='span2'>
-      </span>
-    </div>
-
-    <div class='row-fluid'>
-      <label class='checkbox span2'>
-        <%= f.check_box :remember_me %> Remember Me
-      </label>
-
-    </div>
-  <% end -%>
-
-  <div class='row-fluid'>
-    <%= f.submit "Sign in", :class => 'btn btn-primary span5' %>
-  </div>
-<% end %>
-
 
 <div class='row-fluid'>
+  <div class='span4'>
 
-  <%= render "devise/shared/links" %>
 
+
+
+    <div class='row-fluid'>
+      <div class='span12'>
+        <% if flash[:error] || flash[:notice] || flash[:alert] %>
+        <div class='alert alert-error'>
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <%= content_tag(:div, flash[:error], :id => "flash_error") if flash[:error] %>
+        <%= content_tag(:div, flash[:notice], :id => "flash_notice") if flash[:notice] %>
+        <%= content_tag(:div, flash[:alert], :id => "flash_alert") if flash[:alert] %>
+        </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+      <div class='row-fluid'>
+        <%= f.label :email, :class => 'span3' %>
+        <%= f.email_field :email, :class => 'span9' %>
+      </div>
+
+      <div class='row-fluid'>
+        <%= f.label :password, :class => 'span3' %>
+        <%= f.password_field :password, :class => 'span9' %>
+      </div>
+
+      <% if devise_mapping.rememberable? -%>
+        <div class='row-fluid'>
+          <span class='span12'>
+          </span>
+        </div>
+
+        <div class='row-fluid'>
+          <label class='checkbox span12'>
+            <%= f.check_box :remember_me %> Remember Me
+          </label>
+        </div>
+      <% end -%>
+
+      <div class='row-fluid'>
+        <%= f.submit "Sign in", :class => 'btn btn-primary span12' %>
+      </div>
+
+    <% end %>
+
+    <div class='row-fluid'>
+      <%= render "devise/shared/links" %>
+    </div>
+
+
+  </div> <!-- end of first col -->
+
+  <div class='span8'>
+
+  </div>
 </div>

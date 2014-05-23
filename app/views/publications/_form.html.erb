@@ -116,7 +116,7 @@
 <script type='text/javascript'>
 	$(function() {
 		<% @pub.keywords_array.each do |kw|%>
-			add_to_keywords("<%=kw%>");
+			add_to_keywords("<%= kw %>");
 		<% end %>
 
 		<% @pub.corpora.each do |corp| %>

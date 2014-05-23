@@ -4,8 +4,6 @@ var _tools = {};
 
 $(function() {
 	console.log("publications form 8");
-	dw();
-	$(window).resize(dw);
 
 	$('#error_box').hide();
 	$('#error_box').click(function() {
@@ -15,7 +13,6 @@ $(function() {
 	$('#new_publication').on('ajax:beforeSend', function(e, xhr, settings) {
 		console.log("ORIGINAL = " + settings.data);
 
-		// var obj = uri_to_obj(settings.data);
 		var obj = uri_to_obj($(this));
 
 		var keywords = "";
@@ -89,7 +86,7 @@ $(function() {
 
 	$('.kw').live('click', function(e) {
 		e.stopPropagation(); e.preventDefault();
-		var kw = $(this).text();
+		var kw = $(this).data('value');
 		if(_keywords[kw]) {
 			delete _keywords[kw];
 			$('#kw--'+kw).remove();
@@ -158,26 +155,22 @@ $(function() {
 	});
 	UIHelper.halfwayBind($('#publication_name'), $('#publication_header'), "New Publication");
 });
-function dw() {
-	$('#help_sticker').width($('#primaryOwner').width()-10);
-	//$('#dropbox').width($('textarea').width()-16);
-}
 function add_to_keywords(kw) {
 	kw = kw.toLowerCase();
 	if(!_keywords[kw]) {
-		$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"'>"+kw+"</span> &nbsp;");
+		$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"' data-value='"+kw+"'><i class='fa fa-fw fa-tag'></i> "+kw+"</span> &nbsp;");
 		_keywords[kw] = kw;
 	}
 }
 function add_to_corpora(cname, cid) {
 	if(!_corpora[cid]) {
-		$('#corpora_holder').prepend("<div class='corpi_item_small corp' id='corp--"+cid+"'>"+cname+"</div>");
+		$('#corpora_holder').prepend("<div class='corpi_item_small corp' id='corp--"+cid+"'><i class='fa fa-fw fa-book'></i> "+cname+"</div>");
 		_corpora[cid] = cname;
 	}
 }
 function add_to_tools(name, id) {
 	if(!_tools[id]) {
-		$('#tools_holder').prepend("<div class='corpi_item_small tool' id='tool--"+id+"'>"+name+"</div>");
+		$('#tools_holder').prepend("<div class='corpi_item_small tool' id='tool--"+id+"'><i class='fa fa-fw fa-wrench'></i> "+name+"</div>");
 		_tools[id] = name;
 	}
 }

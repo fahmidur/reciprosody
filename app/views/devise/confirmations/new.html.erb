@@ -1,17 +1,23 @@
-<h2>Resend confirmation instructions</h2>
-<%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post }) do |f| %>
-	<% if !resource.errors.empty? %>
-		<div class='alert alert-error'>
-			<button type="button" class="close" data-dismiss="alert">×</button>
-			<%= devise_error_messages! %>
-		</div>
-	<% end %>
-  <div>
-  	<%= f.label :email %>
-  	<%= f.email_field :email %>
-  </div>
+<h2>Resend Confirmation Instructions</h2>
+<div class='row-fluid'>
+	<div class='span4'>
+		<%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post }) do |f| %>
+			<% if !resource.errors.empty? %>
+				<div class='alert alert-error'>
+					<button type="button" class="close" data-dismiss="alert">×</button>
+					<%= devise_error_messages! %>
+				</div>
+			<% end %>
+		  <div class='row-fluid'>
+		  	<%= f.label :email %>
+		  	<%= f.email_field :email, :class => 'span12' %>
+		  </div>
 
-  <div><%= f.submit "Resend confirmation instructions" %></div>
-<% end %>
+		  <div class='row-fluid'>
+		  	<%= f.submit "Resend confirmation instructions", :class => 'btn btn-primary span12' %>
+		  </div>
+		<% end %>
+	</div>
+</div>
 
 <%= render "devise/shared/links" %>
