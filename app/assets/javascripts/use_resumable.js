@@ -52,7 +52,7 @@ r.on('fileAdded', function(file){
   $('.resumable-progress .progress-pause-link').hide();
 
   // Add the file to the list
-  $('.resumable-list').append('<div title="remove" class="resumable-file-'+file.uniqueIdentifier+' corpi_item_small resumable-remove span12" data-iden="'+file.uniqueIdentifier+'"><span class="remove-warning"></span><span class="resumable-file-name label label-info"></span> <span class="resumable-file-progress"></div>');
+  $('.resumable-list').append('<div title="remove" class="resumable-file-'+file.uniqueIdentifier+' corpi_item_small resumable-remove span11" data-iden="'+file.uniqueIdentifier+'"><i class="fa fa-fw fa-upload ficon"></i><span class="remove-warning"></span><span class="resumable-file-name"></span> <span class="resumable-file-progress"></span></div>');
 
   $('.resumable-file-'+file.uniqueIdentifier+' .resumable-file-name').html(file.fileName);
 

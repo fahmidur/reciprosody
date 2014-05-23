@@ -9,8 +9,6 @@
 
 <% wav_times = @corpus.calc_wav_times %>
 
-<div class='box bordered1'>
-<div class='boxcontent'>
 <%= form_for(@corpus, :multipart => true, :remote => true, :html => {'data-type' => 'json', :id => 'new_corpus'},) do |f| %>
 
 	<div class='row-fluid'>
@@ -117,6 +115,5 @@
 		<input type='submit' value="Edit Corpus" class="btn btn-primary span12" id='submit_btn'/>
 	</div>
 <% end %>
-</div>
-</div>
+
 <%= javascript_include_tag 'use_resumable.js' %>

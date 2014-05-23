@@ -1,6 +1,14 @@
 .resumable-file-name {
 	border-radius:0px;
 }
+.resumable-remove {
+	background-color: #eee;
+	border: 1px solid #dcdcdc;
+	border-left: 2px solid #dcdcdc;
+}
+.resumable-remove {
+	background-color: #fff;
+}
 /* Uploader: Drag & Drop */
 .resumable-error {display:none; font-size:14px; font-style:italic;}
 .resumable-drop {padding:15px; font-size:13px; text-align:center; color:#666; font-weight:bold;background-color:#eee; border:1px solid #aaa; border-radius:0px; margin-top:5px; z-index:9999; display:none;}
