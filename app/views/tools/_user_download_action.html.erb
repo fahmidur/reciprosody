@@ -1,7 +1,7 @@
 <tr>
 	<td>
 		<a href='<%= url_for(ua.user_actionable) %>' class='dark'>
-			<i class='icon-wrench'></i>
+			<%= render :partial => 'shared/icon.tool' %>
 			<%= ua.user_actionable.name %>
 		</a>
 	</td>

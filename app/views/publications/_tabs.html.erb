@@ -5,7 +5,7 @@
 
 	<div class='span6'>
 		<h3 class='publication_name'>
-			<i class='icon-file'></i>
+			<%= render :partial => 'shared/icon.publication' %>
 			<%= @pub.name %> 
 			<% if @pub.pubdate && @pub.pubdate.year != 0 %>
 				<span class='badge'>

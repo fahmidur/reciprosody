@@ -1,7 +1,3 @@
-var _keywords = {};
-var _corpora = {};
-var _tools = {};
-
 $(function() {
 	console.log("publications form 8");
 
@@ -10,8 +6,10 @@ $(function() {
 		$(this).hide();
 	});
 
+	UIHelper.halfwayBind($('#publication_name'), $('#publication_header'), "New Publication");
+
 	$('#new_publication').on('ajax:beforeSend', function(e, xhr, settings) {
-		console.log("ORIGINAL = " + settings.data);
+		// console.log("ORIGINAL = " + settings.data);
 
 		var obj = uri_to_obj($(this));
 
@@ -20,13 +18,16 @@ $(function() {
 		var tools = "";
 
 
-		console.log(obj);
-		console.log("changing settings.data");
+		// console.log(obj);
+		// console.log("changing settings.data");
 
 		delete obj['publication[keyword]'];
 		delete obj['publication[corpus]'];
 		delete obj['publication[tool]'];
 
+		var _keywords		= __app.modules.form_holder.get_keywords();
+		var _corpora		= __app.modules.form_holder.get_corpora();
+		var _tools			= __app.modules.form_holder.get_tools();
 
 		for(kw in _keywords) {
 			keywords += kw + "\n";
@@ -38,19 +39,17 @@ $(function() {
 			tools += tool + "\n";
 		}
 
-		console.log(keywords);
-		console.log(corpora);
-		console.log(tools);
+		// console.log(keywords);
+		// console.log(corpora);
+		// console.log(tools);
 
 		obj['publication[keywords]'] = keywords;
 		obj['publication[corpora]'] = corpora;
 		obj['publication[tools]'] = tools;
 
 
-		console.log("final obj = ", obj);
 		settings.data = obj_to_uri(obj);
-
-		console.log(settings.data);
+		// console.log(settings.data);
 	});
 	$('#new_publication').on('ajax:success', function(e, data) {
 		console.log("success!");
@@ -68,109 +67,5 @@ $(function() {
 			console.log(data);
 		}
 	});
-
-	$('#keyword_in').keydown(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-		}
-	});
-	$('#keyword_in').keyup(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-			var kw = $(this).val().replace(/\s+/g, "-");
-			$(this).val("");
-
-			add_to_keywords(kw);
-		}
-	});
-
-	$('.kw').live('click', function(e) {
-		e.stopPropagation(); e.preventDefault();
-		var kw = $(this).data('value');
-		if(_keywords[kw]) {
-			delete _keywords[kw];
-			$('#kw--'+kw).remove();
-		}
-	});
-	$('.corp').live('click', function(e) {
-		e.stopPropagation(); e.preventDefault();
-		var cid = $(this).attr('id').split("--")[1];
-		if(_corpora[cid]) {
-			delete _corpora[cid];
-			$('#corp--'+cid).remove();
-		}
-	});
-
-	$('#uses_corpus_in').keydown(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-		}
-	});
-	$('#uses_corpus_in').keyup(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-			var v = $(this).val();
-			$(this).val("");
-			console.log(v);
-			var regex = /(.+)\<(\d+)\>/;
-			var matches = regex.exec(v);
-			if(!matches)
-				return;
-			var cname = matches[1];
-			var cid = matches[2];
-
-			add_to_corpora(cname, cid);
-		}
-	});
-
-	$('#tool_in').keydown(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-		}
-	});
-	$('#tool_in').keyup(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-			var v = $(this).val();
-			$(this).val("");
-			console.log(v);
-			var regex = /(.+)\<(\d+)\>/;
-			var matches = regex.exec(v);
-			if(!matches)
-				return;
-			var name = matches[1];
-			var id = matches[2];
-
-			add_to_tools(name, id);
-		}
-	});
-
-	$('.tool').live('click', function(e) {
-		e.stopPropagation(); e.preventDefault();
-		var id = $(this).attr('id').split("--")[1];
-		if(_tools[id]) {
-			delete _tools[id];
-			$('#tool--'+id).remove();
-		}
-	});
-	UIHelper.halfwayBind($('#publication_name'), $('#publication_header'), "New Publication");
 });
-function add_to_keywords(kw) {
-	kw = kw.toLowerCase();
-	if(!_keywords[kw]) {
-		$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"' data-value='"+kw+"'><i class='fa fa-fw fa-tag'></i> "+kw+"</span> &nbsp;");
-		_keywords[kw] = kw;
-	}
-}
-function add_to_corpora(cname, cid) {
-	if(!_corpora[cid]) {
-		$('#corpora_holder').prepend("<div class='corpi_item_small corp' id='corp--"+cid+"'><i class='fa fa-fw fa-book'></i> "+cname+"</div>");
-		_corpora[cid] = cname;
-	}
-}
-function add_to_tools(name, id) {
-	if(!_tools[id]) {
-		$('#tools_holder').prepend("<div class='corpi_item_small tool' id='tool--"+id+"'><i class='fa fa-fw fa-wrench'></i> "+name+"</div>");
-		_tools[id] = name;
-	}
-}
+

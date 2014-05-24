@@ -4,15 +4,21 @@
 <div class='row-fluid'>
 	<div class='span6'>
 		<h3 class='tool_name'>
-			<i class='icon-wrench'></i>
+			<%= render :partial => 'shared/icon.tool' %>
 			<%= @tool.name %> 
-			<% if @tool.programming_language && @tool.programming_language.present? %>
-				<span class='badge'><%= @tool.programming_language %></span>
-			<% end %>
+			
 
-			<span class='badge'>
+			<span class='label'>
+				<i class='fa fa-fw fa-calendar'></i>		
 				<%= @tool.to_timestring %>
 			</span>
+			
+			<% if @tool.programming_language && @tool.programming_language.present? %>
+				<span class='lang'>
+					<i class='fa fa-fw fa-language'></i>
+					<%= @tool.programming_language %>
+				</span>
+			<% end %>
 		</h3>
 	</div>
 

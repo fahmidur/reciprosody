@@ -4,7 +4,11 @@ __app.modules.form_holder = function() {
 	var _publications = {};
 	var _tools = {};
 
-	$('.pub').live('click', function(e) {
+	var $pub = $('.pub');
+	var $pub_in = $('#pub_in');
+	var $kw = $('.kw');
+	
+	$pub.live('click', function(e) {
 		e.stopPropagation(); e.preventDefault();
 		var id = $(this).attr('id').split("--")[1];
 		if(_publications[id]) {
@@ -13,7 +17,31 @@ __app.modules.form_holder = function() {
 		}
 	});
 
-	$('.kw').live('click', function(e) {
+	if($pub_in.length !== 0) {
+		$pub_in.keydown(function(e) {
+			if(e.keyCode == 13) {
+				e.stopPropagation(); e.preventDefault();
+			}
+		});
+		$pub_in.keyup(function(e) {
+			if(e.keyCode == 13) {
+				e.stopPropagation(); e.preventDefault();
+				var v = $(this).val();
+				$(this).val("");
+				console.log(v);
+				var regex = /(.+)\<(\d+)\>/;
+				var matches = regex.exec(v);
+				if(!matches)
+					return;
+				var name = matches[1];
+				var id = matches[2];
+
+				add_to_publications(name, id);
+			}
+		});
+	}
+
+	$kw.live('click', function(e) {
 		e.stopPropagation(); e.preventDefault();
 		var kw = $(this).data('value');
 		if(_keywords[kw]) {
@@ -21,7 +49,28 @@ __app.modules.form_holder = function() {
 			$('#kw--'+kw).remove();
 		}
 	});
-	
+
+	if($('#keyword_in').length !== 0) {
+		$('#keyword_in').keydown(function(e) {
+			if(e.keyCode == 13) {
+				e.stopPropagation(); e.preventDefault();
+			}
+		});
+		$('#keyword_in').keyup(function(e) {
+			if(e.keyCode == 13) {
+				e.stopPropagation(); e.preventDefault();
+				var v = $(this).val();
+				if(v.match(/^\s*$/)) {
+					return;
+				}
+				var kw = v.replace(/\s+/g, "-");
+				$(this).val("");
+
+				add_to_keywords(kw);
+			}
+		});
+	}
+
 	$('.corp').live('click', function(e) {
 		e.stopPropagation(); e.preventDefault();
 		var cid = $(this).attr('id').split("--")[1];
@@ -31,67 +80,63 @@ __app.modules.form_holder = function() {
 		}
 	});
 
-	$('#pub_in').keydown(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-		}
-	});
-	$('#pub_in').keyup(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-			var v = $(this).val();
-			$(this).val("");
-			console.log(v);
-			var regex = /(.+)\<(\d+)\>/;
-			var matches = regex.exec(v);
-			if(!matches)
-				return;
-			var name = matches[1];
-			var id = matches[2];
-
-			add_to_publications(name, id);
-		}
-	});
-
-	$('#keyword_in').keydown(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-		}
-	});
-	$('#keyword_in').keyup(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-			var v = $(this).val();
-			if(v.match(/^\s*$/)) {
-				return;
+	if($('#uses_corpus_in').length !== 0) {
+		$('#uses_corpus_in').keydown(function(e) {
+			if(e.keyCode == 13) {
+				e.stopPropagation(); e.preventDefault();
 			}
-			var kw = v.replace(/\s+/g, "-");
-			$(this).val("");
+		});
+		$('#uses_corpus_in').keyup(function(e) {
+			if(e.keyCode == 13) {
+				e.stopPropagation(); e.preventDefault();
+				var v = $(this).val();
+				$(this).val("");
+				console.log(v);
+				var regex = /(.+)\<(\d+)\>/;
+				var matches = regex.exec(v);
+				if(!matches)
+					return;
+				var cname = matches[1];
+				var cid = matches[2];
 
-			add_to_keywords(kw);
-		}
-	});
-	$('#uses_corpus_in').keydown(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-		}
-	});
-	$('#uses_corpus_in').keyup(function(e) {
-		if(e.keyCode == 13) {
-			e.stopPropagation(); e.preventDefault();
-			var v = $(this).val();
-			$(this).val("");
-			console.log(v);
-			var regex = /(.+)\<(\d+)\>/;
-			var matches = regex.exec(v);
-			if(!matches)
-				return;
-			var cname = matches[1];
-			var cid = matches[2];
+				add_to_corpora(cname, cid);
+			}
+		});
+	}
 
-			add_to_corpora(cname, cid);
+	
+	$('.tool').live('click', function(e) {
+		e.stopPropagation(); e.preventDefault();
+		var id = $(this).attr('id').split("--")[1];
+		if(_tools[id]) {
+			delete _tools[id];
+			$('#tool--'+id).remove();
 		}
 	});
+	
+	if($('#tool_in').length !== 0) {
+		$('#tool_in').keydown(function(e) {
+			if(e.keyCode == 13) {
+				e.stopPropagation(); e.preventDefault();
+			}
+		});
+		$('#tool_in').keyup(function(e) {
+			if(e.keyCode == 13) {
+				e.stopPropagation(); e.preventDefault();
+				var v = $(this).val();
+				$(this).val("");
+				console.log(v);
+				var regex = /(.+)\<(\d+)\>/;
+				var matches = regex.exec(v);
+				if(!matches)
+					return;
+				var name = matches[1];
+				var id = matches[2];
+
+				add_to_tools(name, id);
+			}
+		});
+	}
 
 	function get_keywords() {
 		return _keywords;
@@ -103,6 +148,10 @@ __app.modules.form_holder = function() {
 
 	function get_publications() {
 		return _publications;
+	}
+
+	function get_tools() {
+		return _tools;
 	}
 
 	function add_to_keywords(kw) {
@@ -127,12 +176,25 @@ __app.modules.form_holder = function() {
 		}
 	}
 
+	function add_to_tools(name, id) {
+		if(!_tools[id]) {
+			$('#tools_holder').prepend("<div class='corpi_item_small tool' id='tool--"+id+"'><i class='fa fa-fw fa-wrench'></i> "+name+"</div>");
+			_tools[id] = name;
+		}
+	}
+
 	return {
 		'get_keywords': get_keywords,
 		'get_corpora': get_corpora,
 		'get_publications': get_publications,
+		'get_tools': get_tools,
 		'add_to_keywords': add_to_keywords,
 		'add_to_corpora': add_to_corpora,
-		'add_to_publications':  add_to_publications
+		'add_to_publications':  add_to_publications,
+		'add_to_tools':  add_to_tools
 	};
-}();
+};
+
+$(function() {
+	__app.modules.form_holder = __app.modules.form_holder();
+});

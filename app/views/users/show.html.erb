@@ -97,13 +97,6 @@
 				Admin Panel
 			</a></li>
 			<% end %>
-			<!-- <li class='l-nav'><a href='/graphics/one' class=''>Graph View</a></li> -->
-
-			<!--
-			<li class='l-nav'><a href='/corpora' class=''>View All Corpora</a></li>
-			<li class='l-nav'><a href='/publications' class=''>View All Publications</a></li>
-			<li class='l-nav'><a href='/tools' class=''>View All Tools</a></li>
-			-->
 
 			<% unless my_corpora.size > 0 %> <li><a href='/corpora/new' class='lnav_hl'>New Corpus</a></li> <% end %>
 			<% unless my_pubs.size > 0 %> <li><a href='/publications/new' class='lnav_hl'>New Publication</a></li> <% end %>
@@ -154,7 +147,7 @@
 									<i class='icon-list'></i>&nbsp;List All
 								</a>
 							<% end %>
-						</div>
+						</div> <!-- end of button group --> 
 					</div>
 					<br/>
 				</div> <!-- end of box content -->
@@ -176,6 +169,7 @@
 						<%= render :partial => 'shared/publication_index_small.html.erb', 
 						:locals => {:p => pub} %>
 					<% end %>
+
 					<div>
 						<!-- publications -->
 						<div class='btn-group pull-right btn-group-narrow'>
@@ -187,10 +181,9 @@
 									<i class='icon-list'></i>&nbsp;List All
 								</a>
 							<% end %>
-						</div>
-					</div>
+						</div> <!-- end of button group -->
+					</div> 
 					<br/>
-
 				</div> <!-- end of boxcontent -->
 			</div> <!-- end of box -->
 		<% end %>
@@ -211,6 +204,7 @@
 					<% end %>
 
 					<div>
+						<!-- tools -->
 						<div class='btn-group pull-right btn-group-narrow'>
 							<a href='/tools/new' class='btn btn-mini'>
 								<i class='icon-plus'></i>&nbsp;New
@@ -220,7 +214,7 @@
 									<i class='icon-list'>&nbsp;List All</i>
 								</a>
 							<% end %>
-						</div>
+						</div> <!-- end of button group -->
 					</div>
 					<br/>
 				</div> <!-- end of box content -->

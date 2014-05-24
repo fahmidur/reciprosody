@@ -1,6 +1,5 @@
 <%= content_for :javascript_includes do%>
 	<%= javascript_include_tag 'resumable.js' %>
-	<%= javascript_include_tag 'publications_form.js' %>
 <% end %>
 <%= form_for(@pub, :remote => true, :html => {'data-type' => 'json', :id => 'new_publication'}) do |f|%>
 	<div class='row-fluid'>
@@ -110,21 +109,24 @@
 
 <% end %>
 
-<%=javascript_include_tag 'use_resumable.js' %>
+<%= javascript_include_tag 'use_resumable.js' %>
+<%= javascript_include_tag "module.form_holder.js" %>
+<%= javascript_include_tag 'publications_form.js' %>
+
+
 
 <script type='text/javascript'>
 	$(function() {
 		<% @pub.keywords_array.each do |kw|%>
-			add_to_keywords("<%= kw %>");
+			__app.modules.form_holder.add_to_keywords("<%= kw %>");
 		<% end %>
 
 		<% @pub.corpora.each do |corp| %>
-			add_to_corpora("<%= corp.name %>", "<%= corp.id %>");
+			__app.modules.form_holder.add_to_corpora("<%= corp.name %>", "<%= corp.id %>");
 		<% end %>
-		
 
 		<% @pub.tools.each do |tool| %>
-			add_to_tools("<%= tool.name %>", "<%= tool.id %>");
+			__app.modules.form_holder.add_to_tools("<%= tool.name %>", "<%= tool.id %>");
 		<% end %>
 	});
 </script>

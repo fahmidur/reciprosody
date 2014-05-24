@@ -1,7 +1,7 @@
 <tr>
 	<td>
 		<a href='<%= url_for(ua.user_actionable) %>' class='dark'>
-			<i class='icon-book'></i>
+			<%= render :partial => 'shared/icon.corpus' %>
 			<%= ua.user_actionable.name %>
 			<br/>
 			&nbsp;&nbsp;&nbsp;&nbsp;

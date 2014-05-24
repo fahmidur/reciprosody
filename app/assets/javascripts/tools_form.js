@@ -9,7 +9,7 @@ $(function() {
 
 	//handle beforeSend
 	$('#new_tool').on('ajax:beforeSend', function(e, xhr, settings) {
-		console.log("ORIGINAL = " + settings.data);
+		// console.log("ORIGINAL = " + settings.data);
 
 		var obj = uri_to_obj($(this));
 
@@ -17,16 +17,16 @@ $(function() {
 		var corpora = "";
 		var publications = "";
 
-		console.log(obj);
-		console.log("changing settings.data");
+		// console.log(obj);
+		// console.log("changing settings.data");
 
 		delete obj['tool[keyword]'];
 		delete obj['tool[corpus]'];
 		delete obj['tool[publication]'];
 
-		var _keywords		= 		__app.modules.form_holder.get_keywords();
-		var _corpora		=		__app.modules.form_holder.get_corpora();
-		var _publications	=		__app.modules.form_holder.get_publications();
+		var _keywords		= __app.modules.form_holder.get_keywords();
+		var _corpora		= __app.modules.form_holder.get_corpora();
+		var _publications	= __app.modules.form_holder.get_publications();
 
 		for(kw in _keywords) {
 			keywords += kw + "\n";
@@ -37,16 +37,16 @@ $(function() {
 		for(pub in _publications) {
 			publications += pub + "\n";
 		}
-		console.log(keywords);
-		console.log(corpora);
-		console.log(publications);
+		// console.log(keywords);
+		// console.log(corpora);
+		// console.log(publications);
 
 		obj['tool[keywords]'] = keywords;
 		obj['tool[corpora]'] = corpora;
 		obj['tool[publications]'] = publications;
 		
 		settings.data = obj_to_uri(obj);
-		console.log(settings.data);
+		// console.log(settings.data);
 	});
 
 	// handle success

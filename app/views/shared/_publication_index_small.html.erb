@@ -9,7 +9,10 @@
 			</td>
 			<td>
 				<% if p.pubdate && p.pubdate.year != 0%>
-					<span class='badge pull-right'><%= p.pubdate.year %> </span>
+					<span class='badge pull-right'>
+						<!-- <i class='fa fa-fw fa-calendar'></i> -->
+						<%= p.pubdate.year %>
+					</span>
 				<% end %>
 			</td>
 		</tr>
