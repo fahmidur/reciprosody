@@ -29,6 +29,7 @@
 	<div class='box span4 r1-box'>
 		<div class='boxheader small'>Authors</div>
 		<div class='boxcontent'>
+			<br/>
 			<ul>
 			<% @pub.authors.split("\n").each do  |author|%>
 				<li><%= author %></li>
@@ -43,21 +44,18 @@
 
 		<div class='boxcontent'>
 			<% if @pub.url && !@pub.url.blank? %>
-			<center>
 
-			<!--<p class='label label-default' href='<%= @pub.url %>'><%= @pub.url %></p><br/>-->
+			<div class='center'>
+				<div class='follow-link-url'><%= @pub.url %></div>
+				<br/>
+				
+				<a href='/publications/<%= @pub.id %>/follow' target='_blank' class='btn btn-primary'>
+					<i class='icon-share'></i>
+					Follow Link
+				</a>
 
-			<div style="font-weight:bold;color:#6d6d6d;font-size:x-small"><%= @pub.url %></div>
-			<br/>
-			
-			<a href='/publications/<%= @pub.id %>/follow' target='_blank' class='btn btn-small btn-primary'>
-				<i class='icon-share'></i>
-				Follow Link
-			</a>
-
-			<br/>
-
-			</center>
+				<br/>
+			</div>
 			<% end %>
 		</div> <!-- end of box content -->
 	</div> <!-- end of box -->
@@ -67,12 +65,13 @@
 		<div class='boxheader small'>Our Copy</div>
 		<div class='boxcontent'>
 			<% if @pub.local %>
-				<center class='row-fluid'>
-				<br/>
-				<%= form_tag("/publications/#{@pub.id}/download", :method => :get) do%>
-						<input type='submit' class='btn btn-primary cdownload span6' value="Download">
-				<% end %>
-				</center>
+				<div class='center'>
+				<br>
+					<a class='btn btn-primary centered' href='/publications/<%= @pub.id %>/download'>
+						<i class='fa fa-fw fa-cloud-download'></i>
+						Download
+					</a>
+				</div>
 			<% end %>
 		</div> <!-- end of box content  -->
 	</div> <!-- end of box -->

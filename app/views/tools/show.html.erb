@@ -28,7 +28,8 @@
 <div class='row-fluid'>
 	<div class='box span4 r1-box'>
 		<div class='boxheader small'>Authors</div>
-		<div class'boxcontent'> 
+		<div class'boxcontent'>
+			<br>
 			<ul>
 			<% @tool.authors.split("\n").each do  |author|%>
 				<li><%= author %></li>
@@ -38,22 +39,22 @@
 	</div> <!-- end of box -->
 
 	
-	<div class='box span4 r1-box' style='word-wrap: break-word'>
+	<div class='box span4 r1-box'>
 		<div class='boxheader small'>External Link</div>
 
 		<div class='boxcontent'>
 			<% if @tool.url && !@tool.url.blank? %>
-			<center>
-			<!--<span class='label label-default' style='word-wrap: break-word'><%= @tool.url %></span><br/><br/>-->
-			<div style="font-weight:bold;color:#6d6d6d;font-size:x-small"><%= @tool.url %></div>
-			<br/>
+			<div class='center'>
+				<div class='follow-link-url'><%= @tool.url %></div>
+				<br/>
 
-			<a href='/tools/<%= @tool.id %>/follow' target='_blank' class='btn btn-small btn-primary'>
-				<i class='icon-share'></i>
-				Follow Link
-			</a>
-			<br/>
-			</center>
+				<a href='/tools/<%= @tool.id %>/follow' target='_blank' class='btn btn-primary'>
+					<i class='icon-share'></i>
+					Follow Link
+				</a>
+
+				<br/>
+			</div>
 			<% end %>
 		</div> <!-- end of box content -->
 	</div> <!-- end of box -->
@@ -63,12 +64,13 @@
 		<div class='boxheader small'>Our Copy</div>
 		<div class='boxcontent'>
 			<% if @tool.local %>
-				<center class='row-fluid'>
-				<br>
-				<%= form_tag("/tools/#{@tool.id}/download", :method => :get) do%>
-						<input type='submit' class='btn btn-primary cdownload span6' value="Download">
-				<% end %>
-				</center>
+				<div class='center'>
+					<br>
+					<a class='btn btn-primary' href="/tools/<%= @tool.id %>/download">
+						<i class='fa fa-fw fa-cloud-download'></i>
+						Download
+					</a>
+				</div>
 			<% end %>
 		</div> <!-- end of box content -->
 	</div> <!-- end of box -->
