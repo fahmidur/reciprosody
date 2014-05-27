@@ -92,15 +92,15 @@
 					</div>
 
 					<div class='citation-style' id='citation-style-mla'>
-						<%=raw html_from_citation(@corpus.citation, :mla) %>
+						<%=raw @corpus.citation_format('modern-language-association') %>
 					</div>
 
 					<div class='citation-style' id='citation-style-apa'>
-						<%=raw html_from_citation(@corpus.citation, :apa) %>
+						<%=raw @corpus.citation_format('apa') %>
 					</div>
 
 					<div class='citation-style' id='citation-style-chicago'>
-						<%=raw html_from_citation(@corpus.citation, 'chicago-author-date') %>
+						<%=raw @corpus.citation_format('chicago-annotated-bibliography') %>
 					</div>
 				</div> <!-- End of BoxContent -->
 			</div> <!-- End of Box Citation -->

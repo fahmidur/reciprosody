@@ -1,5 +1,6 @@
 class Corpus < ActiveRecord::Base
 	include UserActionable
+	include Citable
 
 	require 'waveinfo'
 	

@@ -1,5 +1,6 @@
 class Publication < ActiveRecord::Base
 	include UserActionable
+	include Citable
 	
 	attr_accessible :description, :keywords, :local, :name, :url, :authors, :citation, :pubdate, :venue
 	paginates_per 3

@@ -94,13 +94,13 @@
 				<%=raw markdown(@pub.citation) %>
 			</div>
 			<div class='citation-style' id='citation-style-mla'>
-				<%=raw html_from_citation(@pub.citation, :mla) %>
+				<%=raw @pub.citation_format('modern-language-association') %>
 			</div>
 			<div class='citation-style' id='citation-style-apa'>
-				<%=raw html_from_citation(@pub.citation, :apa) %>
+				<%=raw @pub.citation_format('apa') %>
 			</div>
 			<div class='citation-style' id='citation-style-chicago'>
-				<%=raw html_from_citation(@pub.citation, 'chicago-author-date') %>
+				<%=raw @pub.citation_format('chicago-annotated-bibliography') %>
 			</div>
 		</div> <!-- end of box content -->
 	</div> <!-- end of box -->
