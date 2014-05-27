@@ -14,10 +14,9 @@
 				<% insts = @user.insts %>
 
 				<div class='avatar-wrapper'>
-					<%= image_tag @user.gravatar_url(:png), :id => :profile_avatar, :class => "public"%>
+					<%= image_tag gravatar_user_path(:id => @user.id), :id => :profile_avatar %>
 				</div>
 
-				<center>
 				<div id='inst_holder'>
 					<% insts.each do |inst| %>
 					<span class='badge badge-info inst'>
@@ -38,7 +37,6 @@
 					</div>
 					<% end %>
 				</div>
-				</center>
 			</div> <!-- end of boxheader -->
 		</div> <!-- end of box -->
 	</div> <!-- end of span -->
@@ -100,7 +98,10 @@
 <br/>
 <div class='row-fluid'>
 		<div class='span6'>
-			<a href='#destroy-confirm-<%= @user.id %>' class='delete-confirm btn btn-small btn-danger' data-toggle='modal'>Destroy User</a>
+			<a href='#destroy-confirm-<%= @user.id %>' class='delete-confirm btn btn-small btn-danger' data-toggle='modal'>
+				<i class='fa fa-fw fa-bomb'></i>
+				Destroy User
+			</a>
 		</div>
 </div>
 <% end %>
