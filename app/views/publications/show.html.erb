@@ -16,7 +16,7 @@
 				<% if @pub.keywords && !@pub.keywords.blank? %>
 					<br/>
 					<% @pub.keywords_array.each do |kw| %>
-						<%= render :partial => 'keyword', :locals => {:kw => kw} %>
+						<%= render :partial => 'shared/keyword', :locals => {:kw => kw} %>
 					<% end %>
 				<% end %>
 			</div> <!-- end of box content -->
@@ -50,7 +50,7 @@
 				<br/>
 				
 				<a href='/publications/<%= @pub.id %>/follow' target='_blank' class='btn btn-primary'>
-					<i class='icon-share'></i>
+					<%= render :partial => 'shared/icon.outlink' %>
 					Follow Link
 				</a>
 
@@ -68,7 +68,7 @@
 				<div class='center'>
 				<br>
 					<a class='btn btn-primary centered' href='/publications/<%= @pub.id %>/download'>
-						<i class='fa fa-fw fa-cloud-download'></i>
+						<%= render :partial => 'shared/icon.download' %>
 						Download
 					</a>
 				</div>

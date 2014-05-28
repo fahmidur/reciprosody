@@ -16,7 +16,10 @@
 		<div class='row-fluid content'>
 			<div class='box borderfree span12'>
 				<div class='boxheader'>
-					<%= File.basename(@file) %> <a class='badge badge-info' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&amp;noview=true'><i class='icon-download'></i></a>
+					<%= File.basename(@file) %> 
+					<a class='pull-right' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&amp;noview=true'>
+					<%= render :partial => 'shared/icon.download' %>
+					</a>
 				</div>
 
 				<div class='boxcontent'>
@@ -94,7 +97,9 @@
 
 									<span class='pull-right'>&nbsp;</span>
 
-									<a href='#' class='pull-right badge badge-info' style="visibility:hidden"><i class='icon-download'></i></a>
+									<a href='#' class='pull-right badge badge-info hidden'>
+										<i class='icon-download'></i>
+									</a>
 
 									<span class='pull-right'>&nbsp;</span>
 								</span>
@@ -132,7 +137,9 @@
 
 								<span class='pull-right'>&nbsp;</span>
 
-								<a href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(file) if file %>&amp;noview=true' class='pull-right badge badge-inverse download'><i class='icon-download'></i></a>
+								<a href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(file) if file %>&amp;noview=true' class='pull-right badge badge-inverse download'>
+									<%= render :partial => 'shared/icon.download' %>
+								</a>
 
 								<span class='pull-right'>&nbsp;</span>
 

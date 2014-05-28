@@ -54,7 +54,7 @@
 
 							<div class='span6'>
 								<button type='submit' class='btn btn-primary cdownload' <%= "disabled" unless current_user()%> title="<%= 'Please Sign In' unless current_user() %>">
-									<i class='fa fa-fw fa-cloud-download'></i>
+									<%= render :partial => 'shared/icon.download' %>
 									Download
 								</button>
 							</div>
