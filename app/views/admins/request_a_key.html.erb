@@ -7,25 +7,29 @@
 	</div>
 <% end %>
 
-<%= form_tag '/admin/process_request_form', :method => :post do %>
-	<div class='row-fluid'>
-		<div class='span4'>
-			<%= render :partial => 'shared/member_small.html.erb', :locals => {:mem => current_user()} %>
-		</div>
-	</div>
+<div class='box'>
+	<div class='boxcontent'>
+		<%= form_tag '/admin/process_request_form', :method => :post do %>
+			<div class='row-fluid'>
+				<div class='span4'>
+					<%= render :partial => 'shared/member_small', :locals => {:mem => current_user()} %>
+				</div>
+			</div>
 
-	<br/>
-	<div class='row-fluid'>
-		<div class='span12'>
-			<%= recaptcha_tags :ajax => true, :display => {:theme => 'clean'}%>
-		</div>
-	</div>
-	<br/>
+			<br/>
+			<div class='row-fluid'>
+				<div class='span12'>
+					<%= recaptcha_tags :ajax => true, :display => {:theme => 'clean'}%>
+				</div>
+			</div>
+			<br/>
 
-	<div class='row-fluid'>
-		<div class='span12'>
-			<input type='submit' class='btn btn-primary' value='Request A SuperKey'>
-		</div>
-	</div>
+			<div class='row-fluid'>
+				<div class='span12'>
+					<input type='submit' class='btn btn-primary' value='Request A SuperKey'>
+				</div>
+			</div>
 
-<% end %>
+		<% end %>
+</div>
+</div>

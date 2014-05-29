@@ -1,9 +1,12 @@
 <div class='member'>
+	<i class='fa fa-fw fa-user'></i>
 	<span class='member_name'><%= mem.name %></span>
 
 	<span class='member_email pull-right'>
-		<a href="mailto:<%= mem.email%>" class='btn btn-mini mem-email' target='_BLANK'>
-			<%= render :partial => 'shared/icon2', :locals => {:icon => 'envelope', :extra => 'pull-left'}%>&nbsp;<%= mem.email %>
+		<a href="mailto:<%= mem.email%>" class='mem-email' target='_BLANK'>
+			<i class='fa fa-fw fa-envelope'></i>
+			&nbsp;
+			<%= mem.email %>
 		</a>
 	</span>
 </div>
