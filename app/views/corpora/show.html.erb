@@ -76,32 +76,11 @@
 		<div class='row-fluid'>
 
 			<div class='box borderfree span12'>
-				<div class='boxheader small toggleable'>BibTex Citation</div>
+				<div class='boxheader small toggleable'>BibTeX Citation</div>
 				<div class='boxcontent'>
-					<div class='btn-group' id='citation-style-select'>
-						<button class='btn btn-mini active'>Raw</button>
-						<button class='btn btn-mini'>MLA</button>
-						<button class='btn btn-mini'>APA</button>
-						<button class='btn btn-mini'>Chicago</button>
-					</div>
-
-					<br/><br/>
-
-					<div class='citation-style' id='citation-style-raw'>
-						<%=raw markdown(@corpus.citation) %>
-					</div>
-
-					<div class='citation-style' id='citation-style-mla'>
-						<%=raw @corpus.citation_format('modern-language-association') %>
-					</div>
-
-					<div class='citation-style' id='citation-style-apa'>
-						<%=raw @corpus.citation_format('apa') %>
-					</div>
-
-					<div class='citation-style' id='citation-style-chicago'>
-						<%=raw @corpus.citation_format('chicago-annotated-bibliography') %>
-					</div>
+					<%= render :partial => 'shared/citation_for_resource', :locals => {
+						:citable => @corpus
+					}%>
 				</div> <!-- End of BoxContent -->
 			</div> <!-- End of Box Citation -->
 		</div> <!-- end of row -->

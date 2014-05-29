@@ -1,0 +1,27 @@
+<div class='btn-group' id='citation-style-select'>
+<button class='btn btn-mini active'>Raw</button>
+
+<% cits =  citable.citation_formats({
+	'MLA' => 'modern-language-association',
+	'APA' => 'apa', 
+	'Chicago' => 'chicago-annotated-bibliography'
+	})
+%>
+
+<% cits.each do |k,v| %>
+	<% next unless v %>
+	<button class='btn btn-mini'><%= k %></button>
+<% end %>
+</div>
+<br/><br/>
+
+<div class='citation-style' id='citation-style-raw'>
+<%=raw markdown(citable.citation) %>
+</div>
+
+<% cits.each do |k,v| %>
+	<% next unless v %>
+	<div class='citation-style' id='citation-style-<%= k.downcase %>'>
+	<%=raw v %>
+	</div>
+<% end %>

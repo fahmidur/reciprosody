@@ -80,28 +80,12 @@
 <div class='row-fluid'>
 
 	<div class='box span4 r3-box'>
-		<div class='boxheader small'>BibTex Citation</div>
+		<div class='boxheader small'>BibTeX Citation</div>
 
 		<div class='boxcontent'>
-			<div class='btn-group' id='citation-style-select'>
-				<button class='btn btn-mini active'>Raw</button>
-				<button class='btn btn-mini'>MLA</button>
-				<button class='btn btn-mini'>APA</button>
-				<button class='btn btn-mini'>Chicago</button>
-			</div>
-			<br/><br/>
-			<div class='citation-style' id='citation-style-raw'>
-				<%=raw markdown(@pub.citation) %>
-			</div>
-			<div class='citation-style' id='citation-style-mla'>
-				<%=raw @pub.citation_format('modern-language-association') %>
-			</div>
-			<div class='citation-style' id='citation-style-apa'>
-				<%=raw @pub.citation_format('apa') %>
-			</div>
-			<div class='citation-style' id='citation-style-chicago'>
-				<%=raw @pub.citation_format('chicago-annotated-bibliography') %>
-			</div>
+			<%= render :partial => 'shared/citation_for_resource', :locals => {
+				:citable => @pub
+			}%>
 		</div> <!-- end of box content -->
 	</div> <!-- end of box -->
 
@@ -149,7 +133,10 @@
 	</div> <!-- end of box -->
 
 	<div class='box borderfree span4 r2-box'>
-		<div class='boxheader small' id='owners_hd'><%= pluralize(@pub.reviewers.size, 'Reviewer', 'Reviewers') %></div>
+		<div class='boxheader small'>
+			<%= pluralize(@pub.reviewers.size, 'Reviewer', 'Reviewers') %>
+		</div>
+
 		<div class='boxcontent padfree'>
 			<% @pub.reviewers.each do |m| %>
 				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
@@ -158,7 +145,10 @@
 	</div> <!-- end of box -->
 
 	<div class='box borderfree span4 r2-box'>
-		<div class='boxheader small' id='owners_hd'><%= pluralize(@pub.members.size, 'Member', 'Members') %></div>
+		<div class='boxheader small'>
+			<%= pluralize(@pub.members.size, 'Member', 'Members') %>
+		</div>
+
 		<div class='boxcontent padfree'>
 			<% @pub.members.each do |m| %>
 				<%= render :partial => 'shared/s.member', :locals => {:mem => m} %>
