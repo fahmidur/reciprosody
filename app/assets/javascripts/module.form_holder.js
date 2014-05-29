@@ -157,28 +157,36 @@ __app.modules.form_holder = function() {
 	function add_to_keywords(kw) {
 		kw = kw.toLowerCase();
 		if(!_keywords[kw]) {
-			$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"' data-value='"+kw+"'><i class='fa fa-fw fa-tag'></i> "+kw+"</span> &nbsp;");
+			$('#keywords_holder').prepend("<span class='label label-info kw' id='kw--"+kw+"' data-value='"+kw+"'>"
+				+ __app.sharedVariables.icons.tag
+				+ " "+kw+"</span> ");
 			_keywords[kw] = kw;
 		}
 	}
 
 	function add_to_corpora(cname, cid) {
 		if(!_corpora[cid]) {
-			$('#corpora_holder').prepend("<div class='corpi_item_small corp' id='corp--"+cid+"'><i class='fa fa-fw fa-book'></i> "+cname+"</div>");
+			$('#corpora_holder').prepend("<div class='corpi_item_small corp' id='corp--"+cid+"'>"
+				+ __app.sharedVariables.icons.corpus
+				+ " "+cname+"</div>");
 			_corpora[cid] = cname;
 		}
 	}
 
 	function add_to_publications(name, id) {
 		if(!_publications[id]) {
-			$('#publications_holder').prepend("<div class='corpi_item_small pub' id='pub--"+id+"'><i class='fa fa-fw fa-file-text'></i> "+name+"</div>");
+			$('#publications_holder').prepend("<div class='corpi_item_small pub' id='pub--"+id+"'>"
+				+ __app.sharedVariables.icons.publication
+				+" "+name+"</div>");
 			_publications[id] = name;
 		}
 	}
 
 	function add_to_tools(name, id) {
 		if(!_tools[id]) {
-			$('#tools_holder').prepend("<div class='corpi_item_small tool' id='tool--"+id+"'><i class='fa fa-fw fa-wrench'></i> "+name+"</div>");
+			$('#tools_holder').prepend("<div class='corpi_item_small tool' id='tool--"+id+"'>"
+				+ __app.sharedVariables.icons.tool
+				+ " "+name+"</div>");
 			_tools[id] = name;
 		}
 	}
