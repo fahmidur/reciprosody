@@ -18,7 +18,7 @@
 				<div class='boxheader'>
 					<%= File.basename(@file) %> 
 					<a class='pull-right' href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&amp;noview=true'>
-					<%= render :partial => 'shared/icon.download' %>
+					<%= render :partial => 'shared/icons/download' %>
 					</a>
 				</div>
 
@@ -138,7 +138,7 @@
 								<span class='pull-right'>&nbsp;</span>
 
 								<a href='<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(file) if file %>&amp;noview=true' class='pull-right badge badge-inverse download'>
-									<%= render :partial => 'shared/icon.download' %>
+									<%= render :partial => 'shared/icons/download' %>
 								</a>
 
 								<span class='pull-right'>&nbsp;</span>
