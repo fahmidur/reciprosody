@@ -55,9 +55,7 @@
 
 <div class='raw' style="display:none">
 	<% if current_user && current_user.super_key %>
-	<pre>
-		<%=raw @rawlog %>
-	</pre>
+	<pre><%=raw @rawlog %></pre>
 	<% else %>
 	<div class='alert'>
 		<h4>The Raw Log is only available to Admins</h4>
