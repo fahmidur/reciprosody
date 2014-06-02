@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
 		return Rails.root + "avatars" + self.id.to_s
 	end
 
-	def self.wsearch(q)
+	def self.wsearch(q, limit=10)
 		if(q !~ /^\%.+\%$/)
 			q = "%#{q}%"
 		end
@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
 		result += User.where("email LIKE ?", q).to_a
 		result += User.where("name LIKE ?", q).to_a
 		result += User.includes(:institutions).where("institutions.name LIKE ?", q).references(:institutions).to_a
-		result.uniq!
+		result = result.uniq.first(limit)
 		return result
 	end
 
