@@ -1261,6 +1261,11 @@ class CorporaController < ApplicationController
 			`mv #{xtract_dir}/#{@corpus.utoken}/** #{xtract_dir}`
 			`rm -rf #{xtract_dir}/#{@corpus.utoken}`
 		end
+
+		# remove all symlinks
+		logger.info "*** REMOVING ALL SYMLINKS "
+		output = `find #{xtract_dir} -type l -delete`
+		logger.info "OUTPUT = #{output}"
 	end
   
 	def untar(tarpath, xtract_dir)
