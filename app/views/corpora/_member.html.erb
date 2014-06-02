@@ -2,7 +2,7 @@
 	<div class='span5'>
 	  <span class='member_name'><%= mem.user.name%></span>
 	  <span class='member_email'><a href="mailto:<%= mem.user.email%>" class='btn btn-mini' target='_BLANK'>
-	   	<%= render :partial => 'shared/icon', :locals => {:icon => 'envelope'}, :formats => [:html] %>&nbsp;
+	   	<i class='fa fa-fw fa-envelope'></i>
 	  	<%= mem.user.email %></a></span>
 	</div>
 
