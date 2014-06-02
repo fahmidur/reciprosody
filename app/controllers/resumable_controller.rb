@@ -100,6 +100,7 @@ class ResumableController < ApplicationController
 
 		# Forget it ever happened
 		session[:resumable_filename] = nil
+		session[:resumable_filenames] = nil
 
 		# echo parameters
 		render :json => {:filename => @resumableFilename, :identifier => @resumableIdentifier, :globstring => globstring}
@@ -361,7 +362,6 @@ class ResumableController < ApplicationController
 		cleanIdentifier!(identifier)
 		return "#{FOLDER}/resumable-#{identifier}.*"
 	end
-
 
 	#---Filters--
 	def user_filter

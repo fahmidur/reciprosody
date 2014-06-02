@@ -12,5 +12,8 @@
 	</li> 
 <% end %>
 </ul>
+
+<% if message && message.present? %>
 <h6>Commit Message:</h6>
 <pre><%= message %></pre>
+<% end %>

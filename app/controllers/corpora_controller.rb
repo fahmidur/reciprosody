@@ -647,7 +647,9 @@ class CorporaController < ApplicationController
 			return
 		end
 
-		if !File.directory?(dir)
+		# if it's a file then you are most likely in the wrong path
+		# we'll send you over to single_file_download
+		unless File.directory?(dir)
 			dir.gsub!(/#{@corpus.head_path}/, '')
 			rd = "/corpora/#{@corpus.id}/single_download?path=#{dir}"
 			logger.info "**************#{rd}"
@@ -657,11 +659,14 @@ class CorporaController < ApplicationController
 
 		@files = Dir.glob("#{dir}/*").sort {|a,b| a.downcase <=> b.downcase}.partition{|f|File.directory?(f)}.flatten
 
-		#---retroactive patch for old corpora---
-		if(@files.empty? && Dir.glob(@corpus.archives_path + "*").present?)
-			retro_browse_patch()
-			@files = Dir.glob("#{dir}/*")
-		end
+
+		# not valid, you could just have an empty corpus
+		# corporaFilesAtRoot = Dir.glob(@corpus.head_path + "*")
+		# #---retroactive patch for old corpora---
+		# if(corporaFilesAtRoot.empty? && Dir.glob(@corpus.archives_path + "*").present?)
+		# 	retro_browse_patch()
+		# 	@files = Dir.glob("#{dir}/*")
+		# end
 	end
 
 	def single_download
@@ -728,8 +733,18 @@ class CorporaController < ApplicationController
 			return
 		end
 
+		# resumable_filename_list contains original names
 		resumable_filename_list = session[:resumable_filenames]
 		resumable_filepath_list = session[:resumable_filepaths]
+
+		unless resumable_filename_list && resumable_filepath_list && resumable_filename_list.size > 0 && resumable_filepath_list.size > 0 && resumable_filepath_list.size == resumable_filename_list.size
+			flash[:alert] = 'upload files not provided'
+			redirect_to browse_corpus_path(@corpus)
+			return
+		end
+
+		logger.info "*** RESUMABLE FILENAMES: #{resumable_filename_list.inspect}"
+		logger.info "*** RESUMABLE FILEPATHS: #{resumable_filepath_list.inspect}"
 
 		# logger.info "***RESUMABLE FILES COUNT: #{resumable_filename_list.length}"
 		# logger.info "***RESUMABLE FILES: #{resumable_filename_list}"
@@ -790,24 +805,6 @@ class CorporaController < ApplicationController
 					:message => params[:msg]
 				}.to_json
 		}, method(:action_notify))
-
-		# this is no longer necessary
-		# will be swapped to with new
-		# useraction feed
-		# messager = make_messager
-		# current_user.shout(
-		# 	@corpus.associated_users, 
-		# 	"#{current_user.name} has uploaded files to #{@corpus.name}",
-		# 	render_to_string(:partial => 'shout_single_upload', :locals => {
-		# 		:files => resumable_filename_list, 
-		# 		:rpath => baseurl,
-		# 		:message => params[:msg],
-		# 		}),
-		# 	messager
-		# );
-		# @corpus.user_action_from(current_user, 
-		# 	:upload,
-		# )
 
 		redirect_to "/corpora/#{@corpus.id}/browse?path=#{@rpath}"
 	end

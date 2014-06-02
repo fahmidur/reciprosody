@@ -6,12 +6,21 @@
 	<%= javascript_include_tag 'resumable.js' %>
 <% end %>
 
+<% setup_upload %>
+
 <p id="notice"><%= notice %></p>
 
 <%= render :partial => 'tabs', :locals => {:tab => 'browse'} %>
 
 <div class='row-fluid'>
 	<div class='span7'>
+		<% if flash[:alert] %>
+		<div class='alert alert-error'>
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<%= flash[:alert] %>
+		</div>
+		<% end %>
+
 		<% if @file %>
 		<div class='row-fluid content'>
 			<div class='box borderfree span12'>
