@@ -24,10 +24,15 @@
 		</td>
 		<% end %>
 
-		<td><a href="/users/<%= user.id %>"><%=user.name%></a></td>
+		<td class='lefted'>
+			<a href="/users/<%= user.id %>">
+				<img class='user-avatar-small' src='<%= gravatar_user_path(:id => user.id, :size => 50)%>' title="<%= user.name %>" alt="<%= user.name %>"/>
+				<%= user.name %>
+			</a>
+		</td>
 
 		<% if current_user().super_key %>
-		<td>
+		<td class='lefted'>
 			<%= render :partial => 'shared/mail_button', :locals => {:user => user } %>
 		</td>
 		<td>
@@ -40,19 +45,19 @@
 
 <% if current_user().super_key %>
 <br/>
+<h4>Combined Mail-To Field For Selected Users <span class='badge' id='selected-count'></span></h4>
 <div class='row-fluid'>
-	<pre class='span12' id='emails_selected'>
-
-	</pre>
+	<pre class='span12' id='emails_selected'></pre>
 </div>
-<h4>CSV for Importing</h4>
+<br/>
+<h4>CSV for Importing All Users</h4>
 <div class='row-fluid'>
-	<pre class='span12 box grad2'>
+		<pre class='span12'>
 Name,Email
 <% @users.each do |user| %>
 <%= user.name %>,<%= user.email %>
 <% end %>
-	</pre>
+		</pre>
 </div>
 <% end %>
 
@@ -77,6 +82,7 @@ Name,Email
         		if($(this).prop('checked'))
         		emails.push( $(this).attr('data-uname') + " <" + $(this).attr('data-uemail') + ">" );
         	});
+        	$('#selected-count').text(emails.length);
         	$('#emails_selected').text(emails.join(","));
         });
 	});

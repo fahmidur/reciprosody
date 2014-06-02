@@ -98,9 +98,25 @@
 			</a></li>
 			<% end %>
 
-			<% unless my_corpora.size > 0 %> <li><a href='/corpora/new' class='lnav_hl'>New Corpus</a></li> <% end %>
-			<% unless my_pubs.size > 0 %> <li><a href='/publications/new' class='lnav_hl'>New Publication</a></li> <% end %>
-			<% unless my_tools.size > 0 %> <li><a href='/tools/new' class='lnav_hl'>New Tool</a></li> <% end %>
+			<% unless my_corpora.size > 0 %>
+				<li><a href='/corpora/new' class='lnav_hl'>
+					<%= render :partial => 'shared/icons/corpus' %>
+					New Corpus
+				</a></li>
+			<% end %>
+
+			<% unless my_pubs.size > 0 %>
+				<li><a href='/publications/new' class='lnav_hl'>
+					<%= render :partial => 'shared/icons/publication' %>
+					New Publication
+				</a></li>
+			<% end %>
+			<% unless my_tools.size > 0 %>
+				<li><a href='/tools/new' class='lnav_hl'>
+					<%= render :partial => 'shared/icons/tool' %>
+					New Tool
+				</a></li>
+			<% end %>
 		</ul>
 	</div>
 
