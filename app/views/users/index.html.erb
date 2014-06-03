@@ -7,6 +7,7 @@
 		<% end %>
 
 		<th>Name</th>
+		<th>Joined</th>
 
 		<% if current_user().super_key %>
 		<th>Email</th>
@@ -29,6 +30,10 @@
 				<img class='user-avatar-small' src='<%= gravatar_user_path(:id => user.id, :size => 50)%>' title="<%= user.name %>" alt="<%= user.name %>"/>
 				<%= user.name %>
 			</a>
+		</td>
+
+		<td class='lefted'>
+			<%= time_ago_in_words user.created_at %> ago
 		</td>
 
 		<% if current_user().super_key %>
