@@ -94,12 +94,12 @@
 			<%= pluralize(@pub.corpora.length, "Corpus", "Corpora") %>
 		</div>
 		<div class='boxcontent padfree'>
-			<% @pub.corpora.each do |c|%>
+			<% @pub.corpora.limit(5).each do |c|%>
 				<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
 			<% end %>
 		</div>
 		<div class='boxcontent'> 
-			<% if @pub.corpora && @pub.corpora.size > 0%>
+			<% if @pub.corpora && @pub.corpora.size > 5%>
 				<a href='<%= corpora_publication_path %>' class='pull-right'>See All</a><br/>
 			<% end %>
 		</div>
@@ -108,12 +108,12 @@
 	<div class='box borderfree span4 r3-box'>
 		<div class='boxheader small'><%= pluralize(@pub.tools.length, "Tool","Tools") %></div>
 		<div class='boxcontent padfree'>
-			<%@pub.tools.each do |t|%>
+			<%@pub.tools.limit(5).each do |t|%>
 				<%= render :partial => 'shared/tool_index_small', :locals => {:tool => t} %>
 			<% end %>
 		</div>
 		<div class='boxcontent'>
-			<% if @pub.tools && @pub.tools.size > 0%>
+			<% if @pub.tools && @pub.tools.size > 5 %>
 				<a href='<%= tools_publication_path %>' class='pull-right'>See All</a><br/>
 			<% end %>
 		</div>

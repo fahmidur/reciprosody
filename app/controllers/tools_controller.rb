@@ -1,5 +1,5 @@
 class ToolsController < ApplicationController
-	before_filter :user_filter, :except => [:index, :show, :download, :follow]
+	before_filter :user_filter, :except => [:index, :show, :publications, :corpora, :download, :follow]
 	before_filter :existence_filter, :only => [
 		:show, :edit, :update, :destroy,
 		:add_corpus_rel, :update_corpus_rel, :delete_corpus_rel,

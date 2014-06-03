@@ -1,5 +1,5 @@
 class PublicationsController < ApplicationController
-	before_filter :user_filter, :except => [:index, :show, :download, :follow]
+	before_filter :user_filter, :except => [:index, :show, :corpora, :tools, :download, :follow]
 	before_filter :existence_filter, :only => [:follow]
 	before_filter :owner_filter, 
 		:only => [:edit, :update, :destroy,

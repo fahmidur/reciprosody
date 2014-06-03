@@ -117,13 +117,13 @@
 		"Corpora") %>
 		</div>
 		<div class='boxcontent padfree'>
-			<% @tool.corpora.limit(2).each do |c|%>
+			<% @tool.corpora.limit(5).each do |c|%>
 				<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => c} %>
 			<% end %>
 		</div>
 
 		<div class='boxcontent'>
-			<% if @tool.corpora && @tool.corpora.size > 2%>
+			<% if @tool.corpora && @tool.corpora.size > 5%>
 				<a href='<%= corpora_tool_path %>' class='pull-right'>See All</a>
 				<br/>
 			<% end %>
@@ -137,12 +137,12 @@
 		"Publications") %>
 		</div>
 		<div class='boxcontent padfree'>
-			<%@tool.publications.limit(2).each do |p|%>
+			<%@tool.publications.limit(5).each do |p|%>
 				<%= render :partial => 'shared/publication_index_small', :locals => {:p => p} %>
 			<% end %>
 		</div>
 		<div class='boxcontent'>
-			<% if @tool.publications && @tool.publications.size > 2 %>
+			<% if @tool.publications && @tool.publications.size > 5 %>
 				<a href='<%= publications_tool_path %>' class='pull-right'>See All</a>
 				<br/>
 			<% end %>
