@@ -12,11 +12,11 @@ gem 'kaminari'
 
 # Gems used only for assets and not required
 # in production environments by default.
-group :assets do
+# group :assets do #no longer needed because rails 4 - sfr
   gem 'uglifier', '>= 1.0.3'
   gem 'less-rails', '2.3.3'
   gem 'therubyracer'
-end
+# end
 
 gem 'jquery-rails', '2.1.4'
 
