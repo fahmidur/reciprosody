@@ -149,6 +149,15 @@
 					<span class='pull-right resource-count'><%= my_corpora.size%></span>
 				</div>
 				<div class='boxcontent padfree'>
+					<% if my_corpora.size == 0 %>
+					<div class='alert alert-warning missing-resource-sticker'>
+						<h4>You are not a part of any Corpus</h4>
+						<p>
+							We encourage you to Join a Corpus
+							or Create A New Corpus.
+						</p>
+					</div>
+					<% end %>
 					<% my_corpora[0...5].each do |corpus| %>
 						<%= render :partial => 'shared/corpus_index_small', :locals => {:corpus => corpus} %>
 					<% end %>
@@ -173,14 +182,21 @@
 
 		<% if my_pubs.size > 0 %>
 			<div class='box borderfree'>
-
 				<div class='boxheader small toggleable'>
 					My <%= "Publication".pluralize(my_pubs.size) %>
 					<span class='pull-right resource-count'><%= my_pubs.size %></span>
 				</div>
 
 				<div class='boxcontent padfree'>
-
+					<% if my_pubs.size == 0 %>
+					<div class='alert alert-warning missing-resource-sticker'>
+						<h4>You are not a part of any Publication</h4>
+						<p>
+							We encourage you to Join a Publication
+							or Create A New Publication.
+						</p>
+					</div>
+					<% end %>
 					<% my_pubs[0...5].each do |pub| %>
 						<%= render :partial => 'shared/publication_index_small.html.erb', 
 						:locals => {:p => pub} %>
@@ -214,11 +230,18 @@
 				</div>
 
 				<div class='boxcontent padfree'>
-
+					<% if my_tools.size == 0 %>
+					<div class='alert alert-warning missing-resource-sticker'>
+						<h4>You are not a part of any Tool</h4>
+						<p>
+							We encourage you to Join a Tool
+							or Create A New Tool.
+						</p>
+					</div>
+					<% end %>
 					<% my_tools[0...5].each do |tool| %>
 						<%= render :partial => 'shared/tool_index_small', :locals => {:tool => tool} %>
 					<% end %>
-
 					<div>
 						<!-- tools -->
 						<div class='btn-group pull-right btn-group-narrow'>
@@ -226,7 +249,7 @@
 								<i class='icon-plus'></i>&nbsp;New
 							</a>
 							<% if my_tools.size > 5 %>
-								<a href='tools?query=&amp;roles=owner&amp;order=created_at' class='btn btn-mini'>
+								<a href='tools?query=&amp;roles=owner,reviewer,member&amp;order=created_at' class='btn btn-mini'>
 									<i class='icon-list'>&nbsp;List All</i>
 								</a>
 							<% end %>
