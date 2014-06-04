@@ -8,7 +8,7 @@ class SearchLogEntry < ActiveRecord::Base
   # Factory
   def self.make(user, resourceType, inString, outString)
   	resourceType = ResourceType.find_by_name(resourceType)
-  	throw "Resource Type: #{resource_type_symbol} not found" unless resourceType
+  	throw "resourceType not found" unless resourceType
 
   	SearchLogEntry.create(
   		:user_id => user.id, 

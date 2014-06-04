@@ -3,20 +3,18 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.2'
 
 gem 'sqlite3'
-gem 'puma' #07-22-2013
+gem 'puma' # 07-22-2013
 gem 'thin'
 gem 'faye'
+gem 'faye-rails' # sfr: to get rid of second server, host on thin
 gem 'passenger'
 gem 'eventmachine'
 gem 'kaminari'
 
-# Gems used only for assets and not required
-# in production environments by default.
-# group :assets do #no longer needed because rails 4 - sfr
-  gem 'uglifier', '>= 1.0.3'
-  gem 'less-rails', '2.3.3'
-  gem 'therubyracer'
-# end
+
+gem 'uglifier', '>= 1.0.3'
+gem 'less-rails', '2.3.3'
+gem 'therubyracer'
 
 gem 'jquery-rails', '2.1.4'
 

@@ -132,6 +132,9 @@ GEM
       multi_json (>= 1.0.0)
       rack (>= 1.0.0)
       websocket-driver (>= 0.3.0)
+    faye-rails (2.0.0)
+      eventmachine (~> 1.0.0)
+      faye (~> 1.0.1)
     faye-websocket (0.7.3)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.3.1)
@@ -314,6 +317,7 @@ DEPENDENCIES
   eventmachine
   factory_girl_rails (~> 4.0)
   faye
+  faye-rails
   fog
   jquery-rails (= 2.1.4)
   kaminari
