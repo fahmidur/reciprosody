@@ -6,7 +6,7 @@ gem 'sqlite3'
 gem 'puma' # 07-22-2013
 gem 'thin'
 gem 'faye'
-gem 'faye-rails' # sfr: to get rid of second server, host on thin
+# gem 'faye-rails' # sfr: to get rid of second server, host on thin
 gem 'passenger'
 gem 'eventmachine'
 gem 'kaminari'
