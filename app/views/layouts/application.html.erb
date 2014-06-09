@@ -29,10 +29,6 @@
   <%= javascript_include_tag "main.js" %>
 
   
-  
-
-  
-  
   <%= yield :javascript_includes %>
   
   
@@ -114,6 +110,5 @@
 <input type='hidden' id='hf-userID' value="<%= current_user()? current_user().id : "NA"%>" class='hf' data-name='userID'/>
 <input type='hidden' id='hf-fayeURL' value='<%= @faye_url %>' class='hf' data-name='fayeURL' />
 
-<%= javascript_include_tag "bootstrap_fix.js" %>
 </body>
 </html>

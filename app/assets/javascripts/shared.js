@@ -105,7 +105,7 @@ var UIHelper = {
 	},
 	autoCollapseToggleableBoxes: function() {
 		toggleSmartDW();
-		$(window).on('resize', toggleSmartDW);
+		// $(window).on('resize', toggleSmartDW);
 		function toggleSmartDW() {
 			if($(window).width() < 760) {
 				$('.boxheader.toggleable').each(function() {

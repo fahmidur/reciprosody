@@ -1,9 +1,17 @@
 @import "twitter/bootstrap/bootstrap";
 @import "twitter/bootstrap/responsive";
 
+/* Bootstrap Fix */
+@desktop: ~"only screen and (min-width: 772px)";
+
 body {
-	padding-top: 60px;
+	padding-top: 0px;
 	background-color: #fafafa;
+}
+@media @desktop {
+	body {
+		padding-top: 60px;
+	}
 }
 .hidden {
 	visibility:hidden;
@@ -437,6 +445,7 @@ textarea::-webkit-scrollbar-thumb {
 	text-align: center;
 	padding-bottom:5px;
 	margin-bottom:5px;
+	margin-top:5px;
 	/*border-bottom:1px solid #eee;*/
 }
 #gravatar-email-wrapper {
