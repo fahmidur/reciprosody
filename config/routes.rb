@@ -172,6 +172,9 @@ Reciprosody2::Application.routes.draw do
 	match 'how-to'     => 'pages#how_to', :via => :get
 	match '/faq_submit'	=> 'pages#faq_submit', :via => :get
 	match '/sug_submit' => 'pages#sug_submit', :via => :get
+
+  #--for me--
+  match '/environment' => 'pages#environment', :via => :get
 	#-----------------------------------------------------
 	
 	#------------Upload Controller-------------------------

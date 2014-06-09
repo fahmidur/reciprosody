@@ -2,6 +2,10 @@ class PagesController < ApplicationController
 	protect_from_forgery
 	
 	before_filter :user_redirect, :only => [:index]
+
+  def environment
+    render :text => Rails.env.to_s
+  end
   
   #----Static Pagse---
   def index
