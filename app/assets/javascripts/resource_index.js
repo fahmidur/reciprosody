@@ -1,20 +1,55 @@
 $(function() {
+  var $current_item = $('.corpi_item:first');
+  $current_item.addClass('active');
 
   $(".corpi_item").hover(function() {
     if($('.modal').is(':visible')) { return; }
-    // $(this).find('.hButton').animate({opacity:1.0}, 200);
-    $(this).find('.index-item-option-bar').animate({opacity:1.0}, 200);
-
-    // $(this).find('.index-item-option-bar').slideDown("fast");
-    // $(this).find('.index-item-info-bar').slideUp("fast");
+    $('.index-item-option-bar').removeClass('active');
+    $('.corpi_item').removeClass('active');
+    $(this).find('.index-item-option-bar').addClass('active');
+    $(this).addClass('active');
+    $current_item = $(this);
   }, function() {
     if($('.modal').is(':visible')) { return; }
-    // $(this).find('.hButton').animate({opacity:0.3}, 200);
-    $(this).find('.index-item-option-bar').animate({opacity:0.1}, 200);
-
-    // $(this).find('.index-item-option-bar').slideUp("fast");
-    // $(this).find('.index-item-info-bar').slideDown("fast");
+    // $(this).find('.index-item-option-bar').removeClass('active');
   });
+
+  $(document).keydown(function(e) {
+    if(e.keyCode == 13) {
+      if($current_item) {
+        $current_item.click();
+      }
+    }
+  });
+
+  // $(document).keydown(function(e) {
+  //   if(!(e.keyCode == 40 || e.keyCode == 38)) { return; }
+  //   console.log(e.keyCode);
+  //   var t = null;
+
+  //   $('.corpi_item').removeClass('active');
+  //   $('.index-item-option-bar').removeClass('active');
+
+  //   if(e.keyCode == 38) { //up
+  //     t = $current_item.prev('.corpi_item');
+  //     if(t.length == 0) {
+  //       $current_item = $('.corpi_item:last');
+  //     } else {
+  //       $current_item = t;
+  //     }
+  //   }
+  //   else
+  //   if(e.keyCode == 40) { //down
+  //     t = $current_item.next('.corpi_item');
+  //     if(t.length == 0) {
+  //       $current_item = $('.corpi_item:first');
+  //     } else {
+  //       $current_item = t;
+  //     }
+  //   }
+  //   $current_item.addClass('active');
+  //   $current_item.find('.index-item-option-bar').addClass('active');
+  // });
 
   var _over_option_item = false;
   $('.corpi_item .index-item-option-bar a').mouseenter(function() {
