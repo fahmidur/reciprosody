@@ -104,8 +104,8 @@ class ApplicationController < ActionController::Base
 		@faye_url = Rails.application.config.action_mailer.default_url_options[:host].clone
 
 
-		if Rails.application.config.faye_url
-			@faye_url = Rails.application.config.faye_url
+		if Rails.env == 'staging'
+			@faye_url = 'faye.' + @faye_url
 		else
 			if @faye_url =~ /\:\d+$/
 			@faye_url.gsub!(/\:\d+$/, ':9292')
