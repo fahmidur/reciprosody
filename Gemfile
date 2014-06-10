@@ -10,6 +10,7 @@ gem 'faye'
 gem 'passenger'
 gem 'eventmachine'
 gem 'kaminari'
+gem 'mina', '0.2.0'
 
 
 gem 'uglifier', '>= 1.0.3'
