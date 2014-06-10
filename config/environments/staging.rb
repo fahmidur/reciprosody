@@ -36,6 +36,7 @@ Reciprosody2::Application.configure do
 	#require 'tlsmail'
 	#Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE);
 	
+  config.faye_url = 'faye.reciprosody-staging.syedreza.org'
   config.action_mailer.default_url_options = { :host => 'reciprosody-staging.syedreza.org' }
   
 	config.action_mailer.delivery_method = :smtp

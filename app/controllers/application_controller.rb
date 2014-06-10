@@ -102,11 +102,18 @@ class ApplicationController < ActionController::Base
 	def get_faye_url
 		return @faye_url if @faye_url
 		@faye_url = Rails.application.config.action_mailer.default_url_options[:host].clone
-		if @faye_url =~ /\:\d+$/
-			@faye_url.gsub!(/\:\d+$/, ':9292')
+
+
+		if Rails.application.config.faye_url
+			@faye_url = Rails.application.config.faye_url
 		else
-			@faye_url += ":9292"
+			if @faye_url =~ /\:\d+$/
+			@faye_url.gsub!(/\:\d+$/, ':9292')
+			else
+				@faye_url += ":9292"
+			end
 		end
+
 		@faye_url = "http://#{@faye_url}/faye"
 		return @faye_url
 	end
