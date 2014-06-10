@@ -104,9 +104,9 @@ $(function() {
 			}
 			var comment = $('#comment-'+data.comment_id);
 			comment.find('.removable:first').remove();
-			comment.animate({backgroundColor: '#FFA200'}, 200, function() {
-				comment.animate({backgroundColor: 'transparent'}, 800);
-			});
+			// comment.animate({backgroundColor: '#FFA200'}, 200, function() {
+			// 	comment.animate({backgroundColor: 'transparent'}, 800);
+			// });
 		});
 
 		_fclient.subscribe('/corpora/'+cid+'/comments/delete', function(data) {
