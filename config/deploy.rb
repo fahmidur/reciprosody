@@ -17,6 +17,7 @@ set :branch, 'master'
 
 # for the server
 set :user, "syed"
+set :rails_env, "staging"
 
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
@@ -74,6 +75,7 @@ task :deploy => :environment do
 
     to :launch do
       # queue "touch #{deploy_to}/tmp/restart.txt"
+      queue "/etc/init.d/thin restart"
     end
   end
 end
