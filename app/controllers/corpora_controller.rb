@@ -699,8 +699,8 @@ class CorporaController < ApplicationController
 		@ext = File.extname(@file)
 		@ext = ".txt" if `file #{File.expand_path(@file)}` =~ /ASCII/
 
-		if [".md", ".txt", ".wav", ".png", ".jpg", ".jpeg", ".gif"].include?(@ext)
-			unless @ext == ".wav"
+		if [".md", ".txt", ".wav", ".png", ".jpg", ".jpeg", ".gif", ".TextGrid"].include?(@ext)
+			if [".md", ".txt"].include?(@ext)
 				@content = ""
 				File.open(file, "r") do |f|
 					@content = f.read

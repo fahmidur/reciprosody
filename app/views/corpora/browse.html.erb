@@ -4,6 +4,8 @@
 	<%= javascript_include_tag 'drawer.js'%>
 	<%= javascript_include_tag 'audio.js'%>
 	<%= javascript_include_tag 'resumable.js' %>
+	<%= javascript_include_tag 'd3.v3.js' %>
+	<%= javascript_include_tag 'JSPraat.mini.js' %>
 <% end %>
 
 <% setup_upload %>
@@ -31,11 +33,20 @@
 					</a>
 				</div>
 
-				<div class='boxcontent'>
+				<div class='boxcontent padfree'>
 					<%if File.extname(@file) == ".md"  %>
 						<%=raw markdown(@content)%>
 					<%elsif [".png", ".jpg", ".jpeg", ".gif"].include?(@ext) %>
 						<img src="<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&amp;noview=true">
+					<%elsif @ext == '.TextGrid' %>
+					<div id='TSG-container'></div>
+					<script>
+						var tg = new JSPraat.TextGrid.TextGrid("<%= single_download_corpus_path(@corpus)%>?noview=true&amp;path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>");
+						var tsg = new JSPraat.TimeSyncedGrid.TimeSyncedGrid('TSG-container');
+						tg.ready(function() {
+							tsg.setTextGrid(tg);
+						});
+					</script>
 					<%elsif @ext == ".wav" %>
 						<div class='waveform'>
 							<canvas style="height:200px;"></canvas>
