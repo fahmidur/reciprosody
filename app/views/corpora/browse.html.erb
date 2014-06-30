@@ -39,16 +39,10 @@
 					<%elsif [".png", ".jpg", ".jpeg", ".gif"].include?(@ext) %>
 						<img src="<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&amp;noview=true">
 					<%elsif @ext == '.TextGrid' %>
-					<!-- <div id='TSG-container'></div> -->
+					
 					<div class='TSG-container' data-textgrid="<%= single_download_corpus_path(@corpus)%>?noview=true&amp;path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>" data-audio=''></div>
-					<!--<script>
-						var tg = new JSPraat.TextGrid.TextGrid("<%= single_download_corpus_path(@corpus)%>?noview=true&amp;path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>");
-						var tsg = new JSPraat.TimeSyncedGrid.TimeSyncedGrid('TSG-container');
-						tg.ready(function() {
-							tsg.setTextGrid(tg);
-						});
-					</script>-->
 					<script>JSPraat.TimeSyncedGrid.autoRender();</script>
+
 					<%elsif @ext == ".wav" %>
 						<div class='waveform'>
 							<canvas style="height:200px;"></canvas>
