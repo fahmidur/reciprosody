@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140513040741) do
+ActiveRecord::Schema.define(version: 20140714084347) do
 
   create_table "comments", force: true do |t|
     t.integer  "commentable_id",   default: 0
@@ -306,6 +306,8 @@ ActiveRecord::Schema.define(version: 20140513040741) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.string   "gravatar_email"
+    t.text     "bio_markdown"
+    t.text     "bio_html"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

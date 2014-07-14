@@ -13,6 +13,27 @@ body {
 		padding-top: 60px;
 	}
 }
+#bio-input-toggle {
+	cursor: pointer;
+}
+#bio-edit-wrapper {
+	display: none;
+}
+#bio-input, .bio {
+	resize: none;
+	background-color: #fff;
+	border: 1px solid #fff;
+	outline: none;
+	box-shadow: 0px 0px 5px #ccc;
+	color: #2d2d2d;
+	margin-bottom: 5px;
+	/*font-weight: bold;*/
+}
+.bio {
+	margin-top:10px;
+	margin-bottom:0px;
+	padding: 5px;
+}
 #error_explanation {
 	font-size: small;
 	background-color: rgba(255, 0, 0, 0.2);
@@ -428,11 +449,18 @@ body::-webkit-scrollbar-thumb {
 .opt {
 	opacity: 0.1;
 }
-#add-inst {
+.uhome-bt {
 	border-radius: 0px;
 	background-color: #adb8ad;
 	cursor: pointer;
 	height:14px;
+	margin: 0px;
+	transition-property:background;
+	transition-duration:2s;
+	transition-timing-function:cubic-bezier(.06,1.47,.29,.87);
+}
+span.uhome-bt:hover {
+	background: orange;
 }
 .inst .x {
 	opacity: 0.0;
@@ -717,6 +745,10 @@ h4.index-header1 {
 }
 .signal.active {
 	opacity: 1.0;
+}
+.action {
+	display: block;
+	font-weight: bold;
 }
 .user-action {
 	border: 1px solid #ddd;

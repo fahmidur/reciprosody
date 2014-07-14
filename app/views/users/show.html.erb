@@ -1,5 +1,6 @@
 <% content_for :javascript_includes do %>
 <%= javascript_include_tag "resource_index.js" %>
+<%= javascript_include_tag "showdown.min.js" %>
 <% end %>
 
 <% my_corpora = current_user.associated_corpora %>
@@ -36,9 +37,12 @@
 							</span>
 							<% inst_flag = true %>
 						<% end %>
-						<span id='add-inst' class='label label-info opt' title="Add Institution">
+						<span id='add-inst' class='label label-info opt uhome-bt' title="Add Institution">
 							<%=raw 'Add Institution &nbsp;' unless inst_flag %>
 							<i class='fa fa-fw fa-plus'></i>
+						</span><!--
+					 --><span id='edit-bio' class='label label-info opt uhome-bt' title='Edit Bio'>
+							<i class='fa fa-fw fa-edit'></i>
 						</span>
 					</div>
 
@@ -121,9 +125,27 @@
 	</div>
 
 	<div class='span5'>
+		<div class='row-fluid' id='bio-edit-wrapper'>
+			<strong id='bio-input-toggle'><i class='fa fa-edit'></i> About Me</strong>
+			<textarea class='span12' id='bio-input'><%= current_user.bio_markdown %></textarea>
+			<div>
+				<button class='btn btn-small btn-primary' style='opacity:0.8' id='edit-bio-submit'>
+					Done
+					<i class='fa fa-fw fa-check-circle'></i>
+				</button>
+
+				<span>
+					<i>&nbsp; Preview</i>
+					<i class='fa fa-hand-o-down'></i>
+				</span>
+
+				<div class='bio'>
+					<%=raw @user.bio_html %>
+				</div>
+			</div>
+		</div>
 		<!-- <div class='row-fluid'>
 			<strong>
-				<i class='icon-signal signal' id='faye-connection-indicator'></i>
 				Activity
 			</strong>
 		</div> -->

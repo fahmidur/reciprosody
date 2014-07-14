@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
 	 :recoverable, :rememberable, :trackable, :validatable, :confirmable
 
 	# Setup accessible (or protected) attributes for your model
-	attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :avatar, :gravatar_email
+	attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :avatar, :gravatar_email, :bio_markdown, :bio_html
 
 	validates_format_of :gravatar_email, :with => Devise.email_regexp, :allow_blank => true
 
@@ -55,6 +55,16 @@ class User < ActiveRecord::Base
 	scope :tool_owners, -> { where :tool_memberships => {:role => 'owner'} }
 	scope :tool_reviewers, -> { where :tool_memberships => {:role => 'reviewer'} }
 	scope :tool_members, -> { where :tool_memberships => {:role => 'member'} }
+
+	def self.markdown(text)
+		options = [:hard_wrap, :filter_html, :autolink, :no_intraemphasis, :fenced_code, :gh_blockcode]
+		::Redcarpet.new(text, *options).to_html
+	end
+	
+	def bio=(md)
+		self.bio_markdown = md
+		self.bio_html = User.markdown(md)
+	end
 
 	def clear_avatars_cache
 		FileUtils.rm_rf(self.avatars_folder)

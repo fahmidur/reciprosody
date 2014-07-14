@@ -9,12 +9,21 @@ __app.modules.userhome = function() {
 	var $profileBox = $('#profile-box');
 	var $gravatarInfobox = $('#gravatar-infobox');
 
+	var $actionsHolder = $('#actionsHolder');
 	var $sideMenuDiv = $('#side_menu');
 	var $instSearchWrapper = $('#inst_search_wrapper');
 	var $instSearch = $('#inst_search');
 	var $instHolder = $('#inst_holder');
 	var $instAddButton = $('#add-inst');
 	var $fayeConnectionIndicator = $('#faye-connection-indicator');
+
+	var $bioEditWrapper = $('#bio-edit-wrapper');
+	var $bioInput = $('#bio-input');
+	var $bio = $('.bio');
+	var $bioEditToggle = $('#edit-bio');
+	var $bioEditSubmit = $('#edit-bio-submit');
+	var $bioInputToggle = $('#bio-input-toggle');
+
 
 	var _userID = __app.sharedVariables.userID;
 	var _fayeClient = null;
@@ -24,6 +33,7 @@ __app.modules.userhome = function() {
 	var _previous_search = "";
 
 	var _snd = new Audio("/assets/sound1.mp3");
+	var _showdown = new Showdown.converter();
 
 	var _userAction = function() {
 		var actions = {};
@@ -98,6 +108,34 @@ __app.modules.userhome = function() {
 
 	$instAddButton.click(show_instSearch);
 	$instSearch.blur(hide_instSearch);
+
+	$bioInput.on('keyup', function() {
+		updateInputSize($(this));
+		$bio.html(_showdown.makeHtml($(this).val()));
+	});
+	$bioEditToggle.click(function() {
+		if($bioEditWrapper.is(':visible')) {
+			$bioEditWrapper.slideUp("fast");
+			$actionsHolder.slideDown("fast");
+		} else {
+			$bioEditWrapper.slideDown("fast");
+			$actionsHolder.slideUp("fast");
+		}
+	});
+	$bioInputToggle.click(function() {
+		if($bioInput.is(':visible')) {
+			$bioInput.slideUp("fast");
+		} else {
+			$bioInput.slideDown("fast");
+		}
+	});
+	$bioEditSubmit.click(function() {
+		var mdown = $bioInput.val();
+		$.post('/user/update_bio', {'markdown': mdown}, function(data) {
+			console.log(data);
+		});
+		$bioEditToggle.click();
+	});
 
 	function show_instSearch(e) {
 		$instSearchWrapper.show();
@@ -270,6 +308,10 @@ __app.modules.userhome = function() {
 			$peopleResult.slideDown();
 			$sideMenuDiv.slideUp();
 		}
+	}
+	function updateInputSize(container) {
+		var rows = container.val().split("\n").length+3;
+		container.attr('rows', rows);
 	}
 
 	// function dwInstFix() {

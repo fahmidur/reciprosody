@@ -108,6 +108,7 @@ Reciprosody2::Application.routes.draw do
 
 
   get '/user/info/:id' => 'users#info'
+  get '/public/user/:id' => 'users#public_profile'
 
 	resources :users, :constraints => {:id => /\d+|.+\@.+/} do
     collection do
@@ -138,6 +139,7 @@ Reciprosody2::Application.routes.draw do
       get :remove_inst_rel          #users_controller#remove_inst_rel
 
       get :update_gravatar_email    #users_controller#update_gravatar_email
+      post :update_bio
       
 			post :invite_user
 		end

@@ -4,6 +4,15 @@ class UsersController < ApplicationController
 	protect_from_forgery
 	before_filter :auth_filter, :except => [:gravatar]
 
+
+	# POST /user/update_bio
+	def update_bio
+		@user = current_user
+		@user.bio = params[:markdown]
+		@user.save();
+		render :json => {:ok => true, :html => @user.bio_html}
+	end
+
 	#
 	# GET /user/info/:id
 	# via AJAX
@@ -434,6 +443,17 @@ class UsersController < ApplicationController
 
 		@user.setProp(name, value)
 		render :json => {:ok => true, :name => name, :value => value}
+	end
+
+	# GET /public/user/:id
+	def public_profile
+		@user = User.find_by_id(params[:id])
+		if(@user)
+			render :public_profile
+			return
+		else
+			redirect_to '/'
+		end
 	end
 
 	# GET /users/:id
