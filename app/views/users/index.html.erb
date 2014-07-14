@@ -7,12 +7,13 @@
 		<% end %>
 
 		<th>Name</th>
+		<th>Write</th>
 		<th>Joined</th>
 
 		<% if current_user().super_key %>
 		<th>Email</th>
 		<th>
-			<button class='btn' id='uselect_btn'>Select</button>
+			<button class='btn' id='uselect_btn'>Toggle</button>
 		</th>
 		<% end %>
 	</tr>
@@ -30,6 +31,10 @@
 				<img class='user-avatar-small' src='<%= gravatar_user_path(:id => user.id, :size => 50)%>' title="<%= user.name %>" alt="<%= user.name %>"/>
 				<%= user.name %>
 			</a>
+		</td>
+
+		<td>
+			<%= render :partial => 'shared/btns/compose', :locals => {:user => user} %>
 		</td>
 
 		<td class='lefted'>
@@ -90,5 +95,14 @@ Name,Email
         	$('#selected-count').text(emails.length);
         	$('#emails_selected').text(emails.join(","));
         });
+
+        <% if current_user && current_user.super_key %>
+        var maxWidth = 0;
+        $('.mail-button').each(function() {
+        	var w = $(this).width();
+        	if(w > maxWidth) { maxWidth = w; }
+        });
+        $('.mail-button').width(maxWidth);
+        <% end %>
 	});
 </script>
