@@ -99,6 +99,7 @@
 					<% if File.directory?(file) %>
 							<div class='corpi_item_small file' onclick="browse('<%= File.basename(file) %>')">
 								<i class='fa fa-fw fa-folder'></i>
+								<i class='fa fa-fw fa-folder-open' style='display: none'></i>
 								<%= File.basename(file) %>
 								<span class='file-controls pull-right'>
 									<a href='#dfc-<%= file.hash %>' role="button" class='pull-right delete-confirm badge badge-warning' data-toggle="modal">
@@ -258,7 +259,11 @@
 	$('.file').hover(function(){
 		$('.file-controls').removeClass('active');
 		$(this).find('.file-controls').addClass('active');
+		$(this).find('.fa-folder').hide();
+		$(this).find('.fa-folder-open').show();
 	}, function() {
+		$(this).find('.fa-folder').show();
+		$(this).find('.fa-folder-open').hide();
 		// $(this).find('.file-controls').removeClass('active');
 	});
 
