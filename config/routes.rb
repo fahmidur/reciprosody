@@ -105,6 +105,10 @@ Reciprosody2::Application.routes.draw do
 	#----authenticaton-----------------------
   devise_for :users, :controllers => {:registrations => "registrations"}
 
+
+
+  get '/user/info/:id' => 'users#info'
+
 	resources :users, :constraints => {:id => /\d+|.+\@.+/} do
     collection do
       get :index              #user home page

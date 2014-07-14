@@ -190,9 +190,7 @@
 			_view = capture[1];
 		}
 		console.log(_view);
-		if(_is_firefox) {
-			restoreState();
-		}
+		restoreState();
 		try {
 			_fclient = new Faye.Client(_faye_url);
 		} catch(err) {
@@ -661,7 +659,7 @@
 		// $('#to-label').height($('#message-recipients').height());
 	}
 	function restoreState() {
-		/*console.log("restoring state");*/
+		// console.log("restoring state");
 		var capture = /v=(\w+)/.exec(document.URL);
 		if(capture) {
 			_view = capture[1];
@@ -688,11 +686,21 @@
 			if(capture[1] === 'cmessage') {
 				capture = /\#([a-z]+)-(\d+)/.exec(document.URL);
 				stateRestore_cmessage(parseInt(capture[2]));
-			} else
+			} 
+			else
 			if(capture[1] === 'replyall') {
 				capture = /\#([a-z]+)-(\d+)/.exec(document.URL);
 				stateRestore_replyall(parseInt(capture[2]));
 			}
+			// else
+			// if(capture[1] === 'write') {
+			// 	capture = /\#([a-z]+)-(\d+)/.exec(document.URL);
+			// 	if(capture){
+			// 		stateRestore_write(parseInt(capture[2]));
+			// 	} else {
+			// 		stateRestore_normal();
+			// 	}
+			// }
 			else {
 				eval("stateRestore_"+capture[1]+"()");
 			}
@@ -751,8 +759,23 @@
 			}
 		});
 
-		history.replaceState({state: 'cmessage', 'mid': mid}, "Title", "#cmessage-"+mid);
+		history.replaceState({state: 'cmessage', 'mid': mid}, "View Message", "#cmessage-"+mid);
 	}
+	// function stateRestore_write(id) {
+	// 	console.log('State Restore Write. ID = ', id);
+
+	// 	$('#compose_bt').show().addClass('disabled');
+
+	// 	$('#message-recipients').html('');
+	// 	$('#compose-subject').val('');
+	// 	$('#compose-body').val('');
+
+	// 	$('.ib-component').slideUp();
+	// 	$('#ibar').slideUp();
+	// 	$('#compose_panel').slideDown();
+
+	// 	history.replaceState({state: 'write'}, "Writing", "#write-"+id);
+	// };
 	function stateRestore_compose() {
 		/*console.log("Restoring compose state");*/
 
@@ -770,19 +793,27 @@
 		var url = document.URL;
 		var match = null;
 		if( (match=url.match(/compose\:(.+)/)) ) {
-			$('#user-search').val(match[1]);
-			$('#user-search').trigger('keyup');
+			var id = parseInt(match[1]);
+			var name = 'Unknown User';
+			$.getJSON('/user/info/'+id, function(data) {
+				if(data.ok) {
+					name = data.info.name;
+				}
+				$('#message-recipients').append('<span class="label user-label" data-id="'+id+'"><i class="icon-user"></i>&nbsp; '+name+'&nbsp;<i class="icon-remove"></i></span>');
+				$('#compose-subject').focus();
+			});
+			history.replaceState({state: 'compose'}, "Compose", "#compose:"+match[1]);
+		} else {
+			$('#user-search').focus();
 			setTimeout(function() {
-				$('#user-search').trigger('keyup');
-			},400);
+				$('#user-search').focus();
+			},500);
+			history.replaceState({state: 'compose'}, "Compose", "#compose");
 		}
 
-		$('#user-search').focus();
-		setTimeout(function() {
-			$('#user-search').focus();
-		},500);
+		
 
-		history.replaceState({state: 'compose'}, "Title", "#compose");
+		
 	}
 	//the mid is the message you are replying to
 	function stateRestore_replyall(mid) {

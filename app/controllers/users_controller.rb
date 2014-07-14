@@ -5,6 +5,24 @@ class UsersController < ApplicationController
 	before_filter :auth_filter, :except => [:gravatar]
 
 	#
+	# GET /user/info/:id
+	# via AJAX
+	#
+	def info
+		@user = User.find_by_id(params[:id]);
+		if(@user)
+			render :json => {
+				:ok => true, 
+				:info => {
+					:name => @user.name
+				}
+			}
+		else
+			render :json => {:ok => false}
+		end
+	end
+
+	#
 	# GET /user/update_gravatar_email 
 	# updates teh gravatar email field
 	#
