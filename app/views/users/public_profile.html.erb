@@ -18,16 +18,20 @@
 				</div>
 
 				<div id='inst_holder'>
-					<% insts.each do |inst| %>
-					<span class='badge badge-info inst'>
-						<i class='fa fa-fw fa-university inst-icon'></i>
-						<%= inst.name %>
-					</span>
-					<% end %>
+					<div class='center'>
 
-					<% if insts.size == 0 %>
-						<span class='badge badge-warning inst'>Unaffiliated</span>
-					<% end %>
+						<% insts.each do |inst| %>
+						<span class='badge badge-info inst'>
+							<i class='fa fa-fw fa-university inst-icon'></i>
+							<%= inst.name %>
+						</span>
+						<% end %>
+
+						<% if insts.size == 0 %>
+								<span class='badge badge-warning inst'>Unaffiliated</span>
+						<% end %>
+						<br/>
+					</div>
 
 					<% if current_user && current_user.super_key != nil %>
 						<div class='email-dec-wrapper'>

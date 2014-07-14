@@ -1,9 +1,17 @@
 <div class='row-fluid memberListItem' id='memberListItem-<%=mem.id%>'>
 	<div class='span5'>
-	  <span class='member_name'><%= mem.user.name%></span>
-	  <span class='member_email'><a href="mailto:<%= mem.user.email%>" class='btn btn-mini' target='_BLANK'>
-	   	<i class='fa fa-fw fa-envelope'></i>
-	  	<%= mem.user.email %></a></span>
+		<%= render :partial => 'shared/btns/compose', :locals => {:user => mem.user } %>
+		<a class='member_name' href='<%= user_path(mem) %>'>
+			<i class='fa fa-fw fa-user'></i>
+			<%= mem.user.name%>
+		</a>
+
+
+		<!-- <span class='member_email'>
+			<a href="mailto:<%= mem.user.email%>" class='btn btn-mini' target='_BLANK'>
+			<i class='fa fa-fw fa-envelope'></i>
+			<%= mem.user.email %></a>
+		</span> -->
 	</div>
 
 	<div class="span5 input-prepend">
