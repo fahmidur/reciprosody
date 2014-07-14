@@ -2,20 +2,25 @@
 	<%= javascript_include_tag 'show_fix.js' %>
 <% end %>
 
-<%= render :partial => 'tabs', :locals => {:tab => 'details'} %>
+<% isAssociated = current_user() && current_user().corpora.to_a.include?(@corpus) %>
+<% hasComments = @comments.size > 0 %>
+<% showComments = isAssociated || hasComments %>
+
+<%= render :partial => 'tabs', :locals => {
+	:tab => 'details', 
+} %>
 
 <br/>
 
 <%if flash[:notice] %>
-
 <!-- <div class='alert alert-info'>
 	<h5 id="notice"><%= notice %></h5>
 </div> -->
-
 <% end %>
 
+
 <div class='row-fluid'>
-	<div class='span5'>
+	<div class='span<%= showComments ? 5 : 12 %>'>
 		<div class='row-fluid'>
 			<div class='box span12'>
 				<div class='boxcontent'>
@@ -180,16 +185,19 @@
 	</div> <!-- End of first major column -->
 
 
-
+	<% if showComments %>
 	<div class='span7'>
 		<div class='row-fluid'>
-			<h4><i class='icon-comment'></i> Comments</h4>
+			<hr/>
+			<h4>
+				<i class='icon-comment'></i>
+				Comments
+			</h4>
 		</div>
 
-		<input type='hidden' id='cid' data-cid='<%= @corpus.id %>'/>
+		
 
-		<% if current_user() && current_user().corpora.to_a.include?(@corpus) #association filter %>
-
+		<% if isAssociated %>
 			<%= form_tag add_comment_corpus_path(@corpus), :remote => true, :method => 'get', 'data-type' => :json, :id => 'newComment_form' do%>
 
 				<div class='row-fluid'>
@@ -215,11 +223,12 @@
 				<%= render :partial => 'comment', :locals => {:comment => comment} %>
 			<% end %>
 		</div>
-
-	</div> <!-- End of second major column -->
+	</div> <!-- End of second major column for Comments -->
+	<% end %>
 </div> <!-- End of outer most row-fluid -->
 
 <br/>
+<input type='hidden' id='cid' data-cid='<%= @corpus.id %>'/>
 <%= render :partial => 'footer' %>
 
 <script type='text/javascript'>
