@@ -1,11 +1,10 @@
-<h2>Sign In</h2>
+
 
 <div class='row-fluid'>
-  <div class='span4'>
-
-
-
-
+  <div class='span5' id='single-page-box'>
+    <div class='center'>
+      <h2>Sign In</h2>
+    </div>
     <div class='row-fluid'>
       <div class='span12'>
         <% if flash[:error] || flash[:notice] || flash[:alert] %>
@@ -21,13 +20,13 @@
 
     <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
       <div class='row-fluid'>
-        <%= f.label :email, :class => 'span3' %>
-        <%= f.email_field :email, :class => 'span9' %>
+        <%= f.label :email, :class => 'span3 sign-in-label' %>
+        <%= f.email_field :email, :class => 'span9', :placeholder => 'Email' %>
       </div>
 
       <div class='row-fluid'>
-        <%= f.label :password, :class => 'span3' %>
-        <%= f.password_field :password, :class => 'span9' %>
+        <%= f.label :password, :class => 'span3 sign-in-label' %>
+        <%= f.password_field :password, :class => 'span9', :placeholder => 'Password' %>
       </div>
 
       <% if devise_mapping.rememberable? -%>
