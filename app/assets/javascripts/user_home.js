@@ -121,6 +121,14 @@ __app.modules.userhome = function() {
 		} else {
 			$bioEditWrapper.slideDown("fast");
 			$actionsHolder.slideUp("fast");
+			var toggleTop = $bioEditToggle.offset().top;
+			var wrapperTop = $bioInput.offset().top;
+			console.log('toggleTop', toggleTop);
+			console.log('wrapperTop', wrapperTop);
+			if(wrapperTop > toggleTop) {
+				window.scrollTo(0, wrapperTop);	
+			}
+			$bioInput.focus();
 		}
 	});
 	$bioInputToggle.click(function() {
