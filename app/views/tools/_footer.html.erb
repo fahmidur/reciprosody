@@ -1,8 +1,17 @@
 <div class='row-fluid'>
 	<div class='span12'>
-	<a href='javascript:history.go(-1)' class='btn'>Back</a>
+
+	<%= render :partial => 'shared/btns/back' %>
+
+	<%= render :partial => 'shared/btns/list', :locals => {
+		:href => tools_path,
+		:text => 'All Tools'
+	}%>
+
 	<% if @tool.canEdit?(current_user) %> 
-		<a href='<%= edit_tool_path(@tool)%>' class='btn'>Edit</a>
+		<%= render :partial => 'shared/btns/edit', :locals => {
+			:href => edit_tool_path(@tool)
+		}%>
 
 		<a href="#delete-confirm-tool-<%=@tool.id%>" data-id="<%= @tool.id %>" class="delete-confirm btn btn-danger pull-right" data-toggle="modal">
 			<i class='icon-trash'></i>&nbsp;
