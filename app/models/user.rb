@@ -62,6 +62,7 @@ class User < ActiveRecord::Base
 	end
 	
 	def bio=(md)
+		md.gsub!(/\<\s*\/*\s*script\s*\>/, '');
 		self.bio_markdown = md
 		self.bio_html = User.markdown(md)
 	end

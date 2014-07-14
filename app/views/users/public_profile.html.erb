@@ -74,7 +74,7 @@
 	</div>
 
 	<div class='span4'>
-		<% if @user.owner_of.size > 0 || @user.approver_of.size > 0 || @user.member_of.size > 0 %>
+		<% if true || @user.owner_of.size > 0 || @user.approver_of.size > 0 || @user.member_of.size > 0 %>
 			<div class='box borderfree'>
 				<div class='boxheader small toggleable'>
 					Corpora
@@ -89,7 +89,7 @@
 			</div> <!-- end of box -->
 		<% end %>
 
-		<% if @user.publication_owner_of.size > 0 %>
+		<% if true || @user.publication_owner_of.size > 0 %>
 			<div class='box borderfree'>
 				<div class='boxheader small toggleable'>
 					Publications
@@ -106,7 +106,7 @@
 		<% end %>
 
 
-		<% if @user.tool_owner_of.size > 0 %>
+		<% if true || @user.tool_owner_of.size > 0 %>
 			<div class='box borderfree'>
 				<div class='boxheader small toggleable'>
 					Tools

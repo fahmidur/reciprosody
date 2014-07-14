@@ -109,6 +109,7 @@ __app.modules.userhome = function() {
 	$instAddButton.click(show_instSearch);
 	$instSearch.blur(hide_instSearch);
 
+	updateInputSize($bioInput);
 	$bioInput.on('keyup', function() {
 		updateInputSize($(this));
 		$bio.html(_showdown.makeHtml($(this).val()));

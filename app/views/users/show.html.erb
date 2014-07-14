@@ -83,6 +83,10 @@
 					<%= current_user.received_messages.unreaded.size %>
 				</span>
 			</a></li>
+			<li class='l-nav'><a href='/public/user/<%= current_user.id %>' class=''>
+				<i class='fa fa-fw fa-eye'></i>
+				View Public Profile
+			</a></li>
 			<li class='l-nav'><a href='/users' class=''>
 				<i class='fa fa-fw fa-users'></i>
 				Show All Users
@@ -125,6 +129,17 @@
 	</div>
 
 	<div class='span5'>
+		<div class='alert alert-info' id='bio-urge' style='display: none'>
+			<button type="button" class="close" data-dismiss="alert">
+				<i class='fa fa-fw fa-times-circle'></i>
+			</button>
+			<h5>We noticed you haven't written anything about yourself.</h5>
+			<p>
+				To edit your Bio, click on the little Edit Icon under your Gravatar.
+				<br/>
+			</p>
+		</div>
+
 		<div class='row-fluid' id='bio-edit-wrapper'>
 			<strong id='bio-input-toggle'><i class='fa fa-edit'></i> About Me</strong>
 			<textarea class='span12' id='bio-input'><%= current_user.bio_markdown %></textarea>
@@ -135,7 +150,7 @@
 				</button>
 
 				<span>
-					<i>&nbsp; Preview</i>
+					<i>&nbsp; Markdown Preview</i>
 					<i class='fa fa-hand-o-down'></i>
 				</span>
 
@@ -289,6 +304,12 @@
 <script type='text/javascript' src='<%= @faye_url %>.js'></script>
 <%= javascript_include_tag "handle_box_toggleable.js" %>
 <%= javascript_include_tag "user_home.js" %>
+
+<script>
+	<% if !current_user.bio_html || (current_user.bio_html && current_user.bio_html.blank?) %>
+		$('#bio-urge').show();
+	<% end %>
+</script>
 
 
 <!--
