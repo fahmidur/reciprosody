@@ -20,12 +20,12 @@
 
     <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
       <div class='row-fluid'>
-        <%= f.label :email, :class => 'span3 sign-in-label' %>
+        <%= f.label :email, :class => 'span3 gray-label' %>
         <%= f.email_field :email, :class => 'span9', :placeholder => 'Email' %>
       </div>
 
       <div class='row-fluid'>
-        <%= f.label :password, :class => 'span3 sign-in-label' %>
+        <%= f.label :password, :class => 'span3 gray-label' %>
         <%= f.password_field :password, :class => 'span9', :placeholder => 'Password' %>
       </div>
 
