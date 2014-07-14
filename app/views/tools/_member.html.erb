@@ -1,10 +1,5 @@
 <div class='row-fluid memberListItem' id='memberListItem-<%=mem.id%>'>
-	<div class='span5'>
-	  <span class='member_name'><%= mem.user.name%></span>
-	  <span class='member_email'><a href="mailto:<%= mem.user.email%>" class='btn btn-mini' target='_BLANK'>
-		<i class='fa fa-fw fa-envelope'></i>
-	  	<%= mem.user.email %></a></span>
-	</div>
+	<%= render :partial => 'shared/member.span5', :locals => {:mem => mem} %>
 
 	<div class="span5 input-prepend">
 		<span class="add-on"><i class="icon-list"></i></span>

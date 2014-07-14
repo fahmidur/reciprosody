@@ -1,0 +1,7 @@
+<div class='span5'>
+	<%= render :partial => 'shared/btns/compose', :locals => {:user => mem.user } %>
+	<a class='member_name' href='<%= user_path(mem) %>'>
+		<i class='fa fa-fw fa-user'></i>
+		<%= mem.user.name%>
+	</a>
+</div>
