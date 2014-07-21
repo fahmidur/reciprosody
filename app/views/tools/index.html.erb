@@ -17,6 +17,11 @@
 	<%= render :partial => "shared/tool_index1", :locals => {:tool => t} %>
 <% end %>
 
+<div class='indexBottom'>
+	<%= paginate @tools %>
+	<br/>
+</div>
+
 <% if  user_signed_in? %>
 	<div class='row-fluid'>
 		<a class='btn span12' href='/tools/new'>New Tool</a>
