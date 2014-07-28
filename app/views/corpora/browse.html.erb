@@ -35,6 +35,7 @@
 				</div>
 
 				<div class='boxcontent padfree'>
+					<!--- EXTNAME = <%= @ext %> FILE = <%= @file %> -->
 					<%if File.extname(@file) == ".md"  %>
 						<%=raw markdown(@content)%>
 					<%elsif [".png", ".jpg", ".jpeg", ".gif"].include?(@ext) %>

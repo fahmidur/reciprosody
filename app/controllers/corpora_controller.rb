@@ -697,7 +697,12 @@ class CorporaController < ApplicationController
 
 		@file = file
 		@ext = File.extname(@file)
-		@ext = ".txt" if `file #{File.expand_path(@file)}` =~ /ASCII/
+		logger.info "*** EXTENSION = #{@ext}\t\tFILE = #{@file}"
+		logger.info "*** EXTENSION = #{@ext.downcase == '.textgrid'}\t\tFILE = #{@file}"
+
+		unless @ext.downcase == ".textgrid"
+			@ext = ".txt" if `file #{File.expand_path(@file)}` =~ /ASCII/
+		end
 
 		if [".md", ".txt", ".wav", ".png", ".jpg", ".jpeg", ".gif", ".TextGrid"].include?(@ext)
 			if [".md", ".txt"].include?(@ext)
