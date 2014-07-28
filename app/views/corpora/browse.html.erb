@@ -6,6 +6,7 @@
 	<%= javascript_include_tag 'resumable.js' %>
 	<%= javascript_include_tag 'd3.v3.js' %>
 	<%= javascript_include_tag 'JSPraat.mini.js' %>
+	<%= javascript_include_tag 'jquery.mousewheel.min.js' %>
 <% end %>
 
 <% setup_upload %>
@@ -38,9 +39,9 @@
 						<%=raw markdown(@content)%>
 					<%elsif [".png", ".jpg", ".jpeg", ".gif"].include?(@ext) %>
 						<img src="<%= single_download_corpus_path(@corpus)%>?path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>&amp;noview=true">
-					<%elsif @ext == '.TextGrid' %>
+					<%elsif @ext.downcase == '.textgrid' %>
 					
-					<div class='TSG-container' data-textgrid="<%= single_download_corpus_path(@corpus)%>?noview=true&amp;path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file) if @file %>" data-audio=''></div>
+					<div class='TSG-container' data-textgrid="<%= single_download_corpus_path(@corpus)%>?noview=true&amp;path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file)%>" data-audio='<%= single_download_corpus_path(@corpus)%>?noview=true&amp;path=<%= @rpath %><%= "/" if @rpath != "/"%><%= File.basename(@file, @ext )%>.wav'></div>
 					<script>JSPraat.TimeSyncedGrid.autoRender();</script>
 
 					<%elsif @ext == ".wav" %>
